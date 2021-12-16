@@ -9,6 +9,11 @@ class Rol extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'nombre',
+        'descripcion'
+    ];
+
     public function users(){
         return $this->belongsToMany('App\Models\User');
     }

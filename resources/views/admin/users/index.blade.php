@@ -120,12 +120,6 @@
                 }
             });
 
-            // LIMPIAR LA LISTA DE ERRORES
-            $('#crearUsuarioModal').click(function(){
-                $('.erroresDeFormulario').html('');
-                $('.erroresDeFormulario').hide();
-            });
-
             // MANTENER EL MODAL DE CREAR CLIENTES ABIERTO SI HAY ERRORES
             @if(count($errors)>0)
                   $('#modalCrearUsuario').modal('show');

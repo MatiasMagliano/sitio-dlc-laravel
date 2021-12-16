@@ -10,6 +10,7 @@
         <div class="col-xl-4 d-flex justify-content-xl-end">
             {{--para engañar al sistema, se hace un formulario por GET con el botón x-adminlte-button--}}
             <x-adminlte-button id="crearRolModal" label="Crear nuevo rol" data-toggle="modal" data-target="#modalCrearRol" class="bg-green"/>
+            <a href="{{ route('admin.users.index') }}" role="button" class="btn btn-md btn-secondary">Volver a usuarios</a>
         </div>
     </div>
 @stop
@@ -44,7 +45,7 @@
                                         role="button">
                                         <i class="fa fa-lg fa-fw fa-trash"></i></a>
                             <form id="form-borrar-rol-{{ $rol->id }}"
-                                action="{{ route('admin.users.destroy', $rol->id) }}" method="POST"
+                                action="{{ route('admin.roles.destroy', $rol->id) }}" method="POST"
                                 style="display: none">
                                 @csrf
                                 @method("DELETE")
@@ -55,6 +56,28 @@
             </tbody>
         </table>
     </x-adminlte-card>
+
+    {{--MODAL CREAR ROL--}}
+    <x-adminlte-modal id="modalCrearRol" title="Crear un rol" theme="blue" icon="fas fa-user-tag" size='md' v-centered>
+        <form action="{{ route('admin.roles.store') }}" method="post">
+            @include('admin.roles.partials.formulario-roles')
+            
+            {{-- Register button --}}
+            <div class="d-flex justify-content-end">
+                <x-adminlte-button data-dismiss="modal" theme="secondary" label="Cerrar" style="margin: 0 10px"/>
+                <x-adminlte-button type="submit" theme="success" label="Guardar" id="guardarRol"/>
+            </div>
+        </form>
+
+        {{--zona de muestra de errores--}}
+        <x-slot name="footerSlot">
+            @if (count($errors)>0)
+                <div class="callout callout-warning mr-auto">
+                    <p>Por favor, rellene los campos requeridos por el formulario.</p>
+                </div>
+            @endif
+        </x-slot>
+    </x-adminlte-modal>
 @endsection
 
 @section('js')
@@ -82,6 +105,11 @@
                     }
                 }
             });
+
+            // MANTENER EL MODAL DE CREAR CLIENTES ABIERTO SI HAY ERRORES
+            @if(count($errors)>0)
+                  $('#modalCrearRol').modal('show');
+            @endif
         });
     </script>
 @endsection

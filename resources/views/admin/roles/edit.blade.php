@@ -5,10 +5,10 @@
 @section('content_header')
 <div class="row">
     <div class="col-md-10">
-        <h1>Administración de Usuarios | Editar usuario</h1>
+        <h1>Administración de roles | Editar rol</h1>
     </div>
     <div class="col-md-2 d-flex justify-content-end">
-        <a href="{{ route('admin.users.index') }}" role="button" class="btn btn-md btn-secondary">Volver</a>
+        <a href="{{ route('admin.roles.index') }}" role="button" class="btn btn-md btn-secondary">Volver</a>
     </div>
 </div>
 @stop
@@ -18,12 +18,12 @@
     <div class="row justify-content-md-center">
         <div class="card col-md-4 offset-md-1">
             <div class="card-header">
-                <h3 class="card-title">Editar cliente</h3>
+                <h3 class="card-title">Editar rol</h3>
             </div>
-            <form action="{{ route('admin.users.update', $editusuario->id) }}" method="POST">
+            <form action="{{ route('admin.roles.update', $rol->id) }}" method="POST">
                 <div class="card-body">
                     @method('PATCH')
-                    @include('admin.users.partials.formulario-usuarios')
+                    @include('admin.roles.partials.formulario-roles')
                 </div>
                 <div class="card-footer">
                     {{-- Register button --}}
@@ -49,4 +49,3 @@
         <b>Versión</b> 2.0 (LARAVEL V.8)
     </div>
 @endsection
-

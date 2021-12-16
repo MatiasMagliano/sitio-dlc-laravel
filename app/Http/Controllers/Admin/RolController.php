@@ -36,7 +36,15 @@ class RolController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $datosValidados = $request->validate([
+            'nombre' => 'required|max:50', //dos formas: con pipe para acumular reglas o con un array
+            'descripcion' => 'required|max:500',
+        ]);
+
+        $rol = Rol::create($datosValidados);
+        $request->session()->flash('success', 'Se ha creado el rol con éxito.');
+
+        return redirect(route('admin.roles.index'));
     }
 
     /**
@@ -58,7 +66,7 @@ class RolController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('admin.roles.edit', ['rol' => Rol::find($id)]);
     }
 
     /**
@@ -70,7 +78,22 @@ class RolController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rol = Rol::find($id);
+
+        $datosValidados = $request->validate([
+            'nombre' => 'required|max:50',
+            'descripcion' => 'required|max:500'
+        ]);
+
+        if(!$rol){
+            $request->session()->flash('error', 'Ocurrió un error al intentar borrar el rol.');
+            return redirect(route('admin.roles.index'));
+        }
+
+        $rol->update($datosValidados);
+        $request->session()->flash('success', 'Se ha actualizado el rol con éxito.');
+
+        return redirect(route('admin.roles.index'));
     }
 
     /**
@@ -79,8 +102,10 @@ class RolController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        //
+        Rol::destroy($id);
+        $request->session()->flash('success', 'Se ha borrado el rol con éxito.');
+        return redirect(route('admin.roles.index'));
     }
 }
