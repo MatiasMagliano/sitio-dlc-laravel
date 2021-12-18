@@ -28,7 +28,7 @@ Route::get('/home', function () {
 require __DIR__ . '/auth.php';
 
 // Rutas agrupadas al admin
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('/users', UserController::class)->middleware(['auth']);
-    Route::resource('/roles', RolController::class)->middleware(['auth']);
+Route::prefix('admin')->middleware(['auth', 'auth.esSistAdmin'])->name('admin.')->group(function () {
+    Route::resource('/users', UserController::class);
+    Route::resource('/roles', RolController::class);
 });

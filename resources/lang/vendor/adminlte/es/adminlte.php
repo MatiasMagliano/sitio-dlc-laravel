@@ -3,6 +3,8 @@
 return [
 
     'full_name'                   => 'Nombre completo',
+    'role_name'                   => 'Nombre del rol',
+    'role_description'            => 'Descripción del rol',
     'email'                       => 'Email',
     'password'                    => 'Contraseña',
     'retype_password'             => 'Confirmar la contraseña',

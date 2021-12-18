@@ -48,8 +48,30 @@ class User extends Authenticatable
         $this->attributes['password'] = Hash::make($password);
     }
 
-    // esta función sirve para dejar claro en el modelo que tiene una relación una-a-muchos
+    /**
+     * esta función sirve para dejar claro en el modelo que tiene una relación una-a-muchos
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function roles(){
         return $this->belongsToMany('App\Models\Rol');
+    }
+
+    /**
+     * chequea si el usuario logueado tiene el rol pedido por parámetro
+     * @param string $rol
+     * @return bool
+     */
+    public function tieneElRol(string $rol){
+        return null !== $this->roles()->where('nombre', $rol)->first();
+    }
+
+    /**
+     * chequea si el usuario logueado tiene los roles pedido por parámetro
+     * @param array $rol
+     * @return bool
+     */
+    public function tieneLosRoles(array $rol){
+        return null !== $this->roles()->whereIn('nombre', $rol)->first();
     }
 }

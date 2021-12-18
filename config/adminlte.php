@@ -242,37 +242,15 @@ return [
             'text' => 'search',
         ],
         [
-            'text' => 'Administrar usuarios',
-            'url'  => 'admin/users',
-            'icon' => 'fas fa-users-cog',
-            //'can'  => 'sist-admin'
+            'text'   => 'Administrar usuarios',
+            'route'  => 'admin.users.index',
+            'icon'   => 'fas fa-users-cog',
+            'can'    => 'es-sist-admin'
         ],
         [
-            'text' => 'blog',
-            'url'  => 'admin/blog',
-            'can'  => 'sist-admin',
-        ],
-        [
-            'text'        => 'pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'far fa-fw fa-file',
-            'label'       => 4,
-            'label_color' => 'success',
-        ],
-        ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'change_password',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text'    => 'multilevel',
+            'text'    => 'administration',
             'icon'    => 'fas fa-fw fa-share',
+            'can'     => 'es-administracion',
             'submenu' => [
                 [
                     'text' => 'level_one',
@@ -308,21 +286,16 @@ return [
                 ],
             ],
         ],
-        ['header' => 'labels'],
+        ['header' => 'account_settings'],
         [
-            'text'       => 'important',
-            'icon_color' => 'red',
-            'url'        => '#',
+            'text' => 'profile',
+            'url'  => 'admin/settings',
+            'icon' => 'fas fa-fw fa-user',
         ],
         [
-            'text'       => 'warning',
-            'icon_color' => 'yellow',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'information',
-            'icon_color' => 'cyan',
-            'url'        => '#',
+            'text' => 'change_password',
+            'url'  => 'admin/settings',
+            'icon' => 'fas fa-fw fa-lock',
         ],
     ],
 
