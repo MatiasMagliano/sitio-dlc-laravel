@@ -32,7 +32,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        //En este caso se una un modal...
     }
 
     /**
@@ -73,7 +73,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        //Los usuarios no tienen una vista de DETALLE
     }
 
     /**

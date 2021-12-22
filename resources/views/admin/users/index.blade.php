@@ -1,5 +1,18 @@
 @extends('adminlte::page')
 
+@section('css')
+<style>
+    .btn-rm-hover:hover{
+        color: white;
+        background-color: rgb(160, 0, 0);
+        }
+        .btn-edt-hover:hover{
+            color: white;
+            background-color: darkgreen;
+        }
+</style>    
+@endsection
+
 @section('title', 'Administrar usuarios')
 
 @section('content_header')
@@ -49,10 +62,10 @@
                         <td>{{ $usuario->created_at->format('d/m/Y h:i A') }}</td>
                         <td class="text-center" style="vertical-align: middle;">
                             {{--El botón modificar no lleva a un modal. Lleva a una vista nueva, para respetar la idiosincrasia de Laravel--}}
-                            <a href="{{ route('admin.users.edit', $usuario->id) }}" role="button" class="btn btn-sm btn-default mx-1 shadow"><i class="fa fa-lg fa-fw fa-pen"></i></a>
+                            <a href="{{ route('admin.users.edit', $usuario->id) }}" role="button" class="btn btn-sm btn-default btn-edt-hover mx-1 shadow"><i class="fas fa-lg fa-fw fa-cog"></i></a>
                             
                             {{--se crea este método, porque el borrado en Laravel se hace por POST--}}
-                            <a class="btn btn-sm btn-default mx-1 shadow"
+                            <a class="btn btn-rm-hover btn-sm btn-light mx-1 shadow"
                                 onclick="event.preventDefault();
                                         document.getElementById('form-borrar-usuario-{{ $usuario->id }}').submit();"
                                         role="button">
