@@ -2,8 +2,9 @@
 
 use App\Http\Controllers\Admin\RolController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\HomeController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\TrazabilidadController;
+use App\Models\Producto;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,4 +32,11 @@ require __DIR__ . '/auth.php';
 Route::prefix('admin')->middleware(['auth', 'auth.esSistAdmin'])->name('admin.')->group(function () {
     Route::resource('/users', UserController::class);
     Route::resource('/roles', RolController::class);
+});
+
+Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->name('administracion.')->group(function () {
+    Route::resource('/productos', ProductoController::class);
+    Route::get('/buscar', [ProductoController::class, 'buscar']);
+    Route::resource('/trazabilidad', TrazabilidadController::class);
+    //Route::resource('/roles', RolController::class);
 });

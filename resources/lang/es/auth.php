@@ -15,6 +15,6 @@ return [
 
     'failed' => 'Los datos ingresados no corresponden a a una credencial váilda.',
     'password' => 'El usuario o contraseña ingresados son incorrectos.',
-    'throttle' => 'Demasiados intentos incorrectos. Por favor, inténtelo en nuevamente en :seconds seconds.',
+    'throttle' => 'Demasiados intentos incorrectos. Por favor, inténtelo en nuevamente en :seconds segundos.',
 
 ];

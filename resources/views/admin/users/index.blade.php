@@ -34,7 +34,6 @@
     <x-adminlte-card>
         <table id="tabla1" class="table table-bordered display nowrap" style="width: 100%;">
             <thead>
-                <th width="25px">#ID</th>
                 <th>Nombre</th>
                 <th>E-mail</th>
                 <th>Roles</th>
@@ -44,7 +43,6 @@
             <tbody>
                 @foreach ($usuarios as $usuario)
                     <tr>
-                        <td class="text-center">{{ $usuario->id }}</td>
                         <td>{{ $usuario->name }}</td>
                         <td>{{ $usuario->email }}</td>
                         <td>

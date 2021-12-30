@@ -242,48 +242,36 @@ return [
             'text' => 'search',
         ],
         [
+            'header' => 'sist-admin_settings',
+            'can'    => 'es-sist-admin'
+        ],
+        [
             'text'   => 'Administrar usuarios',
             'route'  => 'admin.users.index',
             'icon'   => 'fas fa-users-cog',
             'can'    => 'es-sist-admin'
         ],
         [
-            'text'    => 'administration',
-            'icon'    => 'fas fa-fw fa-share',
+            'header' => 'administration',
+            'can'    => 'es-administracion'
+        ],
+        [
+            'text'    => 'products_menu',
+            'icon'    => 'fas fa-shopping-basket',
             'can'     => 'es-administracion',
             'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
+                    [
+                        'text' => 'products',
+                        'url'  => '/administracion/productos',
                     ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
+                    [
+                        'text' => 'products_presentation',
+                        'url'  => '/administracion/presentacion'
+                    ],
+                    [
+                        'text' => 'suppliers',
+                        'url'  => '/administracion/proveedores'
+                    ],
             ],
         ],
         ['header' => 'account_settings'],
@@ -355,7 +343,7 @@ return [
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => 'https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css',
+                    'location' => 'https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css',
                 ],
                 [
                     'type' => 'css',
@@ -370,17 +358,12 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/js/dataTables.buttons.min.js',
+                    'location' => 'https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.bootstrap4.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.html5.min.js',
+                    'location' => 'https://cdn.datatables.net/buttons/2.1.0/js/buttons.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'js',
@@ -390,22 +373,32 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/datatables-plugins/jszip/jszip.min.js',
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/datatables-plugins/pdfmake/pdfmake.min.js',
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/datatables-plugins/pdfmake/vfs_fonts.js',
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'https://cdn.datatables.net/buttons/2.1.0/js/buttons.colVis.min.js'
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/css/buttons.bootstrap4.min.css',
+                    'location' => 'https://cdn.datatables.net/buttons/2.1.0/css/buttons.bootstrap4.min.css',
                 ],
             ],
         ],        
@@ -456,6 +449,26 @@ return [
                     'type' => 'js',
                     'asset' => false,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
+                ],
+            ],
+        ],
+        'TempusDominusBs4' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/moment/moment.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
                 ],
             ],
         ],

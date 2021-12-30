@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Presentacion extends Model
+{
+    use HasFactory;
+
+    //Se setean los campos "llenables" en masa
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'forma',
+        'presentacion'
+    ];
+
+    // Se definen las relaciones
+    public function productos(){
+        return $this->belongsToMany('\App\Models\Producto');
+    }
+}
