@@ -17,6 +17,7 @@ class CreateProveedorsTable extends Migration
             $table->id();
             $table->string('razonSocial');
             $table->string('cuit');
+            $table->string('contacto');
             $table->string('direccion');
             $table->string('url');
             $table->timestamps();
