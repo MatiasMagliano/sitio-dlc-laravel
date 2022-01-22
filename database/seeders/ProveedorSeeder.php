@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Proveedors;
+use App\Models\Proveedor;
 use Illuminate\Database\Seeder;
 
 class ProveedorSeeder extends Seeder
@@ -14,6 +14,6 @@ class ProveedorSeeder extends Seeder
      */
     public function run()
     {
-        Proveedors::factory()->times(30)->create();
+        Proveedor::factory()->times(30)->create();
     }
 }

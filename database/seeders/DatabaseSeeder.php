@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Proveedors;
+use App\Models\Proveedor;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use Illuminate\Database\Seeder;
@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         //$this->call(RolSeeder::class);
 
-        $this->call(Proveedors::class);
+        $this->call(Proveedor::class);
         $this->call(Presentacion::class);
         $this->call(Producto::class);
     }
