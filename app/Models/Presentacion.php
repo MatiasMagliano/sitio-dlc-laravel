@@ -15,8 +15,8 @@ class Presentacion extends Model
      */
     protected $fillable = [
         'forma',
-        'presentacion'
-        'hospitalario'
+        'presentacion',
+        'hospitalario',
         'trazabilidad'
     ];
 
