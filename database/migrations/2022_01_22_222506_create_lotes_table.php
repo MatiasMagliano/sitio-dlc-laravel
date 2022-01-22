@@ -1,10 +1,11 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AgregarColumnasARoles extends Migration
+class CreateLotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +14,11 @@ class AgregarColumnasARoles extends Migration
      */
     public function up()
     {
-        Schema::table('rols', function (Blueprint $table) {
-            $table->text('descripcion')->default(' ');
+        Schema::create('lotes', function (Blueprint $table) {
+            $table->id();
+            $table->string('identificador');
+            $table->dateTime('desde')->default(Carbon::now()->format('Y-m-d H:i:s'));
+            $table->dateTime('hasta');
         });
     }
 
@@ -25,8 +29,6 @@ class AgregarColumnasARoles extends Migration
      */
     public function down()
     {
-        Schema::table('rols', function (Blueprint $table) {
-            $table->dropColumn('descripcion');
-        });
+        Schema::dropIfExists('lotes');
     }
 }

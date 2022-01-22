@@ -14,10 +14,8 @@ class CreatePresentacionProductoTable extends Migration
     public function up()
     {
         Schema::create('presentacion_producto', function (Blueprint $table) {
-            $table->id();
             $table->foreignId('presentacion_id')->constrained()->onDelete('cascade');
             $table->foreignId('producto_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
         });
     }
 
