@@ -22,6 +22,6 @@ class Presentacion extends Model
 
     // Se definen las relaciones
     public function productos(){
-        return $this->belongsToMany('\App\Models\Producto');
+        return $this->belongsToMany(Presentacion::class);
     }
 }

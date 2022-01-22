@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Proveedor;
 use App\Models\Presentacion;
 use App\Models\Producto;
+use App\Models\Proveedor;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
