@@ -43,14 +43,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // esto es una función del tipo mutators, que permite hashear una contraseña
-    public function setPasswordAttribute($password){
-        $this->attributes['password'] = Hash::make($password);
-    }
-
     /**
      * esta función sirve para dejar claro en el modelo que tiene una relación una-a-muchos
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles(){

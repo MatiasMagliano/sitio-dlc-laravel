@@ -189,9 +189,9 @@ return [
 
     'use_route_url' => false,
     'dashboard_url' => 'home',
-    'logout_url' => 'logout',
+    'logout_url' => '/logout',
     'login_url' => 'login',
-    'register_url' => 'register',
+    'register_url' => '/register',
     'password_reset_url' => '/forgot-password',
     'password_email_url' => '/reset-password',
     'profile_url' => false,
@@ -242,28 +242,22 @@ return [
             'text' => 'search',
         ],
         [
-            'header' => 'sist-admin_settings',
-            'can'    => 'es-sist-admin'
-        ],
-        [
             'text'   => 'Administrar usuarios',
             'route'  => 'admin.users.index',
             'icon'   => 'fas fa-users-cog',
             'can'    => 'es-sist-admin'
         ],
         [
-            'header' => 'administration',
-            'can'    => 'es-administracion'
+            'text'  => 'products',
+            'route' => 'administracion.productos.index',
+            'icon'  => 'fas fa-shopping-cart',
+            'can'   => 'es-administracion',
         ],
         [
-            'text'    => 'products_menu',
+            'text'    => 'products_maintenance',
             'icon'    => 'fas fa-shopping-basket',
             'can'     => 'es-administracion',
             'submenu' => [
-                    [
-                        'text' => 'products',
-                        'url'  => '/administracion/productos',
-                    ],
                     [
                         'text' => 'products_presentation',
                         'url'  => '/administracion/presentacion'
@@ -273,6 +267,12 @@ return [
                         'url'  => '/administracion/proveedores'
                     ],
             ],
+        ],
+        [
+            'text' => 'quotations',
+            'icon' => 'fab fa-shopify',
+            'url'  => '/administracion/cotizaciones',
+            'can'  => 'es-administracion',
         ],
         ['header' => 'account_settings'],
         [
@@ -401,7 +401,7 @@ return [
                     'location' => 'https://cdn.datatables.net/buttons/2.1.0/css/buttons.bootstrap4.min.css',
                 ],
             ],
-        ],        
+        ],
         'Select2' => [
             'active' => false,
             'files' => [

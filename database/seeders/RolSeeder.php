@@ -21,5 +21,13 @@ class RolSeeder extends Seeder
         DB::table('rols')->insert([
             'nombre' => 'administracion'
         ]);
+
+        DB::table('rols')->insert([
+            'nombre' => 'gerencia'
+        ]);
+
+        DB::table('rols')->insert([
+            'nombre' => 'expedicion'
+        ]);
     }
 }

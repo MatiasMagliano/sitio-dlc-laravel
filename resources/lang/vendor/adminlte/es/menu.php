@@ -10,7 +10,8 @@ return [
     'change_password'               => 'Cambiar Contraseña',
     'multilevel'                    => 'Multi Nivel',
     'administration'                => 'ADMINISTRACIÓN',
-    'products_menu'                 => 'Productos',
+    'products_menu'                 => 'Stock',
+    'products_maintenance'          => 'Mantenimiento de stock',
     'products'                      => 'Productos en stock',
     'products_presentation'         => 'Presentación de productos',
     'suppliers'                     => 'Proveedores',
@@ -22,4 +23,5 @@ return [
     'important'                     => 'Importante',
     'warning'                       => 'Advertencia',
     'information'                   => 'Información',
+    'quotations'                    => 'Cotizaciones'
 ];
