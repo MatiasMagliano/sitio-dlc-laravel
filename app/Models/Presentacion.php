@@ -16,6 +16,8 @@ class Presentacion extends Model
     protected $fillable = [
         'forma',
         'presentacion'
+        'hospitalario'
+        'trazabilidad'
     ];
 
     // Se definen las relaciones
