@@ -16,9 +16,6 @@ class CreateProductoTable extends Migration
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
             $table->string('droga');
-            $table->string('lote');
-            $table->float('precio');
-            $table->date('vencimiento');
             $table->timestamps();
         });
     }

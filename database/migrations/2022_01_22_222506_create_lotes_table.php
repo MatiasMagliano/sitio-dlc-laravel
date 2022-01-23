@@ -17,6 +17,7 @@ class CreateLotesTable extends Migration
         Schema::create('lotes', function (Blueprint $table) {
             $table->id();
             $table->string('identificador');
+            $table->float('precioCompra');
             $table->dateTime('desde')->default(Carbon::now()->format('Y-m-d H:i:s'));
             $table->dateTime('hasta');
         });

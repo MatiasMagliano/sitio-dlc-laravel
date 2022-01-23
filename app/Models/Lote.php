@@ -22,6 +22,7 @@ class Lote extends Model
      * @var array
      */
     protected $hidden = [
+        'precioCompra',
         'desde',
         'hasta'
     ];
@@ -31,6 +32,7 @@ class Lote extends Model
      * @var array
      */
     protected $casts = [
+        'precioCompra' => 'float',
         'desde' => 'datetime:Y-m-d',
         'hasta' => 'datetime:Y-m-d'
     ];

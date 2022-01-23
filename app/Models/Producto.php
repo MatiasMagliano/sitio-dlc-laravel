@@ -17,20 +17,11 @@ class Producto extends Model
         'droga'
     ];
 
-    //Se resguardan los campos protegidos
-    /**
-     * @var array
-     */
-    protected $hidden = [
-        'precio',
-    ];
-
     //Se definen los campos casteables
     /**
      * @var array
      */
     protected $casts = [
-        'precio' => 'float',
         'vencimiento' => 'datetime:Y-m-d'
     ];
 
