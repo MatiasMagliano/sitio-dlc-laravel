@@ -45,8 +45,6 @@
                 <th>Presentación</th>
                 <th>Proveedor</th>
                 <th>Lote</th>
-                <th>Vencimiento</th>
-                <th>Precio compra</th>
                 <th>Acciones</th>
             </thead>
             <tbody>
@@ -80,14 +78,11 @@
                                 @endforeach
                             </ul>
                         </td>
-                        <td class="text-center" style="vertical-align: middle;">
-                            {{ $producto->lote }}
-                        </td>
-                        <td class="text-center" style="vertical-align: middle;">
-                            {{ $producto->vencimiento->format('d/m/Y') }}
-                        </td>
-                        <td class="text-center" style="vertical-align: middle;">
-                            {{ $producto->precio }}
+                        <td>
+                            @foreach ($producto->lotes as $lote)
+                                <strong>Lote:</strong> {{ $lote->identificador }} <strong>Precio:</strong> ${{ $lote->precioCompra }} <strong>Vencimiento:</strong> {{ $lote->hasta->format('d/m/Y') }}
+                                <hr>
+                            @endforeach
                         </td>
                         <td class="text-center" style="vertical-align: middle;" width="100px">
                             {{-- Botón modificar --}}
