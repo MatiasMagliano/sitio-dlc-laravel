@@ -258,14 +258,18 @@ return [
             'icon'    => 'fas fa-shopping-basket',
             'can'     => 'es-administracion',
             'submenu' => [
-                    [
-                        'text' => 'products_presentation',
-                        'url'  => '/administracion/presentacion'
-                    ],
-                    [
-                        'text' => 'suppliers',
-                        'url'  => '/administracion/proveedores'
-                    ],
+                [
+                    'text' => 'add_products_batches',
+                    'route'  => 'administracion.lotes.index'
+                ],
+                [
+                    'text' => 'products_presentation',
+                    'url'  => '/administracion/presentacion'
+                ],
+                [
+                    'text' => 'suppliers',
+                    'url'  => '/administracion/proveedores'
+                ],
             ],
         ],
         [

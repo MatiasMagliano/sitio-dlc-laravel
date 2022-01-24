@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Administracion;
 
-use App\Http\Requests\StoreRolRequest;
-use App\Http\Requests\UpdateRolRequest;
-use App\Models\Rol;
+use App\Http\Controllers\Controller;
+use App\Models\Producto;
+use Illuminate\Http\Request;
 
-class RolController extends Controller
+class TrazabilidadController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +31,10 @@ class RolController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreRolRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreRolRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -42,21 +42,22 @@ class RolController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Rol  $rol
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Rol $rol)
+    public function show($id)
     {
-        //
+        $producto = Producto::find($id);
+        return view('administracion.trazabilidad.show', compact('producto'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Rol  $rol
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Rol $rol)
+    public function edit($id)
     {
         //
     }
@@ -64,11 +65,11 @@ class RolController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateRolRequest  $request
-     * @param  \App\Models\Rol  $rol
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateRolRequest $request, Rol $rol)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -76,10 +77,10 @@ class RolController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Rol  $rol
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Rol $rol)
+    public function destroy($id)
     {
         //
     }

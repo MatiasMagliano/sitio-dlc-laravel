@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Administracion;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
 use App\Models\Presentacion;
@@ -19,7 +20,6 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        //$productos = Producto::with('presentaciones')->get();
         $productos = Producto::all();
         return view('administracion.productos.index', compact('productos'));
     }

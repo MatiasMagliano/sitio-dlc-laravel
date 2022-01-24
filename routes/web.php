@@ -2,11 +2,11 @@
 
 use App\Http\Controllers\Admin\RolController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\LoteController;
-use App\Http\Controllers\PresentacionController;
-use App\Http\Controllers\ProductoController;
-use App\Http\Controllers\ProveedorController;
-use App\Http\Controllers\TrazabilidadController;
+use App\Http\Controllers\Administracion\LoteController;
+use App\Http\Controllers\Administracion\PresentacionController;
+use App\Http\Controllers\Administracion\ProductoController;
+use App\Http\Controllers\Administracion\ProveedorController;
+use App\Http\Controllers\Administracion\TrazabilidadController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,5 +43,4 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::resource('/lotes', LoteController::class);
     Route::get('/buscar', [ProductoController::class, 'buscar']);
     Route::resource('/trazabilidad', TrazabilidadController::class);
-    Route::resource('/roles', RolController::class);
 });

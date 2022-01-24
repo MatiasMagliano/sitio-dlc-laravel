@@ -25,7 +25,7 @@ class RolController extends Controller
      */
     public function create()
     {
-        //
+        // ES UN MODAL, POR ELLOS NO SE MUESTRA ACÁ EL MÉTODO CREAR...
     }
 
     /**
