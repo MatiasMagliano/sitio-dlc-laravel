@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Producto;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,6 +17,7 @@ class CreateLotesTable extends Migration
     {
         Schema::create('lotes', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Producto::class)->constrained();
             $table->string('identificador');
             $table->float('precioCompra');
             $table->dateTime('desde')->default(Carbon::now()->format('Y-m-d H:i:s'));

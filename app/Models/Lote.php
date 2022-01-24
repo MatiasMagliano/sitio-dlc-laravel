@@ -9,12 +9,14 @@ class Lote extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     //Se setean los campos "llenables" en masa
     /**
      * @var array
      */
     protected $fillable = [
-        'identificador'
+        'identificador',
     ];
 
     //Se resguardan los campos protegidos
