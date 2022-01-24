@@ -21,7 +21,7 @@ class LoteFactory extends Factory
             'producto_id' => Producto::inRandomOrder()->first()->id,
             'desde' => Carbon::now()->format('Y-m-d H:i:s'),
             'hasta' => $this->faker->dateTimeBetween('+1 years', '+3 years'),
-            'cantidad' => $this->faker->randomNumber($min = 10, $max = 1000),
+            'cantidad' => $this->faker->randomNumber($nbDigits = 3)
         ];
     }
 }
