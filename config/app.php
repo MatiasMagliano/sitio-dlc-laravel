@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://dlc-laravel.ddns.net/'),
+    'url' => env('APP_URL', 'https://dlc-laravel.ddns.net/'),
 
     'asset_url' => env('ASSET_URL', null),
 

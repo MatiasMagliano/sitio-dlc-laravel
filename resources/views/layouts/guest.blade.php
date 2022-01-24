@@ -8,10 +8,10 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <link rel="stylesheet" href="http://dlc-laravel.ddns.net/vendor/fontawesome-free/css/all.min.css">
-        <link rel="stylesheet" href="http://dlc-laravel.ddns.net/vendor/adminlte/dist/css/adminlte.min.css">
+        <link rel="stylesheet" href="https://dlc-laravel.ddns.net/vendor/fontawesome-free/css/all.min.css">
+        <link rel="stylesheet" href="https://dlc-laravel.ddns.net/vendor/adminlte/dist/css/adminlte.min.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-        <link rel="shortcut icon" href="http://dlc-laravel.ddns.net/favicons/favicon.ico">
+        <link rel="shortcut icon" href="https://dlc-laravel.ddns.net/favicons/favicon.ico">
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
@@ -24,8 +24,8 @@
             {{ $slot }}
         </div>
 
-        <script src="http://dlc-laravel.ddns.net/vendor/jquery/jquery.min.js"></script>
-        <script src="http://dlc-laravel.ddns.net/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="https://dlc-laravel.ddns.net/vendor/jquery/jquery.min.js"></script>
+        <script src="https://dlc-laravel.ddns.net/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="{{ asset('js/jquery-countdown.js') }}"></script>
         <script src="{{ asset('js/jquery.backstretch.min.js') }}"></script>
         <script src="{{ asset('js/scripts.js') }}"></script>
