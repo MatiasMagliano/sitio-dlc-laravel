@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\Admin\RolController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\LoteController;
+use App\Http\Controllers\PresentacionController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\TrazabilidadController;
-use App\Models\Producto;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,7 +38,10 @@ Route::prefix('admin')->middleware(['auth', 'auth.esSistAdmin'])->name('admin.')
 
 Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->name('administracion.')->group(function () {
     Route::resource('/productos', ProductoController::class);
+    Route::resource('/proveedores', ProveedorController::class);
+    Route::resource('/presentaciones', PresentacionController::class);
+    Route::resource('/lotes', LoteController::class);
     Route::get('/buscar', [ProductoController::class, 'buscar']);
     Route::resource('/trazabilidad', TrazabilidadController::class);
-    //Route::resource('/roles', RolController::class);
+    Route::resource('/roles', RolController::class);
 });

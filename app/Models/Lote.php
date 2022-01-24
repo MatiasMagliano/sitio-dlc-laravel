@@ -26,7 +26,8 @@ class Lote extends Model
     protected $hidden = [
         'precioCompra',
         'desde',
-        'hasta'
+        'hasta',
+        'cantidad'
     ];
 
     //Se definen los campos casteables
@@ -36,7 +37,8 @@ class Lote extends Model
     protected $casts = [
         'precioCompra' => 'float',
         'desde' => 'datetime:Y-m-d',
-        'hasta' => 'datetime:Y-m-d'
+        'hasta' => 'datetime:Y-m-d',
+        'cantidad' => 'int'
     ];
 
     //Se definen las relaciones

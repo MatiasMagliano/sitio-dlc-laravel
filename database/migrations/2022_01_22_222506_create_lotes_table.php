@@ -22,6 +22,7 @@ class CreateLotesTable extends Migration
             $table->float('precioCompra');
             $table->dateTime('desde')->default(Carbon::now()->format('Y-m-d H:i:s'));
             $table->dateTime('hasta');
+            $table->integer('cantidad');
         });
     }
 

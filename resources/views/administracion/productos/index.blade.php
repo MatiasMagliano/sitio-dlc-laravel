@@ -44,48 +44,41 @@
                 <th>Droga</th>
                 <th>Presentación</th>
                 <th>Proveedor</th>
-                <th>Lote</th>
+                <th>Lotes vigentes</th>
                 <th>Acciones</th>
             </thead>
             <tbody>
                 @foreach ($productos as $producto)
                     <tr>
-                        <td>{{ $producto->droga }}</td>
+                        <td width="200px" style="vertical-align: middle;">
+                            {{ $producto->droga }}
+                        </td>
                         <td style="vertical-align: middle;">
-                            <ul>
-                                {{-- Aquí se hace referencia a la relación creada en el modelo --}}
-                                @foreach ($producto->presentaciones as $presentacion)
-                                    <li>
-                                        @if ($presentacion->hospitalario)
-                                            <strong>HOSP - </strong>
-                                        @endif
-                                        {{ $presentacion->forma }}, {{ $presentacion->presentacion }}
-                                        @if ($presentacion->trazabilidad)
-                                            {{--MÉTODO NO IMPLEMENTADO--}}
-                                            <form action="{{ route('administracion.trazabilidad.show', $producto->id) }}" method="get">
-                                                <strong>- CON TRAZABILIDAD</strong>
-                                                <x-adminlte-button type="submit" label="ver" class="btn-sm bg-gray-light" />
-                                            </form>
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </ul>
+                            {{-- Aquí se hace referencia a la relación creada en el modelo --}}
+                            @foreach ($producto->presentaciones as $presentacion)
+                                @if ($presentacion->hospitalario)
+                                    <strong>PRODUCTO HOSPITALARIO</strong>
+                                    <br>
+                                @endif
+                                {{ $presentacion->forma }}, {{ $presentacion->presentacion }}
+                                @if ($presentacion->trazabilidad)
+                                    {{--MÉTODO NO IMPLEMENTADO TODAVÍA--}}
+                                    <strong>- CON TRAZABILIDAD</strong> <a href="{{ route('administracion.trazabilidad.show', $producto->id) }}" class="btn-sm bg-gray" role="button">Ver</a>
+                                @endif
+                            @endforeach
                         </td>
                         <td>
-                            <ul>
-                                @foreach ($producto->proveedores as $proveedor)
-                                    <li>{{ $proveedor->razonSocial }}</li>
-                                @endforeach
-                            </ul>
+                            @foreach ($producto->proveedores as $proveedor)
+                                <a href="{{ route('administracion.proveedores.show', $proveedor->id) }}">{{ $proveedor->razonSocial }}</a><br>
+                            @endforeach
                         </td>
                         <td>
                             @foreach ($producto->lotes as $lote)
-                                <strong>Lote:</strong> {{ $lote->identificador }} <strong>Precio:</strong> ${{ $lote->precioCompra }} <strong>Vencimiento:</strong> {{ $lote->hasta->format('d/m/Y') }}
-                                <hr>
+                                <strong>Lote Nº:</strong> <a href="{{ route('administracion.lotes.show', $lote->id) }}">{{ $lote->identificador }}</a> | <strong>Vencimiento:</strong> {{ $lote->hasta->format('d/m/Y') }} <br>
                             @endforeach
                         </td>
                         <td class="text-center" style="vertical-align: middle;" width="100px">
-                            {{-- Botón modificar --}}
+                            {{-- Botón mostrar producto --}}
                             <a href="{{ route('administracion.productos.show', $producto->id) }}" role="button"
                                 class="btn btn-sm btn-default btn-shw-hover mx-1 shadow">
                                 <i class="fas fa-lg fa-fw fa-eye"></i></a>
