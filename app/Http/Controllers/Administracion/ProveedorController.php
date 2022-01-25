@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class ProveedorController extends Controller
 {
+    public function index()
+    {
+        $proveedores = Proveedor::all();
+        return view('administracion.proveedores.index', compact('proveedores'));
+    }
     public function show($id)
     {
         $proveedor = Proveedor::find($id);
