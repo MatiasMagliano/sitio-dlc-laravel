@@ -17,18 +17,22 @@ class Lote extends Model
      */
     protected $fillable = [
         'identificador',
-    ];
-
-    //Se resguardan los campos protegidos
-    /**
-     * @var array
-     */
-    protected $hidden = [
         'precioCompra',
         'desde',
         'hasta',
         'cantidad'
     ];
+
+    //Se resguardan los campos protegidos (ojo que cuando se toman datos por ajax, los campos hidden no se devuelven...)
+    /**
+     * @var array
+     */
+    /*protected $hidden = [
+        'precioCompra',
+        'desde',
+        'hasta',
+        'cantidad'
+    ];*/
 
     //Se definen los campos casteables
     /**

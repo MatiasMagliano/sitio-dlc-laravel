@@ -10,7 +10,11 @@
             border-bottom: 1px solid  #111;
         }
 
-        #datosLote {
+        #datosLoteActivo {
+            height: 50vh;
+        }
+
+        #datosLoteInactivo {
             display: none;
         }
     </style>
@@ -33,9 +37,9 @@
 {{-- aquí va contenido --}}
 @section('content')
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <x-adminlte-card title="Seleccione un producto" icon="fas fa-search">
-                <table id="tabla1" class="" style="width: 100%">
+                <table id="tabla1" class="tabla1" style="width: 100%">
                     <thead>
                         <th>Droga</th>
                     </thead>
@@ -43,7 +47,7 @@
                         @foreach ($productos as $producto)
                             <tr>
                                 <td>
-                                    <input type="text" id="id_producto" id_producto="{{ $producto->id }}" hidden>
+                                    <input type="text" id="idProducto" class="idProducto" idProducto="{{ $producto->id }}" hidden>
                                     {{ $producto->droga }}
                                 </td>
                             </tr>
@@ -52,8 +56,16 @@
                 </table>
             </x-adminlte-card>
         </div>
-        <div class="col-md-4" id="datosLote">
+        <div class="col-md-6" id="datosLote">
             <x-adminlte-card title="Lotes vigentes" icon="fas fa-plus">
+                <table id="tabla2" class="display nowrap" style="width: 100%">
+                    <thead>
+                        <th>Nº</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Vencimiento</th>
+                    </thead>
+                </table>
             </x-adminlte-card>
         </div>
     </div>
@@ -63,19 +75,44 @@
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
         $(document).ready(function() {
-            var tabla = $('#tabla1').DataTable({
+            var tabla1 = $('#tabla1').DataTable({
                 responsive: true,
                 dom: 'Pfrtip',
 
                 "scrollY": "50vh",
                 "scrollCollapse": true,
-                "paging": false
+                "paging": false,
+                "select": true
             });
 
-            $('#tabla1 tbody').on('click', 'tr', function(){
-                var dato = tabla.row( this ).data();
-                $('#id_producto').val(dato);
-                alert( 'You clicked on '+dato[0]+'\'s row' );
+            $('#tabla1 tbody').on('click', 'td', function(){
+                var idProducto = tabla1.row(this).data();
+                alert( 'El id del producto es: '+idProducto[0] );
+                var datos = {idProducto: idProducto};
+
+                // Se genera la segunda tabla con la característica destroy, para poder recargarla con los nuevos datos
+                $('#tabla2').DataTable({
+                    "processing": true,
+                    "order": [[0, "desc"]],
+                    "paging": false,
+                    "info": false,
+                    "searching": false,
+                    "ajax": {
+                        "data": datos,
+                        "dataSrc": "",
+                        "url": "{{ route('administracion.lotes.buscarLotes') }}",
+                        "type": "GET",
+                    },
+                    "columns": [
+                        {data: 'identificador', name: 'Nº'},
+                        {data: 'precioCompra', name: 'Precio'},
+                        {data: 'cantidad', name: 'Cantidad'},
+                        {data: 'hasta', name: 'Vencimiento'}
+                    ],
+                    "destroy": true
+                });
+
+                //alert( 'El id del producto es: '+idProducto );
             });
         });
     </script>

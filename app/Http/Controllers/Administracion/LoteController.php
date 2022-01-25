@@ -26,4 +26,13 @@ class LoteController extends Controller
         $producto = Producto::find($lote->producto_id);
         return view('administracion.lotes.show', compact('lote', 'producto'));
     }
+
+    public function buscarLotes(Request $request)
+    {
+        if($request->ajax()){
+            $where = array('producto_id' => $request->idProducto);
+	        $lotes = Lote::where($where)->get();
+            return Response()->json($lotes);
+        }
+    }
 }
