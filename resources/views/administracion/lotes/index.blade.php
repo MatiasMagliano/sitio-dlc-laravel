@@ -41,15 +41,14 @@
             <x-adminlte-card title="Seleccione un producto" icon="fas fa-search">
                 <table id="tabla1" class="tabla1" style="width: 100%">
                     <thead>
+                        <th>ID</th>
                         <th>Droga</th>
                     </thead>
                     <tbody>
                         @foreach ($productos as $producto)
                             <tr>
-                                <td>
-                                    <input type="text" id="idProducto" class="idProducto" idProducto="{{ $producto->id }}" hidden>
-                                    {{ $producto->droga }}
-                                </td>
+                                <td>{{ $producto->id }}</td>
+                                <td>{{ $producto->droga }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -57,7 +56,7 @@
             </x-adminlte-card>
         </div>
         <div class="col-md-6" id="datosLote">
-            <x-adminlte-card title="Lotes vigentes" icon="fas fa-plus">
+            <x-adminlte-card title="Lotes vigentes" id="lotesVigentes" icon="fas fa-plus" disabled>
                 <table id="tabla2" class="display nowrap" style="width: 100%">
                     <thead>
                         <th>Nº</th>
@@ -66,6 +65,26 @@
                         <th>Vencimiento</th>
                     </thead>
                 </table>
+                <hr>
+                <x-adminlte-card title="Agregar nuevo lote">
+                    <form action="{{ route('administracion.lotes.store') }}" method="post">
+                        @csrf
+
+                        {{-- Campo identificador de lote --}}
+                        <label for="droga-input" class="label">{{ __('formularios.batch_identification') }}</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="droga-input" id="droga-input"
+                                class="form-control @error('droga-input') is-invalid @enderror"
+                                value="{{ old('droga-input') }}@isset($editproducto){{ $editproducto->droga }}@endisset">
+
+                            @error('droga-input')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </form>
+                </x-adminlte-card>
             </x-adminlte-card>
         </div>
     </div>
@@ -76,24 +95,27 @@
     <script>
         $(document).ready(function() {
             var tabla1 = $('#tabla1').DataTable({
-                responsive: true,
-                dom: 'Pfrtip',
-
+                "responsive": true,
+                "dom": 'Pfrtip',
                 "scrollY": "50vh",
                 "scrollCollapse": true,
                 "paging": false,
-                "select": true
+                "select": true,
+                "columns":[
+                    {data: 'ID', visible: false, searchable: false},
+                    {data: 'Droga'}
+                ]
             });
 
-            $('#tabla1 tbody').on('click', 'td', function(){
-                var idProducto = tabla1.row(this).data();
-                alert( 'El id del producto es: '+idProducto[0] );
+            $('#tabla1 tbody').on('click', 'tr', function(){
+                $('.overlay').remove();
+                var idProducto = tabla1.row(this).data().ID;
                 var datos = {idProducto: idProducto};
 
                 // Se genera la segunda tabla con la característica destroy, para poder recargarla con los nuevos datos
                 $('#tabla2').DataTable({
                     "processing": true,
-                    "order": [[0, "desc"]],
+                    "order": [[3, "desc"]],
                     "paging": false,
                     "info": false,
                     "searching": false,
