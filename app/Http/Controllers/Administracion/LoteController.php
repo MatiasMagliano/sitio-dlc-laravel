@@ -17,7 +17,12 @@ class LoteController extends Controller
     public function index()
     {
         $productos = Producto::all();
-        return view('administracion.lotes.index', compact('productos'));
+        $config = [
+            'format' => 'DD/MM/YYYY',
+            'dayViewHeaderFormat' => 'MMM YYYY',
+            'minDate' => "js:moment().startOf('month')",
+        ];
+        return view('administracion.lotes.index', compact('productos', 'config'));
     }
 
     public function show($id)
@@ -25,6 +30,10 @@ class LoteController extends Controller
         $lote = Lote::find($id);
         $producto = Producto::find($lote->producto_id);
         return view('administracion.lotes.show', compact('lote', 'producto'));
+    }
+
+    public function store(Request $request){
+
     }
 
     public function buscarLotes(Request $request)

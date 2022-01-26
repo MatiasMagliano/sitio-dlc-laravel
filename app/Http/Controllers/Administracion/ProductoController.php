@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
 use App\Models\Presentacion;
 use App\Models\Producto;
@@ -47,7 +46,7 @@ class ProductoController extends Controller
      * @param  \App\Http\Requests\StoreProductosRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreProductoRequest $request)
+    public function store(Request $request)
     {
         //
     }
