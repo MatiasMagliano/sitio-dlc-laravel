@@ -260,7 +260,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'add_products_batches',
-                    'route'  => 'administracion.lotes.index'
+                    'route'  => 'administracion.lotes.index',
                 ],
                 [
                     'text' => 'products_presentation',
@@ -398,6 +398,11 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => 'https://cdn.datatables.net/buttons/2.1.0/js/buttons.colVis.min.js'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'https://cdn.datatables.net/plug-ins/1.10.19/dataRender/datetime.js'
                 ],
                 [
                     'type' => 'css',

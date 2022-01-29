@@ -51,6 +51,7 @@
                 @foreach ($productos as $producto)
                     <tr>
                         <td width="200px" style="vertical-align: middle;">
+                            {{--<a href="{{ route('administracion.lotes.edit', $producto->id) }}">{{ $producto->droga }}</a>--}}
                             {{ $producto->droga }}
                         </td>
                         <td style="vertical-align: middle;">

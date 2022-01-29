@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administracion;
 use App\Http\Controllers\Controller;
 use App\Models\Lote;
 use App\Models\Producto;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LoteController extends Controller
@@ -22,6 +23,7 @@ class LoteController extends Controller
             'dayViewHeaderFormat' => 'MMM YYYY',
             'minDate' => "js:moment().startOf('month')",
         ];
+
         return view('administracion.lotes.index', compact('productos', 'config'));
     }
 
@@ -32,8 +34,28 @@ class LoteController extends Controller
         return view('administracion.lotes.show', compact('lote', 'producto'));
     }
 
-    public function store(Request $request){
+    public function edit($id)
+    {
 
+    }
+
+    /**
+     * FUNCIÓN DECLARADA COMO AJAX
+     */
+    public function store(Request $request){
+        $lote = new Lote;
+
+        $lote->identificador = $request->identificador;
+        $lote->precioCompra = $request->precio;
+        $lote->cantidad = $request->cantidad;
+        $lote->desde = Carbon::now()->format('Y-m-d H:i:s');
+        $lote->hasta = Carbon::createFromFormat('d/m/Y', $request->vencimiento);
+        $lote->producto_id = $request->producto_id;
+
+        $lote->save();
+
+        $request->session()->flash('success', 'El lote se ha creado con éxito.');
+        return response()->json(['success' => true]);
     }
 
     public function buscarLotes(Request $request)
