@@ -264,7 +264,7 @@ return [
                 ],
                 [
                     'text' => 'products_presentation',
-                    'url'  => '/administracion/presentacion'
+                    'route'  => 'administracion.presentaciones.index'
                 ],
                 [
                     'text' => 'suppliers',
