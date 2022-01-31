@@ -86,6 +86,7 @@
     <x-adminlte-card>
         <table id="tabla2" class="table table-bordered display nowrap" style="width: 100%;">
             <thead>
+                <th>Producto</th>
                 <th>Forma</th>
                 <th>Presentación</th>
                 <th>Hospitalario</th>
@@ -98,33 +99,44 @@
             </thead>
             <tbody>
                 @foreach ($presentaciones as $presentacion)
-                    <tr>
-                        <td width="200px" style="vertical-align: middle;">
-                            {{ $presentacion->forma}}
-                        </td>
-                        <td width="200px" style="vertical-align: middle;">
-                            {{ $presentacion->presentacion }}
-                        </td>
-                        <td width="200px" style="vertical-align: middle;">
-                            {{ $presentacion->hospitalario }}
-                        </td>
-                        <td width="200px" style="vertical-align: middle;">
-                            {{ $presentacion->trazabilidad }}
-                        </td>
-                        <!--
-                        <td width="200px" style="vertical-align: middle;">
-                            {{ $presentacion->created_at }}
-                        </td>
-                        <td width="200px" style="vertical-align: middle;">
-                            {{ $presentacion->updated_at }}
-                        </td>
-                        -->
-                        <td class="text-center" style="vertical-align: middle;" width="100px">
-                        <a href="{{ route('administracion.presentaciones.edit', $presentacion->id) }}" role="button"
-                            class="btn btn-sm btn-default btn-edt-hover mx-1 shadow">
-                            <i class="fas fa-lg fa-fw fa-cog"></i></a>
-                        </td>
-                    </tr>
+                    @foreach ($presentacion->productos as $producto)
+                        <tr>
+                            <td width="200px" style="vertical-align: middle;">
+                                {{-- Aquí se hace referencia a la relación creada en el modelo --}}
+                                {{ $producto->droga}}  
+                            </td>
+                            <td width="200px" style="vertical-align: middle;">
+                                {{ $presentacion->forma}}
+                            </td>
+                            <td width="200px" style="vertical-align: middle;">
+                                {{ $presentacion->presentacion }}
+                            </td>
+                            <td width="200px" style="vertical-align: middle;">
+                                @if ($presentacion->hospitalario)
+                                    PRODUCTO HOSPITALARIO
+                                @endif
+                            </td>
+                            <td width="200px" style="vertical-align: middle;">
+                                @if ($presentacion->trazabilidad)
+                                    CON TRAZABILIDAD
+                                @endif
+                            </td>
+                            <!--
+                            <td width="200px" style="vertical-align: middle;">
+                                {{ $presentacion->created_at }}
+                            </td>
+                            <td width="200px" style="vertical-align: middle;">
+                                {{ $presentacion->updated_at }}
+                            </td>
+                            
+                            <td class="text-center" style="vertical-align: middle;" width="100px">
+                            <a href="{{ route('administracion.presentaciones.edit', $presentacion->id) }}" role="button"
+                                class="btn btn-sm btn-default btn-edt-hover mx-1 shadow">
+                                <i class="fas fa-lg fa-fw fa-cog"></i></a>
+                            </td>
+                            -->
+                        </tr>
+                    @endforeach
                 @endforeach
             </tbody>
         </table>

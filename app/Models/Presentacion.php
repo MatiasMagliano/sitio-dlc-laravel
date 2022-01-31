@@ -14,7 +14,7 @@ class Presentacion extends Model
      * @var array
      */
     protected $fillable = [
-        'id'/*,
+        'id'/*
         'forma',
         'presentacion',
         'hospitalario',
@@ -22,7 +22,7 @@ class Presentacion extends Model
     ];
 
     // Se definen las relaciones
-    public function presentacion(){
+    public function productos(){
         return $this->belongsToMany(Producto::class);
     }
 }
