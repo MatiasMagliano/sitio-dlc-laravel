@@ -9,14 +9,6 @@
             border-top: none;
             border-bottom: 1px solid  #111;
         }
-
-        .selectorProducto{
-            height: 100%;
-        }
-
-        .lotesVigentes{
-            height: 100%;
-        }
     </style>
 @endsection
 
@@ -37,8 +29,8 @@
 {{-- aquí va contenido --}}
 @section('content')
     <div class="row">
-        <div class="col-md-6">
-            <x-adminlte-card title="Seleccionar producto" icon="fas fa-search" class="selectorProducto">
+        <div class="col-md-6 d-flex">
+            <x-adminlte-card title="Seleccionar producto" icon="fas fa-search" class="flex-fill">
                 <table id="tabla1" class="tabla1" style="width: 100%; cursor:pointer">
                     <thead>
                         <th>ID</th>
@@ -55,8 +47,8 @@
                 </table>
             </x-adminlte-card>
         </div>
-        <div class="col-md-6">
-            <div class="card" id="lotesVigentes" class="lotesVigentes">
+        <div class="col-md-6 d-flex">
+            <div class="card flex-fill" id="lotesVigentes">
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-plus mr-2"></i>
@@ -74,9 +66,9 @@
                     </table>
                     <hr>
 
-                    <x-adminlte-card title="Agregar nuevo lote" id="agregarLote" theme="lime">
+                    <x-adminlte-card title="Agregar nuevo lote" id="agregarLote" theme="lime" class="flex-fill">
 
-                        {{--FORMULARIO TIPO JQUERY VALIDATE--}}
+                        {{--FORMULARIO TIPO JQUERY.VALIDATE--}}
                         <form action="javascript:void(0)" method="post" id="formAgregarLote">
                             @csrf
 
@@ -122,7 +114,7 @@
                                 </div>
                             </div>
 
-                            {{-- Register button --}}
+                            {{-- Guardar lote nuevo --}}
                             <div class="d-flex justify-content-end">
                                 <x-adminlte-button type="submit" theme="success" label="Guardar" id="guardarCliente"/>
                             </div>
@@ -197,8 +189,6 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             }
                         });
-                        $('#submit').html('Please Wait...');
-                        $("#submit"). attr("disabled", true);
 
                         $.ajax({
                             url: "{{ route('administracion.lotes.store') }}",
@@ -208,10 +198,11 @@
                                 $('#submit').html('Submit');
                                 $("#submit").attr("disabled", false);
 
+                                var respuesta = JSON.parse(response.responseText);
                                 //sweet alert
                                 Swal.fire({
                                     icon: 'success',
-                                    text: 'El lote se ha creado con éxito',
+                                    text: respuesta.mensaje,
                                     showConfirmButton: false,
                                     timer: 2500
                                 });
@@ -221,7 +212,7 @@
                                 var datos = {idProducto: idProducto};
                                 $('#tabla2').DataTable({
                                     "processing": true,
-                                    "order": [[3, "desc"]],
+                                    "order": [[3, "asc"]],
                                     "paging": false,
                                     "info": false,
                                     "searching": false,
@@ -247,7 +238,18 @@
                                 });
 
                                 document.getElementById("formAgregarLote").reset();
-                            }//fin del ajax.success
+                            },//fin del ajax.success
+                            error: function( response ) {
+                                $("#submit").attr("disabled", true);
+                                var respuesta = JSON.parse(response.responseText);
+                                //sweet alert
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: respuesta.errors.identificador,
+                                    showConfirmButton: true,
+                                });
+                                document.getElementById("formAgregarLote").reset();
+                            }
                         });
                     }
                 });
@@ -278,8 +280,6 @@
                 var idProducto = tabla1.row(this).data().ID;
                 var droga = tabla1.row(this).data().Droga;
                 var titulo = $('#lotesVigentes .card-header h3').text();
-                alert(titulo+ ' ' +droga);
-                $('#lotesVigentes').attr('title', droga);
                 $('#producto_id').val(idProducto);
                 var datos = {idProducto: idProducto};
 

@@ -43,6 +43,11 @@ class LoteController extends Controller
      * FUNCIÓN DECLARADA COMO AJAX
      */
     public function store(Request $request){
+        // No se puede agregar un nuevo lote con el mismo identificador
+        $isValid = $request->validate([
+            'identificador' => 'required|unique:lotes'
+        ]);
+
         $lote = new Lote;
 
         $lote->identificador = $request->identificador;
@@ -54,8 +59,7 @@ class LoteController extends Controller
 
         $lote->save();
 
-        $request->session()->flash('success', 'El lote se ha creado con éxito.');
-        return response()->json(['success' => true]);
+        return response()->json('');
     }
 
     public function buscarLotes(Request $request)
