@@ -14,14 +14,15 @@ class Presentacion extends Model
      * @var array
      */
     protected $fillable = [
+        'id'/*,
         'forma',
         'presentacion',
         'hospitalario',
-        'trazabilidad'
+        'trazabilidad'*/
     ];
 
     // Se definen las relaciones
-    public function productos(){
-        return $this->belongsToMany(Presentacion::class);
+    public function presentacion(){
+        return $this->belongsToMany(Producto::class);
     }
 }
