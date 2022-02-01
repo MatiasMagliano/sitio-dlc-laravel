@@ -1,6 +1,11 @@
 @extends('adminlte::page')
 @section('css')
     <style>
+        .dataTable > thead > tr > th[class*="sort"]:before,
+        .dataTable > thead > tr > th[class*="sort"]:after {
+            content: "" !important;
+        }
+
         tabla1.dataTable thead th {
             border-bottom: none;
         }
@@ -17,7 +22,7 @@
 @section('content_header')
     <div class="row">
         <div class="col-xl-8">
-            <h1>Administrar/agregar lotes a productos</h1>
+            <h1>Administrar lotes a productos</h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
             <a href="{{ route('administracion.productos.index') }}" role="button"
@@ -33,8 +38,8 @@
             <x-adminlte-card title="Seleccionar producto" icon="fas fa-search" class="flex-fill">
                 <table id="tabla1" class="tabla1" style="width: 100%; cursor:pointer">
                     <thead>
-                        <th>ID</th>
-                        <th>Droga</th>
+                        <th></th>
+                        <th></th>
                     </thead>
                     <tbody>
                         @foreach ($productos as $producto)
@@ -50,18 +55,20 @@
         <div class="col-md-6 d-flex">
             <div class="card flex-fill" id="lotesVigentes">
                 <div class="card-header">
-                    <h3 class="card-title">
+                    <h3 id="tituloLotesVigentes" class="card-title">
                         <i class="fas fa-plus mr-2"></i>
                         Lotes vigentes
                     </h3>
                 </div>
                 <div class="card-body">
-                    <table id="tabla2" class="display nowrap" style="width: 100%">
+                    <table id="tabla2" class="display nowrap" style="width: 100%; cursor:pointer">
                         <thead>
+                            <th>ID</th>
                             <th>Nº</th>
                             <th>Precio</th>
                             <th>Cantidad</th>
                             <th>Vencimiento</th>
+                            <th></th>
                         </thead>
                     </table>
                     <hr>
@@ -104,7 +111,7 @@
                                 <div class="col-md-4 form-group mb-3">
                                     @section('plugins.TempusDominusBs4', true)
                                     <x-adminlte-input-date name="vencimiento" id="vencimiento" label="{{ __('formularios.batch_expiration') }}" igroup-size="md"
-                                        :config="$config" placeholder="{{ __('formularios.date_placeholder') }}">
+                                        :config="$config" placeholder="{{ __('formularios.date_placeholder') }}" autocomplete="off">
                                         <x-slot name="appendSlot">
                                             <div class="input-group-text bg-dark">
                                                 <i class="fas fa-calendar"></i>
@@ -131,9 +138,153 @@
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/localization/methods_pt.js"></script>
-    <script src="https://cdn.datatables.net/plug-ins/1.11.4/api/sum().js"></script>
     <script>
         $(document).ready(function() {
+            // VARIABLES LOCALES
+            var tabla2;
+
+            // FUNCIÓN QUE GENERA LA TABLA DE LOS LOTES
+            function getLotes(idProducto){
+                var datos = {idProducto: idProducto};
+
+                $.ajax({
+                    url: "{{ route('administracion.lotes.buscarLotes') }}",
+                    type: "GET",
+                    data: datos,
+                }).done( function(resultado) {
+                    //console.log(typeof resultado);
+                    //resultado = JSON.parse(resultado);
+                    tabla2.clear();
+                    tabla2.rows.add(resultado).draw();
+                });
+            }
+
+            tabla2 = $('#tabla2').DataTable({
+                "processing": true,
+                "order": [[4, "asc"]],
+                "paging": false,
+                "info": false,
+                "searching": false,
+                "columns": [
+                    {
+                        targets: [0],
+                        visible: false,
+                        data: 'id',
+                        searchable: false
+                    },
+                    {
+                        targets: [1],
+                        data: 'identificador',
+                    },
+                    {
+                        targets: [2],
+                        data: 'precioCompra'
+                    },
+                    {
+                        targets: [3],
+                        data: 'cantidad'
+                    },
+                    {
+                        targets: [4],
+                        data: 'hasta'
+                    }
+                ],
+                "columnDefs": [
+                    {
+                        targets: [4],
+                        render: $.fn.dataTable.render.moment('DD/MM/YYYY'),
+                    },
+                    {
+                        targets: [5],
+                        data: null,
+                        defaultContent: "<button id='btnBorrar' class='btn-sm btn-primary'>X</button>"
+                    }
+                ],
+            });
+
+            tabla2.row.add({
+                id: '*',
+                identificador: '*',
+                precioCompra: '*',
+                cantidad: '*',
+                hasta: '*',
+            }).draw();
+
+            // ELIMINACIÓN DEL LOTE
+            $('#tabla2 tbody').on('click', 'button', function (e) {
+                debugger;
+                if(!confirm("¿Está seguro de borrar este lote?")) {
+                    return false;
+                }
+
+                var idLote = tabla2.row( $(this).parents('tr') ).data().id;
+                var datos = {
+                    id:     idLote,
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    method: 'DELETE',
+                };
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    url: "http://localhost/sitio-dlc-laravel/public/administracion/lotes/"+idLote,
+                    type: "DELETE",
+                    data: datos,
+                    success: function (response){
+                        //sweet alert
+                        Swal.fire({
+                            icon: 'success',
+                            text: response.mensaje,
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+
+                        // Se actualiza la segunda tabla
+                        var idProducto = $('input[type=hidden][name=producto_id]').val();
+                        getLotes(idProducto);
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
+            });
+
+            //BOTON ESCANEAR - SIN IMPLEMENTAR
+            $('#escanear').on('click', function(){
+                alert("Escanee el código de barras");
+            });
+
+            // DEFINICION DE tabla1
+            var tabla1 = $('#tabla1').DataTable({
+                "responsive": true,
+                "dom": 'Pfrtip',
+                "scrollY": "50vh",
+                "scrollCollapse": true,
+                "paging": false,
+                "select": true,
+                "columns":[
+                    {data: 'ID', visible: false, searchable: false},
+                    {data: 'Droga'}
+                ]
+            });
+
+            // CAPTURA DEL CLICK EN EL DATATABLE tabla1
+            $('#tabla1 tbody').on('click', 'tr', function(){
+                $('#lotesVigentes .overlay').remove();
+                var idProducto = tabla1.row(this).data().ID;
+                var droga = tabla1.row(this).data().Droga;
+                $('#tituloLotesVigentes').text('Lotes vigentes para '+ droga);
+                $('#producto_id').val(idProducto);
+
+                // Se genera la segunda tabla con la característica destroy, para poder recargarla con los nuevos datos
+                getLotes(idProducto);
+
+            });
+
             //VALIDACIÓN DEL FORMULARIO POR JQUERY
             if($('#formAgregarLote').length > 0){
                 $('#formAgregarLote').validate({
@@ -198,45 +349,19 @@
                                 $('#submit').html('Submit');
                                 $("#submit").attr("disabled", false);
 
-                                var respuesta = JSON.parse(response.responseText);
                                 //sweet alert
                                 Swal.fire({
                                     icon: 'success',
-                                    text: respuesta.mensaje,
+                                    text: response.mensaje,//respuesta.mensaje,
                                     showConfirmButton: false,
                                     timer: 2500
                                 });
 
                                 // Se actualiza la segunda tabla con la característica destroy, para poder recargarla con los nuevos datos
                                 var idProducto = $('input[type=hidden][name=producto_id]').val();
-                                var datos = {idProducto: idProducto};
-                                $('#tabla2').DataTable({
-                                    "processing": true,
-                                    "order": [[3, "asc"]],
-                                    "paging": false,
-                                    "info": false,
-                                    "searching": false,
-                                    "ajax": {
-                                        "data": datos,
-                                        "dataSrc": "",
-                                        "url": "{{ route('administracion.lotes.buscarLotes') }}",
-                                        "type": "GET",
-                                    },
-                                    "columns": [
-                                        {data: 'identificador', name: 'Nº'},
-                                        {data: 'precioCompra', name: 'Precio'},
-                                        {data: 'cantidad', name: 'Cantidad'},
-                                        {data: 'hasta', name: 'Vencimiento'}
-                                    ],
-                                    "columnDefs": [
-                                        {
-                                            targets: [3],
-                                            render: $.fn.dataTable.render.moment('DD/MM/YYYY'),
-                                        },
-                                    ],
-                                    "destroy": true
-                                });
+                                getLotes(idProducto);
 
+                                // se resetea el formulario de AGREGAR LOTES
                                 document.getElementById("formAgregarLote").reset();
                             },//fin del ajax.success
                             error: function( response ) {
@@ -248,71 +373,18 @@
                                     text: respuesta.errors.identificador,
                                     showConfirmButton: true,
                                 });
+
+                                // Se actualiza la segunda tabla con la característica destroy, para poder recargarla con los nuevos datos
+                                var idProducto = $('input[type=hidden][name=producto_id]').val();
+                                getLotes(idProducto);
+
+                                // se resetea el formulario de AGREGAR LOTES
                                 document.getElementById("formAgregarLote").reset();
                             }
                         });
                     }
                 });
             }
-
-            //BOTON ESCANEAR - SIN IMPLEMENTAR
-            $('#escanear').on('click', function(){
-                alert("Escanee el código de barras");
-            });
-
-            //DATATABLES
-            var tabla1 = $('#tabla1').DataTable({
-                "responsive": true,
-                "dom": 'Pfrtip',
-                "scrollY": "50vh",
-                "scrollCollapse": true,
-                "paging": false,
-                "select": true,
-                "columns":[
-                    {data: 'ID', visible: false, searchable: false},
-                    {data: 'Droga'}
-                ]
-            });
-
-            // CAPTURA DEL CLICK EN EL DATATABLE ANTERIOR
-            $('#tabla1 tbody').on('click', 'tr', function(){
-                $('#lotesVigentes .overlay').remove();
-                var idProducto = tabla1.row(this).data().ID;
-                var droga = tabla1.row(this).data().Droga;
-                var titulo = $('#lotesVigentes .card-header h3').text();
-                $('#producto_id').val(idProducto);
-                var datos = {idProducto: idProducto};
-
-                // Se genera la segunda tabla con la característica destroy, para poder recargarla con los nuevos datos
-                $('#tabla2').DataTable({
-                    "processing": true,
-                    "order": [[3, "asc"]],
-                    "paging": false,
-                    "info": false,
-                    "searching": false,
-                    "ajax": {
-                        "data": datos,
-                        "dataSrc": "",
-                        "url": "{{ route('administracion.lotes.buscarLotes') }}",
-                        "type": "GET",
-                    },
-                    "columns": [
-                        {data: 'identificador', name: 'Nº'},
-                        {data: 'precioCompra', name: 'Precio'},
-                        {data: 'cantidad', name: 'Cantidad'},
-                        {data: 'hasta', name: 'Vencimiento'}
-                    ],
-                    "columnDefs": [
-                        {
-                            targets: [3],
-                            render: $.fn.dataTable.render.moment('DD/MM/YYYY'),
-                        }
-                    ],
-                    "destroy": true
-                });
-
-                //alert( 'El id del producto es: '+idProducto );
-            });
         });
     </script>
 @endsection

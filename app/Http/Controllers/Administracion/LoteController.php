@@ -45,9 +45,11 @@ class LoteController extends Controller
     public function store(Request $request){
         // No se puede agregar un nuevo lote con el mismo identificador
         $isValid = $request->validate([
-            'identificador' => 'required|unique:lotes'
+            'identificador' => 'required|unique:lotes',
+            //HACER VALIDACION DE LA FECHA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ]);
 
+        // los datos están validados y listos para guardarse
         $lote = new Lote;
 
         $lote->identificador = $request->identificador;
@@ -59,7 +61,7 @@ class LoteController extends Controller
 
         $lote->save();
 
-        return response()->json('');
+        return response()->json(['mensaje'=> 'El lote fue agregado con éxito']);
     }
 
     public function buscarLotes(Request $request)
@@ -69,5 +71,13 @@ class LoteController extends Controller
 	        $lotes = Lote::where($where)->get();
             return Response()->json($lotes);
         }
+    }
+
+    public function destroy($id)
+    {
+        $lote = Lote::findOrFail($id);
+        $lote->delete();
+
+        return response()->json(['mensaje' => 'El lote se eliminó correctamente']);
     }
 }

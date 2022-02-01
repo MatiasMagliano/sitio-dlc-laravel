@@ -38,8 +38,11 @@ Route::prefix('admin')->middleware(['auth', 'auth.esSistAdmin'])->name('admin.')
 });
 
 Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->name('administracion.')->group(function () {
+    // rutas ajax GET
     Route::get('/buscar', [ProductoController::class, 'buscar']);
     Route::get('/lotes/buscarLotes', [LoteController::class, 'buscarLotes'])->name('lotes.buscarLotes');
+
+    // rutas resource regulares
     Route::resource('/productos', ProductoController::class);
     Route::resource('/proveedores', ProveedorController::class);
     Route::resource('/presentaciones', PresentacionController::class);
