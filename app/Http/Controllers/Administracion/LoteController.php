@@ -7,6 +7,7 @@ use App\Models\Lote;
 use App\Models\Producto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LoteController extends Controller
 {
@@ -17,14 +18,14 @@ class LoteController extends Controller
      */
     public function index()
     {
-        $productos = Producto::all();
+        $nombreProductos = DB::table('productos')->select('id', 'droga')->get();
         $config = [
             'format' => 'DD/MM/YYYY',
             'dayViewHeaderFormat' => 'MMM YYYY',
             'minDate' => "js:moment().startOf('month')",
         ];
 
-        return view('administracion.lotes.index', compact('productos', 'config'));
+        return view('administracion.lotes.index', compact('nombreProductos', 'config'));
     }
 
     public function show($id)

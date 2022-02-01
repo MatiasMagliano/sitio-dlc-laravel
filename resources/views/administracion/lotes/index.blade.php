@@ -42,7 +42,7 @@
                         <th></th>
                     </thead>
                     <tbody>
-                        @foreach ($productos as $producto)
+                        @foreach ($nombreProductos as $producto)
                             <tr>
                                 <td>{{ $producto->id }}</td>
                                 <td>{{ $producto->droga }}</td>
@@ -212,43 +212,52 @@
 
             // ELIMINACIÓN DEL LOTE
             $('#tabla2 tbody').on('click', 'button', function (e) {
-                debugger;
-                if(!confirm("¿Está seguro de borrar este lote?")) {
-                    return false;
-                }
+                var lote = tabla2.row( $(this).parents('tr') ).data().identificador;
 
-                var idLote = tabla2.row( $(this).parents('tr') ).data().id;
-                var datos = {
-                    id:     idLote,
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    method: 'DELETE',
-                };
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Eliminación de lotes',
+                    text: '¿Está seguro de eliminar el lote Nº '+lote+'?',
+                    confirmButtonText: 'Borrar',
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        var idLote = tabla2.row( $(this).parents('tr') ).data().id;
+                        var datos = {
+                            id:     idLote,
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            method: 'DELETE',
+                        };
 
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
-                $.ajax({
-                    url: "http://localhost/sitio-dlc-laravel/public/administracion/lotes/"+idLote,
-                    type: "DELETE",
-                    data: datos,
-                    success: function (response){
-                        //sweet alert
-                        Swal.fire({
-                            icon: 'success',
-                            text: response.mensaje,
-                            showConfirmButton: false,
-                            timer: 2500
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
                         });
 
-                        // Se actualiza la segunda tabla
-                        var idProducto = $('input[type=hidden][name=producto_id]').val();
-                        getLotes(idProducto);
-                    },
-                    error: function (response) {
-                        console.log(response);
+                        $.ajax({
+                            url: "lotes/"+idLote,
+                            type: "DELETE",
+                            data: datos,
+                            success: function (response){
+                                //sweet alert
+                                Swal.fire(
+                                    'Eliminado',
+                                    response.mensaje,
+                                    'success'
+                                );
+
+                                // Se actualiza la segunda tabla
+                                var idProducto = $('input[type=hidden][name=producto_id]').val();
+                                getLotes(idProducto);
+                            },
+                            error: function (response) {
+                                console.log(response);
+                                //sweet alert
+                                Swal('Algo salió mal...', response.mensaje, 'error');
+                            }
+                        });
                     }
                 });
             });

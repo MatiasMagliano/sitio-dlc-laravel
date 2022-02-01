@@ -14,7 +14,7 @@ return [
     'products_maintenance'          => 'Mantenimiento de stock',
     'products'                      => 'Productos en stock',
     'products_presentation'         => 'Presentación de productos',
-    'add_products_batches'          => 'Agregar nuevo lote',
+    'add_products_batches'          => 'Administrar lotes',
     'suppliers'                     => 'Proveedores',
     'sist-admin_settings'           => 'AJUSTES DE ADMINISTRADOR',
     'level_one'                     => 'Nivel 1',
