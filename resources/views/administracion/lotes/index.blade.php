@@ -297,7 +297,7 @@
 
             });
 
-            //VALIDACIÓN DEL FORMULARIO POR JQUERY
+            //AGREGAR LOTE --> VALIDACIÓN DEL FORMULARIO POR JQUERY
             if($('#formAgregarLote').length > 0){
                 $('#formAgregarLote').validate({
                     rules:{
@@ -363,6 +363,7 @@
 
                                 //sweet alert
                                 Swal.fire({
+                                    title: 'Agregar lote',
                                     icon: 'success',
                                     text: response.mensaje,
                                     showConfirmButton: false,

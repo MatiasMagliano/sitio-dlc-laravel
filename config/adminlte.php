@@ -263,12 +263,12 @@ return [
                     'route'  => 'administracion.lotes.index',
                 ],
                 [
-                    'text' => 'products_presentation',
-                    'url'  => '/administracion/presentaciones'
-                ],
-                [
                     'text' => 'suppliers',
                     'url'  => '/administracion/proveedores'
+                ],
+                [
+                    'text' => 'products_presentation',
+                    'url'  => '/administracion/presentaciones'
                 ],
             ],
         ],
