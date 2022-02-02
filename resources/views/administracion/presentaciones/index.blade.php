@@ -1,7 +1,5 @@
 @extends('adminlte::page')
 
-@section('title', 'Administrar Presentaciones')
-
 @section('css')
     <style>
         tabla1.dataTable thead th {
@@ -21,6 +19,81 @@
             display: none;
         }
     </style>
+@endsection
+
+@section('title', 'Administrar Presentaciones')
+
+@section('content_header')
+    <div class="row">
+        <div class="col-xl-8">
+            <h1>Administración de presentaciones</h1>
+        </div>
+        <div class="col-xl-4 d-flex justify-content-xl-end">
+            {{-- para engañar al sistema, se hace un formulario por GET solamente con el botón x-adminlte-button --}}
+            <form action="{{ route('administracion.productos.create') }}" method="get">
+                <x-adminlte-button type="submit" label="Crear producto" class="bg-green" />
+            </form>
+        </div>
+    </div>
+@endsection
+
+@section('content')
+    <x-adminlte-card>
+        <table id="tabla2" class="table table-bordered display nowrap" style="width: 100%;">
+            <thead>
+                <th>Producto</th>
+                <th>Forma</th>
+                <th>Presentación</th>
+                <th>Hospitalario</th>
+                <th>Trazabilidad</th>
+                <!--
+                <th>Creado</th>
+                <th>Actualizado</th>
+                -->
+                <th>Acciones</th>
+            </thead>
+            <tbody>
+                @foreach ($presentaciones as $presentacion)
+                    @foreach ($presentacion->productos as $producto)
+                        <tr>
+                            <td width="200px" style="vertical-align: middle;">
+                                {{ $producto->droga}}  
+                            </td>
+                            <td width="200px" style="vertical-align: middle;">
+                                {{ $presentacion->forma}}
+                            </td>
+                            <td width="200px" style="vertical-align: middle;">
+                                {{ $presentacion->presentacion }}
+                            </td>
+                            <td width="200px" style="vertical-align: middle;">
+                                @if ($presentacion->hospitalario)
+                                    PRODUCTO HOSPITALARIO
+                                @endif
+                            </td>
+                            <td width="200px" style="vertical-align: middle;">
+                                @if ($presentacion->trazabilidad)
+                                    CON TRAZABILIDAD
+                                @endif
+                            </td>
+                            <!--
+                            <td width="200px" style="vertical-align: middle;">
+                                {{ $presentacion->created_at }}
+                            </td>
+                            <td width="200px" style="vertical-align: middle;">
+                                {{ $presentacion->updated_at }}
+                            </td>
+                            -->
+                            <td class="text-center" style="vertical-align: middle;" width="100px">
+                            <a href="{{ route('administracion.presentaciones.edit', $presentacion->id) }}" role="button"
+                                class="btn btn-sm btn-default btn-edt-hover mx-1 shadow">
+                                <i class="fas fa-lg fa-fw fa-cog"></i></a>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endforeach
+            </tbody>
+        </table>
+    </x-adminlte-card>
 @endsection
 
 @section('js')
@@ -81,69 +154,6 @@
         });
     </script>
 @endsection
-
-@section('content')
-    <x-adminlte-card>
-        <table id="tabla2" class="table table-bordered display nowrap" style="width: 100%;">
-            <thead>
-                <th>Producto</th>
-                <th>Forma</th>
-                <th>Presentación</th>
-                <th>Hospitalario</th>
-                <th>Trazabilidad</th>
-                <!--
-                <th>Creado</th>
-                <th>Actualizado</th>
-                -->
-                <th>Acciones</th>
-            </thead>
-            <tbody>
-                @foreach ($presentaciones as $presentacion)
-                    @foreach ($presentacion->productos as $producto)
-                        <tr>
-                            <td width="200px" style="vertical-align: middle;">
-                                {{-- Aquí se hace referencia a la relación creada en el modelo --}}
-                                {{ $producto->droga}}  
-                            </td>
-                            <td width="200px" style="vertical-align: middle;">
-                                {{ $presentacion->forma}}
-                            </td>
-                            <td width="200px" style="vertical-align: middle;">
-                                {{ $presentacion->presentacion }}
-                            </td>
-                            <td width="200px" style="vertical-align: middle;">
-                                @if ($presentacion->hospitalario)
-                                    PRODUCTO HOSPITALARIO
-                                @endif
-                            </td>
-                            <td width="200px" style="vertical-align: middle;">
-                                @if ($presentacion->trazabilidad)
-                                    CON TRAZABILIDAD
-                                @endif
-                            </td>
-                            <!--
-                            <td width="200px" style="vertical-align: middle;">
-                                {{ $presentacion->created_at }}
-                            </td>
-                            <td width="200px" style="vertical-align: middle;">
-                                {{ $presentacion->updated_at }}
-                            </td>
-                            
-                            <td class="text-center" style="vertical-align: middle;" width="100px">
-                            <a href="{{ route('administracion.presentaciones.edit', $presentacion->id) }}" role="button"
-                                class="btn btn-sm btn-default btn-edt-hover mx-1 shadow">
-                                <i class="fas fa-lg fa-fw fa-cog"></i></a>
-                            </td>
-                            -->
-                        </tr>
-                    @endforeach
-                @endforeach
-            </tbody>
-        </table>
-    </x-adminlte-card>
-@endsection
-
-
 
 @section('footer')
     <strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
