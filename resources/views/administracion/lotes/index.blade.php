@@ -189,15 +189,20 @@
                 ],
                 "columnDefs": [
                     {
-                        targets: [4],
+                        targets: 1,
+                        width: 100,
+                    },
+                    {
+                        targets: 4,
                         render: $.fn.dataTable.render.moment('DD/MM/YYYY'),
                     },
                     {
-                        targets: [5],
+                        targets: 5,
                         data: null,
+                        width: 30,
                         defaultContent: "<button id='btnBorrar' class='btn-sm btn-primary'>X</button>"
                     }
-                ],
+                ]
             });
 
             tabla2.row.add({
