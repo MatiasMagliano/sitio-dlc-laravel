@@ -152,8 +152,6 @@
                     type: "GET",
                     data: datos,
                 }).done( function(resultado) {
-                    //console.log(typeof resultado);
-                    //resultado = JSON.parse(resultado);
                     tabla2.clear();
                     tabla2.rows.add(resultado).draw();
                 });
@@ -361,7 +359,7 @@
                                 //sweet alert
                                 Swal.fire({
                                     icon: 'success',
-                                    text: response.mensaje,//respuesta.mensaje,
+                                    text: response.mensaje,
                                     showConfirmButton: false,
                                     timer: 2500
                                 });

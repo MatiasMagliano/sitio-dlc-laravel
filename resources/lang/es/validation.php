@@ -47,7 +47,7 @@ return [
     'ends_with' => 'El :attribute debe terminar con alguno de los siguientes valores: :values.',
     'exists' => 'El :attribute seleccionado es inválido.',
     'file' => 'El :attribute debe ser un archivo.',
-    'filled' => 'El campo :attribute debe tenr un valor.',
+    'filled' => 'El campo :attribute debe tener un valor.',
     'gt' => [
         'numeric' => 'El :attribute debe ser mayor a :value.',
         'file' => 'El :attribute debe ser mayor que :value kilobytes.',
