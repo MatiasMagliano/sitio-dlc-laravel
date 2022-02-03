@@ -105,7 +105,6 @@ class ProductoController extends Controller
             return response()->json($rta);
         }
 
-        $data = array('droga' => 'No hay resultados');
-        return response()->json($data);;
+        return response()->json(['droga' => 'No hay resultados']);
     }
 }

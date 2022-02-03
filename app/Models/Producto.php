@@ -37,8 +37,9 @@ class Producto extends Model
     }
 
     // En este caso la relación es UNO-A-MUCHOS, por lo que se utiliza hasMany de un lado y belongsTo del otro
+    // Además, se le agrega un decorado de orden, para que en un "all", devuelva los lotes ordenados por fecha y no por ID
     public function lotes(){
-        return $this->hasMany(Lote::class);
+        return $this->hasMany(Lote::class)->orderBy('hasta', 'asc');
     }
 
     /**

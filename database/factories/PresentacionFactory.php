@@ -13,7 +13,7 @@ class PresentacionFactory extends Factory
      */
     public function definition()
     {
-        $forma = array('COMPRIMIDO', 'CAPSULA BLANDA', 'GRAGEA', 'CREMA', 'SUSPENSION ORAL', 'SOLUCION INYECTABLE', 'INYECTABLE PARA PERFUSION', 'CAPSULA VAGINAL', 'GEL');
+        $forma = array('COMPRIMIDO', 'CAPSULA BLANDA', 'GRAGEA', 'CREMA', 'SUSPENSION ORAL', 'SOLUCION INYECTABLE', 'INYECTABLE PARA PERFUSION', 'CAPSULA SOLUBLE', 'GEL');
         $presentacion = array (
             0 => array (
                 'nombre' => rand(1, 10). ' AMPOLLA/S',

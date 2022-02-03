@@ -28,10 +28,7 @@
             <h1>Administración de productos</h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
-            {{-- para engañar al sistema, se hace un formulario por GET solamente con el botón x-adminlte-button --}}
-            <form action="{{ route('administracion.productos.create') }}" method="get">
-                <x-adminlte-button type="submit" label="Crear producto" class="bg-green" />
-            </form>
+            <a href="{{ route('administracion.productos.create') }}" role="button" class="btn btn-md btn-success">Crear producto</a>
         </div>
     </div>
 @stop
@@ -57,14 +54,17 @@
                         <td style="vertical-align: middle;">
                             {{-- Aquí se hace referencia a la relación creada en el modelo --}}
                             @foreach ($producto->presentaciones as $presentacion)
-                                @if ($presentacion->hospitalario)
-                                    <strong>PRODUCTO HOSPITALARIO</strong>
-                                    <br>
-                                @endif
                                 {{ $presentacion->forma }}, {{ $presentacion->presentacion }}
+                                <br>
+                                @if ($presentacion->hospitalario || $presentacion->trazabilidad)
+                                <strong>Producto: </strong>
+                                @endif
+                                @if ($presentacion->hospitalario)
+                                     HOSPITALARIO
+                                @endif
                                 @if ($presentacion->trazabilidad)
                                     {{--MÉTODO NO IMPLEMENTADO TODAVÍA--}}
-                                    <strong>- CON TRAZABILIDAD</strong> <a href="{{ route('administracion.trazabilidad.show', $producto->id) }}" class="btn-sm bg-gray" role="button">Ver</a>
+                                    <span style="color: red;">TRAZABLE </span><a href="{{ route('administracion.trazabilidad.show', $producto->id) }}" class="btn-sm bg-gray" role="button">Ver</a>
                                 @endif
                             @endforeach
                         </td>
@@ -75,14 +75,10 @@
                         </td>
                         <td>
                             @foreach ($producto->lotes as $lote)
-                                <strong>Lote Nº:</strong> <a href="{{ route('administracion.lotes.show', $lote->id) }}">{{ $lote->identificador }}</a> | <strong>Vencimiento:</strong> {{ $lote->hasta->format('d/m/Y') }} <br>
+                                <strong>Lote:</strong> <a href="{{ route('administracion.lotes.show', $lote->id) }}">{{ $lote->identificador }}</a> | <strong>Vto:</strong> {{ $lote->hasta->format('d/m/Y') }} <br>
                             @endforeach
                         </td>
                         <td class="text-center" style="vertical-align: middle;" width="100px">
-                            {{-- Botón mostrar producto --}}
-                            <a href="{{ route('administracion.productos.show', $producto->id) }}" role="button"
-                                class="btn btn-sm btn-default btn-shw-hover mx-1 shadow">
-                                <i class="fas fa-lg fa-fw fa-eye"></i></a>
 
                             {{-- Botón modificar --}}
                             <a href="{{ route('administracion.productos.edit', $producto->id) }}" role="button"
