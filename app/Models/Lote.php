@@ -49,4 +49,9 @@ class Lote extends Model
     public function producto(){
         return $this->belongsTo(Producto::class);
     }
+
+    // función útil para suma de lotes
+    public function sumaLote($id){
+        return $this->where('producto_id', '=', $id)->sum('cantidad');
+    }
 }

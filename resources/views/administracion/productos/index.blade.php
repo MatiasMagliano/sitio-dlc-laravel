@@ -2,21 +2,10 @@
 
 @section('css')
     <style>
-        .btn-shw-hover:hover {
-            color: white;
-            background-color: rgb(0, 37, 160);
-        }
-
         .btn-rm-hover:hover {
             color: white;
             background-color: rgb(160, 0, 0);
         }
-
-        .btn-edt-hover:hover {
-            color: white;
-            background-color: darkgreen;
-        }
-
     </style>
 @endsection
 
@@ -38,17 +27,21 @@
     <x-adminlte-card>
         <table id="tabla2" class="table table-bordered display nowrap" style="width: 100%;">
             <thead>
+                <th>ID</th>
                 <th>Droga</th>
                 <th>Presentación</th>
-                <th>Proveedor</th>
+                <th>Proveedor/es</th>
                 <th>Lotes vigentes</th>
                 <th>Acciones</th>
             </thead>
             <tbody>
                 @foreach ($productos as $producto)
                     <tr>
+                        <td>{{ $producto->id }}</td>
                         <td width="200px" style="vertical-align: middle;">
                             {{--<a href="{{ route('administracion.lotes.edit', $producto->id) }}">{{ $producto->droga }}</a>--}}
+                            {{--
+                            <a href="{{ route('administracion.productos.edit', $producto->id) }}" role="button" class="btn btn-sm btn-default btn-edt-hover mx-1 shadow"><i class="fas fa-lg fa-fw fa-cog"></i></a>--}}
                             {{ $producto->droga }}
                         </td>
                         <td style="vertical-align: middle;">
@@ -58,13 +51,13 @@
                                 <br>
                                 @if ($presentacion->hospitalario || $presentacion->trazabilidad)
                                 <strong>Producto: </strong>
-                                @endif
-                                @if ($presentacion->hospitalario)
-                                     HOSPITALARIO
-                                @endif
-                                @if ($presentacion->trazabilidad)
-                                    {{--MÉTODO NO IMPLEMENTADO TODAVÍA--}}
-                                    <span style="color: red;">TRAZABLE </span><a href="{{ route('administracion.trazabilidad.show', $producto->id) }}" class="btn-sm bg-gray" role="button">Ver</a>
+                                    @if ($presentacion->hospitalario)
+                                        HOSPITALARIO
+                                    @endif
+                                    @if ($presentacion->trazabilidad)
+                                        {{--MÉTODO NO IMPLEMENTADO TODAVÍA--}}
+                                        <span style="color: red;">TRAZABLE </span><a href="{{ route('administracion.trazabilidad.show', $producto->id) }}" class="btn-sm bg-gray" role="button">Ver</a>
+                                    @endif
                                 @endif
                             @endforeach
                         </td>
@@ -74,28 +67,22 @@
                             @endforeach
                         </td>
                         <td>
-                            @foreach ($producto->lotes as $lote)
-                                <strong>Lote:</strong> <a href="{{ route('administracion.lotes.show', $lote->id) }}">{{ $lote->identificador }}</a> | <strong>Vto:</strong> {{ $lote->hasta->format('d/m/Y') }} <br>
-                            @endforeach
+                            <div class="row d-flex">
+                                @foreach ($producto->lotes as $lote)
+                                    <div class="col-6 px-auto">
+                                        <strong>Lote:</strong> <a href="{{ route('administracion.lotes.show', $lote->id) }}">{{ $lote->identificador }}</a>
+                                    </div>
+                                    <div class="col-6 px-auto">
+                                        <strong>Vto:</strong> {{ $lote->hasta->format('m/Y') }} <br>
+                                    </div>
+                                @endforeach
+                                <hr>
+                                Total en stock: &nbsp; <strong>{{ $lote->sumaLote($producto->id) }}</strong>
+                            </div>
                         </td>
                         <td class="text-center" style="vertical-align: middle;" width="100px">
-
-                            {{-- Botón modificar --}}
-                            <a href="{{ route('administracion.productos.edit', $producto->id) }}" role="button"
-                                class="btn btn-sm btn-default btn-edt-hover mx-1 shadow">
-                                <i class="fas fa-lg fa-fw fa-cog"></i></a>
-
                             {{-- se crea este método, porque el borrado en Laravel se hace por POST --}}
-                            <a class="btn btn-rm-hover btn-sm btn-light mx-1 shadow" onclick="event.preventDefault();
-                                        document.getElementById('form-borrar-producto-{{ $producto->id }}').submit();"
-                                role="button">
-                                <i class="fa fa-lg fa-fw fa-trash"></i></a>
-                            <form id="form-borrar-producto-{{ $producto->id }}"
-                                action="{{ route('administracion.productos.destroy', $producto->id) }}" method="POST"
-                                style="display: none">
-                                @csrf
-                                @method("DELETE")
-                            </form>
+                            <a id="btnBorrar" class="btn btn-rm-hover btn-sm btn-light mx-1 shadow" ><i class="fa fa-lg fa-fw fa-trash"></i></a>
                         </td>
                     </tr>
                 @endforeach
@@ -110,8 +97,10 @@
         $(document).ready(function() {
             // el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
             $('#tabla2').DataTable({
-                dom: 'Bfrtip',
-                buttons: [{
+                "processing": true,
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
                         extend: 'copyHtml5',
                         text: 'Copiar al portapapeles',
                     },
@@ -139,25 +128,45 @@
                         text: 'Seleccionar columnas'
                     }
                 ],
-                responsive: {
-                    details: {
-                        renderer: function(api, rowIdx, columns) {
-                            var data = $.map(columns, function(col, i) {
-                                return col.hidden ?
-                                    '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' +
-                                    col.columnIndex + '">' +
-                                    '<td>' + col.title + ':' + '</td> ' +
-                                    '<td>' + col.data + '</td>' +
-                                    '</tr>' :
-                                    '';
-                            }).join('');
+                "responsive": [
+                    {
+                        "details": {
+                            renderer: function(api, rowIdx, columns) {
+                                var data = $.map(columns, function(col, i) {
+                                    return col.hidden ?
+                                        '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' +
+                                        col.columnIndex + '">' +
+                                        '<td>' + col.title + ':' + '</td> ' +
+                                        '<td>' + col.data + '</td>' +
+                                        '</tr>' :
+                                        '';
+                                }).join('');
 
-                            return data ?
-                                $('<table/>').append(data) :
-                                false;
+                                return data ?
+                                    $('<table/>').append(data) :
+                                    false;
+                            }
                         }
                     }
-                }
+                ],
+                "columnDefs": [
+                    {
+                        targets: 0,
+                        visible: false
+                    },
+                    {
+                        targets: 1,
+                        width: '1%',
+                    },
+                    {
+                        targets: 4,
+                        width: '23%',
+                    },
+                    {
+                        targets: 5,
+                        width: '1%'
+                    }
+                ]
             });
         });
     </script>

@@ -200,7 +200,7 @@
                         targets: 5,
                         data: null,
                         width: 30,
-                        defaultContent: "<button id='btnBorrar' class='btn-sm btn-primary'>X</button>"
+                        defaultContent: "<button id='btnBorrar' class='btn-sm btn-primary'><i class='fa fa-lg fa-fw fa-trash'></i></button>"
                     }
                 ]
             });
