@@ -32,7 +32,7 @@
                 <th>Presentación</th>
                 <th>Proveedor/es</th>
                 <th>Lotes vigentes</th>
-                <th>Acciones</th>
+                <th></th>
             </thead>
             <tbody>
                 @foreach ($productos as $producto)
