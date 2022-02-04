@@ -264,11 +264,11 @@ return [
                 ],
                 [
                     'text' => 'suppliers',
-                    'url'  => '/administracion/proveedores'
+                    'route'  => 'administracion.proveedores.index'
                 ],
                 [
                     'text' => 'products_presentation',
-                    'url'  => '/administracion/presentaciones'
+                    'route'  => 'administracion.presentaciones.index'
                 ],
             ],
         ],
@@ -332,12 +332,12 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js',
+                    'location' => 'https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
+                    'location' => 'https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'js',
@@ -345,14 +345,24 @@ return [
                     'location' => 'https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js',
                 ],
                 [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'https://cdn.datatables.net/select/1.3.4/js/select.bootstrap4.min.js',
+                ],
+                [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => 'https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css',
+                    'location' => 'https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap4.min.css',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
                     'location' => 'https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css'
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'https://cdn.datatables.net/select/1.3.4/css/select.bootstrap4.min.css',
                 ],
             ],
         ],
@@ -442,7 +452,7 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@9',
+                    'location' => 'https://cdn.jsdelivr.net/npm/sweetalert2@9',
                 ],
             ],
         ],

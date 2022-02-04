@@ -24,4 +24,4 @@
     <div class="float-right d-none d-sm-inline-block">
         <b>Versión</b> 2.0 (LARAVEL V.8)
     </div>
-@endsectionx
+@endsection

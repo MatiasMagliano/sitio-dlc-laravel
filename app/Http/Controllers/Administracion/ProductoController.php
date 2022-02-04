@@ -8,7 +8,6 @@ use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class ProductoController extends Controller
 {
@@ -90,9 +89,17 @@ class ProductoController extends Controller
      *
      * @param  \App\Models\Productos  $productos
      */
-    public function destroy(Producto $productos)
+    public function destroy(Request $request)
     {
-        //
+        // hace un softdelete sobre producto y redirecciona al index de productos
+        if($request->ajax()){
+            Producto::destroy($request->id);
+
+            return response()->json([
+                'mensaje' => 'El producto ha sido eliminado correctamente',
+                'redireccion' => route('administracion.productos.index')
+            ]);
+        }
     }
 
     /**

@@ -173,6 +173,7 @@
                     "paging": false,
                     "info": false,
                     "searching": false,
+                    "select": false,
                     "columns": [{
                             targets: [0],
                             visible: false,
@@ -323,6 +324,15 @@
 
                 // CAPTURA DEL CLICK EN EL DATATABLE tabla1
                 $('#tabla1 tbody').on('click', 'tr', function() {
+                    // marcado/desmarcado del row seleccionado
+                    if ($(this).hasClass('selected')) {
+                        $(this).removeClass('selected');
+                    } else {
+                        tabla1.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }
+
+                    // se sigue con el resto del procedimiento
                     $('#lotesVigentes .overlay').remove();
                     var idProducto = tabla1.row(this).data().ID;
                     var droga = tabla1.row(this).data().Droga;

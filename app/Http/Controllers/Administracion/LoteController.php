@@ -18,7 +18,8 @@ class LoteController extends Controller
      */
     public function index()
     {
-        $nombreProductos = DB::table('productos')->select('id', 'droga')->get();
+        // OJO: softdeletes funciona con eloquent, por lo que es necesario usar el modelo para buscar columnas específicas
+        $nombreProductos = Producto::all('id', 'droga');
         $config = [
             'format' => 'DD/MM/YYYY',
             'dayViewHeaderFormat' => 'MMM YYYY',
@@ -73,9 +74,7 @@ class LoteController extends Controller
     }
 
     public function destroy($id){
-        $lote = Lote::findOrFail($id);
-
-        $lote->delete();
+        Lote::destroy($id);
 
         return response()->json(['mensaje' => 'El lote ha sido eliminado correctamente']);
     }

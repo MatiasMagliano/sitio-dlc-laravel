@@ -42,4 +42,17 @@ class Producto extends Model
     public function lotes(){
         return $this->hasMany(Lote::class)->orderBy('hasta', 'asc');
     }
+
+    // Método para eliminar las relaciones del modelo
+    public static function boot(){
+        parent::boot();
+
+        static::deleting(function ($producto){
+            // eliminación definitiva de los lotes
+            $producto->lotes()->delete();
+
+            // eliminación sólo la relación tabla pivot de proveedores
+            $producto->proveedores()->detach();
+        });
+    }
 }

@@ -96,9 +96,10 @@
     <script>
         $(document).ready(function() {
             // el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
-            $('#tabla2').DataTable({
+            var tabla2 = $('#tabla2').DataTable({
                 "processing": true,
                 "dom": 'Bfrtip',
+                "order": [1, 'asc'],
                 "buttons": [
                     {
                         extend: 'copyHtml5',
@@ -167,6 +168,61 @@
                         width: '1%'
                     }
                 ]
+            });
+
+            // ELIMINACIÓN DE PRODUCTO
+            $('#tabla2 tbody').on('click', '#btnBorrar', function(e) {
+                var nombreDroga = tabla2.row($(this).parents('tr')).data()[1];
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Eliminación de productos',
+                    text: '¿Está seguro de eliminar el producto ' + nombreDroga + '?',
+                    confirmButtonText: 'Borrar',
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var idProducto = tabla2.row($(this).parents('tr')).data()[0];
+                        var datos = {
+                            id: idProducto,
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            method: 'DELETE',
+                        };
+
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                        });
+
+                        $.ajax({
+                            url: "productos/" + idProducto,
+                            type: "DELETE",
+                            data: datos,
+                            success: function(response) {
+                                //sweet alert
+                                Swal.fire({
+                                    title: 'Eliminado',
+                                    text: response.mensaje,
+                                    icon: 'success',
+                                    timer: 2500,
+                                    showConfirmButton: false,
+                                });
+
+                                setTimeout(() => {
+                                    window.location.href = response.redireccion;
+                                    //alert(response.redireccion);
+                                }, 2500);
+                            },
+                            error: function(response) {
+                                console.log(response);
+                                //sweet alert
+                                Swal('Algo salió mal...', response.mensaje, 'error');
+                            }
+                        });
+                    }
+                });
             });
         });
     </script>
