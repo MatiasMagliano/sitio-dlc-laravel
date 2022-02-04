@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Producto extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     //Se setean los campos "llenables" en masa
     /**
@@ -42,10 +42,4 @@ class Producto extends Model
     public function lotes(){
         return $this->hasMany(Lote::class)->orderBy('hasta', 'asc');
     }
-
-    /**
-     * public function estado(){
-     *  return $this->belongsTo('App\Models\Estado');
-     * }
-     */
 }

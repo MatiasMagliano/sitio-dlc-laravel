@@ -18,7 +18,7 @@ class PresentacionFactory extends Factory
             0 => array (
                 'nombre' => rand(1, 10). ' AMPOLLA/S',
                 'cantidad'  => ' por '. rand(1, 500),
-                'medida' => 'ml'
+                'medida' => 'ml.'
             ),
             1 => array (
                 'nombre' => 'FRASCO',
@@ -33,7 +33,7 @@ class PresentacionFactory extends Factory
             3 => array (
                 'nombre' => 'TUBO',
                 'cantidad' => ' por '. rand(1, 100),
-                'medida' => 'gr'
+                'medida' => 'gr.'
             ),
         );
 

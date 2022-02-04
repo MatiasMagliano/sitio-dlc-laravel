@@ -17,6 +17,7 @@ class CreateProductoTable extends Migration
             $table->id();
             $table->string('droga');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -50,13 +50,13 @@
                                 {{ $presentacion->forma }}, {{ $presentacion->presentacion }}
                                 <br>
                                 @if ($presentacion->hospitalario || $presentacion->trazabilidad)
-                                <strong>Producto: </strong>
+                                    Producto
                                     @if ($presentacion->hospitalario)
-                                        HOSPITALARIO
+                                        <strong>HOSPITALARIO</strong>
                                     @endif
                                     @if ($presentacion->trazabilidad)
                                         {{--MÉTODO NO IMPLEMENTADO TODAVÍA--}}
-                                        <span style="color: red;">TRAZABLE </span><a href="{{ route('administracion.trazabilidad.show', $producto->id) }}" class="btn-sm bg-gray" role="button">Ver</a>
+                                        <span style="color: red; font-weight:800;">TRAZABLE </span><a href="{{ route('administracion.trazabilidad.show', $producto->id) }}" class="btn-sm bg-gray" role="button">Ver</a>
                                     @endif
                                 @endif
                             @endforeach
