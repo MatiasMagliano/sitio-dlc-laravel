@@ -146,6 +146,7 @@
             // ELIMINACIÓN DE PRODUCTO
             $('#tabla2 tbody').on('click', '#btnBorrar', function(e) {
                 var nombreDroga = tabla2.row($(this).parents('tr')).data()[1];
+                //nombreDroga = jQuery.trim(nombreDroga).substring(0,10);
                 alert(nombreDroga);
                 var advertencia = 'Esto implica el borrado definitivo de todos los lotes vigentes y su relación con presentaciones y proveedores.'
 

@@ -94,6 +94,7 @@
                         <th>Forma Farmacéutica</th>
                         <th>Presentación</th>
                         <th>Detalles</th>
+                        <th></th>
                     </thead>
                     <tbody>
                         @foreach ($producto->presentaciones as $presentacion)
@@ -112,6 +113,7 @@
                                         SIN DETALLES
                                     @endif
                                 </td>
+                                <td><a href="{{ route('administracion.presentaciones.edit', $presentacion->id) }}"><i class="fas fa-edit"></i></a></td>
                             </tr>
                         @endforeach
                     </tbody>
