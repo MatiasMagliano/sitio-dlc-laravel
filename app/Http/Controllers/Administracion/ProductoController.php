@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductoRequest;
+use App\Models\Lote;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\Proveedor;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ProductoController extends Controller
@@ -47,7 +49,40 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validación pura de Laravel
+        $request->validate([
+            'droga' => 'required|unique:productos|max:50',
+        ]);
+
+        $request->validate([
+            'proveedor' => 'required',
+            'presentacion' => 'required'
+        ]);
+
+        $hoy = Carbon::now()->format('d/m/Y');
+        $request->validate([
+            'identificador' => 'required|unique:lotes|max:20',
+            'precioCompra' => 'required|numeric|max:5000',
+            'cantidad' => 'required|numeric|min:1|max:50000',
+            'vencimiento' => 'required|date_format:d/m/Y|after:'.$hoy,
+        ]);
+
+        $lote = new Lote;
+        $lote->identificador = $request->identificador;
+        $lote->precioCompra = $request->precioCompra;
+        $lote->cantidad = $request->cantidad;
+        $lote->desde = Carbon::now()->format('Y-m-d H:i:s');
+        $lote->hasta = Carbon::createFromFormat('d/m/Y', $request->vencimiento);
+
+        $producto = Producto::create([
+            'droga' => $request->droga,
+        ]);
+        $producto->proveedores()->attach($request->proveedor);
+        $producto->presentaciones()->attach($request->presentacion);
+        $producto->lotes()->save($lote);
+
+        $request->session()->flash('success', 'El producto se ha creado con éxito');
+        return redirect(route('administracion.productos.index'));
     }
 
     /**
@@ -56,9 +91,11 @@ class ProductoController extends Controller
      * @param  \App\Models\Productos  $productos
      * @return \Illuminate\Http\Response
      */
-    public function show(Producto $productos)
+    public function show($id)
     {
         //
+        $producto = Producto::findOrFail($id);
+        return view('administracion.productos.show', compact('producto'));
     }
 
     /**
@@ -95,10 +132,9 @@ class ProductoController extends Controller
         if($request->ajax()){
             Producto::destroy($request->id);
 
-            return response()->json([
-                'mensaje' => 'El producto ha sido eliminado correctamente',
-                'redireccion' => route('administracion.productos.index')
-            ]);
+            $request->session()->flash('success', 'El producto ha sido eliminado correctamente');
+
+            return response()->json(['redireccion' => route('administracion.productos.index')]);
         }
     }
 

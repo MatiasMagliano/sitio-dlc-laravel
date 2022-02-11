@@ -37,7 +37,7 @@
                         <td class="text-center" style="vertical-align: middle;">
                             {{--El botón modificar no lleva a un modal. Lleva a una vista nueva, para respetar la idiosincrasia de Laravel--}}
                             <a href="{{ route('admin.roles.edit', $rol->id) }}" role="button" class="btn btn-sm btn-default mx-1 shadow"><i class="fa fa-lg fa-fw fa-pen"></i></a>
-                                
+
                             {{--se crea este método, porque el borrado en Laravel se hace por POST--}}
                             <a class="btn btn-sm btn-default mx-1 shadow"
                                 onclick="event.preventDefault();
@@ -61,7 +61,7 @@
     <x-adminlte-modal id="modalCrearRol" title="Crear un rol" theme="blue" icon="fas fa-user-tag" size='md' v-centered>
         <form action="{{ route('admin.roles.store') }}" method="post">
             @include('admin.roles.partials.formulario-roles')
-            
+
             {{-- Register button --}}
             <div class="d-flex justify-content-end">
                 <x-adminlte-button data-dismiss="modal" theme="secondary" label="Cerrar" style="margin: 0 10px"/>
@@ -82,6 +82,7 @@
 
 @section('js')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
+    @include('partials.alerts')
     <script>
         $(document).ready(function() {
             // el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
@@ -97,7 +98,7 @@
                                     '</tr>' :
                                     '';
                             } ).join('');
-        
+
                             return data ?
                                 $('<table/>').append( data ) :
                                 false;
