@@ -11,8 +11,15 @@ class PresentacionController extends Controller
 {
     public function index()
     {
-        $presentaciones = Presentacion::all();
-        return view('administracion.presentaciones.index', compact('presentaciones'));
+        $productos = Producto::all();
+        return view('administracion.presentaciones.index', compact('productos'));
+    }
+
+    public function edit($idProducto, $idPresentacion)
+    {
+        $presentacion = Presentacion::findOrFail($idPresentacion);
+        $producto = Producto::findOrFail($idProducto);
+        return view('administracion.presentaciones.edit', compact('presentacion', 'producto'));
     }
 
 }

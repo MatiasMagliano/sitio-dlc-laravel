@@ -91,7 +91,7 @@
                                         <input type="text" name="identificador" id="identificador" class="form-control"
                                             value="" required>
                                         <div class="input-group-append">
-                                            <button type="button" id="escanear" class="btn btn-sm btn-primary">
+                                            <button type="button" id="escanear" class="btn btn-sm btn-dark">
                                                 <i class="fas fa-barcode"></i>
                                                 Escanear
                                             </button>
@@ -109,7 +109,7 @@
                                     <div class="col-md-4 form-group mb-3">
                                         <label for="cantidad"
                                             class="label">{{ __('formularios.batch_quantity') }}</label>
-                                        <input type="text" name="cantidad" id="cantidad" class="form-control" value="">
+                                        <input type="text" name="cantidad" id="cantidad" class="form-control" value="" required>
                                     </div>
 
                                     <div class="col-md-4 form-group mb-3">
@@ -117,7 +117,7 @@
                                         <x-adminlte-input-date name="vencimiento" id="vencimiento"
                                             label="{{ __('formularios.batch_expiration') }}" igroup-size="md"
                                             :config="$config" placeholder="{{ __('formularios.date_placeholder') }}"
-                                            autocomplete="off">
+                                            autocomplete="off" required>
                                             <x-slot name="appendSlot">
                                                 <div class="input-group-text bg-dark">
                                                     <i class="fas fa-calendar"></i>

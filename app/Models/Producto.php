@@ -30,11 +30,11 @@ class Producto extends Model
 
     // En las relaciones MUCHOS-A-MUCHOS, donde hay una tabla pivot, se usa la relación belongsToMany en ambas tablas
     public function presentaciones(){
-        return $this->belongsToMany(Presentacion::class);
+        return $this->belongsToMany(Presentacion::class, 'presentacion_producto');
     }
 
     public function proveedores(){
-        return $this->belongsToMany(Proveedor::class);
+        return $this->belongsToMany(Proveedor::class, 'producto_proveedor');
     }
 
     // En este caso la relación es UNO-A-MUCHOS, por lo que se utiliza hasMany de un lado y belongsTo del otro
@@ -51,8 +51,11 @@ class Producto extends Model
             // eliminación definitiva de los lotes
             $producto->lotes()->delete();
 
-            // eliminación sólo la relación tabla pivot de proveedores
+            // eliminación sólo de la relación (tabla pivot) de proveedores
             $producto->proveedores()->detach();
+
+            // eliminación sólo de la relación (tabla pivot) de presentaciones
+            $producto->presentaciones()->detach();
         });
     }
 }

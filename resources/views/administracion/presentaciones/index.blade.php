@@ -44,12 +44,6 @@
                 <th>Producto</th>
                 <th>Forma</th>
                 <th>Presentación</th>
-                <th>Hospitalario</th>
-                <th>Trazabilidad</th>
-                <!--
-                <th>Creado</th>
-                <th>Actualizado</th>
-                -->
                 <th>Acciones</th>
             </thead>
             <tbody>
@@ -57,23 +51,20 @@
                     @foreach ($presentacion->productos as $producto)
                         <tr>
                             <td width="200px" style="vertical-align: middle;">
-                                {{ $producto->droga}}  
+                                @if ($presentacion->hospitalario)
+                                    <strong>H -</strong>
+                                @endif
+                                {{ $producto->droga}}
+                                @if ($presentacion->trazabilidad)
+                                    <strong style="color: #ff1600">TRAZABLE</strong>
+
+                                @endif
                             </td>
                             <td width="200px" style="vertical-align: middle;">
                                 {{ $presentacion->forma}}
                             </td>
                             <td width="200px" style="vertical-align: middle;">
                                 {{ $presentacion->presentacion }}
-                            </td>
-                            <td width="200px" style="vertical-align: middle;">
-                                @if ($presentacion->hospitalario)
-                                    PRODUCTO HOSPITALARIO
-                                @endif
-                            </td>
-                            <td width="200px" style="vertical-align: middle;">
-                                @if ($presentacion->trazabilidad)
-                                    CON TRAZABILIDAD
-                                @endif
                             </td>
                             <!--
                             <td width="200px" style="vertical-align: middle;">
