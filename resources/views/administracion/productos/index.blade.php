@@ -45,7 +45,7 @@
                         <td style="vertical-align: middle;">
                             {{-- Aquí se hace referencia a la relación creada en el modelo --}}
                             @foreach ($producto->presentaciones as $presentacion)
-                                {{ $presentacion->forma }}, {{ $presentacion->presentacion }}
+                                <a href="{{ route('administracion.presentaciones.edit', [$producto->id, $presentacion->id]) }}">{{ $presentacion->forma }}, {{ $presentacion->presentacion }}</a>
                                 <br>
                                 @if ($presentacion->hospitalario || $presentacion->trazabilidad)
                                     Producto
@@ -57,6 +57,7 @@
                                         <span style="color: red; font-weight:800;">TRAZABLE </span><a href="{{ route('administracion.trazabilidad.show', $producto->id) }}" class="btn-sm bg-gray" role="button">Ver</a>
                                     @endif
                                 @endif
+                                <br>
                             @endforeach
                         </td>
                         <td>

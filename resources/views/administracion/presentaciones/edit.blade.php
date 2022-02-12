@@ -25,7 +25,8 @@
 
 
 @section('content')
-
+    {{--<h1>{{$producto->droga}}</h1>--}}
+    <h3>{{ $presentacion->forma }}, {{ $presentacion->presentacion }}</h3>
 @endsection
 
 

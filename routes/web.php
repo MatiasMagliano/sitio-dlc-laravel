@@ -42,7 +42,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::get('/lotes/buscarLotes', [LoteController::class, 'buscarLotes'])->name('lotes.buscarLotes');
     Route::resource('/productos', ProductoController::class);
     Route::resource('/proveedores', ProveedorController::class);
-    Route::resource('/presentaciones', PresentacionController::class);
+    Route::resource('/presentaciones', PresentacionController::class)->except('edit');
+    Route::get('/presentaciones/{idProducto}/{idPresentacion}', [PresentacionController::class, 'edit'])->name('presentaciones.edit');
     Route::resource('/lotes', LoteController::class);
     Route::resource('/trazabilidad', TrazabilidadController::class);
 });
