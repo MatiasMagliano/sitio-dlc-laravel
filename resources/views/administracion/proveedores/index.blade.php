@@ -9,8 +9,8 @@
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
             {{-- para engañar al sistema, se hace un formulario por GET solamente con el botón x-adminlte-button --}}
-            <form action="{{ route('administracion.productos.create') }}" method="get">
-                <x-adminlte-button type="submit" label="Crear producto" class="bg-green" />
+            <form action="{{ route('administracion.proveedores.create') }}" method="get">
+                <x-adminlte-button type="submit" label="Nuevo Proveedor" class="bg-green" />
             </form>
         </div>
     </div>
@@ -19,15 +19,15 @@
 @section('content')
 
     <x-adminlte-card>
-        <table id="tabla2" class="table table-bordered display nowrap" style="width: 100%;"> 
+        <table id="tabla2" class="table table-bordered display nowrap" style="width: 100%;">
             <thead>
                 <th>Razón social</th>
                 <th>Cuit</th>
                 <th>contacto</th>
                 <th>Dirección</th>
             </thead>
-    
-            
+
+
 
             @foreach($proveedores as $proveedor)
                 <tr>
@@ -98,8 +98,8 @@
             });
         });
     </script>
-@endsection    
-    
+@endsection
+
 
 
 
