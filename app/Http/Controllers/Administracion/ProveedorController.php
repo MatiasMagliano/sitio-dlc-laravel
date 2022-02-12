@@ -18,4 +18,16 @@ class ProveedorController extends Controller
         $proveedor = Proveedor::find($id);
         return view('administracion.proveedores.show', compact('proveedor'));
     }
+    public function edit()
+    {
+        //
+    }
+    public function create()
+    {
+        //
+    }
+    public function destroy()
+    {
+        //
+    }
 }
