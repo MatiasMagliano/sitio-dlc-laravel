@@ -23,7 +23,7 @@
 @section('content_header')
     <div class="row">
         <div class="col-xl-8">
-            <h1>Administrar lotes a productos</h1>
+            <h1>Administrar lotes del producto <strong>{{ $producto->droga }}</strong></h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
             <a href="{{ route('administracion.productos.index') }}" role="button"
@@ -34,115 +34,88 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-    <div class="card-group mb-4">
-        <div class="card mr-2">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-search mr-2"></i>
-                    Seleccionar producto
-                </h3>
-            </div>
-            <div class="card-body">
-                <table id="tabla1" class="tabla1" style="width: 100%; cursor:pointer">
-                    <thead>
-                        <th></th>
-                        <th></th>
-                    </thead>
-                    <tbody>
-                        @foreach ($nombreProductos as $producto)
-                            <tr>
-                                <td>{{ $producto->id }}</td>
-                                <td>{{ $producto->droga }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+    <div class="card mr-2" id="lotesVigentes">
+        <div class="card-header">
+            <h3 id="tituloLotesVigentes" class="card-title">
+                Lotes vigentes
+            </h3>
         </div>
-
-        <div class="card ml-2" id="lotesVigentes">
-            <div class="card-header">
-                <h3 id="tituloLotesVigentes" class="card-title">
-                    <i class="fas fa-plus mr-2"></i>
-                    Lotes vigentes
-                </h3>
-            </div>
-            <div class="card-body">
-                <table id="tabla2" class="display nowrap" style="width: 100%; cursor:pointer">
-                    <thead>
-                        <th>ID</th>
-                        <th>Nº</th>
-                        <th>Precio</th>
-                        <th>Cantidad</th>
-                        <th>Vencimiento</th>
-                        <th></th>
-                    </thead>
-                </table>
-                <p style="font-size: 1.3em"><u>TOTAL EN STOCK:</u>&nbsp;&nbsp;<strong id="totalLotes"></strong></p>
-                <hr>
-                <x-adminlte-card title="Agregar nuevo lote" id="agregarLote" theme="lime" class="flex-fill">
-
-                    {{-- FORMULARIO TIPO JQUERY.VALIDATE --}}
-                    <form action="javascript:void(0)" method="post" id="formAgregarLote">
-                        @csrf
-
-                        <input type="hidden" id="producto_id" name="producto_id"
-                            value="@isset($idProducto){{ $idProducto }}@endisset">
-
-                        {{-- Campo identificador de lote --}}
-                        <div class="form-group mb-3">
-                            <label for="identificador"
-                                class="label">{{ __('formularios.batch_identification') }}</label>
-                            <div class="input-group mb-3">
-                                <input type="text" name="identificador" id="identificador" class="form-control"
-                                    value="" required>
-                                <div class="input-group-append">
-                                    <button type="button" id="escanear" class="btn btn-sm btn-dark">
-                                        <i class="fas fa-barcode"></i>
-                                        Escanear
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Campos de precio, cantidad y vencimiento --}}
-                        <div class="row">
-                            <div class="col-md-4 form-group mb-3">
-                                <label for="precio" class="label">{{ __('formularios.batch_price') }}</label>
-                                <input type="text" name="precio" id="precio" class="form-control" value="" required>
-                            </div>
-
-                            <div class="col-md-4 form-group mb-3">
-                                <label for="cantidad"
-                                    class="label">{{ __('formularios.batch_quantity') }}</label>
-                                <input type="text" name="cantidad" id="cantidad" class="form-control" value="" required>
-                            </div>
-
-                            <div class="col-md-4 form-group mb-3">
-                                @section('plugins.TempusDominusBs4', true)
-                                <x-adminlte-input-date name="vencimiento" id="vencimiento"
-                                    label="{{ __('formularios.batch_expiration') }}" igroup-size="md"
-                                    :config="$config" placeholder="{{ __('formularios.date_placeholder') }}"
-                                    autocomplete="off" required>
-                                    <x-slot name="appendSlot">
-                                        <div class="input-group-text bg-dark">
-                                            <i class="fas fa-calendar"></i>
-                                        </div>
-                                    </x-slot>
-                                </x-adminlte-input-date>
-                            </div>
-                        </div>
-
-                        {{-- Guardar lote nuevo --}}
-                        <div class="d-flex justify-content-end">
-                            <x-adminlte-button type="submit" theme="success" label="Guardar" id="guardarCliente" />
-                        </div>
-                    </form>
-                </x-adminlte-card>
-            </div>
-            <div class="overlay"><i class="fas fa-ban text-gray"></i></div>
+        <div class="card-body">
+            <table id="tabla2" class="table table-responsive-md" width="100%">
+                <thead>
+                    <th>ID</th>
+                    <th>Nº</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Vencimiento</th>
+                    <th></th>
+                </thead>
+            </table>
+        </div>
+        <div class="card-footer">
+            <h3>Total en stock:</u>&nbsp;<strong id="totalLotes"></strong></h3>
         </div>
     </div>
+
+    <x-adminlte-card title="Agregar nuevo lote" id="agregarLote" theme="lime" icon="fas fa-plus mr-2">
+
+    {{-- FORMULARIO TIPO JQUERY.VALIDATE --}}
+        <form action="javascript:void(0)" method="post" id="formAgregarLote">
+            @csrf
+
+            <input type="hidden" id="producto_id" name="producto_id"
+                value="{{ $producto->id }}">
+
+            {{-- Campo identificador de lote --}}
+            <div class="form-group mb-3">
+                <label for="identificador"
+                    class="label">{{ __('formularios.batch_identification') }}</label>
+                <div class="input-group mb-3">
+                    <input type="text" name="identificador" id="identificador" class="form-control"
+                        value="" required>
+                    <div class="input-group-append">
+                        <button type="button" id="escanear" class="btn btn-sm btn-dark">
+                            <i class="fas fa-barcode"></i>
+                            Escanear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Campos de precio, cantidad y vencimiento --}}
+            <div class="row">
+                <div class="col-md-4 form-group mb-3">
+                    <label for="precio" class="label">{{ __('formularios.batch_price') }}</label>
+                    <input type="text" name="precio" id="precio" class="form-control" value="" required>
+                </div>
+
+                <div class="col-md-4 form-group mb-3">
+                    <label for="cantidad"
+                        class="label">{{ __('formularios.batch_quantity') }}</label>
+                    <input type="text" name="cantidad" id="cantidad" class="form-control" value="" required>
+                </div>
+
+                <div class="col-md-4 form-group mb-3">
+                    @section('plugins.TempusDominusBs4', true)
+                    <x-adminlte-input-date name="vencimiento" id="vencimiento"
+                        label="{{ __('formularios.batch_expiration') }}" igroup-size="md"
+                        :config="$config" placeholder="{{ __('formularios.date_placeholder') }}"
+                        autocomplete="off" required>
+                        <x-slot name="appendSlot">
+                            <div class="input-group-text bg-dark">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                        </x-slot>
+                    </x-adminlte-input-date>
+                </div>
+            </div>
+
+            {{-- Guardar lote nuevo --}}
+            <div class="d-flex justify-content-end">
+                <x-adminlte-button type="submit" theme="success" label="Guardar" id="guardarCliente" />
+            </div>
+        </form>
+    </x-adminlte-card>
 @endsection
 
 @section('js')
@@ -151,8 +124,10 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/localization/methods_pt.js"></script>
     <script>
         $(document).ready(function() {
-            // VARIABLES LOCALES
+            // VARIABLES GLOBALES
             var tabla2;
+            var idProducto = {{ $producto->id }};
+            getLotes(idProducto);
 
             // FUNCIÓN QUE GENERA LA TABLA DE LOS LOTES
             function getLotes(idProducto) {
@@ -214,7 +189,8 @@
                         targets: 5,
                         data: null,
                         width: 30,
-                        defaultContent: "<button id='btnBorrar' class='btn-xs btn-primary'><i class='fa fa-lg fa-fw fa-trash'></i></button>"
+                        defaultContent:
+                        "<button id='btnBorrar' class='btn-xs btn-primary'><i class='fa fa-lg fa-fw fa-trash'></i></button>"
                     }
                 ],
                 "fnDrawCallback": function(row, data, start, end, display) {
@@ -240,6 +216,7 @@
                 }
             });
 
+            // agrega items en la tabla 2
             tabla2.row.add({
                 id: '*',
                 identificador: '*',
@@ -277,6 +254,7 @@
                             url: "{{ url('borrar-lote') }}",
                             type: "DELETE",
                             data: datos,
+                            dataType: "json",
                             success: function(response) {
                                 //sweet alert
                                 Swal.fire(
@@ -285,15 +263,20 @@
                                     'success'
                                 );
 
-                                // Se actualiza la segunda tabla
-                                var idProducto = $(
-                                    'input[type=hidden][name=producto_id]').val();
+                                // Se actualiza la tabla
                                 getLotes(idProducto);
                             },
                             error: function(response) {
                                 console.log(response);
                                 //sweet alert
-                                Swal('Algo salió mal...', response.mensaje, 'error');
+                                Swal.fire(
+                                    'Algo salió mal...',
+                                    response,
+                                    'error'
+                                );
+
+                                // Se actualiza la tabla
+                                getLotes(idProducto);
                             }
                         });
                     }
@@ -303,49 +286,6 @@
             //BOTON ESCANEAR - SIN IMPLEMENTAR
             $('#escanear').on('click', function() {
                 alert("Escanee el código de barras");
-            });
-
-            // DEFINICION DE tabla1
-            var tabla1 = $('#tabla1').DataTable({
-                "responsive": true,
-                "dom": 'Pfrtip',
-                "scrollY": "50vh",
-                "scrollCollapse": true,
-                "paging": false,
-                "select": true,
-                "columns": [{
-                        data: 'ID',
-                        visible: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'Droga'
-                    }
-                ],
-                "order": [1, 'asc'],
-                "bInfo": false,
-            });
-
-            // CAPTURA DEL CLICK EN EL DATATABLE tabla1
-            $('#tabla1 tbody').on('click', 'tr', function() {
-                // marcado/desmarcado del row seleccionado
-                if ($(this).hasClass('selected')) {
-                    $(this).removeClass('selected');
-                } else {
-                    tabla1.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                }
-
-                // se sigue con el resto del procedimiento
-                $('#lotesVigentes .overlay').remove();
-                var idProducto = tabla1.row(this).data().ID;
-                var droga = tabla1.row(this).data().Droga;
-                $('#tituloLotesVigentes').text('Lotes vigentes para ' + droga);
-                $('#producto_id').val(idProducto);
-
-                // Se genera la segunda tabla con la característica destroy, para poder recargarla con los nuevos datos
-                getLotes(idProducto);
-
             });
 
             //AGREGAR LOTE --> VALIDACIÓN DEL FORMULARIO POR JQUERY
@@ -403,7 +343,6 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             }
                         });
-
                         $.ajax({
                             url: "{{ route('administracion.lotes.store') }}",
                             type: "POST",
@@ -421,9 +360,6 @@
                                     timer: 2500
                                 });
 
-                                // Se actualiza la segunda tabla con la característica destroy, para poder recargarla con los nuevos datos
-                                var idProducto = $('input[type=hidden][name=producto_id]')
-                                    .val();
                                 getLotes(idProducto);
 
                                 // se resetea el formulario de AGREGAR LOTES
@@ -439,9 +375,6 @@
                                     showConfirmButton: true,
                                 });
 
-                                // Se actualiza la segunda tabla con la característica destroy, para poder recargarla con los nuevos datos
-                                var idProducto = $('input[type=hidden][name=producto_id]')
-                                    .val();
                                 getLotes(idProducto);
 
                                 // se resetea el formulario de AGREGAR LOTES

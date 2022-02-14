@@ -6,6 +6,9 @@
             color: white;
             background-color: rgb(160, 0, 0);
         }
+        tabla2.dataTable {
+            border-top: 1px solid black;
+        }
     </style>
 @endsection
 
@@ -24,14 +27,14 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-    <x-adminlte-card>
-        <table id="tabla2" class="table table-bordered display nowrap" style="width: 100%;">
+    <x-adminlte-card class="dataTables_processing">
+        <table id="tabla2" class="table table-bordered" style="width: 100%;">
             <thead>
                 <th>ID</th>
                 <th>Droga</th>
                 <th>Presentación</th>
-                <th>Proveedor/es</th>
                 <th>Lotes vigentes</th>
+                <th>Proveedor/es</th>
                 <th></th>
             </thead>
             <tbody>
@@ -61,30 +64,31 @@
                             @endforeach
                         </td>
                         <td>
+                            @if (count($producto->lotes) > 0)
+                                <div class="row d-flex">
+                                    @foreach ($producto->lotes as $lote)
+                                        <div class="col-6 px-auto">
+                                            Lote: {{ $lote->identificador }}
+                                        </div>
+                                        <div class="col-6 px-auto">
+                                            Vto: {{ $lote->hasta->format('m/Y') }} <br>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="d-flex">
+                                    <span class="mt-auto">Total en stock:&nbsp; <strong>{{ $producto->lotes->sum('cantidad') }}</strong></span>
+                                </div>
+                            @else
+                                <span style="color: lightcoral">SIN LOTE</span>
+                            @endif
+                        </td>
+                        <td>
                             @if (count($producto->proveedores) > 0)
                                 @foreach ($producto->proveedores as $proveedor)
                                     {{ $proveedor->razonSocial }}<br>
                                 @endforeach
                             @else
                                 <span style="color: lightcoral">SIN PROVEEDOR</span>
-                            @endif
-                        </td>
-                        <td>
-                            @if (count($producto->lotes) > 0)
-                                <div class="row d-flex">
-                                    @foreach ($producto->lotes as $lote)
-                                        <div class="col-6 px-auto">
-                                            <strong>Lote:</strong> <a href="{{ route('administracion.lotes.show', $lote->id) }}">{{ $lote->identificador }}</a>
-                                        </div>
-                                        <div class="col-6 px-auto">
-                                            <strong>Vto:</strong> {{ $lote->hasta->format('m/Y') }} <br>
-                                        </div>
-                                    @endforeach
-                                    <hr>
-                                    Total en stock: &nbsp; <strong>{{ $producto->lotes->sum('cantidad') }}</strong>
-                                </div>
-                            @else
-                                <span style="color: lightcoral">SIN LOTE</span>
                             @endif
                         </td>
                         <td class="text-center" style="vertical-align: middle;" width="100px">
@@ -139,7 +143,9 @@
                 "columnDefs": [
                     {targets: 0, visible: false},
                     {targets: 1, width: '1%'},
-                    {targets: 4, width: '23%'},
+                    {targets: 2, width: '30%'},
+                    {targets: 3, width: '25%'},
+                    {targets: 4, width: '20%'},
                     {targets: 5, width: '1%'}
                 ]
             });

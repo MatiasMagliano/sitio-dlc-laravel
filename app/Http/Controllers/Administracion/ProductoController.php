@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 class ProductoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra la vista de productos (a golpe de vista).
      *
      * @return \Illuminate\Http\Response
      */

@@ -16,7 +16,7 @@
 @section('content_header')
     <div class="row">
         <div class="col-md-10">
-            <h1>Administración de productos | Crear producto</h1>
+            <h1>Crear producto y sus características</h1>
         </div>
         <div class="col-md-2 d-flex justify-content-xl-end">
             <a href="{{ route('administracion.productos.index') }}" role="button"
@@ -33,7 +33,7 @@
             <div class="card-header">
                 <div class="row d-flex">
                     <div class="col-8">
-                        <h6 class="heading-small text-muted mb-1">DATOS DEL PRODUCTO</h6>
+                        <h6 class="heading-small text-muted mb-1">NOMBRE DEL PRODUCTO</h6>
                         <p>La creación de un producto implica asociarlo a un proveedor y una presentación (existentes o no), luego es necesario incluir los datos del lote adquirido.</p>
                     </div>
                     <div class="col-4 text-right">
@@ -54,92 +54,89 @@
                 </div>
             </div>
         </div>
-        <div class="form-row d-flex">
+
+        <div class="card-group">
             {{-- DATOS DE PROVEEDOR --}}
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row d-flex">
-                            <div class="col-8">
-                                <h6 class="heading-small text-muted mb-1">PROVEEDOR</h6>
-                            </div>
-                            <div class="col-4 text-right">
-                                <a href="{{ route('administracion.proveedores.create') }}" class="btn btn-sm btn-info"
-                                    role="button"><i class="fas fa-plus fa-sm"></i>&nbsp;<span class="hide">proveedor</span></a>
-                            </div>
+            <div class="card mr-2">
+                <div class="card-header">
+                    <div class="row d-flex">
+                        <div class="col-8">
+                            <h6 class="heading-small text-muted mb-1">PROVEEDOR</h6>
+                        </div>
+                        <div class="col-4 text-right">
+                            <a href="{{ route('administracion.proveedores.create') }}" class="btn btn-sm btn-info"
+                                role="button"><i class="fas fa-plus fa-sm"></i>&nbsp;<span class="hide">proveedor</span></a>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="pl-lg-4">
-                            <div class="form-group">
-                                <label for="input-nombre">Razón social</label>
-                                <select name="proveedor" id="input-nombre"
-                                    class="selecion-proveedor form-control-alternative @error('proveedor') is-invalid @enderror">
-                                    <option data-placeholder="true"></option>
-                                    @foreach ($proveedores as $proveedor)
-                                        @if ($proveedor->id == old('proveedor'))
-                                            <option value="{{ $proveedor->id }}" selected>{{ $proveedor->razonSocial }} -
-                                                {{ $proveedor->cuit }}</option>
-                                        @else
-                                            <option value="{{ $proveedor->id }}">{{ $proveedor->razonSocial }} -
-                                                {{ $proveedor->cuit }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                                @error('proveedor')<div class="invalid-feedback">{{$message}}</div>@enderror
-                            </div>
+                </div>
+                <div class="card-body">
+                    <div class="pl-lg-4">
+                        <div class="form-group">
+                            <label for="input-nombre">Razón social</label>
+                            <select name="proveedor" id="input-nombre"
+                                class="selecion-proveedor form-control-alternative @error('proveedor') is-invalid @enderror">
+                                <option data-placeholder="true"></option>
+                                @foreach ($proveedores as $proveedor)
+                                    @if ($proveedor->id == old('proveedor'))
+                                        <option value="{{ $proveedor->id }}" selected>{{ $proveedor->razonSocial }} -
+                                            {{ $proveedor->cuit }}</option>
+                                    @else
+                                        <option value="{{ $proveedor->id }}">{{ $proveedor->razonSocial }} -
+                                            {{ $proveedor->cuit }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @error('proveedor')<div class="invalid-feedback">{{$message}}</div>@enderror
                         </div>
                     </div>
                 </div>
             </div>
 
             {{-- DATOS DE PRESENTACION --}}
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row d-flex">
-                            <div class="col-8">
-                                <h6 class="heading-small text-muted mb-1">PRESENTACION</h6>
-                            </div>
-                            <div class="col-4 text-right">
-                                <a href="{{ route('administracion.presentaciones.create') }}" class="btn btn-sm btn-info"
-                                    role="button"><i class="fas fa-plus fa-sm"></i>&nbsp;<span class="hide">presentación</span></a>
-                            </div>
+            <div class="card ml-2">
+                <div class="card-header">
+                    <div class="row d-flex">
+                        <div class="col-8">
+                            <h6 class="heading-small text-muted mb-1">PRESENTACION</h6>
+                        </div>
+                        <div class="col-4 text-right">
+                            <a href="{{ route('administracion.presentaciones.create') }}" class="btn btn-sm btn-info"
+                                role="button"><i class="fas fa-plus fa-sm"></i>&nbsp;<span class="hide">presentación</span></a>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="pl-lg-4">
-                            <div class="form-group">
-                                <label for="input-presentacion">Forma farmacéutica y presentación</label>
-                                <select name="presentacion" id="input-presentacion"
-                                    class="selecion-presentacion form-control-alternative @error('presentacion') is-invalid @enderror">
-                                    <option data-placeholder="true"></option>
-                                    @foreach ($presentaciones as $presentacion)
-                                        @if ($presentacion->id == old('presentacion'))
-                                            <option value="{{ $presentacion->id }}" selected>
-                                                @if ($presentacion->hospitalario)
-                                                    <b>H - </b>
-                                                @endif
-                                                {{ $presentacion->forma }}, {{ $presentacion->presentacion }}
-                                                @if ($presentacion->trazabilidad)
-                                                    <b> - Trazable</b>
-                                                @endif
-                                            </option>
-                                        @else
-                                            <option value="{{ $presentacion->id }}">
-                                                @if ($presentacion->hospitalario)
-                                                    <b>H - </b>
-                                                @endif
-                                                {{ $presentacion->forma }}, {{ $presentacion->presentacion }}
-                                                @if ($presentacion->trazabilidad)
-                                                    <b> - Trazable</b>
-                                                @endif
-                                            </option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                                @error('presentacion')<div class="invalid-feedback">{{$message}}</div>@enderror
-                            </div>
+                </div>
+                <div class="card-body">
+                    <div class="pl-lg-4">
+                        <div class="form-group">
+                            <label for="input-presentacion">Forma farmacéutica y presentación</label>
+                            <select name="presentacion" id="input-presentacion"
+                                class="selecion-presentacion form-control-alternative @error('presentacion') is-invalid @enderror">
+                                <option data-placeholder="true"></option>
+                                @foreach ($presentaciones as $presentacion)
+                                    @if ($presentacion->id == old('presentacion'))
+                                        <option value="{{ $presentacion->id }}" selected>
+                                            @if ($presentacion->hospitalario)
+                                                <b>H - </b>
+                                            @endif
+                                            {{ $presentacion->forma }}, {{ $presentacion->presentacion }}
+                                            @if ($presentacion->trazabilidad)
+                                                <b> - Trazable</b>
+                                            @endif
+                                        </option>
+                                    @else
+                                        <option value="{{ $presentacion->id }}">
+                                            @if ($presentacion->hospitalario)
+                                                <b>H - </b>
+                                            @endif
+                                            {{ $presentacion->forma }}, {{ $presentacion->presentacion }}
+                                            @if ($presentacion->trazabilidad)
+                                                <b> - Trazable</b>
+                                            @endif
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @error('presentacion')<div class="invalid-feedback">{{$message}}</div>@enderror
                         </div>
                     </div>
                 </div>
@@ -147,7 +144,7 @@
         </div>
 
         {{-- DATOS DEL LOTE --}}
-        <div class="card">
+        <div class="card mt-3">
             <div class="card-header">
                 <h6 class="heading-small text-muted mb-1">DATOS DEL LOTE</h6>
             </div>

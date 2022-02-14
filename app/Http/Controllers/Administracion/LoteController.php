@@ -36,9 +36,22 @@ class LoteController extends Controller
         return view('administracion.lotes.show', compact('lote', 'producto'));
     }
 
+    /**
+     * Devuelve la vista index de lotes simplificada (sin la selección del producto)
+     * con el producto ya seleccionado, para agregar o quitar lotes --> NO SE PUEDE MODIFICAR UN LOTE.
+     * Recibe el id de producto y lista
+     */
     public function edit($id)
     {
+        $producto = Producto::findOrFail($id);
 
+        $config = [
+            'format' => 'DD/MM/YYYY',
+            'dayViewHeaderFormat' => 'MMM YYYY',
+            'minDate' => "js:moment().startOf('month')",
+        ];
+
+        return view('administracion.lotes.edit', compact('producto', 'config'));
     }
 
     /**
@@ -73,9 +86,13 @@ class LoteController extends Controller
         }
     }
 
-    public function destroy($id){
-        Lote::destroy($id);
+    public function destroy(Request $request){
+        if($request->ajax()){
+            $lote = Lote::destroy($request->id);
 
-        return response()->json(['mensaje' => 'El lote ha sido eliminado correctamente']);
+            return response()->json($lote);
+            //['mensaje' => 'El lote ha sido eliminado correctamente']
+        }
+        return response()->json(['mensaje' => 'No se encuentra el identificador del lote'+$request->id]);
     }
 }
