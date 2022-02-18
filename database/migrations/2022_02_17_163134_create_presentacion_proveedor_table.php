@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductoProveedorTable extends Migration
+class CreatePresentacionProveedorTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class CreateProductoProveedorTable extends Migration
      */
     public function up()
     {
-        Schema::create('producto_proveedor', function (Blueprint $table) {
-            $table->foreignId('producto_id')->constrained()->onDelete('cascade');
+        Schema::create('presentacion_proveedor', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('presentacion_id')->constrained()->onDelete('cascade');
             $table->foreignId('proveedor_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -26,6 +29,6 @@ class CreateProductoProveedorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('producto_proveedor');
+        Schema::dropIfExists('presentacion_proveedor');
     }
 }

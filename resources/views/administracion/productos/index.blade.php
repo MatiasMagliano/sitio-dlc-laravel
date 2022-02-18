@@ -28,72 +28,49 @@
 {{-- aquí va contenido --}}
 @section('content')
     <x-adminlte-card class="dataTables_processing">
-        <table id="tabla2" class="table table-bordered" style="width: 100%;">
+        <table id="tabla2" class="table table-bordered" width="100%">
             <thead>
-                <th>ID</th>
-                <th>Droga</th>
-                <th>Presentación</th>
-                <th>Lotes vigentes</th>
-                <th>Proveedor/es</th>
-                <th></th>
+                <tr>
+                    <th>ID</th>
+                    <th style="vertical-align: middle;">Droga</th>
+                    <th>Detalles</th>
+                    <th style="vertical-align: middle;">ACCIONES</th>
+                </tr>
             </thead>
             <tbody>
                 @foreach ($productos as $producto)
                     <tr>
-                        <td>{{ $producto->id }}</td>
-                        <td width="200px" style="vertical-align: middle;">
-                            <a href="{{ route('administracion.productos.show', $producto->id) }}">{{ $producto->droga }}</a>
-                            {{--{{ $producto->droga }}--}}
+                        <td>
+                            {{ $producto->id }}
                         </td>
                         <td style="vertical-align: middle;">
-                            {{-- Aquí se hace referencia a la relación creada en el modelo --}}
-                            @foreach ($producto->presentaciones as $presentacion)
-                                <a href="{{ route('administracion.presentaciones.edit', [$producto->id, $presentacion->id]) }}">{{ $presentacion->forma }}, {{ $presentacion->presentacion }}</a>
-                                <br>
-                                @if ($presentacion->hospitalario || $presentacion->trazabilidad)
-                                    Producto
-                                    @if ($presentacion->hospitalario)
-                                        <strong>HOSPITALARIO</strong>
-                                    @endif
-                                    @if ($presentacion->trazabilidad)
-                                        {{--MÉTODO NO IMPLEMENTADO TODAVÍA--}}
-                                        <span style="color: red; font-weight:800;">TRAZABLE </span><a href="{{ route('administracion.trazabilidad.show', $producto->id) }}" class="btn-sm bg-gray" role="button">Ver</a>
-                                    @endif
-                                @endif
-                                <br>
-                            @endforeach
+                            {{ $producto->droga }}
                         </td>
                         <td>
-                            @if (count($producto->lotes) > 0)
-                                <div class="row d-flex">
-                                    @foreach ($producto->lotes as $lote)
-                                        <div class="col-6 px-auto">
-                                            Lote: {{ $lote->identificador }}
-                                        </div>
-                                        <div class="col-6 px-auto">
-                                            Vto: {{ $lote->hasta->format('m/Y') }} <br>
-                                        </div>
-                                    @endforeach
-                                </div>
-                                <div class="d-flex">
-                                    <span class="mt-auto">Total en stock:&nbsp; <strong>{{ $producto->lotes->sum('cantidad') }}</strong></span>
-                                </div>
-                            @else
-                                <span style="color: lightcoral">SIN LOTE</span>
-                            @endif
-                        </td>
-                        <td>
-                            @if (count($producto->proveedores) > 0)
-                                @foreach ($producto->proveedores as $proveedor)
-                                    {{ $proveedor->razonSocial }}<br>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-borderless" width="100%">
+                                @foreach ($producto->presentaciones as $presentacion)
+                                    <tr class="border-bottom">
+                                        <td width="33%" class="border-right">
+                                            {{ $presentacion->forma }}, {{ $presentacion->presentacion }}
+                                        </td>
+                                        <td width="33%">
+                                            @foreach ($presentacion->lotes as $lote)
+                                                {{ $lote->identificador }}, Vto: {{ $lote->hasta }} <br>
+                                            @endforeach
+                                        </td>
+                                        <td width="33%" class="border-left">
+                                            @foreach ($presentacion->proveedores as $proveedor) <br>
+                                                {{ $proveedor->razonSocial }}
+                                            @endforeach
+                                        </td>
+                                    </tr>
                                 @endforeach
-                            @else
-                                <span style="color: lightcoral">SIN PROVEEDOR</span>
-                            @endif
+                                </table>
+                            </div>
                         </td>
-                        <td class="text-center" style="vertical-align: middle;" width="100px">
-                            {{-- se crea este método, porque el borrado en Laravel se hace por POST --}}
-                            <a id="btnBorrar" class="btn btn-rm-hover btn-sm btn-light mx-1 shadow" ><i class="fa fa-lg fa-fw fa-trash"></i></a>
+                        <td style="vertical-align: middle;">
+                            ACCION
                         </td>
                     </tr>
                 @endforeach
@@ -141,12 +118,7 @@
                     }
                 ],
                 "columnDefs": [
-                    {targets: 0, visible: false},
-                    {targets: 1, width: '1%'},
-                    {targets: 2, width: '30%'},
-                    {targets: 3, width: '25%'},
-                    {targets: 4, width: '20%'},
-                    {targets: 5, width: '1%'}
+                    {targets: 0, visible: false}
                 ]
             });
 

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lote extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public $timestamps = false;
 
@@ -46,7 +47,7 @@ class Lote extends Model
     ];
 
     //Se definen las relaciones
-    public function producto(){
-        return $this->belongsTo(Producto::class);
+    public function presentacion(){
+        return $this->belongsTo(Presentacion::class);
     }
 }

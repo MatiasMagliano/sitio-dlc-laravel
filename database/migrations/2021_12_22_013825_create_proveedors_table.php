@@ -21,6 +21,7 @@ class CreateProveedorsTable extends Migration
             $table->string('direccion');
             $table->string('url');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

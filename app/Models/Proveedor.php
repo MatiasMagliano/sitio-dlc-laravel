@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Proveedor extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +24,9 @@ class Proveedor extends Model
     ];
 
     // Se definen las relaciones
-    public function productos(){
-        return $this->belongsToMany(Producto::class, 'producto_proveedor');
+    public function presentaciones(){
+        return $this->belongsToMany(Presentacion::class, 'presentacion_proveedor')
+        ->withPivot('deleted_at', null)
+        ->withTimestamps();
     }
 }

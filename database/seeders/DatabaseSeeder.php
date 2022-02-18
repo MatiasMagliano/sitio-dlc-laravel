@@ -16,12 +16,17 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         //$this->call(RolSeeder::class);
 
+        //tablas básicas
+        $this->call(UserSeeder::class);
         $this->call(RolSeeder::class);
         $this->call(ProductoSeeder::class);
         $this->call(ProveedorSeeder::class);
         $this->call(PresentacionSeeder::class);
-        $this->call(PresentacionProductoSeeder::class);
-        $this->call(ProductoProveedorSeeder::class);
         $this->call(LoteSeeder::class);
+
+        //tablas pivot
+        $this->call(PresentacionProductoSeeder::class);
+        $this->call(PresentacionProveedorSeeder::class);
+        $this->call(RolUserSeeder::class);
     }
 }

@@ -134,6 +134,7 @@ class ProductoController extends Controller
 
             $request->session()->flash('success', 'El producto ha sido eliminado correctamente');
 
+            //CORREGIR... NO HACE FALTA AJAX
             return response()->json(['redireccion' => route('administracion.productos.index')]);
         }
     }
