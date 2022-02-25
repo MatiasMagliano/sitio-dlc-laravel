@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lote extends Model
@@ -47,7 +48,27 @@ class Lote extends Model
     ];
 
     //Se definen las relaciones
-    public function presentacion(){
+    public function productos(){
+        return $this->belongsTo(Producto::class);
+    }
+
+    /**
+     * Get the Presentacion that owns the Lote
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function presentacion(): BelongsTo
+    {
         return $this->belongsTo(Presentacion::class);
+    }
+
+    /**
+     * Get the proveedores that owns the Lote
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function proveedores(): BelongsTo
+    {
+        return $this->belongsTo(Proveedor::class);
     }
 }

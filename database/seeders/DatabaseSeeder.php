@@ -25,8 +25,6 @@ class DatabaseSeeder extends Seeder
         $this->call(LoteSeeder::class);
 
         //tablas pivot
-        $this->call(PresentacionProductoSeeder::class);
-        $this->call(PresentacionProveedorSeeder::class);
         $this->call(RolUserSeeder::class);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Proveedor extends Model
@@ -24,9 +25,13 @@ class Proveedor extends Model
     ];
 
     // Se definen las relaciones
-    public function presentaciones(){
-        return $this->belongsToMany(Presentacion::class, 'presentacion_proveedor')
-        ->withPivot('deleted_at', null)
-        ->withTimestamps();
+    /**
+     * Get all of the lotes for the Proveedor
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function lotes(): HasMany
+    {
+        return $this->hasMany(Lote::class);
     }
 }
