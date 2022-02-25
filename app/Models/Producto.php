@@ -24,18 +24,23 @@ class Producto extends Model
     // En las relaciones MUCHOS-A-MUCHOS, donde hay una tabla pivot, se usa la relación belongsToMany en ambas tablas
     // Sin embargo, la relación se complica cuando se usa softDelete, ya que la tabla pivot también
     //está definida como softDelete, pero sin modelo.
-    public function presentaciones(){
-        return $this->belongsToMany(Presentacion::class, 'presentacion_producto')
+    public function lotes(){
+        return $this->belongsToMany(Lote::class, 'lote_producto')
         ->wherePivot('deleted_at', null)
         ->withTimestamps();
     }
 
     // Se puede definir un tipo de relación especial que es uno-a-muchos-atraves
     //para capturar la relación entre producto-lote y producto-proveedor
-    /*public function lotes(){
-        //esto dinalmente, es un inner join. Donde se llega a lotes a través de la tabla pivot
-        return $this->hasManyThrough(Lote::class, Presentacion::class, 'producto_id', 'presentacion_id', 'id', 'id');
-    }*/
+    /**
+     * Get all of the presentaciones for the Producto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function presentaciones(): HasManyThrough
+    {
+        return $this->hasManyThrough(Comment::class, Post::class);
+    }
     /*public function proveedores(){
         return $this->hasManyThrough(Proveedor::class, Presentacion::class, 'producto_id', 'presentacion_id', 'id', 'id');
     }*/
