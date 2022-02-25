@@ -11,6 +11,8 @@ class Lote extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'lotes';
+
     public $timestamps = false;
 
     //Se setean los campos "llenables" en masa
@@ -25,17 +27,6 @@ class Lote extends Model
         'cantidad'
     ];
 
-    //Se resguardan los campos protegidos (ojo que cuando se toman datos por ajax, los campos hidden no se devuelven...)
-    /**
-     * @var array
-     */
-    /*protected $hidden = [
-        'precioCompra',
-        'desde',
-        'hasta',
-        'cantidad'
-    ];*/
-
     //Se definen los campos casteables
     /**
      * @var array
@@ -48,12 +39,19 @@ class Lote extends Model
     ];
 
     //Se definen las relaciones
-    public function productos(){
+
+    /**
+     * Get the productos that owns the Lote
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function productos(): BelongsTo
+    {
         return $this->belongsTo(Producto::class);
     }
 
     /**
-     * Get the Presentacion that owns the Lote
+     * Get the presentacion that owns the Lote
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -63,11 +61,11 @@ class Lote extends Model
     }
 
     /**
-     * Get the proveedores that owns the Lote
+     * Get the proveedor that owns the Lote
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function proveedores(): BelongsTo
+    public function proveedor(): BelongsTo
     {
         return $this->belongsTo(Proveedor::class);
     }

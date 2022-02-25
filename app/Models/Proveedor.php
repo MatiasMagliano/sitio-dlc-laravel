@@ -11,6 +11,8 @@ class Proveedor extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'proveedors';
+
     /**
      * The attributes that are mass assignable.
      *

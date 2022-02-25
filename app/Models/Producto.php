@@ -11,6 +11,8 @@ class Producto extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'productos';
+
     //Se setean los campos "llenables" en masa
     /**
      * @var array
@@ -35,7 +37,14 @@ class Producto extends Model
      */
     public function presentaciones(): HasManyThrough
     {
-        return $this->hasManyThrough(Presentacion::class, Lote::class);
+        return $this->hasManyThrough(
+            Presentacion::class,
+            Lote::class,
+            'producto_id',
+            'id',
+            'id',
+            'presentacion_id'
+        );
     }
 
     /**
@@ -45,6 +54,13 @@ class Producto extends Model
      */
     public function proveedores(): HasManyThrough
     {
-        return $this->hasManyThrough(Proveedor::class, Lote::class);
+        return $this->hasManyThrough(
+            Proveedor::class,
+            Lote::class,
+            'producto_id',
+            'id',
+            'id',
+            'proveedor_id'
+        );
     }
 }

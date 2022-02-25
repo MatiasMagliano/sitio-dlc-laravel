@@ -1,17 +1,5 @@
 @extends('adminlte::page')
 
-@section('css')
-    <style>
-        .btn-rm-hover:hover {
-            color: white;
-            background-color: rgb(160, 0, 0);
-        }
-        tabla2.dataTable {
-            border-top: 1px solid black;
-        }
-    </style>
-@endsection
-
 @section('title', 'Administrar Productos')
 
 @section('content_header')
@@ -27,56 +15,76 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-    <x-adminlte-card class="dataTables_processing">
-        <table id="tabla2" class="table table-bordered" width="100%">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th style="vertical-align: middle;">Droga</th>
-                    <th>Detalles</th>
-                    <th style="vertical-align: middle;">ACCIONES</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($productos as $producto)
+
+    id de producto: {{$productos[0]->id}} <br>
+    @foreach ($productos[0]->lotes as $lote)
+        id: {{$lote->id}} <br>
+        producto_id: {{$lote->producto_id}} <br>
+        presentacion_id: {{$lote->presentacion_id}} <br>
+        proveedor_id: {{$lote->proveedor_id}}
+        <hr>
+    @endforeach
+    <hr>
+    @foreach ($collection as $item)
+
+    @endforeach
+
+    {{--<x-adminlte-card>
+        <div class="processing">
+            <table id="tabla2" class="table table-bordered table-responsive-md" width="100%">
+                <thead>
                     <tr>
-                        <td>
-                            {{ $producto->id }}
-                        </td>
-                        <td style="vertical-align: middle;">
-                            {{ $producto->droga }}
-                        </td>
-                        <td>
-                            <div class="table-responsive">
-                                <table class="table table-sm table-borderless" width="100%">
-                                @foreach ($producto->presentaciones as $presentacion)
-                                    <tr class="border-bottom">
-                                        <td width="33%" class="border-right">
-                                            {{ $presentacion->forma }}, {{ $presentacion->presentacion }}
-                                        </td>
-                                        <td width="33%">
-                                            @foreach ($presentacion->lotes as $lote)
-                                                {{ $lote->identificador }}, Vto: {{ $lote->hasta }} <br>
-                                            @endforeach
-                                        </td>
-                                        <td width="33%" class="border-left">
-                                            @foreach ($presentacion->proveedores as $proveedor) <br>
-                                                {{ $proveedor->razonSocial }}
-                                            @endforeach
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </table>
-                            </div>
-                        </td>
-                        <td style="vertical-align: middle;">
-                            ACCION
-                        </td>
+                        <th>ID</th>
+                        <th>Droga</th>
+                        <th>Presentaciones</th>
+                        <th>Lotes</th>
+                        <th>Proveedores</th>
+                        <th>ACCIONES</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </x-adminlte-card>
+                </thead>
+                <tbody>
+                    @foreach ($productos as $producto)
+                        @foreach ($producto->presentaciones as $presentacion)
+                        <tr>
+                            <td>
+                                {{$producto->id}}
+                            </td>
+                            <td style="vertical-align: middle;">
+                                {{$producto->droga}} ({{$producto->id}})
+                            </td>
+                            <td style="vertical-align: middle;">
+                                {{$presentacion->forma}}, {{$presentacion->presentacion}} ({{$presentacion->id}})
+                            </td>
+                            <td>
+                                @foreach ($presentacion->lotes as $lote)
+                                <div class="row d-flex">
+                                    <div class="col">
+                                        <u>Nº</u>: {{$lote->identificador}}
+                                    </div>
+                                    <div class="col">
+                                        <u>Vto</u>: {{$lote->hasta->format('m/Y')}} ({{$lote->id}}-{{$lote->producto_id}}-{{$lote->presentacion_id}}-{{$lote->proveedor_id}})
+                                    </div>
+                                </div>
+                                @endforeach
+                                <div class="border-top text-center">
+                                    Stock: {{$producto->lotes->sum('cantidad')}}
+                                </div>
+                            </td>
+                            <td style="vertical-align: middle;">
+                                @foreach ($presentacion->proveedores as $proveedor)
+                                    {{$proveedor->razonSocial}} ({{$proveedor->id}})<br>
+                                @endforeach
+                            </td>
+                            <td style="vertical-align: middle; text-align:center;">
+                                <a id="btnBorrar" class="text-cyan"><i class="fas fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </x-adminlte-card>--}}
 @endsection
 
 @section('js')
