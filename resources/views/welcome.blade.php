@@ -1,7 +1,7 @@
 <x-guest-layout>
     <!-- Barra superior -->
     <div class="container">
-        
+
     </div>
     <div class="header row">
         <div class="logo span6 col">
@@ -15,9 +15,9 @@
                     @else
                         <a href="{{ route('login') }}" class="col justify-content-center">Ingresar</a>
 
-                        @if (Route::has('register'))
+                        {{--@if (Route::has('register'))
                             <a href="{{ route('register') }}" class="col justify-content-center">Registarse</a>
-                        @endif
+                        @endif--}}
                     @endauth
                 </div>
             @endif
