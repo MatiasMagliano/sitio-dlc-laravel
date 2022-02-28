@@ -15,21 +15,7 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-
-    id de producto: {{$productos[0]->id}} <br>
-    @foreach ($productos[0]->lotes as $lote)
-        id: {{$lote->id}} <br>
-        producto_id: {{$lote->producto_id}} <br>
-        presentacion_id: {{$lote->presentacion_id}} <br>
-        proveedor_id: {{$lote->proveedor_id}}
-        <hr>
-    @endforeach
-    <hr>
-    @foreach ($collection as $item)
-
-    @endforeach
-
-    {{--<x-adminlte-card>
+    <x-adminlte-card>
         <div class="processing">
             <table id="tabla2" class="table table-bordered table-responsive-md" width="100%">
                 <thead>
@@ -44,47 +30,55 @@
                 </thead>
                 <tbody>
                     @foreach ($productos as $producto)
-                        @foreach ($producto->presentaciones as $presentacion)
-                        <tr>
-                            <td>
-                                {{$producto->id}}
-                            </td>
-                            <td style="vertical-align: middle;">
-                                {{$producto->droga}} ({{$producto->id}})
-                            </td>
-                            <td style="vertical-align: middle;">
-                                {{$presentacion->forma}}, {{$presentacion->presentacion}} ({{$presentacion->id}})
-                            </td>
-                            <td>
-                                @foreach ($presentacion->lotes as $lote)
+                    <tr>
+                        <td>
+                            {{$producto->id}}
+                        </td>
+                        <td style="vertical-align: middle;">
+                            {{$producto->droga}}
+                        </td>
+                        <td style="vertical-align: middle;">
+                            @foreach ($producto->presentaciones as $presentacion)
+                                {{$presentacion->forma}}, {{$presentacion->presentacion}} <br>
+                            @endforeach
+                        </td>
+                        <td>
+                            @if (count($producto->lotes) > 0)
+                                @foreach ($producto->lotes as $lote)
                                 <div class="row d-flex">
                                     <div class="col">
                                         <u>Nº</u>: {{$lote->identificador}}
                                     </div>
                                     <div class="col">
-                                        <u>Vto</u>: {{$lote->hasta->format('m/Y')}} ({{$lote->id}}-{{$lote->producto_id}}-{{$lote->presentacion_id}}-{{$lote->proveedor_id}})
+                                        <u>Vto</u>: {{$lote->hasta->format('m/Y')}}
                                     </div>
                                 </div>
                                 @endforeach
                                 <div class="border-top text-center">
                                     Stock: {{$producto->lotes->sum('cantidad')}}
                                 </div>
-                            </td>
-                            <td style="vertical-align: middle;">
-                                @foreach ($presentacion->proveedores as $proveedor)
-                                    {{$proveedor->razonSocial}} ({{$proveedor->id}})<br>
+                            @else
+                                <span style="color: lightcoral">SIN STOCK</span>
+                            @endif
+                        </td>
+                        <td style="vertical-align: middle;">
+                            @if (count($producto->proveedores) > 0)
+                                @foreach ($producto->proveedores as $proveedor)
+                                    {{$proveedor->razonSocial}} <br>
                                 @endforeach
-                            </td>
-                            <td style="vertical-align: middle; text-align:center;">
-                                <a id="btnBorrar" class="text-cyan"><i class="fas fa-trash-alt"></i></a>
-                            </td>
-                        </tr>
-                        @endforeach
+                            @else
+                                <span style="color: lightcoral">SIN PROVEEDOR</span>
+                            @endif
+                        </td>
+                        <td style="vertical-align: middle; text-align:center;">
+                            <a id="btnBorrar" class="text-cyan"><i class="fas fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-    </x-adminlte-card>--}}
+    </x-adminlte-card>
 @endsection
 
 @section('js')
