@@ -8,7 +8,8 @@
             <h1>Administración de productos</h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
-            <a href="{{ route('administracion.productos.create') }}" role="button" class="btn btn-md btn-success">Crear producto</a>
+            <a href="{{ route('administracion.productos.create') }}" role="button"
+                class="btn btn-md btn-success">Crear producto</a>
         </div>
     </div>
 @stop

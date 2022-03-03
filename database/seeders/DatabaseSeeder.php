@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Producto;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ProveedorSeeder::class);
         $this->call(PresentacionSeeder::class);
         $this->call(LoteSeeder::class);
+        $this->call(ClientesSeeder::class);
 
         //tablas pivot
         $this->call(RolUserSeeder::class);

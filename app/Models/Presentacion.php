@@ -19,10 +19,7 @@ class Presentacion extends Model
      * @var array
      */
     protected $fillable = [
-        'forma',
-        'presentacion',
-        'hospitalario',
-        'trazabilidad'
+        'forma', 'presentacion', 'stock', 'hospitalario', 'trazabilidad'
     ];
 
     // Se definen las relaciones

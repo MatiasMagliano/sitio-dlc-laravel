@@ -20,7 +20,7 @@
         </div>
         <div class="col-md-2 d-flex justify-content-xl-end">
             <a href="{{ route('administracion.productos.index') }}" role="button"
-                class="btn btn-md btn-secondary">Volver</a>
+                class="btn btn-md btn-secondary">Volver a productos</a>
         </div>
     </div>
 @stop

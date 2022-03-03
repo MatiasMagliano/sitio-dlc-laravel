@@ -33,8 +33,8 @@ class Lote extends Model
      */
     protected $casts = [
         'precioCompra' => 'float',
-        'desde' => 'datetime:Y-m-d',
-        'hasta' => 'datetime:Y-m-d',
+        'desde' => 'datetime',
+        'hasta' => 'datetime',
         'cantidad' => 'int'
     ];
 

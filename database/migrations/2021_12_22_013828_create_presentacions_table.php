@@ -17,6 +17,7 @@ class CreatePresentacionsTable extends Migration
             $table->id();
             $table->string('forma');
             $table->string('presentacion');
+            $table->integer('stock')->default(0);
             $table->boolean('hospitalario');
             $table->boolean('trazabilidad');
             $table->timestamps();

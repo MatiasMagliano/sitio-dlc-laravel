@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Lote;
+use App\Observers\LoteObserver;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,6 +26,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        
+        Lote::observe(LoteObserver::class);
     }
 }

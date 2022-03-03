@@ -7,7 +7,7 @@ use App\Http\Controllers\Administracion\PresentacionController;
 use App\Http\Controllers\Administracion\ProductoController;
 use App\Http\Controllers\Administracion\ProveedorController;
 use App\Http\Controllers\Administracion\TrazabilidadController;
-use App\Models\Lote;
+use App\Http\Controllers\Administracion\CotizacionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,4 +55,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::resource('/lotes', LoteController::class)->except('destroy');
 
     Route::resource('/trazabilidad', TrazabilidadController::class);
+
+    Route::resource('/cotizaciones', CotizacionController::class)->except('edit', 'update');
+    Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])->name('cotizaciones.finalizar');
 });

@@ -7,7 +7,6 @@ use App\Models\Lote;
 use App\Models\Producto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class LoteController extends Controller
 {

@@ -275,7 +275,7 @@ return [
         [
             'text' => 'quotations',
             'icon' => 'fab fa-shopify',
-            'url'  => '/administracion/cotizaciones',
+            'route'  => 'administracion.cotizaciones.index',
             'can'  => 'es-administracion',
         ],
         ['header' => 'account_settings'],
