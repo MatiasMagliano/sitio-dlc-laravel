@@ -4,9 +4,6 @@
 
 @section('css')
     <style>
-        .fondoTabla {
-            background-color: rgba(150, 150, 255, 0.2);
-        }
         @media (max-width: 600px) {
             .hide {
                 display: none;
@@ -20,9 +17,9 @@
         <div class="col-xl-8">
             <h1>Administración de cotizaciones</h1>
         </div>
-        <div class="col-xl-4 d-flex justify-content-xl-end">
-            <a href="{{ route('administracion.cotizaciones.create') }}" role="button"
-                class="btn btn-md btn-success">Crear cotización</a>
+        <div class="col-md-4 d-flex justify-content-xl-end">
+            <a href="{{ route('administracion.cotizaciones.index') }}" role="button"
+                class="btn btn-md btn-secondary">Volver a cotizaciones</a>
         </div>
     </div>
 @stop
@@ -54,7 +51,7 @@
             </div>
         </div>
         <div class="card-body">
-            <table id="tabla2" class="table table-responsive-md fondoTabla" width="100%">
+            <table class="table table-responsive-md" width="100%">
                 <thead>
                     <tr>
                         <th>Fecha</th>
@@ -83,7 +80,7 @@
                             @if (!$cotizacion->finalizada)
                                 <span class="text-danger">Pendiente: </span> {{$cotizacion->estado}}
                             @else
-                                <span class="text-success">Presentada el: </span> {{$cotizacion->finalizada->format('dd/mm/YYYY')}}
+                                <span class="text-success">Presentada el: </span> {{$cotizacion->finalizada->format('d/m/Y')}}
                             @endif
                         </td>
                     </tr>
@@ -100,19 +97,80 @@
                 </div>
                 <div class="col-4 text-right">
                     @if (!$cotizacion->finalizada)
-                        {{-- TERMINÉ ACÁ --> AGREGAR LA RUTA --}}
-                        <a href="{{ route('sales.product.add', ['sale' => $sale->id]) }}" class="btn btn-sm btn-primary">Add</a>
+                        <a href="{{ route('administracion.cotizaciones.agregar.producto', ['cotizacion' => $cotizacion->id]) }}"
+                            class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus fa-sm"></i>&nbsp;<span class="hide">agregar productos</span>
+                        </a>
                     @endif
                 </div>
             </div>
         </div>
-        <div class="card-body"></div>
+        <div class="card-body">
+            <table id="tablaProductos" class="table table-responsive-md table-bordered table-condensed" width="100%">
+                <thead>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio unitario</th>
+                    <th>Total</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    @foreach ($cotizacion->productos as $cotizado)
+                    <tr>
+                        <td>{{--Producto: producto+presentacion--}}
+                            {{$cotizado->producto->droga}}, {{$cotizado->producto->presentaciones->forma}} {{$cotizado->producto->presentaciones->presentacion}}
+                        </td>
+                        <td>
+                            {{$cotizado->cantidad}}
+                        </td>
+                        <td>
+                            {{$cotizado->precio}}
+                        </td>
+                        <td>
+                            ${{$cotizado->total}}
+                        </td>
+                        <td>
+                            @if (!$cotizacion->finalizada)
+                                <a href="{{ route('administracion.cotizaciones.editar.producto', ['cotizacion' => $cotizacion, 'productoCotizado' => $cotizado]) }}"
+                                    class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
+                                    title="Editar producto cotizado">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <form action="{{ route('administracion.cotizaciones.borrar.producto', ['cotizacion' => $cotizacion, 'productoCotizado' => $cotizado]) }}"
+                                    id="{{$cotizado->id}}" method="post" class="d-inline">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="button" class="btn btn-link" data-toggle="tooltip"
+                                        data-placement="bottom" title="Borrar cotización"
+                                        onclick="borrarProductoCotizado({{$cotizado->id}})">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 @endsection
 
 @section('js')
     @include('partials.alerts')
     <script>
+        $(document).ready(function() {
+            $('#tablaProductos').DataTable( {
+                "responsive": true,
+                "dom": 'Pfrtip',
+                "scrollY": "50vh",
+                "scrollCollapse": true,
+                "paging": false,
+                "order": [0, 'asc'],
+                "bInfo": false,
+                "searching": false
+            });
+        });
         function confirmarCotizacion(){
             Swal.fire({
                 icon: 'warning',
@@ -124,6 +182,22 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.replace('{{ route('administracion.cotizaciones.finalizar', $cotizacion) }}');
+                }
+            });
+        }
+
+        function borrarProductoCotizado(id){
+            Swal.fire({
+                icon: 'warning',
+                title: 'Borrar producto',
+                text: 'Esto quitará el producto de la lista.',
+                confirmButtonText: 'Borrar',
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#' + id).submit();
+                    window.location.replace('{{ route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]) }}');
                 }
             });
         }

@@ -51,4 +51,31 @@ class Presentacion extends Model
             'proveedor_id'
         );
     }
+
+    /**
+     * Get all of the productos for the Presentacion
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function productos(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Producto::class,
+            Lote::class,
+            'producto_id',
+            'id',
+            'id',
+            'producto_id'
+        );
+    }
+
+    /**
+     * Get all of the productosCotizados for the Producto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function productosCotizados(): HasMany
+    {
+        return $this->hasMany(ProductoCotizado::class);
+    }
 }

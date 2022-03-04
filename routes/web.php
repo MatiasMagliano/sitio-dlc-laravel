@@ -57,5 +57,16 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::resource('/trazabilidad', TrazabilidadController::class);
 
     Route::resource('/cotizaciones', CotizacionController::class)->except('edit', 'update');
-    Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])->name('cotizaciones.finalizar');
+    Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])
+        ->name('cotizaciones.finalizar');
+    Route::get('/cotizaciones/{cotizacion}/agregar/producto', [CotizacionController::class, 'agregarProducto'])
+        ->name('cotizaciones.agregar.producto');
+    Route::get('/cotizaciones/{cotizacion}/producto/{productoCotizado}/edit', [CotizacionController::class, 'editarProductoCotizado'])
+        ->name('cotizaciones.editar.producto');
+    Route::post('/cotizaciones/{cotizacion}/producto', [CotizacionController::class, 'guardarProductoCotizado'])
+        ->name('cotizaciones.guardar.producto');
+    Route::match(['put', 'patch'], '/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class], 'actualizarProductoCotizado')
+        ->name('cotizaciones.actualizar.rpoducto');
+    Route::delete('/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class, 'borrarProductoCotizado'])
+        ->name('cotizaciones.borrar.producto');
 });

@@ -91,9 +91,9 @@
             debugger;
             Swal.fire({
                 icon: 'warning',
-                title: 'Presentar cotización',
-                text: 'A continuación se le presentará un archivo PDF para descargar y presentar al cliente',
-                confirmButtonText: 'Presentar',
+                title: 'Borrar cotización',
+                text: 'Su cotización no contiene líneas, esto borrará la referencia en el registro.',
+                confirmButtonText: 'Borrar',
                 showCancelButton: true,
                 cancelButtonText: 'Cancelar',
             }).then((result) => {

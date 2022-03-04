@@ -6,6 +6,8 @@ use App\Models\Cotizacion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Cliente;
+use App\Models\Producto;
+use App\Models\ProductoCotizado;
 
 class CotizacionController extends Controller
 {
@@ -108,6 +110,40 @@ class CotizacionController extends Controller
     // MÉTODOS ESPECIALES
     public function finalizar(Cotizacion $cotizacion)
     {
-        dd($cotizacion);
+        //FINALIZAR COTIZACION
+    }
+
+    public function agregarProducto(Cotizacion $cotizacion)
+    {
+        //AGREGAR PRESENTACION A COTIZACION
+        $productos = Producto::all();
+
+        return view('administracion.cotizaciones.agregarProducto', compact('cotizacion', 'productos'));
+    }
+
+    public function editarProductoCotizado(Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
+    {
+        //EDICION DE LA PRESENTACION COTIZADA
+    }
+
+    public function guardarProductoCotizado(Request $request, Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
+    {
+        //GUARDADO DEL PRODUCTO COTIZADO
+
+        // se obtienen en un arrary
+        // $producto[0]: producto_id
+        // $producto[1]: presentacion_id
+        $producto = $request->get('producto');
+        $producto_ids = explode('|', $producto); //esta función separa y guarda en un array
+    }
+
+    public function actualizarProductoCotizado(Request $request, Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
+    {
+        //ACTUALIZADO DEL PRODUCTO COTIZADO
+    }
+
+    public function borrarProductoCotizado(Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
+    {
+        //BORRADO DEL PRODUCTO COTIZADO
     }
 }
