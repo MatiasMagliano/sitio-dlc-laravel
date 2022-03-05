@@ -2,6 +2,7 @@
 
 use App\Models\Cotizacion;
 use App\Models\Presentacion;
+use App\Models\Producto;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,6 +19,7 @@ class CreateProductoCotizadosTable extends Migration
         Schema::create('producto_cotizados', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Cotizacion::class)->constrained();
+            $table->foreignIdFor(Producto::class)->constrained();
             $table->foreignIdFor(Presentacion::class)->constrained();
             $table->integer('cantidad');
             $table->decimal('precio', 10, 2);

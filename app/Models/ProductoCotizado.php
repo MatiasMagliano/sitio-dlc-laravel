@@ -9,21 +9,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProductoCotizado extends Model
 {
     protected $fillable = [
-        'cotizacions_id', 'presentacion_id', 'cantidad', 'precio', 'total'
+        'cotizacion_id', 'producto_id', 'presentacion_id', 'cantidad', 'precio', 'total'
     ];
 
 
 
     // relaciones
     /**
-     * Get the presentaciones that owns the ProductoCotizado
+     * Get the producto that owns the ProductoCotizado
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function presentaciones(): BelongsTo
+    public function producto(): BelongsTo
     {
-        return $this->belongsTo(Presentacion::class);
+        return $this->belongsTo(Producto::class);
     }
+
     /**
      * Get the cotizaciones that owns the ProductoCotizado
      *

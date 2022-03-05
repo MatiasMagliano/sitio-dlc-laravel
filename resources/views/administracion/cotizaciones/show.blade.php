@@ -108,6 +108,7 @@
         <div class="card-body">
             <table id="tablaProductos" class="table table-responsive-md table-bordered table-condensed" width="100%">
                 <thead>
+                    <th>Línea</th>
                     <th>Producto</th>
                     <th>Cantidad</th>
                     <th>Precio unitario</th>
@@ -115,10 +116,12 @@
                     <th></th>
                 </thead>
                 <tbody>
+                    @php $i = 0; /*variable contadora del Nº Orden*/@endphp
                     @foreach ($cotizacion->productos as $cotizado)
                     <tr>
+                        <td>{{++$i}}</td>
                         <td>{{--Producto: producto+presentacion--}}
-                            {{$cotizado->producto->droga}}, {{$cotizado->producto->presentaciones->forma}} {{$cotizado->producto->presentaciones->presentacion}}
+                            {{$cotizado->producto->droga}}, {{$presentaciones[$cotizado->presentacion_id-1]->forma}} {{$presentaciones[$cotizado->presentacion_id-1]->presentacion}}
                         </td>
                         <td>
                             {{$cotizado->cantidad}}
@@ -158,6 +161,7 @@
 
 @section('js')
     @include('partials.alerts')
+    <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
         $(document).ready(function() {
             $('#tablaProductos').DataTable( {
@@ -168,7 +172,12 @@
                 "paging": false,
                 "order": [0, 'asc'],
                 "bInfo": false,
-                "searching": false
+                "searching": false,
+                "columnDefs": [{
+                        targets: 4,
+                        width: 70,
+                    },
+                ],
             });
         });
         function confirmarCotizacion(){

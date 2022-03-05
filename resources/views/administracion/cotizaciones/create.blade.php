@@ -59,7 +59,7 @@
                             @endif
                         @endforeach
                     </select>
-                    @error('cliente')<div class="invalid-feedback">{{$message}}</div>@enderror
+                    @error('cliente_id')<div class="invalid-feedback">{{$message}}</div>@enderror
                 </div>
 
                 <button type="submit" class="btn btn-success mt-4">Continuar</button>

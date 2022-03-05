@@ -2,9 +2,10 @@
     <script>
         Swal.fire({
         icon: 'success',
-        text: '{{ session('success') }}',
+        title: 'INFORMACION',
+        html: '{!! session('success') !!}',
         showConfirmButton: false,
-        timer: 2500
+        timer: 3000
         })
     </script>
 @endif
@@ -12,9 +13,9 @@
 @if (session('error'))
     <script>
         Swal.fire({
-        title: 'Error',
         icon: 'error',
-        text: '{{ session('error') }}',
+        title: 'ERROR',
+        html: '{!! session('error') !!}',
         showConfirmButton: true,
         })
     </script>

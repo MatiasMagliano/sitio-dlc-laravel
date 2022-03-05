@@ -21,7 +21,7 @@
             <table id="tabla2" class="table table-bordered table-responsive-md" width="100%">
                 <thead>
                     <tr>
-                        <th>Fecha/Identificador</th>
+                        <th>Fecha</th>
                         <th>Cliente</th>
                         <th>Usuario</th>
                         <th>Lineas cotizadas</th>
@@ -88,7 +88,6 @@
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
         function borrarCotizacion(id){
-            debugger;
             Swal.fire({
                 icon: 'warning',
                 title: 'Borrar cotización',
@@ -156,7 +155,12 @@
                                 false;
                         }
                     }
-                }]
+                }],
+                "columnDefs": [{
+                        targets: 7,
+                        width: 70,
+                    },
+                ],
             });
         });
     </script>
