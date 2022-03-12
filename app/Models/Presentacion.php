@@ -1,4 +1,3 @@
-
 <?php
 //Agregado líena 8 y de 83-92
 namespace App\Models;

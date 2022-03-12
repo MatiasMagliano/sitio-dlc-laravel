@@ -27,7 +27,7 @@ class ListaPrecioController extends Controller
         //     'minDate' => "js:moment().startOf('month')",
         // ];
 
-        return view('administracion.listaprecios.index', compact('listaPrecios', 'proveedors', 'presentaciones', 'productos'));
+        return view('administracion.listaprecios.index', compact('listaPrecios', 'proveedors', 'presentaciones'));
     }
 
 
