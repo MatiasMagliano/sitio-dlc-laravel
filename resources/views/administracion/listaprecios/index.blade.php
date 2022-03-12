@@ -30,8 +30,7 @@
             <h1>Listado de Precios</h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
-            <a href="{{ route('administracion.cotizaciones.create') }}" role="button" class="btn btn-md btn-success">Crear
-                cotización</a>
+
         </div>
     </div>
 @stop
@@ -202,53 +201,7 @@
             //Agrega item a la lista del Proveedor ---Pendiente
 
             // Quita un item de la lista de precios del proveedor
-            $('#tabla2 tbody').on('click', 'button', function(e) {
-                var itemlistaproveedor = tabla2.row($(this).parents('tr')).data().presentacion_id;
-
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Quitar de la lista del Proveedor',
-                    text: '¿Está seguro de quitar el producto ' + itemlistaproveedor + '?',
-                    confirmButtonText: 'Borrar',
-                    showCancelButton: true,
-                    cancelButtonText: 'Cancelar',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        var iditemlistaproveedor = tabla2.row($(this).parents('tr')).data().id;
-                        var datos = {
-                            id: iditemlistaproveedor,
-                            method: 'DELETE',
-                        };
-
-                        $.ajaxSetup({
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            }
-                        });
-
-                        $.ajax({
-                            url: "{{ url('borrar-lote') }}",
-                            type: "DELETE",
-                            data: datos,
-                            success: function(response) {
-                                Swal.fire(
-                                    'Eliminado',
-                                    response.mensaje,
-                                    'success'
-                                );
-                                // Se actualiza la tabla2
-                                var idProveedor = $(
-                                    'input[type=hidden][name=proveedor_id]').val();
-                                getListadoProveedor(idProveedor);
-                            },
-                            error: function(response) {
-                                console.log(response);
-                                Swal('Algo salió mal...', response.mensaje, 'error');
-                            }
-                        });
-                    }
-                });
-            });
+            
 
         });
     </script>
