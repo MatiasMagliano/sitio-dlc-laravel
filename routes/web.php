@@ -1,5 +1,5 @@
 <?php
-
+//Agregado líena 11-12 ; 46 ; 62-64
 use App\Http\Controllers\Admin\RolController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Administracion\LoteController;
@@ -8,6 +8,8 @@ use App\Http\Controllers\Administracion\ProductoController;
 use App\Http\Controllers\Administracion\ProveedorController;
 use App\Http\Controllers\Administracion\TrazabilidadController;
 use App\Http\Controllers\Administracion\CotizacionController;
+use App\Http\Controllers\Administracion\ListaPrecioController;
+use App\Models\ListaPrecio;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,7 +40,12 @@ Route::prefix('admin')->middleware(['auth', 'auth.esSistAdmin'])->name('admin.')
 });
 
 Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->name('administracion.')->group(function () {
-    // rutas especiales para ajax
+    // rutas especiales para ajax de búsqueda y eliminación
+    Route::get('/buscar', [ProductoController::class, 'buscar']);
+    Route::get('/lotes/buscarLotes', [LoteController::class, 'buscarLotes'])->name('lotes.buscarLotes');
+    Route::get('/listaprecios/actualizarLista', [ListaPrecioController::class, 'actualizarLista'])->name('listaprecios.actualizarLista');
+
+    Route::post('borrar-lote', [LoteController::class, 'destroy']);
 
     // rutas de PRODUCTOS
     Route::resource('/productos', ProductoController::class);
@@ -57,7 +64,9 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     // rutas de TRAZABILIDAD
     Route::resource('/trazabilidad', TrazabilidadController::class);
 
-    // rutas de COTIZACIONES
+    // rutas especiales para LISTA DE PRECIOS
+    Route::resource('/listaprecios', ListaPrecioController::class);
+
     Route::resource('/cotizaciones', CotizacionController::class)->except('edit', 'update');
     Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])
         ->name('cotizaciones.finalizar');

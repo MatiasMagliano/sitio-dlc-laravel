@@ -1,5 +1,5 @@
 <?php
-
+//Agregado líena 276-281
 return [
 
     /*
@@ -271,6 +271,12 @@ return [
                     'route'  => 'administracion.presentaciones.index'
                 ],
             ],
+        ],
+        [
+            'text'  => 'Lista de Precios',
+            'route' => 'administracion.listaprecios.index',
+            'icon'  => 'fas fa-barcode-alt',
+            'can'   => 'es-administracion',
         ],
         [
             'text' => 'quotations',

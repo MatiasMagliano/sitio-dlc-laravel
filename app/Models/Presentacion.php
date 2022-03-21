@@ -1,10 +1,14 @@
 <?php
-
+//Agregado líena 8 y de 83-92
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+=======
+use Illuminate\Database\Eloquent\Relations\HasOne;
+>>>>>>> 09ad39b278485417c5d2f6fa4e5c73ecfd208a28
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -55,5 +59,15 @@ class Presentacion extends Model
     public function productosCotizados(): HasMany
     {
         return $this->hasMany(ProductoCotizado::class);
+    }
+
+        /**
+     * Get all of the productosCotizados for the Producto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function listaprecios(): HasOne
+    {
+        return $this->hasOne(ListaPrecio::class);
     }
 }
