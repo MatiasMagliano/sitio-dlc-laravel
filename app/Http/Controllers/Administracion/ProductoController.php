@@ -14,13 +14,14 @@ use Illuminate\Http\Request;
 class ProductoController extends Controller
 {
     /**
-     * Muestra la vista de productos (a golpe de vista).
+     * Muestra la vista de productos (a golpe de vista -> presentaciones, lotes y proveedores).
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
         $productos = Producto::all();
+        //var_dump($productos);
         return view('administracion.productos.index', compact('productos'));
     }
 

@@ -17,7 +17,9 @@ class CreatePresentacionsTable extends Migration
             $table->id();
             $table->string('forma');
             $table->string('presentacion');
-            $table->integer('stock')->default(0);
+            $table->integer('existencia')->default(0);
+            $table->integer('cotizacion')->default(0);
+            $table->integer('disponible')->default(0); // existencia-cotizacion
             $table->boolean('hospitalario');
             $table->boolean('trazabilidad');
             $table->timestamps();

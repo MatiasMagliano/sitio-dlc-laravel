@@ -23,7 +23,9 @@ class CreateCotizacionsTable extends Migration
             $table->decimal('monto_total', 10,2)->nullable()->default(0);
             $table->timestamp('finalizada')->nullable();
             $table->string('estado');
+            $table->boolean('confirmed')->nullable()->default(false);
             $table->timestamps();
+
         });
     }
 

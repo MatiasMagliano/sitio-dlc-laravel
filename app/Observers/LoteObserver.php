@@ -14,7 +14,7 @@ class LoteObserver
      */
     public function created(Lote $lote)
     {
-        $lote->presentacion()->increment('stock', $lote->cantidad);
+        $lote->presentacion()->increment('existencia', $lote->cantidad);
     }
 
     /**
@@ -25,10 +25,10 @@ class LoteObserver
      */
     public function updated(Lote $lote)
     {
-        if($lote->presentacion()->isDirty('stock'))
+        if($lote->presentacion()->isDirty('existencia'))
         {
             $cantidad = $lote->getOriginal('cantidad') - $lote->cantidad;
-            $lote->presentacion()->decrement('stock', $cantidad);
+            $lote->presentacion()->decrement('existencia', $cantidad);
         }
     }
 

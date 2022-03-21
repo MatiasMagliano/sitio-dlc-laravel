@@ -19,14 +19,12 @@ class CreateLotesTable extends Migration
     {
         Schema::create('lotes', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Producto::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(Presentacion::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(Proveedor::class)->constrained()->onDelete('cascade');
-            $table->string('identificador');
-            $table->float('precioCompra');
-            $table->dateTime('desde')->default(Carbon::now()->format('Y-m-d H:i:s'));
-            $table->dateTime('hasta');
-            $table->integer('cantidad');
+            $table->string('identificador', 50);
+            $table->unsignedFloat('precio_compra');
+            $table->unsignedInteger('cantidad');
+            $table->dateTime('fecha_elaboracion');
+            $table->dateTime('fecha_compra')->default(Carbon::now()->format('Y-m-d H:i:s'));
+            $table->dateTime('fecha_vencimiento');
             $table->softDeletes();
         });
     }

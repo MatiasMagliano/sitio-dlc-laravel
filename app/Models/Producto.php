@@ -4,8 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Producto extends Model
@@ -24,44 +23,24 @@ class Producto extends Model
 
     //Se definen las relaciones
 
-    // En las relaciones MUCHOS-A-MUCHOS, donde hay una tabla pivot, se usa la relación belongsToMany en ambas tablas
-    // Sin embargo, la relación se complica cuando se usa softDelete, ya que la tabla pivot también
-    //está definida como softDelete, pero sin modelo.
-    public function lotes(){
-        return $this->hasMany(Lote::class);
+    /**
+     * The presentaciones that belong to the Producto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function presentaciones(): BelongsToMany
+    {
+        return $this->belongsToMany(Presentacion::class, 'lote_presentacion_producto', 'producto_id', 'presentacion_id')->distinct();
     }
 
-    /**
-     * Get all of the presentaciones for the Producto
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function presentaciones(): HasManyThrough
-    {
+    public function lotesDeProducto(){
         return $this->hasManyThrough(
-            Presentacion::class,
             Lote::class,
+            LotePresentacionProducto::class,
             'producto_id',
             'id',
-            'id',
-            'presentacion_id'
-        );
-    }
-
-    /**
-     * Get all of the proveedores for the Producto
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function proveedores(): HasManyThrough
-    {
-        return $this->hasManyThrough(
-            Proveedor::class,
-            Lote::class,
-            'producto_id',
-            'id',
-            'id',
-            'proveedor_id'
+            null,
+            'lote_id'
         );
     }
 }

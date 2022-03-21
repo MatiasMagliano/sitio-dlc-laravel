@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lote extends Model
@@ -21,10 +21,11 @@ class Lote extends Model
      */
     protected $fillable = [
         'identificador',
-        'precioCompra',
-        'desde',
-        'hasta',
-        'cantidad'
+        'precio_compra',
+        'cantidad',
+        'fecha_elaboracion',
+        'fecha_compra',
+        'fecha_vencimiento'
     ];
 
     //Se definen los campos casteables
@@ -32,41 +33,22 @@ class Lote extends Model
      * @var array
      */
     protected $casts = [
-        'precioCompra' => 'float',
-        'desde' => 'datetime',
-        'hasta' => 'datetime',
-        'cantidad' => 'int'
+        'precio_compra' => 'float',
+        'cantidad' => 'int',
+        'fecha_elaboracion' => 'datetime',
+        'fecha_compra' => 'datetime',
+        'fecha_vencimiento' => 'datetime'
     ];
 
     //Se definen las relaciones
 
     /**
-     * Get the productos that owns the Lote
+     * The presentacion that belong to the Lote
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function productos(): BelongsTo
+    public function presentacion(): BelongsToMany
     {
-        return $this->belongsTo(Producto::class);
-    }
-
-    /**
-     * Get the presentacion that owns the Lote
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function presentacion(): BelongsTo
-    {
-        return $this->belongsTo(Presentacion::class);
-    }
-
-    /**
-     * Get the proveedor that owns the Lote
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function proveedor(): BelongsTo
-    {
-        return $this->belongsTo(Proveedor::class);
+        return $this->belongsToMany(Presentacion::class, 'lote_presentacion_producto');
     }
 }

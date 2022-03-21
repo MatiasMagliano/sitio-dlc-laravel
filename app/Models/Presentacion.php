@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Presentacion extends Model
 {
@@ -16,57 +17,34 @@ class Presentacion extends Model
 
     //Se setean los campos "llenables" en masa
     /**
+     * EXISTENCIA: SUMA DE TODOS LOS LOTES EXISTENTES
+     * COTIZACION: número positivo con suma de los cotizado
+     * DISPONIBLE: diferencia entre EXISTENCIA - COTIZACION
      * @var array
      */
     protected $fillable = [
-        'forma', 'presentacion', 'stock', 'hospitalario', 'trazabilidad'
+        'forma', 'presentacion', 'existencia', 'cotizacion', 'disponible', 'hospitalario', 'trazabilidad'
     ];
 
     // Se definen las relaciones
-
     /**
-     * Get all of the lotes for the Presentacion
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Devuelve todos los lotes de una presentacion en particular
+     *
      */
-    public function lotes(): HasMany
+    public function lotes(): BelongsToMany
     {
-        return $this->hasMany(Lote::class);
+        return $this->belongsToMany(Lote::class, 'lote_presentacion_producto');
     }
 
-    // relación hacia proveedores, desde Presentacion
-    /**
-     * Get all of the proveedores for the Presentacion
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function proveedores(): HasManyThrough
+    // devuelve todos los lotes de la presentacion en cuestión (modelo) y producto específico
+    public function lotesPorPresentacion($producto)
     {
-        return $this->hasManyThrough(
-            Proveedor::class,
-            Lote::class,
-            'producto_id',
-            'id',
-            'id',
-            'proveedor_id'
-        );
-    }
-
-    /**
-     * Get all of the productos for the Presentacion
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function productos(): HasManyThrough
-    {
-        return $this->hasManyThrough(
-            Producto::class,
-            Lote::class,
-            'producto_id',
-            'id',
-            'id',
-            'producto_id'
-        );
+        return DB::table('lotes')
+            ->leftJoin('lote_presentacion_producto', 'lotes.id', '=', 'lote_presentacion_producto.lote_id')
+            ->where('lote_presentacion_producto.presentacion_id', '=', $this->id)
+            ->where('lote_presentacion_producto.producto_id', '=', $producto)
+            ->get();
     }
 
     /**

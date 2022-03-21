@@ -25,5 +25,6 @@ class DatabaseSeeder extends Seeder
 
         //tablas pivot
         $this->call(RolUserSeeder::class);
+        $this->call(LotePresentacionProductoSeeder::class);
     }
 }

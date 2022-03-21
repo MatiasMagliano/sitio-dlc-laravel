@@ -38,24 +38,26 @@ Route::prefix('admin')->middleware(['auth', 'auth.esSistAdmin'])->name('admin.')
 });
 
 Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->name('administracion.')->group(function () {
-    // rutas especiales para ajax de búsqueda y eliminación
-    Route::get('/buscar', [ProductoController::class, 'buscar']);
-    Route::get('/lotes/buscarLotes', [LoteController::class, 'buscarLotes'])->name('lotes.buscarLotes');
+    // rutas especiales para ajax
 
-    Route::post('borrar-lote', [LoteController::class, 'destroy']);
-
+    // rutas de PRODUCTOS
     Route::resource('/productos', ProductoController::class);
+    Route::get('/productos/buscar', [ProductoController::class, 'buscar'])->name('buscar.producto');
+
+    // rutas de PROVEEDORES
     Route::resource('/proveedores', ProveedorController::class);
 
-    // rutas especiales para PRESENTACIONES
+    // rutas de PRESENTACIONES
     Route::resource('/presentaciones', PresentacionController::class)->except('edit');
     Route::get('/presentaciones/{idProducto}/{idPresentacion}', [PresentacionController::class, 'edit'])->name('presentaciones.edit');
 
-    // rutas especiales para LOTES
+    // rutas de LOTES
     Route::resource('/lotes', LoteController::class)->except('destroy');
 
+    // rutas de TRAZABILIDAD
     Route::resource('/trazabilidad', TrazabilidadController::class);
 
+    // rutas de COTIZACIONES
     Route::resource('/cotizaciones', CotizacionController::class)->except('edit', 'update');
     Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])
         ->name('cotizaciones.finalizar');

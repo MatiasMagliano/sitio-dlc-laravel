@@ -2,10 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Presentacion;
-use App\Models\Producto;
-use App\Models\Proveedor;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LoteFactory extends Factory
@@ -19,12 +15,10 @@ class LoteFactory extends Factory
     {
         return [
             'identificador' => $this->faker->numberBetween($min = 1000000, $max = 9999999),
-            'precioCompra' => $this->faker->randomFloat($nbMaxDecimals = 2, $min = 10, $max = 1000),
-            'producto_id' => Producto::inRandomOrder()->first()->id,
-            'presentacion_id' => Presentacion::inRandomOrder()->first()->id,
-            'proveedor_id' => Proveedor::inRandomOrder()->first()->id,
-            'desde' => Carbon::now()->format('Y-m-d H:i:s'),
-            'hasta' => $this->faker->dateTimeBetween('+1 years', '+3 years'),
+            'precio_compra' => $this->faker->randomFloat($nbMaxDecimals = 2, $min = 10, $max = 1000),
+            'fecha_elaboracion' => $this->faker->dateTimeBetween('-3 years', '-1 years'),
+            'fecha_compra' => $this->faker->dateTimeBetween('-11 months','-1 months'),
+            'fecha_vencimiento' => $this->faker->dateTimeBetween('+1 years', '+3 years'),
             'cantidad' => $this->faker->randomNumber($nbDigits = 3)
         ];
     }

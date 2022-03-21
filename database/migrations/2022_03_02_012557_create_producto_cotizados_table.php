@@ -21,9 +21,9 @@ class CreateProductoCotizadosTable extends Migration
             $table->foreignIdFor(Cotizacion::class)->constrained();
             $table->foreignIdFor(Producto::class)->constrained();
             $table->foreignIdFor(Presentacion::class)->constrained();
-            $table->integer('cantidad');
-            $table->decimal('precio', 10, 2);
-            $table->decimal('total', 10, 2);
+            $table->unsignedInteger('cantidad');
+            $table->unsignedDecimal('precio', 10, 2);
+            $table->unsignedDecimal('total', 10, 2);
             $table->timestamps();
         });
     }

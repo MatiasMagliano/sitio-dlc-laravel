@@ -24,57 +24,30 @@
                         <th>ID</th>
                         <th>Droga</th>
                         <th>Presentaciones</th>
-                        <th>Lotes</th>
+                        <th>Lotes vigentes</th>
                         <th>Proveedores</th>
                         <th>ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($productos as $producto)
-                    <tr>
-                        <td>
-                            {{$producto->id}}
-                        </td>
-                        <td style="vertical-align: middle;">
-                            {{$producto->droga}}
-                        </td>
-                        <td style="vertical-align: middle;">
-                            @foreach ($producto->presentaciones as $presentacion)
-                                {{$presentacion->forma}}, {{$presentacion->presentacion}} <br>
-                            @endforeach
-                        </td>
-                        <td>
-                            @if (count($producto->lotes) > 0)
-                                @foreach ($producto->lotes as $lote)
-                                <div class="row d-flex">
-                                    <div class="col">
-                                        <u>Nº</u>: {{$lote->identificador}}
-                                    </div>
-                                    <div class="col">
-                                        <u>Vto</u>: {{$lote->hasta->format('m/Y')}}
-                                    </div>
-                                </div>
-                                @endforeach
-                                <div class="border-top text-center">
-                                    Stock: {{$producto->lotes->sum('cantidad')}}
-                                </div>
-                            @else
-                                <span style="color: lightcoral">SIN STOCK</span>
-                            @endif
-                        </td>
-                        <td style="vertical-align: middle;">
-                            @if (count($producto->proveedores) > 0)
-                                @foreach ($producto->proveedores as $proveedor)
-                                    {{$proveedor->razonSocial}} <br>
-                                @endforeach
-                            @else
-                                <span style="color: lightcoral">SIN PROVEEDOR</span>
-                            @endif
-                        </td>
-                        <td style="vertical-align: middle; text-align:center;">
-                            <a id="btnBorrar" class="text-cyan"><i class="fas fa-trash-alt"></i></a>
-                        </td>
-                    </tr>
+                        @foreach ($producto->presentaciones as $presentacion)
+                            <tr>
+                                <td>{{$producto->id}}</td>
+                                <td>{{$producto->droga}}</td>
+                                <td>{{$presentacion->forma}}, {{$presentacion->presentacion}}</td>
+                                <td>
+                                    @foreach ($presentacion->lotesPorPresentacion($producto->id) as $lote)
+                                        <div class="row">
+                                            <div class="col">L: {{$lote->identificador}}</div>
+                                            <div class="col">Vto: {{$lote->fecha_vencimiento->format('d/m/Y')}}</div>
+                                        </div>
+                                    @endforeach
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        @endforeach
                     @endforeach
                 </tbody>
             </table>
@@ -120,9 +93,9 @@
                         }
                     }
                 ],
-                "columnDefs": [
-                    {targets: 0, visible: false}
-                ]
+                //"columnDefs": [
+                //    {targets: 0, visible: false}
+                //]
             });
 
             // ELIMINACIÓN DE PRODUCTO
