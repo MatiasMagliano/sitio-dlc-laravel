@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Presentacion;
+use App\Models\LotePresentacionProducto;
 use App\Models\Proveedor;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -18,7 +18,7 @@ class CreateListapreciosTable extends Migration
         Schema::create('lista_precios', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Proveedor::class)->constrained();
-            $table->foreignIdFor(Presentacion::class)->constrained();
+            $table->foreignIdFor(LotePresentacionProducto::class)->constrained();
             $table->decimal('costo', 10, 2);
             $table->timestamps();
         });

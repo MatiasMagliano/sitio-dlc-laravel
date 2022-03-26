@@ -64,6 +64,8 @@
     </div>
 
     <div class="card ml-2" id="ListadoDePrecios">
+        <a class="btn btn-success mt-3 mb-3" href="{{ route('LPrecioExport')}}">
+        Exportar</a>
         <div class="card-header">
             <h3 id="tituloListadoDePrecios" class="card-title">
                 Lista de Precios de

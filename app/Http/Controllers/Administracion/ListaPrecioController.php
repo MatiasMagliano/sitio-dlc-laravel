@@ -7,9 +7,12 @@ use App\Models\Proveedor;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ListaPrecioController extends Controller
 {
+
+
     /**
      * Devuelve una vista para agregar lotes a un producto
      *
@@ -21,15 +24,16 @@ class ListaPrecioController extends Controller
         $proveedors = Proveedor::all();
         $presentaciones = Presentacion::all();
         $producto = Producto::all();
-        // $config = [
-        //     'format' => 'DD/MM/YYYY',
-        //     'dayViewHeaderFormat' => 'MMM YYYY',
-        //     'minDate' => "js:moment().startOf('month')",
-        // ];
+        $config = [
+             'format' => 'DD/MM/YYYY',
+             'dayViewHeaderFormat' => 'MMM YYYY',
+             'minDate' => "js:moment().startOf('month')",
+        ];
 
         return view('administracion.listaprecios.index', compact('listaPrecios', 'proveedors', 'presentaciones'));
     }
 
+     
 
     public function actualizarLista(Request $request)
     {

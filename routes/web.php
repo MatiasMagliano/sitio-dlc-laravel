@@ -14,6 +14,8 @@ use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Yajra\Datatables\Datatables;
+use App\Exports\ListaPrecioExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +70,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     // rutas especiales para LISTA DE PRECIOS
     Route::resource('/listaprecios', ListaPrecioController::class);
+    Route::get('listaprecios/export/', [ListaPrecioController::class, 'export'])->name('LPrecioExport');
+
 
     Route::resource('/cotizaciones', CotizacionController::class)->except('edit', 'update');
     Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])

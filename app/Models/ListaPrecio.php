@@ -37,9 +37,9 @@ class ListaPrecio extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function presentaciones(): BelongsTo
+    public function lotepresentacionproducto(): BelongsTo
     {
-        return $this->belongsTo(Presentacion::class);
+        return $this->belongsTo(LotePresentacionProducto::class);
     }
 
 

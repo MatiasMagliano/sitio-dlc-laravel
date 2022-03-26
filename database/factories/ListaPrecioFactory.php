@@ -3,8 +3,9 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Presentacion;
+use App\Models\LotePresentacionProducto;
 use App\Models\Proveedor;
+
 
 class ListaPrecioFactory extends Factory
 {
@@ -18,7 +19,7 @@ class ListaPrecioFactory extends Factory
 
         return [
             'proveedor_id' => Proveedor::inRandomOrder()->first()->id,
-            'presentacion_id' => Presentacion::inRandomOrder()->first()->id,
+            'lotpresprod_id' => LotePresentacionProducto::inRandomOrder()->first()->id,
             'costo' => $this->faker->numberBetween($min = 450.00,$max = 8200.00),
         ];
     }
