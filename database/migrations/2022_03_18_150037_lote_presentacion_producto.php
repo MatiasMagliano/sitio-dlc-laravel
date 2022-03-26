@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\ListaPrecio;
 use App\Models\Lote;
 use App\Models\Presentacion;
 use App\Models\Producto;
+use App\Models\Proveedor;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,9 +20,11 @@ class LotePresentacionProducto extends Migration
     {
         Schema::create('lote_presentacion_producto', function(Blueprint $table){
             $table->id();
-            $table->foreignIdFor(Producto::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(Presentacion::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(Lote::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Producto::class)->constrained();
+            $table->foreignIdFor(Presentacion::class)->constrained();
+            $table->foreignIdFor(Lote::class)->constrained();
+            $table->foreignIdFor(Proveedor::class)->constrained();
+            //$table->foreignIdFor(ListaPrecio::class)->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

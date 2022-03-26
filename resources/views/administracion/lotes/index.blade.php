@@ -15,6 +15,10 @@
             border-bottom: 1px solid #111;
         }
 
+        .dataTables_filter {
+            display: none;
+        }
+
     </style>
 @endsection
 
@@ -37,23 +41,42 @@
     <div class="card-group mb-4">
         <div class="card mr-2">
             <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-search mr-2"></i>
-                    Seleccionar producto
-                </h3>
+                <div class="row d-flex">
+                    <div class="col-md-4 my-auto">
+                        <h3 class="card-title">
+                            Seleccionar producto
+                        </h3>
+                    </div>
+                    <div class="col-md-8 search-box">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-search mr-2"></i></span>
+                            </div>
+                            <input type="text" id="search_box" class="form-control">
+                          </div>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <table id="tabla1" class="tabla1" style="width: 100%; cursor:pointer">
                     <thead>
                         <th></th>
                         <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                     </thead>
                     <tbody>
-                        @foreach ($nombreProductos as $producto)
-                            <tr>
-                                <td>{{ $producto->id }}</td>
-                                <td>{{ $producto->droga }}</td>
-                            </tr>
+                        @foreach ($productos as $producto)
+                            @foreach ($producto->presentaciones as $presentacion)
+                                <tr>
+                                    <td>{{ $producto->id }}</td>
+                                    <td>{{ $producto->droga }}</td>
+                                    <td>{{ $presentacion->id }}</td>
+                                    <td>{{ $presentacion->droga }}</td>
+                                    <td>{{ $presentacion->presentacion }}</td>
+                                </tr>
+                            @endforeach
                         @endforeach
                     </tbody>
                 </table>
@@ -309,21 +332,16 @@
             var tabla1 = $('#tabla1').DataTable({
                 "responsive": true,
                 "dom": 'Pfrtip',
+                "sDom": '<"search-box"r>lftip',
                 "scrollY": "50vh",
                 "scrollCollapse": true,
                 "paging": false,
                 "select": true,
-                "columns": [{
-                        data: 'ID',
-                        visible: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'Droga'
-                    }
-                ],
                 "order": [1, 'asc'],
                 "bInfo": false,
+            });
+            $('#search_box').keyup(function(){
+                tabla1.search($(this).val()).draw() ;
             });
 
             // CAPTURA DEL CLICK EN EL DATATABLE tabla1

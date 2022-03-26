@@ -9,8 +9,11 @@ use App\Http\Controllers\Administracion\ProveedorController;
 use App\Http\Controllers\Administracion\TrazabilidadController;
 use App\Http\Controllers\Administracion\CotizacionController;
 use App\Http\Controllers\Administracion\ListaPrecioController;
-use App\Models\ListaPrecio;
+use App\Models\Lote;
+use App\Models\Producto;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Yajra\Datatables\Datatables;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +44,7 @@ Route::prefix('admin')->middleware(['auth', 'auth.esSistAdmin'])->name('admin.')
 
 Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->name('administracion.')->group(function () {
     // rutas especiales para ajax de búsqueda y eliminación
-    Route::get('/buscar', [ProductoController::class, 'buscar']);
+    Route::get('/productos/buscar', [ProductoController::class, 'buscar']);
     Route::get('/lotes/buscarLotes', [LoteController::class, 'buscarLotes'])->name('lotes.buscarLotes');
     Route::get('/listaprecios/actualizarLista', [ListaPrecioController::class, 'actualizarLista'])->name('listaprecios.actualizarLista');
 
@@ -56,7 +59,6 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     // rutas de PRESENTACIONES
     Route::resource('/presentaciones', PresentacionController::class)->except('edit');
-    Route::get('/presentaciones/{idProducto}/{idPresentacion}', [PresentacionController::class, 'edit'])->name('presentaciones.edit');
 
     // rutas de LOTES
     Route::resource('/lotes', LoteController::class)->except('destroy');
@@ -77,7 +79,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::post('/cotizaciones/{cotizacion}/producto', [CotizacionController::class, 'guardarProductoCotizado'])
         ->name('cotizaciones.guardar.producto');
     Route::match(['put', 'patch'], '/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class], 'actualizarProductoCotizado')
-        ->name('cotizaciones.actualizar.rpoducto');
+        ->name('cotizaciones.actualizar.producto');
     Route::delete('/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class, 'borrarProductoCotizado'])
         ->name('cotizaciones.borrar.producto');
 });

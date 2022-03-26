@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LotePresentacionProducto extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'lote_presentacion_producto';
 
     protected $fillable = [
-        'producto_id', 'presentacion_id', 'lote_id'
+        'producto_id', 'presentacion_id', 'lote_id', 'proveedor_id'
     ];
 
     // RELACIONES

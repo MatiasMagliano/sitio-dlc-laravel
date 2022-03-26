@@ -25,7 +25,7 @@ class LoteObserver
      */
     public function updated(Lote $lote)
     {
-        if($lote->presentacion()->isDirty('existencia'))
+        if($lote->presentacion()->isDirty('updated_at'))
         {
             $cantidad = $lote->getOriginal('cantidad') - $lote->cantidad;
             $lote->presentacion()->decrement('existencia', $cantidad);

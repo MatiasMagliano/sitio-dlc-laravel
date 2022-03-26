@@ -17,15 +17,24 @@ class LoteController extends Controller
      */
     public function index()
     {
-        // OJO: softdeletes funciona con eloquent, por lo que es necesario usar el modelo para buscar columnas específicas
-        $nombreProductos = Producto::all('id', 'droga');
+        // se crea una colección de líneas específicas
+        $productos = Producto::with('presentaciones')->get();
         $config = [
             'format' => 'DD/MM/YYYY',
             'dayViewHeaderFormat' => 'MMM YYYY',
             'minDate' => "js:moment().startOf('month')",
         ];
 
-        return view('administracion.lotes.index', compact('nombreProductos', 'config'));
+        return view('administracion.lotes.index', compact('productos', 'config'));
+    }
+
+    public function buscarLotes(Request $request)
+    {
+        if($request->ajax()){
+            $where = array('producto_id' => $request->idProducto);
+	        $lotes = Lote::where($where)->get();
+            return Response()->json($lotes);
+        }
     }
 
     public function show($id)
@@ -74,15 +83,6 @@ class LoteController extends Controller
         $lote->save();
 
         return response()->json(['mensaje' => 'El lote fue guardado con éxito']);
-    }
-
-    public function buscarLotes(Request $request)
-    {
-        if($request->ajax()){
-            $where = array('producto_id' => $request->idProducto);
-	        $lotes = Lote::where($where)->get();
-            return Response()->json($lotes);
-        }
     }
 
     public function destroy(Request $request){

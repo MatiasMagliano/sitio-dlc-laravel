@@ -19,7 +19,7 @@ class LotePresentacionProductoSeeder extends Seeder
      */
     public function run()
     {
-
+        // se hace de esta manera, para evitar lotes duplicados en productos diferentes
         foreach (Lote::all() as $lote){
             LotePresentacionProducto::factory()->create([
                 'lote_id' => $lote->id

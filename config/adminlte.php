@@ -275,7 +275,7 @@ return [
         [
             'text'  => 'Lista de Precios',
             'route' => 'administracion.listaprecios.index',
-            'icon'  => 'fas fa-barcode-alt',
+            'icon'  => 'fas fa-dollar-sign',
             'can'   => 'es-administracion',
         ],
         [

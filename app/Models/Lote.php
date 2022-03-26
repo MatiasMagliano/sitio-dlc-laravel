@@ -20,18 +20,10 @@ class Lote extends Model
      * @var array
      */
     protected $fillable = [
-        'identificador',
-        'precio_compra',
-        'cantidad',
-        'fecha_elaboracion',
-        'fecha_compra',
-        'fecha_vencimiento'
+        'identificador', 'precio_compra', 'cantidad', 'fecha_elaboracion', 'fecha_compra', 'fecha_vencimiento'
     ];
 
     //Se definen los campos casteables
-    /**
-     * @var array
-     */
     protected $casts = [
         'precio_compra' => 'float',
         'cantidad' => 'int',

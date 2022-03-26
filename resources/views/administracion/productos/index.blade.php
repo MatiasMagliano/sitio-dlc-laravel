@@ -17,7 +17,7 @@
 {{-- aquí va contenido --}}
 @section('content')
     <x-adminlte-card>
-        <div class="processing">
+        <div class="m-2">
             <table id="tabla2" class="table table-bordered table-responsive-md" width="100%">
                 <thead>
                     <tr>
@@ -34,8 +34,14 @@
                         @foreach ($producto->presentaciones as $presentacion)
                             <tr>
                                 <td>{{$producto->id}}</td>
-                                <td>{{$producto->droga}}</td>
-                                <td>{{$presentacion->forma}}, {{$presentacion->presentacion}}</td>
+                                <td style="vertical-align: middle;">
+                                    <a href="{{route('administracion.productos.edit', $producto)}}" class="btn-link justify-content-md-end">
+                                        {{$producto->droga}}
+                                    </a>
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    {{$presentacion->forma}}, {{$presentacion->presentacion}}
+                                </td>
                                 <td>
                                     @foreach ($presentacion->lotesPorPresentacion($producto->id) as $lote)
                                         <div class="row">
@@ -44,8 +50,40 @@
                                         </div>
                                     @endforeach
                                 </td>
-                                <td></td>
-                                <td></td>
+                                <td style="vertical-align: middle;">
+                                    @foreach ($presentacion->ProveedoresPorPresentacion($producto->id) as $proveedor)
+                                        {{$proveedor->razonSocial}} <br>
+                                    @endforeach
+                                </td>
+                                <td class="text-center" style="vertical-align: middle;" width="100px">
+                                    {{-- PROCEDIMIENTO DE BORRADO --}}
+                                    <form action="{{ route('administracion.productos.destroy', $producto) }}" id="frm-borrar-{{$producto->id}}"
+                                        method="post" class="d-inline">
+
+                                        @csrf
+                                        @method('delete')
+                                        <button type="button" class="btn btn-link" data-toggle="tooltip" data-placement="middle" title="Borrar producto"
+                                            onclick="
+                                                event.preventDefault();
+                                                let advertencia = '<p>Esto implica el borrado de todas las relaciones del producto. Si considera que es un error, deberá restaurar manualmente las relaciones</p>';
+
+                                                Swal.fire({
+                                                    icon: 'warning',
+                                                    title: '¿Está seguro de eliminar el producto?',
+                                                    html: '<p style=color: red; font-wieght:800; font-size:1.3em;>¡ATENCION!</p>' + advertencia,
+                                                    confirmButtonText: 'Borrar',
+                                                    showCancelButton: true,
+                                                    cancelButtonText: 'Cancelar',
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        $('#frm-borrar-{{$producto->id}}').submit()
+                                                    }
+                                                });
+                                            ">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     @endforeach
@@ -59,6 +97,7 @@
     @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
+        $('#loading').html('Loading table')
         $(document).ready(function() {
             // el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
             var tabla2 = $('#tabla2').DataTable({
@@ -93,55 +132,9 @@
                         }
                     }
                 ],
-                //"columnDefs": [
-                //    {targets: 0, visible: false}
-                //]
-            });
-
-            // ELIMINACIÓN DE PRODUCTO
-            $('#tabla2 tbody').on('click', '#btnBorrar', function(e) {
-                var nombreDroga = tabla2.row($(this).parents('tr')).data()[1];
-                //nombreDroga = jQuery.trim(nombreDroga).substring(0,10);
-                alert(nombreDroga);
-                var advertencia = 'Esto implica el borrado definitivo de todos los lotes vigentes y su relación con presentaciones y proveedores.'
-
-                Swal.fire({
-                    icon: 'warning',
-                    title: '¿Está seguro de eliminar el producto: ' + nombreDroga + '?',
-                    html: '<p style="color: red; font-wieght:800; font-size:1.3em;">¡ATENCION!</p>' + advertencia,
-                    confirmButtonText: 'Borrar',
-                    showCancelButton: true,
-                    cancelButtonText: 'Cancelar',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        var idProducto = tabla2.row($(this).parents('tr')).data()[0];
-                        var datos = {
-                            id: idProducto,
-                            _token: $('meta[name="csrf-token"]').attr('content'),
-                            method: 'DELETE',
-                        };
-
-                        $.ajaxSetup({
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            }
-                        });
-
-                        $.ajax({
-                            url: "productos/" + idProducto,
-                            type: "DELETE",
-                            data: datos,
-                            success: function(response) {
-                                window.location.href = response.redireccion;
-                            },
-                            error: function(response) {
-                                console.log(response);
-                                //sweet alert
-                                Swal('Algo salió mal...', response.mensaje, 'error');
-                            }
-                        });
-                    }
-                });
+                "columnDefs": [
+                   {targets: 0, visible: false}
+                ]
             });
         });
     </script>

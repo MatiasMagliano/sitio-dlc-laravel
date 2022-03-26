@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Administracion;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductoRequest;
 use App\Models\Lote;
+use App\Models\LotePresentacionProducto as ModelsLotePresentacionProducto;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\LotePresentacionProducto;
 
 class ProductoController extends Controller
 {
@@ -32,12 +34,11 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        $presentaciones = Presentacion::all();
-        $proveedores = Proveedor::all();
+        $presentaciones = Presentacion::select('id', 'forma', 'presentacion')->get();
+        $proveedores = Proveedor::select('id', 'razonSocial', 'cuit')->get();
         $config = [
             'format' => 'DD/MM/YYYY',
-            'dayViewHeaderFormat' => 'MMM YYYY',
-            'minDate' => "js:moment().startOf('month')",
+            'dayViewHeaderFormat' => 'MMM YYYY'
         ];
         return view('administracion.productos.crear', compact('presentaciones', 'proveedores'))->with('config', $config);
     }
@@ -50,6 +51,8 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
+        // EL ATTACH NO SE PUEDE HACER DE A UNO... HAY QUE COLOCAR TODOS LOS VALORES en una sola transacción
+
         // validación pura de Laravel
         $request->validate([
             'droga' => 'required|unique:productos|max:50',
@@ -60,29 +63,50 @@ class ProductoController extends Controller
             'presentacion' => 'required'
         ]);
 
-        $hoy = Carbon::now()->format('d/m/Y');
-        $request->validate([
-            'identificador' => 'required|unique:lotes|max:20',
-            'precioCompra' => 'required|numeric|max:5000',
-            'cantidad' => 'required|numeric|min:1|max:50000',
-            'vencimiento' => 'required|date_format:d/m/Y|after:'.$hoy,
+        // creamos el modelo y se guarda al final de la transacción
+        $producto = new Producto;
+        $producto->droga = $request->droga;
+
+        if(!$request->sin_lote){
+            $hoy = Carbon::now()->format('d/m/Y');
+            $request->validate([
+                'identificador' => 'required|unique:lotes|max:20',
+                'precio_compra' => 'required|numeric|max:5000',
+                'cantidad' => 'required|numeric|min:1|max:50000',
+                'fecha_elaboracion' => 'required|date_format:d/m/Y|before:'.$hoy,
+                'fecha_compra' => 'required|date_format:d/m/Y|before:'.$hoy,
+                'fecha_vencimiento' => 'required|date_format:d/m/Y|after:'.$hoy,
+            ]);
+
+            // se genera el lote
+            $lote = new Lote;
+            $lote->identificador = $request->identificador;
+            $lote->precio_compra = $request->precio_compra;
+            $lote->cantidad = $request->cantidad;
+            $lote->fecha_elaboracion = Carbon::createFromFormat('d/m/Y', $request->fecha_elaboracion);
+            $lote->fecha_compra = Carbon::createFromFormat('d/m/Y', $request->fecha_compra);
+            $lote->fecha_vencimiento = Carbon::createFromFormat('d/m/Y', $request->fecha_vencimiento);
+            $lote->save();
+
+            // se crea una nueva relación con TODOS LOS DATOS y guarda el modelo producto
+            $producto->save();
+            $producto->presentaciones()->attach($request->presentacion, [
+                'proveedor_id' => $request->proveedor,
+                'lote_id' => $lote->id
+            ]);
+
+            $request->session()->flash('success', 'El producto y su lote, se han creado con éxito');
+            return redirect(route('administracion.productos.index'));
+        }
+
+        // se fuerza la relación pero SIN LOS DATOS DE LOTE y se guarda el modelo producto
+        $producto->save();
+        $producto->presentaciones()->attach($request->presentacion, [
+            'proveedor_id' => $request->proveedor,
+            'lote_id' => '-1'
         ]);
 
-        $lote = new Lote;
-        $lote->identificador = $request->identificador;
-        $lote->precioCompra = $request->precioCompra;
-        $lote->cantidad = $request->cantidad;
-        $lote->desde = Carbon::now()->format('Y-m-d H:i:s');
-        $lote->hasta = Carbon::createFromFormat('d/m/Y', $request->vencimiento);
-
-        $producto = Producto::create([
-            'droga' => $request->droga,
-        ]);
-        $producto->proveedores()->attach($request->proveedor);
-        $producto->presentaciones()->attach($request->presentacion);
-        $producto->lotes()->save($lote);
-
-        $request->session()->flash('success', 'El producto se ha creado con éxito');
+        $request->session()->flash('success', 'El producto SIN LOTE, se ha creado con éxito');
         return redirect(route('administracion.productos.index'));
     }
 
@@ -127,16 +151,19 @@ class ProductoController extends Controller
      *
      * @param  \App\Models\Productos  $productos
      */
-    public function destroy(Request $request)
+    public function destroy($id, Request $request)
     {
-        // hace un softdelete sobre producto y redirecciona al index de productos
-        if($request->ajax()){
-            Producto::destroy($request->id);
+        // hace un softdelete sobre producto
+        $borrado = Producto::destroy($id);
 
+        if(!$borrado){
+            $request->session()->flash('error', 'Ocurrió un error al borrar el producto');
+            return redirect()
+                ->route('administracion.productos.index');
+        }else{
             $request->session()->flash('success', 'El producto ha sido eliminado correctamente');
-
-            //CORREGIR... NO HACE FALTA DEVOLVER EL REDIRECT
-            return response()->json(['redireccion' => route('administracion.productos.index')]);
+            return redirect()
+                ->route('administracion.productos.index');
         }
     }
 

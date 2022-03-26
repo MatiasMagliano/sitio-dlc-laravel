@@ -28,21 +28,27 @@ class Presentacion extends Model
     ];
 
     // Se definen las relaciones
-    /**
-     *
-     * Devuelve todos los lotes de una presentacion en particular
-     *
-     */
+
+    //Devuelve todos los lotes de una presentacion en particular
     public function lotes(): BelongsToMany
     {
         return $this->belongsToMany(Lote::class, 'lote_presentacion_producto');
     }
 
-    // devuelve todos los lotes de la presentacion en cuestión (modelo) y producto específico
+    // devuelve todos los lotes por presentacion y producto
     public function lotesPorPresentacion($producto)
     {
-        return DB::table('lotes')
+        return Lote::select('*')
             ->leftJoin('lote_presentacion_producto', 'lotes.id', '=', 'lote_presentacion_producto.lote_id')
+            ->where('lote_presentacion_producto.presentacion_id', '=', $this->id)
+            ->where('lote_presentacion_producto.producto_id', '=', $producto)
+            ->get();
+    }
+
+    //devuelve todos los proveedores por presentación y producto
+    public function proveedoresPorPresentacion($producto){
+        return Proveedor::select('*')
+            ->leftJoin('lote_presentacion_producto', 'proveedors.id', '=', 'lote_presentacion_producto.proveedor_id')
             ->where('lote_presentacion_producto.presentacion_id', '=', $this->id)
             ->where('lote_presentacion_producto.producto_id', '=', $producto)
             ->get();
@@ -58,7 +64,7 @@ class Presentacion extends Model
         return $this->hasMany(ProductoCotizado::class);
     }
 
-        /**
+    /**
      * Get all of the productosCotizados for the Producto
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
