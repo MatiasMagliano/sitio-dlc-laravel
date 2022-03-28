@@ -14,7 +14,7 @@ class ProveedorFactory extends Factory
     public function definition()
     {
         return [
-            'razonSocial' => $this->faker->company(),
+            'razon_social' => $this->faker->company(),
             'cuit' => $this->faker->bothify('#-########-##'),
             'contacto' => $this->faker->companyEmail(),
             'direccion' => $this->faker->bothify($this->faker->streetAddress() . ', ' . $this->faker->city(). ', ' . $this->faker->state()),

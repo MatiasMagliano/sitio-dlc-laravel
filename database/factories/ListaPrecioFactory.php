@@ -19,7 +19,7 @@ class ListaPrecioFactory extends Factory
 
         return [
             'proveedor_id' => Proveedor::inRandomOrder()->first()->id,
-            'lotpresprod_id' => LotePresentacionProducto::inRandomOrder()->first()->id,
+            'lpp_id' => LotePresentacionProducto::inRandomOrder()->first()->id,
             'costo' => $this->faker->numberBetween($min = 450.00,$max = 8200.00),
         ];
     }

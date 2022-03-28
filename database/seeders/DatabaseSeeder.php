@@ -21,12 +21,14 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductoSeeder::class);
         $this->call(ProveedorSeeder::class);
         $this->call(PresentacionSeeder::class);
-        $this->call(ListaPrecioSeeder::class);
         $this->call(LoteSeeder::class);
         $this->call(ClientesSeeder::class);
 
         //tablas pivot
         $this->call(RolUserSeeder::class);
         $this->call(LotePresentacionProductoSeeder::class);
+
+        //orden necesario de populado
+        $this->call(ListaPrecioSeeder::class);
     }
 }
