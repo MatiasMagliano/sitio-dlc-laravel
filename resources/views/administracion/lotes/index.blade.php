@@ -6,11 +6,11 @@
             content: "" !important;
         }
 
-        tabla1.dataTable thead th {
+        #tabla1 thead th {
             border-bottom: none;
         }
 
-        tabla1.dataTable tfoot th {
+        #tabla1 tfoot th {
             border-top: none;
             border-bottom: 1px solid #111;
         }
@@ -30,7 +30,7 @@
             <h1>Administrar lotes a productos</h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
-            <a href="{{ route('administracion.productos.index') }}" role="button"
+            <a href="{{ url()->previous() }}" role="button"
                 class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
@@ -58,13 +58,13 @@
                 </div>
             </div>
             <div class="card-body">
-                <table id="tabla1" class="tabla1" style="width: 100%; cursor:pointer">
-                    <thead>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                <table id="tabla1" class="table table-borderless" style="width: 100%; cursor:pointer">
+                    <thead style="display: none">
+                        <th>idProducto</th>
+                        <th>droga</th>
+                        <th>idPresentacion</th>
+                        <th>forma</th>
+                        <th>presentacion</th>
                     </thead>
                     <tbody>
                         @foreach ($productos as $producto)
@@ -73,7 +73,7 @@
                                     <td>{{ $producto->id }}</td>
                                     <td>{{ $producto->droga }}</td>
                                     <td>{{ $presentacion->id }}</td>
-                                    <td>{{ $presentacion->droga }}</td>
+                                    <td>{{ $presentacion->forma }}</td>
                                     <td>{{ $presentacion->presentacion }}</td>
                                 </tr>
                             @endforeach
@@ -110,6 +110,8 @@
                         @csrf
 
                         <input type="hidden" id="producto_id" name="producto_id"
+                            value="@isset($idProducto){{ $idProducto }}@endisset">
+                        <input type="hidden" id="presentacion_id" name="presentacion_id"
                             value="@isset($idProducto){{ $idProducto }}@endisset">
 
                         {{-- Campo identificador de lote --}}
@@ -178,9 +180,10 @@
             var tabla2;
 
             // FUNCIÓN QUE GENERA LA TABLA DE LOS LOTES
-            function getLotes(idProducto) {
+            function getLotes(idProducto, idPresentacion) {
                 var datos = {
-                    idProducto: idProducto
+                    producto_id: idProducto,
+                    presentacion_id: idPresentacion
                 };
 
                 $.ajax({
@@ -214,7 +217,7 @@
                     },
                     {
                         targets: [2],
-                        data: 'precioCompra'
+                        data: 'precio_compra'
                     },
                     {
                         targets: [3],
@@ -222,16 +225,20 @@
                     },
                     {
                         targets: [4],
-                        data: 'hasta'
+                        data: 'fecha_vencimiento'
                     }
                 ],
                 "columnDefs": [{
                         targets: 1,
-                        width: 100,
+                        width: 150,
                     },
                     {
                         targets: 4,
-                        render: $.fn.dataTable.render.moment('DD/MM/YYYY'),
+                        type: 'datetime',
+                        //render: $.fn.dataTable.render.moment(data, 'DD/MM/YYYY'),
+                        render: function (data) {
+                            return moment(new Date(data)).format('DD/MM/YYYY');
+                        }
                     },
                     {
                         targets: 5,
@@ -266,9 +273,9 @@
             tabla2.row.add({
                 id: '*',
                 identificador: '*',
-                precioCompra: '*',
+                precio_compra: '*',
                 cantidad: '*',
-                hasta: '*',
+                fecha_vencimiento: '*',
             }).draw();
 
             // ELIMINACIÓN DEL LOTE
@@ -311,7 +318,9 @@
                                 // Se actualiza la segunda tabla
                                 var idProducto = $(
                                     'input[type=hidden][name=producto_id]').val();
-                                getLotes(idProducto);
+                                let idPresentacion = $(
+                                    'input[type=hidden][name=presentacion_id]').val();
+                                getLotes(idProducto, idPresentacion);
                             },
                             error: function(response) {
                                 console.log(response);
@@ -339,7 +348,13 @@
                 "select": true,
                 "order": [1, 'asc'],
                 "bInfo": false,
+                // "columnDefs": [
+                //    {targets: 0, visible: false},
+                //    {targets: 2, visible: false}
+                // ],
             });
+
+            //RELOCACIÓN DE EL TEXTBOX DE BÚSQUEDA
             $('#search_box').keyup(function(){
                 tabla1.search($(this).val()).draw() ;
             });
@@ -356,13 +371,14 @@
 
                 // se sigue con el resto del procedimiento
                 $('#lotesVigentes .overlay').remove();
-                var idProducto = tabla1.row(this).data().ID;
-                var droga = tabla1.row(this).data().Droga;
-                $('#tituloLotesVigentes').text('Lotes vigentes para ' + droga);
-                $('#producto_id').val(idProducto);
+                let idx = tabla1.cell('.selected', 0).index();
+                let prod_sel = tabla1.row( idx.row ).data();
+                $('#tituloLotesVigentes').text('Lotes vigentes para ' + prod_sel[1]);
+                $('#producto_id').val(prod_sel[0]);
+                $('#presentacion_id').val(prod_sel[2]);
 
                 // Se genera la segunda tabla con la característica destroy, para poder recargarla con los nuevos datos
-                getLotes(idProducto);
+                getLotes(prod_sel[0], prod_sel[2]);
 
             });
 
@@ -440,16 +456,18 @@
                                 });
 
                                 // Se actualiza la segunda tabla con la característica destroy, para poder recargarla con los nuevos datos
-                                var idProducto = $('input[type=hidden][name=producto_id]')
+                                let idProducto = $('input[type=hidden][name=producto_id]')
                                     .val();
-                                getLotes(idProducto);
+                                let idPresentacion = $('input[type=hidden][name=presentacion_id]')
+                                    .val();
+                                getLotes(idProducto, idPresentacion);
 
                                 // se resetea el formulario de AGREGAR LOTES
                                 document.getElementById("formAgregarLote").reset();
                             }, //fin del ajax.success
                             error: function(response) {
                                 $("#submit").attr("disabled", true);
-                                var respuesta = JSON.parse(response.responseText);
+                                let respuesta = JSON.parse(response.responseText);
                                 //sweet alert
                                 Swal.fire({
                                     icon: 'error',
@@ -458,9 +476,11 @@
                                 });
 
                                 // Se actualiza la segunda tabla con la característica destroy, para poder recargarla con los nuevos datos
-                                var idProducto = $('input[type=hidden][name=producto_id]')
+                                let idProducto = $('input[type=hidden][name=producto_id]')
                                     .val();
-                                getLotes(idProducto);
+                                let idPresentacion = $('input[type=hidden][name=presentacion_id]')
+                                    .val();
+                                getLotes(idProducto, idPresentacion);
 
                                 // se resetea el formulario de AGREGAR LOTES
                                 document.getElementById("formAgregarLote").reset();

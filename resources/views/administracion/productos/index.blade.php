@@ -4,12 +4,15 @@
 
 @section('content_header')
     <div class="row">
-        <div class="col-xl-8">
+        <div class="col-md-8">
             <h1>Administración de productos</h1>
         </div>
-        <div class="col-xl-4 d-flex justify-content-xl-end">
+        <div class="col-md-4 d-flex justify-content-md-end">
             <a href="{{ route('administracion.productos.create') }}" role="button"
-                class="btn btn-md btn-success">Crear producto</a>
+                class="btn btn-sm btn-success">Crear producto</a>
+            &nbsp;
+            <a href="{{ route('administracion.lotes.index') }}" role="button"
+                class="btn btn-sm btn-success">Crear lotes</a>
         </div>
     </div>
 @stop

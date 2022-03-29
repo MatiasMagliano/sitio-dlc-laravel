@@ -32,8 +32,7 @@ class Lote extends Model
         'fecha_vencimiento' => 'datetime'
     ];
 
-    //Se definen las relaciones
-
+    //SE DEFINEN LAS RELACIONES
     /**
      * The presentacion that belong to the Lote
      *
@@ -42,5 +41,16 @@ class Lote extends Model
     public function presentacion(): BelongsToMany
     {
         return $this->belongsToMany(Presentacion::class, 'lote_presentacion_producto');
+    }
+
+    // RELACIONES PARTICULARES
+    // devuelve todos los lotes por presentacion y producto
+    public static function lotesPorPresentacion($producto, $presentacion)
+    {
+        return Lote::select('*')
+            ->leftJoin('lote_presentacion_producto', 'lotes.id', '=', 'lote_presentacion_producto.lote_id')
+            ->where('lote_presentacion_producto.presentacion_id', '=', $presentacion)
+            ->where('lote_presentacion_producto.producto_id', '=', $producto)
+            ->get();
     }
 }

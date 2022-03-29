@@ -35,7 +35,7 @@ class ProductoController extends Controller
     public function create()
     {
         $presentaciones = Presentacion::select('id', 'forma', 'presentacion')->get();
-        $proveedores = Proveedor::select('id', 'razonSocial', 'cuit')->get();
+        $proveedores = Proveedor::select('id', 'razon_social', 'cuit')->get();
         $config = [
             'format' => 'DD/MM/YYYY',
             'dayViewHeaderFormat' => 'MMM YYYY'

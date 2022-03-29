@@ -82,10 +82,10 @@
                                 <option data-placeholder="true"></option>
                                 @foreach ($proveedores as $proveedor)
                                     @if ($proveedor->id == old('proveedor'))
-                                        <option value="{{ $proveedor->id }}" selected>{{ $proveedor->razonSocial }} -
+                                        <option value="{{ $proveedor->id }}" selected>{{ $proveedor->razon_social }} -
                                             {{ $proveedor->cuit }}</option>
                                     @else
-                                        <option value="{{ $proveedor->id }}">{{ $proveedor->razonSocial }} -
+                                        <option value="{{ $proveedor->id }}">{{ $proveedor->razon_social }} -
                                             {{ $proveedor->cuit }}</option>
                                     @endif
                                 @endforeach

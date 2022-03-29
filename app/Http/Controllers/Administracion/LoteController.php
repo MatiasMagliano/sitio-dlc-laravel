@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lote;
+use App\Models\Presentacion;
 use App\Models\Producto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LoteController extends Controller
 {
@@ -31,8 +33,7 @@ class LoteController extends Controller
     public function buscarLotes(Request $request)
     {
         if($request->ajax()){
-            $where = array('producto_id' => $request->idProducto);
-	        $lotes = Lote::where($where)->get();
+	        $lotes = Lote::lotesPorPresentacion($request->producto_id, $request->presentacion_id);
             return Response()->json($lotes);
         }
     }
