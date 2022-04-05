@@ -64,8 +64,16 @@
     </div>
 
     <div class="card ml-2" id="ListadoDePrecios">
-        <a class="btn btn-success mt-3 mb-3" href="{{ route('LPrecioExport')}}">
+        <a class="btn btn-success mt-3 mb-3" href="{{ route('ListaPrecio.excel')}}">
         Exportar</a>
+        <form action="{{route('ListaPRecios.import.excel')}}" method="post" enctype="multipart/form-data">
+            @csrf
+            @if(Session::has('message'))
+            <p>{{Session::has('message')}}</p>
+            @endif
+            <input type="file" name="file">
+            <button>Importar Listado</button>
+        </form>
         <div class="card-header">
             <h3 id="tituloListadoDePrecios" class="card-title">
                 Lista de Precios de

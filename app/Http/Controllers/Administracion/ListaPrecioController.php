@@ -7,10 +7,25 @@ use App\Models\Proveedor;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use Illuminate\Http\Request;
+
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ListaPrecioExport;
+use App\Imports\ListaPrecioImport;
 
 class ListaPrecioController extends Controller
 {
+
+    public function exportExcel(){
+        return Excel::download(new ListaPrecioExport, 'ListadoDePrecios.xlsx');
+    }
+
+    public function importExcel(Request $request){
+        $file = $request->file('file');
+        Excel::import(new ListaPrecioImport, $file);
+
+        return back()->with('message', 'Importación de listado completada');
+    }
+
 
 
     /**

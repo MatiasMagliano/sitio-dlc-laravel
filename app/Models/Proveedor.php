@@ -27,16 +27,6 @@ class Proveedor extends Model
         'url'
     ];
 
-    // Se definen las relaciones
-    /**
-     * Get all of the lotes for the Proveedor
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function lotes(): HasMany
-    {
-        return $this->hasMany(Lote::class);
-    }
 
     /**
      * Get the user associated with the ListaProveedor
