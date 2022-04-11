@@ -14,7 +14,7 @@ class LotePresentacionProducto extends Model
     protected $table = 'lote_presentacion_producto';
 
     protected $fillable = [
-        'producto_id', 'presentacion_id', 'lote_id', 'proveedor_id'
+        'producto_id', 'presentacion_id', 'lote_id'
     ];
 
     // RELACIONES

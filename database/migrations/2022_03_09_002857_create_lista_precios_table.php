@@ -18,6 +18,7 @@ class CreateListapreciosTable extends Migration
         Schema::create('lista_precios', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Proveedor::class)->constrained();
+            $table->string('codigoProv', 18)->constrained();
             //$table->foreignIdFor(LotePresentacionProducto::class)->constrained();
             $table->unsignedBigInteger('lpp_id');
             $table->foreign('lpp_id')->references('id')->on('lote_presentacion_producto');

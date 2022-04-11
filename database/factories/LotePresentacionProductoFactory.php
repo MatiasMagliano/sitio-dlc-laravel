@@ -20,7 +20,7 @@ class LotePresentacionProductoFactory extends Factory
         return [
             'producto_id' => Producto::inRandomOrder()->first()->id,
             'presentacion_id' => Presentacion::inRandomOrder()->first()->id,
-            'proveedor_id' => Proveedor::inRandomOrder()->first()->id,
+            'lote_id' => Lote::inRandomOrder()->first()->id,
         ];
     }
 }

@@ -24,7 +24,7 @@ class LotePresentacionProducto extends Migration
             $table->foreignIdFor(Presentacion::class)->constrained();
             $table->foreignIdFor(Lote::class)->constrained();
             //$table->foreignIdFor(Proveedor::class)->constrained();
-            $table->foreignIdFor(ListaPrecio::class);
+            //$table->foreignIdFor(ListaPrecio::class);
             $table->timestamps();
             $table->softDeletes();
         });
