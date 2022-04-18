@@ -18,6 +18,7 @@
         <div class="col-md-10">
             <h1>Crear producto y sus características</h1>
         </div>
+        &nbsp;
         <div class="col-md-2 d-flex justify-content-xl-end">
             <a href="{{ url()->previous() }}" role="button"
                 class="btn btn-md btn-secondary">Volver a productos</a>
@@ -26,9 +27,6 @@
 @stop
 
 @section('content')
-@if ($errors->any())
-    {{ implode('', $errors->all('<div>:message</div>')) }}
-@endif
     <form action="{{ route('administracion.productos.store') }}" method="post" class="needs-validation" autocomplete="off" novalidate>
         @csrf
         {{-- NOMBRE DE LA DROGA --}}

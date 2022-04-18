@@ -32,22 +32,24 @@
                 <div class="col-8">
                     <h5 class="heading-small text-muted mb-1">Datos básicos de la cotización</h5>
                 </div>
-                <div class="col-4 text-right">
-                    @if ($cotizacion->count() == 0)
-                        <form action="{{route('administracion.cotizacions.destroy', $cotizacion)}}" method="post" class="d-inline">
-                            @csrf
-                            @method('delete')
-                            <button type="submit" class="btn btn-sm btn-primary">
-                                <i class="far fa-trash-alt"></i>&nbsp;<span class="hide">Borrar cotización</span>
-                            </button>
-                        </form>
-                    @else
-                    <button type="button" class="btn btn-sm btn-primary"
-                        onclick="confirmarCotizacion()">
-                        <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Finalizar cotización</span>
-                    </button>
-                    @endif
-                </div>
+                @if (!$cotizacion->finalizada)
+                    <div class="col-4 text-right">
+                        @if ($cotizacion->productos->count() == 0)
+                            <form action="{{route('administracion.cotizaciones.destroy', $cotizacion)}}" method="post" class="d-inline">
+                                @csrf
+                                @method('delete')
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="far fa-trash-alt"></i>&nbsp;<span class="hide">Borrar cotización</span>
+                                </button>
+                            </form>
+                        @else
+                        <button type="button" class="btn btn-sm btn-primary"
+                            onclick="confirmarCotizacion()">
+                            <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Finalizar cotización</span>
+                        </button>
+                        @endif
+                    </div>
+                @endif
             </div>
         </div>
         <div class="card-body">
@@ -57,9 +59,9 @@
                         <th>Fecha</th>
                         <th>Cliente</th>
                         <th>Usuario</th>
-                        <th>Lineas cotizadas</th>
-                        <th>Vol. dinero</th>
-                        <th>Vol. cantidad</th>
+                        <th>Productos cotizados</th>
+                        <th>Unidades</th>
+                        <th>Importe</th>
                         <th>ESTADO</th>
                     </tr>
                 </thead>
@@ -74,8 +76,8 @@
                         </td>
                         <td style="vertical-align: middle;">{{$cotizacion->user->name}}</td>
                         <td style="vertical-align: middle;">{{$cotizacion->productos->count()}}</td>
-                        <td style="vertical-align: middle;">${{$cotizacion->monto_total}}</td>
                         <td style="vertical-align: middle;">{{$cotizacion->productos->sum('cantidad')}}</td>
+                        <td style="vertical-align: middle;">${{$cotizacion->productos->sum('total')}}</td>
                         <td style="vertical-align: middle;">
                             @if (!$cotizacion->finalizada)
                                 <span class="text-danger">Pendiente: </span> {{$cotizacion->estado}}
@@ -93,16 +95,16 @@
         <div class="card-header">
             <div class="row d-flex">
                 <div class="col-8">
-                    <h5 class="heading-small text-muted mb-1">Productos: {{$cotizacion->productos->sum('cantidad')}}</h5>
+                    <h5 class="heading-small text-muted mb-1">Productos</h5>
                 </div>
-                <div class="col-4 text-right">
-                    @if (!$cotizacion->finalizada)
+                @if (!$cotizacion->finalizada)
+                    <div class="col-4 text-right">
                         <a href="{{ route('administracion.cotizaciones.agregar.producto', ['cotizacion' => $cotizacion->id]) }}"
                             class="btn btn-sm btn-primary">
                             <i class="fas fa-plus fa-sm"></i>&nbsp;<span class="hide">agregar productos</span>
                         </a>
-                    @endif
-                </div>
+                    </div>
+                @endif
             </div>
         </div>
         <div class="card-body">
@@ -119,7 +121,7 @@
                     @php $i = 0; /*variable contadora del Nº Orden*/@endphp
                     @foreach ($cotizacion->productos as $cotizado)
                     <tr>
-                        <td>{{++$i}}</td>
+                        <td style="text-align: center;">{{++$i}}</td>
                         <td>{{--Producto: producto+presentacion--}}
                             {{$cotizado->producto->droga}}, {{$presentaciones[$cotizado->presentacion_id-1]->forma}} {{$presentaciones[$cotizado->presentacion_id-1]->presentacion}}
                         </td>
@@ -127,7 +129,7 @@
                             {{$cotizado->cantidad}}
                         </td>
                         <td>
-                            {{$cotizado->precio}}
+                            ${{$cotizado->precio}}
                         </td>
                         <td>
                             ${{$cotizado->total}}
@@ -139,16 +141,11 @@
                                     title="Editar producto cotizado">
                                     <i class="fas fa-pencil-alt"></i>
                                 </a>
-                                <form action="{{ route('administracion.cotizaciones.borrar.producto', ['cotizacion' => $cotizacion, 'productoCotizado' => $cotizado]) }}"
-                                    id="{{$cotizado->id}}" method="post" class="d-inline">
-                                    @csrf
-                                    @method('delete')
-                                    <button type="button" class="btn btn-link" data-toggle="tooltip"
-                                        data-placement="bottom" title="Borrar cotización"
-                                        onclick="borrarProductoCotizado({{$cotizado->id}})">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-link"
+                                    data-id="{{ $cotizado->id }}" data-action="{{ route('administracion.cotizaciones.borrar.producto', ['cotizacion' => $cotizacion, 'productoCotizado' => $cotizado]) }}"
+                                    onclick="confirmarBorrado({{$cotizacion->id}}, {{$cotizado->id}})">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                             @endif
                         </td>
                     </tr>
@@ -195,7 +192,8 @@
             });
         }
 
-        function borrarProductoCotizado(id){
+        // BORRAR PRODUCTO DE COTIZACIÓN
+        function confirmarBorrado(id_cotizacion, id_cotizado){
             Swal.fire({
                 icon: 'warning',
                 title: 'Borrar producto',
@@ -204,9 +202,22 @@
                 showCancelButton: true,
                 cancelButtonText: 'Cancelar',
             }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#' + id).submit();
-                    window.location.replace('{{ route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]) }}');
+                if(result.isConfirmed) {
+                    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
+                    $.ajax({
+                        type: 'DELETE',
+                        url: "{{url('/administracion/cotizaciones')}}/" + id_cotizacion + '/producto/' + id_cotizado,
+                        data: {_token: CSRF_TOKEN},
+                        dataType: 'JSON',
+                        success: function (results) {
+                            // la redirección se da en el AJAX
+                            window.location.replace('{{ route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]) }}');
+                        },
+                        error: function (results) {
+                            Swal.fire(Swal.fire('Error', results.message, 'error'));
+                        }
+                    });
                 }
             });
         }

@@ -5,6 +5,24 @@
 @section('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.css" />
     <style>
+        .dataTable>thead>tr>th[class*="sort"]:before,
+        .dataTable>thead>tr>th[class*="sort"]:after {
+            content: "" !important;
+        }
+
+        #tablaPreciosSugeridos thead th {
+            border-bottom: none;
+        }
+
+        #tablaPreciosSugeridos tfoot th {
+            border-top: none;
+            border-bottom: 1px solid #111;
+        }
+
+        .dataTables_filter {
+            display: none;
+        }
+
         @media (max-width: 600px) {
             .hide {
                 display: none;
@@ -44,10 +62,11 @@
             <div class="card-body">
 
                 {{-- producto=producto+presentacion. Se retienen los dos ID combinados. Luego el controller los separa --}}
-                <div class="form-group">
-                    <label for="input-producto">Producto y presentación</label>
+                <label for="input-producto">Producto y presentación</label>
+                <div class="form-group row">
+                    <div id="btnBuscarPrecios" class="btn btn-sm btn-outline-secondary col-1 text-nowrap font-weight-light">Obtener precios</div>
                     <select name="producto" id="input-producto"
-                        class="selecion-producto  @error('producto') is-invalid @enderror">
+                        class="seleccion-producto col @error('producto') is-invalid @enderror">
                         <option data-placeholder="true"></option>
                         @foreach ($productos as $producto)
                             @foreach ($producto->presentaciones as $presentacion)
@@ -63,18 +82,41 @@
                     </select>
                     @error('producto')<div class="invalid-feedback">{{$message}}</div>@enderror
                 </div>
+                <hr>
                 <div class="row d-flex">
                     <div class="col">
-                        {{-- PONER EN EL VALUE EL PRECIO SUGERIDO, ojo con el formato--> debe terminar siendo FLOAT --}}
+                        {{-- SELECCIONAR Y SUGERIR LOS PRECIOS --> debe terminar siendo FLOAT --}}
+                        <div class="card mx-auto" style="width: 80%;">
+                            <div class="card-body">
+                                <h5 class="card-title">Precios sugeridos</h5>
+                                <br>
+                                <table id="tablaPreciosSugeridos" class="table table-responsive-md table-bordered table-condensed" width="100%">
+                                    <thead>
+                                        <th>Proveedor</th>
+                                        <th>Descuento 1</th>
+                                        <th>Descuento 2</th>
+                                        <th>Descuento 3</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <ul id="lista-precio-sugerido" class="list-group list-group-flush">
+                                {{-- LA LISTA SE LLENA POR JS, YA QUE ES UN AJAX QUE SE ACTIVA CUANDO SE SELECCIONA UN PRODUCTO --}}
+                            </ul>
+                        </div>
                         <div class="form-group">
                             <label for="input-precio">Precio</label>
                             <input type="number" name="precio" id="input-precio"
                                 class="form-control @error('precio') is-invalid @enderror"
-                                value="@if(old('precio')){{old('precio')}}@else{{15.30}}@endif"
+                                value="@if(old('precio')){{old('precio')}}@endif"
                                 step=".01">
                                 @error('precio')<div class="invalid-feedback">{{$message}}</div>@enderror
                         </div>
                     </div>
+                </div>
+
+                <div class="row d-flex">
                     <div class="col">
                         <div class="form-group">
                             <label for="input-cantidad">Cantidad</label>
@@ -102,20 +144,70 @@
 @section('js')
     @include('partials.alerts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
+    <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
-        new SlimSelect({
-            select: '.selecion-producto',
+        var tablaPreciosSugerido;
+
+        function obtenerDatos(id_producto, id_presentacion){
+            let datos = {
+                producto_id: id_producto,
+                presentacion_id: id_presentacion
+            };
+            $.ajax({
+                Type: 'GET',
+                data: datos,
+                url: "{{route('administracion.cotizaciones.producto.precios')}}",
+            }).done(function (resultado) {
+                tablaPreciosSugerido.clear();
+                tablaPreciosSugerido.rows.add(resultado).draw();
+            });
+        }
+
+        // SCRIPT DEL SLIMSELECT
+        var selProducto = new SlimSelect({
+            select: '.seleccion-producto',
             placeholder: 'Seleccione el nombre de la droga y luego su presentación...',
         });
-    </script>
 
-    <script>
+        // SCRIPT QUE ACTUALIZA EL TOTAL EN EL CAMPO TOTAL
         $('#input-cantidad').on('input', function() {
             $('#input-total').val('$' + (parseInt($('#input-cantidad').val()) * parseFloat($('#input-precio').val())).toFixed(2));
         });
 
+        // SCRIPT QUE ACTUALIZA EL TOTAL EN EL CAMPO TOTAL
         $('#input-precio').on('input', function() {
             $('#input-total').val('$' + (parseInt($('#input-cantidad').val() * parseFloat($('#input-precio').val()))).toFixed(2));
+        });
+
+        $(document).ready(function(){
+            tablaPreciosSugerido = $('#tablaPreciosSugeridos').DataTable({
+                "paging": false,
+                "info": false,
+                "searching": false,
+                "select": false,
+                "columns": [
+                    {"data": "proveedor"},
+                    {"data": "precio_1"},
+                    {"data": "precio_2"},
+                    {"data": "precio_3"},
+                ],
+            });
+
+            tablaPreciosSugerido.row.add({
+                proveedor: '*',
+                precio_1: '*',
+                precio_2: '*',
+                precio_3: '*',
+            }).draw();
+
+            // SOLICITUD DE LENADO DE SUGERENCIA DE PRECIOS
+            $( "#btnBuscarPrecios" ).on('click', function() {
+                // DISPARAR EL AJAX Y LLENAR EL DATATABLE CON PRECIOS
+                debugger;
+                let productoSeleccionado = selProducto.selected();
+                let prodPres = productoSeleccionado.split("|");
+                obtenerDatos(prodPres[0], prodPres[1]);
+            });
         });
     </script>
 @endsection

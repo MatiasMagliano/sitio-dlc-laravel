@@ -24,5 +24,6 @@ return [
     'important'                     => 'Importante',
     'warning'                       => 'Advertencia',
     'information'                   => 'Información',
-    'quotations'                    => 'Cotizaciones'
+    'quotations'                    => 'Cotizaciones',
+    'clients'                       => 'Clientes',
 ];

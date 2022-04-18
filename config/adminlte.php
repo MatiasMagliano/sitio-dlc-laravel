@@ -248,6 +248,12 @@ return [
             'can'    => 'es-sist-admin'
         ],
         [
+            'text'  => 'clients',
+            'route' => 'administracion.clientes.index',
+            'icon'  => 'fas fa-users',
+            'can'   => 'es-administracion',
+        ],
+        [
             'text'  => 'products',
             'route' => 'administracion.productos.index',
             'icon'  => 'fas fa-shopping-cart',
