@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Administracion;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductoRequest;
 use App\Models\Lote;
-use App\Models\LotePresentacionProducto as ModelsLotePresentacionProducto;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\LotePresentacionProducto;
 
 class ProductoController extends Controller
 {
