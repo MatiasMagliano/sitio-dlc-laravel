@@ -1,30 +1,27 @@
 <?php
 
 namespace App\Http\Controllers\Administracion;
+use Illuminate\Support\Facades\DB;
+
 use App\Http\Controllers\Controller;
 use App\Models\ListaPrecio;
 use App\Models\Proveedor;
-use App\Models\Presentacion;
-use App\Models\Producto;
+
 use Illuminate\Http\Request;
 
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ListaPrecioExport;
 use App\Imports\ListaPrecioImport;
 
 class ListaPrecioController extends Controller
 {
 
-    public function exportExcel(){
-        return Excel::download(new ListaPrecioExport, 'ListadoDePrecios.xlsx');
-    }
 
-    public function importExcel(Request $request){
-        $file = $request->file('file');
-        Excel::import(new ListaPrecioImport, $file);
+    // public function importExcel(Request $request){
+    //     $file = $request->file('file');
+    //     Excel::import(new ListaPrecioImport, $file);
 
-        return back()->with('message', 'Importación de listado completada');
-    }
+    //     return back()->with('message', 'Importación de listado completada');
+    // }
 
 
 
@@ -37,24 +34,23 @@ class ListaPrecioController extends Controller
     {
         $listaPrecios = ListaPrecio::all();
         $proveedors = Proveedor::all();
-        $presentaciones = Presentacion::all();
-        $producto = Producto::all();
-        $config = [
-             'format' => 'DD/MM/YYYY',
-             'dayViewHeaderFormat' => 'MMM YYYY',
-             'minDate' => "js:moment().startOf('month')",
-        ];
 
-        return view('administracion.listaprecios.index', compact('listaPrecios', 'proveedors', 'presentaciones'));
+        $users = DB::table('lista_precios')
+            ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
+            ->join('lote_presentacion_producto', 'lista_precios.lpp_id','=','lote_presentacion_producto.id')
+            ->join('productos','lote_presentacion_producto.producto_id','=','productos.id')
+            ->join('presentacions','lote_presentacion_producto.presentacion_id','=','presentacions.id')
+            ->select('lista_precios.*','productos.droga','presentacions.presentacion','proveedors.razon_social')
+            ->get();
+   
+        return view('administracion.listaprecios.index', compact('listaPrecios','users','proveedors'));
     }
 
-     
 
-    public function actualizarLista(Request $request)
-    {
+    public function actualizarLista(Request $request){
+
         if($request->ajax()){
-            $where = array('proveedor_id' => $request->idProveedor);
-	        $listaPrecios = ListaPrecio::where($where)->get();
+            $listaPrecios = ListaPrecio::listaDeProveedor($request->proveedor_id);
             return Response()->json($listaPrecios);
         }
     }

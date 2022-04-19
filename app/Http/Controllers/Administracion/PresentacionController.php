@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Administracion;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Controller;
 use App\Models\Presentacion;
@@ -11,8 +12,12 @@ class PresentacionController extends Controller
 {
     public function index()
     {
-        $productos = Producto::all();
-        return view('administracion.presentaciones.index', compact('productos'));
+        $presentaciones = DB::table('presentacions')
+        ->join('lote_presentacion_producto', 'presentacions.id','=','lote_presentacion_producto.presentacion_id')
+        ->join('productos','lote_presentacion_producto.producto_id','=','productos.id')
+        ->select('presentacions.*','productos.droga')
+        ->get();
+        return view('administracion.presentaciones.index', compact('presentaciones'));
     }
 
     public function edit($idProducto, $idPresentacion)

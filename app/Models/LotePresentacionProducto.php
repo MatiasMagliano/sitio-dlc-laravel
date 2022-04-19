@@ -28,4 +28,11 @@ class LotePresentacionProducto extends Model
     {
         return $this->belongsToMany(Lote::class, 'lote_presentacion_producto');
     }
+        /**
+    * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    */
+   public function productos(): BelongsToMany
+   {
+       return $this->belongsToMany(Producto::class, 'lote_presentacion_producto');
+   }
 }
