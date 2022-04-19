@@ -31,7 +31,7 @@
 
             @foreach($proveedores as $proveedor)
                 <tr>
-                    <td width="200px" style="vertical-align: middle;">{{$proveedor->razonSocial}}</td>
+                    <td width="200px" style="vertical-align: middle;">{{$proveedor->razon_social}}</td>
                     <td width="200px" style="vertical-align: middle;">{{$proveedor->cuit}}</td>
                     <td width="200px" style="vertical-align: middle;">{{$proveedor->contacto}}</td>
                     <td width="200px" style="vertical-align: middle;">{{$proveedor->direccion}}</td>

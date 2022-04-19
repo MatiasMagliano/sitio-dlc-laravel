@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Yajra\Datatables\Datatables;
 use App\Exports\ListaPrecioExport;
+use App\Models\Rol;
+use GuzzleHttp\Promise\Create;
 use Maatwebsite\Excel\Facades\Excel;
 
 /*
@@ -58,6 +60,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     // rutas de PROVEEDORES
     Route::resource('/proveedores', ProveedorController::class);
+    //Route::post('/proveedores/create', 'ProveedorController@Create')->name('proveedores.create');
 
     // rutas de PRESENTACIONES
     Route::resource('/presentaciones', PresentacionController::class)->except('edit');
