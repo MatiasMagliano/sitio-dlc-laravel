@@ -51,12 +51,11 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::resource('/productos', ProductoController::class);
     Route::get('/productos/buscar', [ProductoController::class, 'buscar'])->name('buscar.producto');
 
-    // rutas de PRODUCTOS
+    // rutas de CLIENTES
     Route::resource('/clientes', ClienteController::class);
 
     // rutas de PROVEEDORES
     Route::resource('/proveedores', ProveedorController::class);
-    //Route::post('/proveedores/create', 'ProveedorController@Create')->name('proveedores.create');
 
     // rutas de PRESENTACIONES
     Route::resource('/presentaciones', PresentacionController::class)->except('edit');
