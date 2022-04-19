@@ -22,11 +22,11 @@ class ProveedorController extends Controller
     {
         //
     }
-    public function create(Request $request)
+    public function create( )
     {
-        $proveedores = Proveedor::all();
-        return view('administracion.proveedores.create', compact('proveedores'));
-       // return $request->all();
+
+        return view('administracion.proveedores.create');
+
     }
     public function destroy()
     {

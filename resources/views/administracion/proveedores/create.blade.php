@@ -26,13 +26,13 @@
 @stop
 
 {{-- a partir de acá --}}
-{{--<form action="{{ route('administracion.proveedores.create')}}" method="POST">
+<form action="{{ route('administracion.proveedores.create')}}" method="POST">
     @csrf
     <input type="text" name="razon_social" id="razon_social" placeholder="Nombre del proveedor" class="form-control">
     <input type="text" name="descripcion" id="descripcion" placeholder="Descripción" class="form-control mb-2">
     <button class="btn btn-primary btn-block" type="submit">Agregar proveedor</button>
 </form>
---}}
+
 
 
 
