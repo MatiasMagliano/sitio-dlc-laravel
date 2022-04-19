@@ -47,15 +47,13 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     Route::post('borrar-lote', [LoteController::class, 'destroy']);
 
-    // rutas de CLIENTES
-    Route::resource('/clientes', ClienteController::class);
-
     // rutas de PRODUCTOS
     Route::resource('/productos', ProductoController::class);
     Route::get('/productos/buscar', [ProductoController::class, 'buscar'])->name('buscar.producto');
 
     // rutas de PROVEEDORES
     Route::resource('/proveedores', ProveedorController::class);
+    //Route::post('/proveedores/create', 'ProveedorController@Create')->name('proveedores.create');
 
     // rutas de PRESENTACIONES
     Route::resource('/presentaciones', PresentacionController::class)->except('edit');
@@ -68,15 +66,11 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     // rutas especiales para LISTA DE PRECIOS
     Route::resource('/listaprecios', ListaPrecioController::class);
-    Route::get('ListaPrecioExcel', [ListaPrecioController::class, 'exportExcel'])->name('ListaPrecio.excel');
-    Route::post('importListaPrecioExcel', [ListaPrecioController::class, 'importExcel'])->name('ListaPrecio.import.excel');
+    Route::get('ListaPrecioExcel', 'ListaPrecioController@exportExcel')->name('ListaPrecio.excel');
+    Route::post('importListaPrecioExcel', 'ListaPrecioController@importExcel')->name('ListaPrecio.import.excel');
 
 
     Route::resource('/cotizaciones', CotizacionController::class)->except('edit', 'update');
-    // RUTA AJAX PARA BUSCAR LOS PRECIOS SUGERIDOS
-    Route::get('/cotizaciones/ajax/buscarPreciosSugeridos', [CotizacionController::class, 'preciosSugeridos'])
-        ->name('cotizaciones.producto.precios');
-    // RUTAS EXTRA PARA COTIZACIONES
     Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])
         ->name('cotizaciones.finalizar');
     Route::get('/cotizaciones/{cotizacion}/agregar/producto', [CotizacionController::class, 'agregarProducto'])
