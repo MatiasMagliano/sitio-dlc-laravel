@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\ListaPrecio;
-use App\Models\Producto;
 use Illuminate\Database\Seeder;
+use App\Models\LotePresentacionProducto;
 
 class ListaPrecioSeeder extends Seeder
 {
@@ -15,7 +15,7 @@ class ListaPrecioSeeder extends Seeder
      */
     public function run()
     {
-        foreach(Producto::all() as $producto){
+        foreach(LotePresentacionProducto::all() as $producto){
             ListaPrecio::factory()->create();
         }
     }

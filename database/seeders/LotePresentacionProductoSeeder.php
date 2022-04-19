@@ -21,21 +21,8 @@ class LotePresentacionProductoSeeder extends Seeder
      */
     public function run()
     {
-        
-        // se hace de esta manera, para evitar lotes duplicados en productos diferentes
-        foreach (Producto::all() as $producto){
-            LotePresentacionProducto::factory()->create([
-                'producto_id' => $producto->id,
 
-            ]);
-            $producto->touch();
-        }
-        foreach (Presentacion::all() as $presentacion){
-            LotePresentacionProducto::factory()->create([
-                'presentacion_id' => $presentacion->id,
-            ]);
-            $presentacion->touch();
-        }
+        // se hace de esta manera, para evitar lotes duplicados en productos diferentes
         foreach (Lote::all() as $lote){
             LotePresentacionProducto::factory()->create([
                 'lote_id' => $lote->id,
