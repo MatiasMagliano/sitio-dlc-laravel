@@ -128,6 +128,18 @@ class CotizacionController extends Controller
         return view('administracion.cotizaciones.agregarProducto', compact('cotizacion', 'productos'));
     }
 
+    // AJAX QUE OBTIENE LOS PRECIOS SUGERIDOS
+    public function preciosSugeridos(Request $request)
+    {
+        if($request->ajax()){
+            // la lógica de la función sería obtener todos los precios para esa presentación
+            // por ahora, se envía la misma lista para todos los productos
+            $sugerencias = [];
+
+            return response()->json($sugerencias);
+        }
+    }
+
     public function editarProductoCotizado(Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
     {
         //EDICION DE LA PRESENTACION COTIZADA
@@ -170,8 +182,12 @@ class CotizacionController extends Controller
         //ACTUALIZADO DEL PRODUCTO COTIZADO
     }
 
-    public function borrarProductoCotizado(Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
+    public function borrarProductoCotizado(Request $request, Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
     {
         //BORRADO DEL PRODUCTO COTIZADO
+        $productoCotizado->delete();
+
+        $request->session()->flash('success', 'Producto agregado con éxito.');
+        return response()->json();
     }
 }

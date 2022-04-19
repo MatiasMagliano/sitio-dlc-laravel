@@ -24,9 +24,9 @@
                         <th>Fecha</th>
                         <th>Cliente</th>
                         <th>Usuario</th>
-                        <th>Lineas cotizadas</th>
-                        <th>Vol. dinero</th>
-                        <th>Vol. cantidad</th>
+                        <th>Productos cotizados</th>
+                        <th>Total unidades</th>
+                        <th>Importe total</th>
                         <th>ESTADO</th>
                         <th></th>
                     </tr>
@@ -41,8 +41,14 @@
                             </td>
                             <td style="vertical-align: middle;">{{ $cotizacion->user->name }}</td>
                             <td style="vertical-align: middle;">{{$cotizacion->productos->count()}}</td>
-                            <td style="vertical-align: middle;">${{$cotizacion->monto_total}}</td>
                             <td style="vertical-align: middle;">{{$cotizacion->productos->sum('cantidad')}}</td>
+                            <td style="vertical-align: middle;">
+                                @if ($cotizacion->finalizada)
+                                    ${{$cotizacion->productos->sum('monto_total')}}
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td style="vertical-align: middle;">
                                 @if (!$cotizacion->finalizada)
                                     <span class="text-danger">Pendiente: </span> {{ $cotizacion->estado }}
@@ -57,6 +63,16 @@
                                         title="Editar cotización">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
+                                    <form action="{{ route('administracion.cotizaciones.destroy', $cotizacion) }}"
+                                        id="borrar-{{$cotizacion->id}}" method="post" class="d-inline">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="button" class="btn btn-link" data-toggle="tooltip"
+                                            data-placement="bottom" title="Borrar cotización"
+                                            onclick="borrarCotizacion({{$cotizacion->id}})">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
                                 @else
                                     <a href="{{ route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]) }}"
                                         class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
@@ -64,16 +80,6 @@
                                         <i class="fal fa-search"></i>
                                     </a>
                                 @endif
-                                <form action="{{ route('administracion.cotizaciones.destroy', $cotizacion) }}"
-                                    id="{{$cotizacion->id}}" method="post" class="d-inline">
-                                    @csrf
-                                    @method('delete')
-                                    <button type="button" class="btn btn-link" data-toggle="tooltip"
-                                        data-placement="bottom" title="Borrar cotización"
-                                        onclick="borrarCotizacion({{$cotizacion->id}})">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                     @endforeach
@@ -97,7 +103,8 @@
                 cancelButtonText: 'Cancelar',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $('#' + id).submit();
+                    debugger;
+                    $('#borrar-' + id).submit();
                     window.location.replace('{{ route('administracion.cotizaciones.index') }}');
                 }
             });
