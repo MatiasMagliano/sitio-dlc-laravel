@@ -26,7 +26,7 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-    <form action="route('administracion.clientes.store')" method="post" class="needs-validation" autocomplete="off">
+    <form action="{{route('administracion.clientes.store')}}" method="post" class="needs-validation" autocomplete="off" novalidate>
         @csrf
 
         <div class="card">
@@ -50,7 +50,7 @@
                             <input type="text" name="nombre_corto" id="input-nombre_corto"
                                 class="form-control @error('nombre_corto') is-invalid @enderror"
                                 value="{{ old('nombre_corto') }}" autofocus>
-                                @error('nombre_corto')<div class="invalid-feedback">{{$message}}</div>@enderror
+                            @error('nombre_corto')<div class="invalid-feedback">{{$message}}</div>@enderror
                         </div>
                         <div class="form-group col">
                             <label for="input-razon_social">Razón social</label>
@@ -58,25 +58,28 @@
                                 class="form-control @error('razon_social') is-invalid @enderror"
                                 placeholder="Nombre completo del cliente o nombre de fantasía"
                                 value="{{ old('razon_social') }}">
-                                @error('razon_social')<div class="invalid-feedback">{{$message}}</div>@enderror
-                        </div>
-                    </div>
-                    <div class="row d-flex">
-                        <div class="form-group col-12">
-                            <label for="input-direccion">Dirección de envío</label>
-                            <input type="text" name="direccion" id="input-direccion"
-                                class="form-control @error('direccion') is-invalid @enderror"
-                                placeholder="Nombre completo del cliente o nombre de fantasía"
-                                value="{{ old('direccion') }}">
-                                @error('direccion')<div class="invalid-feedback">{{$message}}</div>@enderror
+                            @error('razon_social')<div class="invalid-feedback">{{$message}}</div>@enderror
                         </div>
                     </div>
 
-                    <h6 class="heading-small text-muted mb-1 mt-5">Datos impositivos</h6>
+                    <h6 class="heading-small text-muted mb-1 mt-5">Datos de envío</h6>
+                    <hr>
+                    <div class="row d-flex">
+                        <div class="form-group col">
+                            <label for="provincia">Provincia</label>
+                            <select id="provincia" name="provincia" class="form-control" data-live-search="true"></select>
+                        </div>
+                        <div class="form-group col">
+                            <label for="localidad">Localidad</label>
+                            <select id="localidad" name="localidad" class="form-control" data-live-search="true"></select>
+                        </div>
+                    </div>
+
+                    <h6 class="heading-small text-muted mb-1 mt-5">Datos Impositivos</h6>
                     <hr>
                     <div class="row d-flex">
                         <div class="form-group col-3">
-                            <label for="input-tipo_afip"><span class="hide">Tipo de</span> inscripción</label>
+                            <label for="input-tipo_afip"><span class="hide">Tipo de</span> Inscripción</label>
                             <select name="tipo_afip" id="input-tipo_afip"
                                 class="form-control @error('tipo_afip') is-invalid @enderror">
                                 <option>Seleccione una opción</option>
@@ -87,10 +90,40 @@
                         </div>
                         <div class="form-group col">
                             <label for="input-afip">Número</label>
-                            <input type="text" name="afip" id="input-afip"
+                            <input type="number" name="afip" id="input-afip"
                                 class="form-control @error('afip') is-invalid @enderror"
                                 value="{{ old('afip') }}">
-                                @error('afip')<div class="invalid-feedback">{{$message}}</div>@enderror
+                            <small id="input-afip" class="form-text text-muted">Sin guiones ni otros caracteres.</small>
+                            @error('afip')<div class="invalid-feedback">{{$message}}</div>@enderror
+                        </div>
+                    </div>
+
+                    <h6 class="heading-small text-muted mb-1 mt-5">Datos de Contacto</h6>
+                    <hr>
+                    <div class="row d-flex">
+                        <div class="form-group col-12">
+                            <label for="input-contacto">Persona de contacto</label>
+                            <input type="text" name="contacto" id="input-contacto"
+                                class="form-control @error('contacto') is-invalid @enderror"
+                                value="{{ old('contacto') }}">
+                            @error('contacto')<div class="invalid-feedback">{{$message}}</div>@enderror
+                        </div>
+                    </div>
+                    <div class="row d-flex">
+                        <div class="form-group col">
+                            <label for="input-telefono">Teléfono</label>
+                            <input type="number" name="telefono" id="input-telefono"
+                                class="form-control @error('telefono') is-invalid @enderror"
+                                value="{{ old('telefono') }}">
+                            <small id="input-afip" class="form-text text-muted">Sin guiones, paréntesis u otros caracteres especiales.</small>
+                            @error('telefono')<div class="invalid-feedback">{{$message}}</div>@enderror
+                        </div>
+                        <div class="form-group col">
+                            <label for="input-email">E-mail</label>
+                            <input type="email" name="email" id="input-email"
+                                class="form-control @error('email') is-invalid @enderror"
+                                value="{{ old('email') }}">
+                            @error('email')<div class="invalid-feedback">{{$message}}</div>@enderror
                         </div>
                     </div>
                 </div>

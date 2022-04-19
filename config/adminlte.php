@@ -242,22 +242,16 @@ return [
             'text' => 'search',
         ],
         [
-            'text'   => 'Administrar usuarios',
-            'route'  => 'admin.users.index',
-            'icon'   => 'fas fa-users-cog',
-            'can'    => 'es-sist-admin'
-        ],
-        [
             'text'  => 'clients',
-            'route' => 'administracion.clientes.index',
             'icon'  => 'fas fa-users',
             'can'   => 'es-administracion',
-        ],
-        [
-            'text'  => 'products',
-            'route' => 'administracion.productos.index',
-            'icon'  => 'fas fa-shopping-cart',
-            'can'   => 'es-administracion',
+            'submenu' => [
+                [
+                    'text'  => 'clients',
+                    'route' => 'administracion.clientes.index',
+                    'icon'  => 'fas fa-people-arrows',
+                ],
+            ],
         ],
         [
             'text'    => 'products_maintenance',
@@ -265,16 +259,24 @@ return [
             'can'     => 'es-administracion',
             'submenu' => [
                 [
-                    'text' => 'add_products_batches',
-                    'route'  => 'administracion.lotes.index',
+                    'text'  => 'products',
+                    'route' => 'administracion.productos.index',
+                    'icon'  => 'fas fa-shopping-cart',
                 ],
                 [
-                    'text' => 'suppliers',
-                    'route'  => 'administracion.proveedores.index'
+                    'text'  => 'add_products_batches',
+                    'route' => 'administracion.lotes.index',
+                    'icon'  => 'fas fa-tag'
                 ],
                 [
-                    'text' => 'products_presentation',
-                    'route'  => 'administracion.presentaciones.index'
+                    'text'  => 'suppliers',
+                    'route' => 'administracion.proveedores.index',
+                    'icon'  => 'fas fa-truck'
+                ],
+                [
+                    'text'  => 'products_presentation',
+                    'route' => 'administracion.presentaciones.index',
+                    'icon'  => 'fas fa-pills'
                 ],
             ],
         ],
@@ -292,15 +294,27 @@ return [
         ],
         ['header' => 'account_settings'],
         [
-            'text' => 'profile',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'change_password',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
+            'text'   => 'admin_tools',
+            'icon'   => 'fas fa-cog',
+            'can'    => 'es-sist-admin',
+            'submenu' => [
+                [
+                    'text'  => 'users_admin',
+                    'route'  => 'admin.users.index',
+                    'icon'  => 'fas fa-users-cog'
+                ],
+                [
+                    'text' => 'profile',
+                    'url'  => 'admin/settings',
+                    'icon' => 'fas fa-fw fa-user',
+                ],
+                [
+                    'text' => 'change_password',
+                    'url'  => 'admin/settings',
+                    'icon' => 'fas fa-fw fa-lock',
+                ],
+            ],
+        ]
     ],
 
     /*

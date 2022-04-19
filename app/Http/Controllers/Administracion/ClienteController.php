@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Administracion;
 
 use App\Models\Cliente;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class ClienteController extends Controller
 {
@@ -39,6 +40,21 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         //
+        $datosValidados = $request->validate([
+            'nombre_corto'  => 'unique:clientes|required|max:30',
+            'razon_social'  => 'required|max:255',
+            'direccion'     => 'required|max:400',
+            'tipo_afip'     => 'required',
+            'afip'          => 'required|numeric',
+            'contacto'      => 'required|max:50',
+            'telefono'      => 'required|numeric',
+            'email'         => 'required|email|max:50'
+        ]);
+
+        Cliente::create($datosValidados);
+
+        $request->session()->flash('success', 'El registro de cliente se ha creado con éxito.');
+        return redirect(route('administracion.clientes.index'));
     }
 
     /**

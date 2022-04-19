@@ -1,8 +1,6 @@
 <?php
 //Agregado líena 5 ; 24
 namespace Database\Seeders;
-
-use App\Models\ListaPrecio;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PresentacionSeeder::class);
         $this->call(LoteSeeder::class);
         $this->call(ClientesSeeder::class);
+        $this->call(EsquemaPrecioSeeder::class);
 
         //tablas pivot
         $this->call(RolUserSeeder::class);

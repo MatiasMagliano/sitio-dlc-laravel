@@ -9,7 +9,7 @@ use App\Http\Controllers\Administracion\ProveedorController;
 use App\Http\Controllers\Administracion\TrazabilidadController;
 use App\Http\Controllers\Administracion\CotizacionController;
 use App\Http\Controllers\Administracion\ListaPrecioController;
-use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\Administracion\ClienteController;
 use Illuminate\Support\Facades\Route;
 
 /*

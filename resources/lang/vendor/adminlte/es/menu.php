@@ -11,7 +11,7 @@ return [
     'multilevel'                    => 'Multi Nivel',
     'administration'                => 'ADMINISTRACIÓN',
     'products_menu'                 => 'Stock',
-    'products_maintenance'          => 'Mantenimiento de stock',
+    'products_maintenance'          => 'Productos',
     'products'                      => 'Productos en stock',
     'products_presentation'         => 'Presentación de productos',
     'add_products_batches'          => 'Administrar lotes',
@@ -26,4 +26,6 @@ return [
     'information'                   => 'Información',
     'quotations'                    => 'Cotizaciones',
     'clients'                       => 'Clientes',
+    'admin_tools'                   => 'Sist-admin',
+    'users_admin'                   => 'Administración de usuarios',
 ];
