@@ -69,8 +69,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     // rutas especiales para LISTA DE PRECIOS
     Route::resource('/listaprecios', ListaPrecioController::class);
-    Route::get('ListaPrecioExcel', 'ListaPrecioController@exportExcel')->name('ListaPrecio.excel');
-    Route::post('importListaPrecioExcel', 'ListaPrecioController@importExcel')->name('ListaPrecio.import.excel');
+    //Route::post('importListaPrecioExcel', 'ListaPrecioController@importExcel')->name('ListaPrecio.import.excel');
 
 
     Route::resource('/cotizaciones', CotizacionController::class)->except('edit', 'update');

@@ -42,45 +42,28 @@
         <table id="tabla2" class="table table-bordered display nowrap" style="width: 100%;">
             <thead>
                 <th>Producto</th>
-                <th>Forma</th>
                 <th>Presentación</th>
-                <th>Acciones</th>
+                <th>Forma</th>
+                <th>Alta</th>
+                <th>Último estado</th>
             </thead>
             <tbody>
                 @foreach ($presentaciones as $presentacion)
-                    @foreach ($presentacion->productos as $producto)
-                        <tr>
-                            <td width="200px" style="vertical-align: middle;">
-                                @if ($presentacion->hospitalario)
-                                    <strong>H -</strong>
-                                @endif
-                                {{ $producto->droga}}
-                                @if ($presentacion->trazabilidad)
-                                    <strong style="color: #ff1600">TRAZABLE</strong>
-
-                                @endif
-                            </td>
-                            <td width="200px" style="vertical-align: middle;">
-                                {{ $presentacion->forma}}
-                            </td>
-                            <td width="200px" style="vertical-align: middle;">
-                                {{ $presentacion->presentacion }}
-                            </td>
-                            <!--
-                            <td width="200px" style="vertical-align: middle;">
-                                {{ $presentacion->created_at }}
-                            </td>
-                            <td width="200px" style="vertical-align: middle;">
-                                {{ $presentacion->updated_at }}
-                            </td>
-                            -->
-                            <td class="text-center" style="vertical-align: middle;" width="100px">
-                            <a href="{{ route('administracion.presentaciones.edit', $presentacion->id) }}" role="button"
-                                class="btn btn-sm btn-default btn-edt-hover mx-1 shadow">
-                                <i class="fas fa-lg fa-fw fa-cog"></i></a>
-                            </td>
-                        </tr>
-                    @endforeach
+                    <tr>
+                        <td>{{ $presentacion->droga }}</td>
+                        <td>
+                            @if($presentacion->hospitalario === 1)
+                                <strong style="color:blue">H - </strong>{{ $presentacion->presentacion }}
+                                @else {{ $presentacion->presentacion }}
+                            @endif
+                            @if($presentacion->trazabilidad === 1)
+                                <strong>(Trazable)</strong>
+                            @endif
+                        </td>
+                        <td>{{ $presentacion->forma }}</td>
+                        <td>{{ $presentacion->created_at }}</td>
+                        <td>{{ $presentacion->updated_at }}</td>
+                    </tr> 
                 @endforeach
             </tbody>
         </table>
