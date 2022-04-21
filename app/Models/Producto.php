@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
@@ -35,13 +36,18 @@ class Producto extends Model
     }
 
     /**
-     * The proveedores that belong to the Producto
+     * Get all of the proveedores for the Producto
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function proveedores(): BelongsToMany
+    public function proveedores(): HasManyThrough
     {
-        return $this->belongsToMany(Proveedor::class, 'lote_presentacion_producto', 'producto_id', 'proveedor_id')->distinct();
+        return $this->hasManyThrough(
+            Proveedor::class,
+            ListaPrecio::class,
+            'xyz',
+            'abc'
+        );
     }
 
     /**

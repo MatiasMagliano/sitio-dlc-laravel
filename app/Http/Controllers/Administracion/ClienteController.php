@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administracion;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class ClienteController extends Controller
 {
@@ -28,7 +29,8 @@ class ClienteController extends Controller
     public function create()
     {
         //
-        return view('administracion.clientes.create');
+        $provincias = DB::table('provincias')->get();
+        return view('administracion.clientes.create', compact('provincias'));
     }
 
     /**

@@ -48,7 +48,8 @@ class Presentacion extends Model
     //devuelve todos los proveedores por presentación y producto
     public function proveedoresPorPresentacion($producto){
         return Proveedor::select('*')
-            ->leftJoin('lote_presentacion_producto', 'proveedors.id', '=', 'lote_presentacion_producto.proveedor_id')
+            ->join('lista_precios', 'lista_precios.proveedor_id', '=', 'proveedors.id')
+            ->join('lote_presentacion_producto', 'lote_presentacion_producto.id', '=', 'lista_precios.lpp_id')
             ->where('lote_presentacion_producto.presentacion_id', '=', $this->id)
             ->where('lote_presentacion_producto.producto_id', '=', $producto)
             ->get();

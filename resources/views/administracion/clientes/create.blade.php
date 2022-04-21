@@ -3,6 +3,7 @@
 @section('title', 'Administrar Clientes')
 
 @section('css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.css" />
     <style>
         @media (max-width: 600px) {
             .hide {
@@ -66,8 +67,19 @@
                     <hr>
                     <div class="row d-flex">
                         <div class="form-group col">
-                            <label for="provincia">Provincia</label>
-                            <select id="provincia" name="provincia" class="form-control" data-live-search="true"></select>
+                            <label for="input-provincia">Provincia</label>
+                            <select name="provincia_id" id="input-provincia"
+                                class="selecion-provincia form-control-alternative @error('provincia_id') is-invalid @enderror">
+                                <option data-placeholder="true"></option>
+                                @foreach ($provincias as $provincia)
+                                    @if ($provincia->id == old('provincia_id'))
+                                        <option value="{{ $provincia->id }}" selected>{{ $provincia->nombre }}</option>
+                                    @else
+                                        <option value="{{ $provincia->id }}">{{ $provincia->nombre }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @error('provincia_id')<div class="invalid-feedback">{{$message}}</div>@enderror
                         </div>
                         <div class="form-group col">
                             <label for="localidad">Localidad</label>
@@ -133,6 +145,13 @@
 @endsection
 @section('js')
     @include('partials.alerts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
+    <script>
+        new SlimSelect({
+            select: '.selecion-provincia',
+            placeholder: 'Seleccione una provincia',
+        });
+    </script>
 @endsection
 
 @section('footer')
