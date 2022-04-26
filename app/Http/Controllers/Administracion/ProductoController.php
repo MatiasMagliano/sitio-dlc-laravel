@@ -114,11 +114,11 @@ class ProductoController extends Controller
      * @param  \App\Models\Productos  $productos
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($producto_id, $presentacion_id)
     {
         //
-        $producto = Producto::findOrFail($id);
-        return view('administracion.productos.show', compact('producto'));
+        $producto = Producto::findOrFail($producto_id);
+        return view('administracion.productos.show', compact('producto', 'presentacion_id'));
     }
 
     /**

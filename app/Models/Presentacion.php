@@ -29,6 +29,13 @@ class Presentacion extends Model
 
     // Se definen las relaciones
 
+    //Devuelve todos los productos de una determinada presentacion
+    public function productosDePresentacion($presentacion_id){
+        return Producto::select('*')
+        ->join('lote_presentacion_producto', 'lote_presentacion_producto.producto_id', '=', 'productos.id')
+        ->where('lote_presentacion_producto.presentacion_id', $presentacion_id)
+        ->get();
+    }
     //Devuelve todos los lotes de una presentacion en particular
     public function lotes(): BelongsToMany
     {

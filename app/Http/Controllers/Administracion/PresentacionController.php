@@ -23,4 +23,14 @@ class PresentacionController extends Controller
         return view('administracion.presentaciones.edit', compact('presentacion', 'producto'));
     }
 
+    public function obtenerProductos(Request $request){
+        if($request->ajax()){
+            $productos = DB::table('productos')
+                ->select('productos.id', 'productos.droga')
+                ->join('lote_presentacion_producto', 'lote_presentacion_producto.producto_id', '=', 'productos.id')
+                ->where('lote_presentacion_producto.presentacion_id', $request->presentacion_id)
+                ->get();
+            return Response()->json($productos);
+        }
+    }
 }

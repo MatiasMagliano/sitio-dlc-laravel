@@ -10,12 +10,11 @@
 
 @section('content_header')
     <div class="row">
-        <div class="col-md-10">
-            <h1>Editar características de producto</h1>
+        <div class="col-md-8">
+            <h1>Administración de clientes</h1>
         </div>
-        <div class="col-md-2 d-flex justify-content-xl-end">
-            <a href="{{ route('administracion.productos.index') }}" role="button"
-                class="btn btn-md btn-secondary">Volver</a>
+        <div class="col-md-4 d-flex justify-content-md-end">
+            <a href="{{ url()->previous() }}" role="button" class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
 @stop
@@ -66,9 +65,9 @@
                         <th>URL</th>
                     </thead>
                     <tbody>
-                        @foreach ($producto->proveedores as $proveedor)
+                        @foreach ($producto->proveedores($presentacion_id) as $proveedor)
                             <tr>
-                                <td>{{ $proveedor->razonSocial }}</td>
+                                <td>{{ $proveedor->razon_social }}</td>
                                 <td>{{ $proveedor->cuit }}</td>
                                 <td><a href="{{ $proveedor->url }}" target="_blank">WEB</a></td>
                             </tr>
@@ -107,7 +106,7 @@
                                 <td>
                                     @if ($presentacion->hospitalario || $presentacion->trazabilidad)
                                         @if ($presentacion->hospitalario)
-                                            HOSP.
+                                            HOSPITALARIO
                                         @endif
                                         @if ($presentacion->trazabilidad)
                                             TRAZABLE
@@ -116,7 +115,7 @@
                                         SIN DETALLES
                                     @endif
                                 </td>
-                                <td><a href="{{ route('administracion.presentaciones.edit', [$producto->id, $presentacion->id]) }}"><i class="fas fa-edit"></i></a></td>
+                                <td><a href="#"><i class="fas fa-edit"></i></a></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -148,12 +147,12 @@
                     <th></th>
                 </thead>
                 <tbody>
-                    @foreach ($producto->lotes as $lote)
+                    @foreach ($producto->lotesDeProducto as $lote)
                         <tr>
                             <td>{{ $lote->identificador }}</td>
                             <td>{{ $lote->cantidad }}</td>
-                            <td>{{ $lote->precioCompra }}</td>
-                            <td>{{ $lote->hasta->format('m/Y') }}</td>
+                            <td>{{ $lote->precio_compra }}</td>
+                            <td>{{ $lote->fecha_vencimiento->format('m/Y') }}</td>
                             <td><a href="{{ route('administracion.lotes.edit', $producto->id) }}"><i class="fas fa-edit"></i></a></td>
                         </tr>
                     @endforeach
@@ -161,7 +160,7 @@
             </table>
         </div>
         <div class="card-footer">
-            <h4>Total en stock: <strong>{{ $producto->lotes->sum('cantidad') }}</strong></43>
+            <h4>Total en stock: <strong>{{ $producto->lotesDeProducto->sum('cantidad') }}</strong></43>
           </div>
     </div>
 @endsection

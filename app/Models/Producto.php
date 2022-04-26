@@ -35,19 +35,14 @@ class Producto extends Model
         return $this->belongsToMany(Presentacion::class, 'lote_presentacion_producto', 'producto_id', 'presentacion_id')->distinct();
     }
 
-    /**
-     * Get all of the proveedores for the Producto
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function proveedores(): HasManyThrough
-    {
-        return $this->hasManyThrough(
-            Proveedor::class,
-            ListaPrecio::class,
-            'xyz',
-            'abc'
-        );
+    //Devuelve los proveedores de este producto y presentacion dada
+    public function proveedores($presentacion_id){
+        return Proveedor::select('*')
+            ->join('lista_precios', 'lista_precios.proveedor_id', '=', 'proveedors.id')
+            ->join('lote_presentacion_producto', 'lote_presentacion_producto.id', '=', 'lista_precios.lpp_id')
+            ->where('lote_presentacion_producto.producto_id', '=', $this->id)
+            ->where('lote_presentacion_producto.presentacion_id', '=', $presentacion_id)
+            ->get();
     }
 
     /**

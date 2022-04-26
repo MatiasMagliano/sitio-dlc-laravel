@@ -41,29 +41,60 @@
     <x-adminlte-card>
         <table id="tabla2" class="table table-bordered display nowrap" style="width: 100%;">
             <thead>
-                <th>Presentación</th>
                 <th>Forma</th>
+                <th>Presentación</th>
                 <th>Alta</th>
+                <th>Productos relacionados</th>
             </thead>
             <tbody>
                 @foreach ($presentaciones as $presentacion)
-                    <tr>
+                    <tr id="{{$presentacion->id}}">
                         <td>
                             @if($presentacion->hospitalario === 1)
-                                <strong>HOSPITALARIO - </strong>{{ $presentacion->presentacion }}
-                                @else {{ $presentacion->presentacion }}
+                                <strong>HOSPITALARIO - </strong>
+                                {{ $presentacion->forma }}
+                            @else
+                                {{ $presentacion->forma }}
                             @endif
                             @if($presentacion->trazabilidad === 1)
                                 <strong>(Trazable)</strong>
                             @endif
                         </td>
-                        <td>{{ $presentacion->forma }}</td>
+                        <td>{{ $presentacion->presentacion }}</td>
                         <td>{{ $presentacion->created_at->format('d/m/Y') }}</td>
+                        <td>
+                            <a role="button" id="{{$presentacion->id}}" value="{{$presentacion->forma}} {{$presentacion->presentacion}}"
+                                class="btn btn-link"
+                                data-toggle="modal" data-target="#modalVerProductos">
+                                <i class="fas fa-search "></i></a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </x-adminlte-card>
+
+    {{-- MODAL VER PUNTOS DE VENTA --}}
+    <div class="modal fade" id="modalVerProductos" tabindex="-1"
+        aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Productos relacionados a <span id="nombrePresentacion"></span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul id="listaProductos"></ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
@@ -121,6 +152,30 @@
                     }
                 }
             });
+
+            $('#modalVerProductos').on('show.bs.modal', function(event){
+                $('#listaProductos').empty();
+
+                //Se coloca el título del modal
+                $('#nombrePresentacion').empty();
+                $('#nombrePresentacion').append(event.relatedTarget.value);
+
+                let datos = {
+                    presentacion_id: event.relatedTarget.id,
+                };
+
+                $.ajax({
+                    url: "{{route('administracion.presentaciones.ajax.obtenerProductos')}}",
+                    type: "GET",
+                    data: datos,
+                }).done(function(resultado) {
+                    $.each(resultado, function(index){
+                        $('#listaProductos').append(
+                            "<li><a href=productos/"+resultado[index].id+"/show/"+event.relatedTarget.id+">"+resultado[index].droga+"</a></li>"
+                        );
+                    });
+                });
+            })
         });
     </script>
 @endsection

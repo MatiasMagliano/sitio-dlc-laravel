@@ -44,8 +44,9 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::get('/listaprecios/actualizarLista', [ListaPrecioController::class, 'actualizarLista'])->name('listaprecios.actualizarLista');
 
     // rutas de PRODUCTOS
-    Route::resource('/productos', ProductoController::class);
     Route::get('/productos/ajaxBuscarProductos', [ProductoController::class, 'buscar'])->name('productos.ajax.obtener');
+    Route::resource('/productos', ProductoController::class)->except('show');
+    Route::get('/productos/{producto_id}/show/{presentacion_id}', [ProductoController::class, 'show'])->name('productos.show');
 
     // rutas de CLIENTES
     Route::get('/clientes/ajaxObtenerClientes', [ClienteController::class, 'obtenerClientes'])->name('clientes.ajax.obtener');
@@ -61,6 +62,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::resource('/proveedores', ProveedorController::class);
 
     // rutas de PRESENTACIONES
+    Route::get('/presentaciones/ajaxObtenerProductos', [PresentacionController::class, 'obtenerProductos'])->name('presentaciones.ajax.obtenerProductos');
     Route::resource('/presentaciones', PresentacionController::class)->except('edit');
 
     // rutas de LOTES
