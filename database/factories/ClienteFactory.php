@@ -25,7 +25,6 @@ class ClienteFactory extends Factory
             'telefono' => $this->faker->bothify('### #### ###'),
             'email' => $this->faker->safeEmail(),
             'contacto' => $this->faker->name(),
-            'direccion' => $this->faker->address(),
         ];
     }
 }

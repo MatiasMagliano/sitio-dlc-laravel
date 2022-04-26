@@ -22,7 +22,6 @@ class CreateClientesTable extends Migration
             $table->string('telefono')->nullable();
             $table->string('email')->nullable();
             $table->string('contacto')->nullable();
-            $table->string('direccion')->nullable();
             $table->timestamp('ultima_compra')->nullable();
             $table->timestamps();
             $table->softDeletes();

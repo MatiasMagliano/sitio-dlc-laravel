@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\Lote;
 use App\Models\Presentacion;
 use App\Models\Producto;
-use App\Models\Proveedor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LotePresentacionProductoFactory extends Factory

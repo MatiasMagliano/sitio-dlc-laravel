@@ -2,12 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\ListaPrecio;
 use App\Models\Lote;
 use App\Models\LotePresentacionProducto;
-use App\Models\Presentacion;
-use App\Models\Producto;
-use App\Models\Proveedor;
 use Illuminate\Database\Seeder;
 
 use function GuzzleHttp\Promise\all;

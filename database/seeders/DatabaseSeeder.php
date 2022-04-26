@@ -20,8 +20,11 @@ class DatabaseSeeder extends Seeder
         $this->call(ProveedorSeeder::class);
         $this->call(PresentacionSeeder::class);
         $this->call(LoteSeeder::class);
+        $this->call(ProvinciasSeeder::class);
+        $this->call(LocalidadSeeder::class);
         $this->call(ClientesSeeder::class);
         $this->call(EsquemaPrecioSeeder::class);
+        $this->call(DireccionEntregaSeeder::class);
 
         //tablas pivot
         $this->call(RolUserSeeder::class);

@@ -16,7 +16,9 @@ class ListaPrecioSeeder extends Seeder
     public function run()
     {
         foreach(LotePresentacionProducto::all() as $producto){
-            ListaPrecio::factory()->create();
+            ListaPrecio::factory()->create([
+                'lpp_id' => $producto->id,
+            ]);
         }
     }
 }
