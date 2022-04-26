@@ -39,7 +39,7 @@
 
 @section('content')
     <x-adminlte-card>
-        <table id="tabla2" class="table table-bordered display nowrap" style="width: 100%;">
+        <table id="tabla2" class="table table-bordered table-responsive-md" style="width: 100%;">
             <thead>
                 <th>Forma</th>
                 <th>Presentación</th>
