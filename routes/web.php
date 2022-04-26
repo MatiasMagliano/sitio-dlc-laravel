@@ -41,10 +41,7 @@ Route::prefix('admin')->middleware(['auth', 'auth.esSistAdmin'])->name('admin.')
 
 Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->name('administracion.')->group(function () {
     // rutas especiales para ajax de búsqueda y eliminación
-    Route::get('/lotes/ajaxObtenerLotes', [LoteController::class, 'buscarLotes'])->name('lotes.ajax.obtener');
     Route::get('/listaprecios/actualizarLista', [ListaPrecioController::class, 'actualizarLista'])->name('listaprecios.actualizarLista');
-
-    Route::post('borrar-lote', [LoteController::class, 'destroy']);
 
     // rutas de PRODUCTOS
     Route::resource('/productos', ProductoController::class);
@@ -67,6 +64,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::resource('/presentaciones', PresentacionController::class)->except('edit');
 
     // rutas de LOTES
+    Route::get('/lotes/ajaxObtenerLotes', [LoteController::class, 'buscarLotes'])->name('lotes.ajax.obtener');
     Route::resource('/lotes', LoteController::class)->except('destroy');
 
     // rutas de TRAZABILIDAD

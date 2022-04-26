@@ -15,11 +15,10 @@
 
 @section('content_header')
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-8">
             <h1>Crear producto y sus características</h1>
         </div>
-        &nbsp;
-        <div class="col-md-2 d-flex justify-content-xl-end">
+        <div class="col-md-4 d-flex justify-content-md-end">
             <a href="{{ url()->previous() }}" role="button"
                 class="btn btn-md btn-secondary">Volver a productos</a>
         </div>

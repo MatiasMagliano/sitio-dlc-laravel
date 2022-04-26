@@ -19,6 +19,23 @@
             display: none;
         }
 
+        .search input[type=text] {
+            font-size: 17px;
+            border: none;
+            outline: none;
+        }
+        .search input[type=text] {
+            font-size: 17px;
+            border: none;
+            outline: rgba(0,0,0,0);
+        }
+
+        .search button {
+            background: #fff;
+            font-size: 17px;
+            border: none;
+            opacity: 0.4;
+        }
     </style>
 @endsection
 
@@ -41,38 +58,25 @@
     <div class="card-group mb-4">
         <div class="card mr-2">
             <div class="card-header">
-                <div class="row d-flex">
-                    <div class="col-md-4 my-auto">
-                        <h3 class="card-title">
-                            Seleccionar producto
-                        </h3>
-                    </div>
-                    <div class="col-md-8 search-box">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="fas fa-search mr-2"></i></span>
-                            </div>
-                            <input type="text" id="search_box" class="form-control">
-                          </div>
+                <div id="nav_search" class="input-group search">
+                    <input id="search_box" class="form-control" type="text" placeholder="Seleccionar droga o presentación...">
+                    <div class="input-group-append">
+                        <button type="submit" ><i class="fas fa-search "></i></button>
                     </div>
                 </div>
             </div>
             <div class="card-body">
                 <table id="tabla1" class="table table-borderless" style="width: 100%; cursor:pointer">
                     <thead style="display: none">
-                        <th>idProducto</th>
                         <th>droga</th>
-                        <th>idPresentacion</th>
                         <th>forma</th>
                         <th>presentacion</th>
                     </thead>
                     <tbody>
                         @foreach ($productos as $producto)
                             @foreach ($producto->presentaciones as $presentacion)
-                                <tr>
-                                    <td>{{ $producto->id }}</td>
+                                <tr id="{{$producto->id}}" value="{{$presentacion->id}}">
                                     <td>{{ $producto->droga }}</td>
-                                    <td>{{ $presentacion->id }}</td>
                                     <td>{{ $presentacion->forma }}</td>
                                     <td>{{ $presentacion->presentacion }}</td>
                                 </tr>
@@ -187,7 +191,7 @@
                 };
 
                 $.ajax({
-                    url: "{{ route('administracion.lotes.buscarLotes') }}",
+                    url: "{{ route('administracion.lotes.ajax.obtener') }}",
                     type: "GET",
                     data: datos,
                 }).done(function(resultado) {
@@ -348,10 +352,6 @@
                 "select": true,
                 "order": [1, 'asc'],
                 "bInfo": false,
-                // "columnDefs": [
-                //    {targets: 0, visible: false},
-                //    {targets: 2, visible: false}
-                // ],
             });
 
             //RELOCACIÓN DE EL TEXTBOX DE BÚSQUEDA
@@ -360,7 +360,7 @@
             });
 
             // CAPTURA DEL CLICK EN EL DATATABLE tabla1
-            $('#tabla1 tbody').on('click', 'tr', function() {
+            $('#tabla1 tbody tr').on('click', function() {
                 // marcado/desmarcado del row seleccionado
                 if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
@@ -371,14 +371,17 @@
 
                 // se sigue con el resto del procedimiento
                 $('#lotesVigentes .overlay').remove();
+
                 let idx = tabla1.cell('.selected', 0).index();
                 let prod_sel = tabla1.row( idx.row ).data();
-                $('#tituloLotesVigentes').text('Lotes vigentes para ' + prod_sel[1]);
-                $('#producto_id').val(prod_sel[0]);
-                $('#presentacion_id').val(prod_sel[2]);
+                $('#tituloLotesVigentes').text('Lotes vigentes para ' + prod_sel[0]);
+
+                // se guardan el producto_id y presentacion_id en los inputs ocultos
+                $('#producto_id').val($(this).attr("id"));
+                $('#presentacion_id').val($(this).attr("value"));
 
                 // Se genera la segunda tabla con la característica destroy, para poder recargarla con los nuevos datos
-                getLotes(prod_sel[0], prod_sel[2]);
+                getLotes($(this).attr("id"), $(this).attr("value"));
 
             });
 

@@ -12,11 +12,7 @@ class PresentacionController extends Controller
 {
     public function index()
     {
-        $presentaciones = DB::table('presentacions')
-        ->join('lote_presentacion_producto', 'presentacions.id','=','lote_presentacion_producto.presentacion_id')
-        ->join('productos','lote_presentacion_producto.producto_id','=','productos.id')
-        ->select('presentacions.*','productos.droga')
-        ->get();
+        $presentaciones = Presentacion::all();
         return view('administracion.presentaciones.index', compact('presentaciones'));
     }
 

@@ -43,12 +43,11 @@
                                     </a>
                                 </td>
                                 <td style="vertical-align: middle;">
-                                    ({{$presentacion->id}}){{$presentacion->forma}}, {{$presentacion->presentacion}}
+                                    {{$presentacion->forma}}, {{$presentacion->presentacion}}
                                 </td>
                                 <td>
                                     @foreach ($presentacion->lotesPorPresentacion($producto->id) as $lote)
                                         <div class="row">
-                                            <div class="col">({{$lote->id}})</div>
                                             <div class="col">L: {{$lote->identificador}}</div>
                                             <div class="col">Vto: {{$lote->fecha_vencimiento->format('d/m/Y')}}</div>
                                         </div>
@@ -56,7 +55,7 @@
                                 </td>
                                 <td style="vertical-align: middle;">
                                     @foreach ($presentacion->ProveedoresPorPresentacion($producto->id) as $proveedor)
-                                        ({{$proveedor->id}}){{$proveedor->razon_social}}<br>
+                                        {{$proveedor->razon_social}}<br>
                                     @endforeach
                                 </td>
                                 <td class="text-center" style="vertical-align: middle;" width="100px">

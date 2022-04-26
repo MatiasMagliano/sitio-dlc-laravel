@@ -25,14 +25,14 @@
 
 @section('content_header')
     <div class="row">
-        <div class="col-xl-8">
-            <h1>Administración de presentaciones</h1>
+        <div class="col-md-8">
+            <h1>Administración de clientes</h1>
         </div>
-        <div class="col-xl-4 d-flex justify-content-xl-end">
-            {{-- para engañar al sistema, se hace un formulario por GET solamente con el botón x-adminlte-button --}}
-            <form action="{{ route('administracion.productos.create') }}" method="get">
-                <x-adminlte-button type="submit" label="Crear producto" class="bg-green" />
-            </form>
+        <div class="col-md-4 d-flex justify-content-md-end">
+            <a href="{{ route('administracion.clientes.create') }}" role="button" class="btn btn-md btn-success">Crear
+                Presentación</a>
+            &nbsp;
+            <a href="{{ url()->previous() }}" role="button" class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
 @endsection
@@ -41,19 +41,16 @@
     <x-adminlte-card>
         <table id="tabla2" class="table table-bordered display nowrap" style="width: 100%;">
             <thead>
-                <th>Producto</th>
                 <th>Presentación</th>
                 <th>Forma</th>
                 <th>Alta</th>
-                <th>Último estado</th>
             </thead>
             <tbody>
                 @foreach ($presentaciones as $presentacion)
                     <tr>
-                        <td>{{ $presentacion->droga }}</td>
                         <td>
                             @if($presentacion->hospitalario === 1)
-                                <strong style="color:blue">H - </strong>{{ $presentacion->presentacion }}
+                                <strong>HOSPITALARIO - </strong>{{ $presentacion->presentacion }}
                                 @else {{ $presentacion->presentacion }}
                             @endif
                             @if($presentacion->trazabilidad === 1)
@@ -61,9 +58,8 @@
                             @endif
                         </td>
                         <td>{{ $presentacion->forma }}</td>
-                        <td>{{ $presentacion->created_at }}</td>
-                        <td>{{ $presentacion->updated_at }}</td>
-                    </tr> 
+                        <td>{{ $presentacion->created_at->format('d/m/Y') }}</td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
