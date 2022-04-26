@@ -18,13 +18,14 @@ class ClienteFactory extends Factory
         $afip = ['cuit', 'cuil'];
 
         return [
-            'nombre_corto' => Str::words($nombre, 1, ''),
-            'razon_social' => $nombre,
-            'tipo_afip' => $afip[rand(0,1)],
-            'afip' => $this->faker->bothify('##-########-#'),
-            'telefono' => $this->faker->bothify('### #### ###'),
-            'email' => $this->faker->safeEmail(),
-            'contacto' => $this->faker->name(),
+            'nombre_corto'  => Str::words($nombre, 1, ''),
+            'razon_social'  => $nombre,
+            'tipo_afip'     => $afip[rand(0,1)],
+            'afip'          => $this->faker->bothify('##-########-#'),
+            'telefono'      => $this->faker->bothify('### #### ###'),
+            'email'         => $this->faker->safeEmail(),
+            'contacto'      => $this->faker->name(),
+            'ultima_compra' => $this->faker->dateTimeBetween('-2 years', '-2 month'),
         ];
     }
 }

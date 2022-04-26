@@ -78,7 +78,7 @@
                                     data-toggle="modal" data-target="#modalVerPuntosEntrega">
                                     Puntos de entrega</a>
                             </td>
-                            <td>{{ $cliente->ultima_compra }}</td>
+                            <td>{{ optional($cliente->ultima_compra)->format('d/m/Y') }}</td>
                             <td></td>
                         </tr>
                     @endforeach
@@ -185,7 +185,8 @@
                 }],
             });
 
-            $('#modalVerPuntosEntrega').on('shown.bs.modal', function(event){
+            $('#modalVerPuntosEntrega').on('show.bs.modal', function(event){
+                $('#cuerpoTablaPtsEntrega').empty();
                 let datos = {
                     cliente_id: event.relatedTarget.id,
                 };

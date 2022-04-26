@@ -117,7 +117,7 @@
         <div class="form-group col">
             <label for="input-condiciones">Condiciones</label>
             <textarea class="form-control @error('condiciones') is-invalid @enderror" id="input-condiciones" rows="2"></textarea>
-            <small id="input-afip" class="form-text text-muted">Datos relevantes como: encargado recepción, Nº puerta, piso, edificio, etc.</small>
+            <small id="input-condiciones" class="form-text text-muted">Datos relevantes como: encargado recepción, Nº puerta, piso, edificio, etc.</small>
             @error('condiciones')<div class="invalid-feedback">{{$message}}</div>@enderror
         </div>
         <div class="form-group col">
