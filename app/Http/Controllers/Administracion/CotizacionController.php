@@ -58,7 +58,7 @@ class CotizacionController extends Controller
             return redirect()->route('administracion.cotizaciones.index');
         }
 
-        $request->request->add(['estado' => 'Agregando líneas']);
+        $request->request->add(['estado' => 1]);
         $cotizacion = new Cotizacion($request->all());
         $cotizacion->save();
 

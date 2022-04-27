@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
     {
 
         //tablas básicas
+        $this->call(EstadoSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(RolSeeder::class);
         $this->call(ProductoSeeder::class);
@@ -32,5 +33,6 @@ class DatabaseSeeder extends Seeder
 
         //orden necesario de populado
         $this->call(ListaPrecioSeeder::class);
+        $this->call(CotizacionSeeder::class);
     }
 }

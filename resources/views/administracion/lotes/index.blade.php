@@ -44,7 +44,7 @@
 @section('content_header')
     <div class="row">
         <div class="col-xl-8">
-            <h1>Administrar lotes a productos</h1>
+            <h1>Administración de lotes</h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
             <a href="{{ url()->previous() }}" role="button"

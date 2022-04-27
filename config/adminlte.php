@@ -251,6 +251,11 @@ return [
                     'route' => 'administracion.clientes.index',
                     'icon'  => 'fas fa-people-arrows',
                 ],
+                [
+                    'text'  => 'add_clients',
+                    'route' => 'administracion.clientes.create',
+                    'icon'  => 'fas fa-user-plus',
+                ],
             ],
         ],
         [
@@ -264,6 +269,11 @@ return [
                     'icon'  => 'fas fa-shopping-cart',
                 ],
                 [
+                    'text'  => 'products_presentation',
+                    'route' => 'administracion.presentaciones.index',
+                    'icon'  => 'fas fa-pills'
+                ],
+                [
                     'text'  => 'add_products_batches',
                     'route' => 'administracion.lotes.index',
                     'icon'  => 'fas fa-tag'
@@ -272,11 +282,6 @@ return [
                     'text'  => 'suppliers',
                     'route' => 'administracion.proveedores.index',
                     'icon'  => 'fas fa-truck'
-                ],
-                [
-                    'text'  => 'products_presentation',
-                    'route' => 'administracion.presentaciones.index',
-                    'icon'  => 'fas fa-pills'
                 ],
             ],
         ],

@@ -80,7 +80,7 @@
                         <td style="vertical-align: middle;">${{$cotizacion->productos->sum('total')}}</td>
                         <td style="vertical-align: middle;">
                             @if (!$cotizacion->finalizada)
-                                <span class="text-danger">Pendiente: </span> {{$cotizacion->estado}}
+                                <span class="text-danger">{{$cotizacion->estado->estado}}</span>
                             @else
                                 <span class="text-success">Presentada el: </span> {{$cotizacion->finalizada->format('d/m/Y')}}
                             @endif

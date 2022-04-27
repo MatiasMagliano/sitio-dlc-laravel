@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Cotizacion extends Model
 {
+    use HasFactory;
+
+    protected $table = 'cotizacions';
+
     protected $fillable = [
         'identificador', 'user_id', 'cliente_id', 'estado'
     ];
@@ -43,5 +49,8 @@ class Cotizacion extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function estado(){
+        return $this->belongsTo(Estado::class);
+    }
     /* hasMany->ventas */
 }

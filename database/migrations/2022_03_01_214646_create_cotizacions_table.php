@@ -18,12 +18,14 @@ class CreateCotizacionsTable extends Migration
         Schema::create('cotizacions', function (Blueprint $table) {
             $table->id();
             $table->string('identificador');
-            $table->foreignIdFor(User::class)->constrained(); // user_id
-            $table->foreignIdFor(Cliente::class)->constrained(); // cliente_id
+            $table->foreignIdFor(User::class)->constrained();
+            $table->foreignIdFor(Cliente::class)->constrained();
             $table->decimal('monto_total', 10,2)->nullable()->default(0);
+            //fechas importantes que pueden o no estar de acuerdo al estado
             $table->timestamp('finalizada')->nullable();
-            $table->string('estado');
-            $table->boolean('confirmed')->nullable()->default(false);
+            $table->timestamp('confirmada')->nullable();
+            $table->timestamp('rechazada')->nullable();
+            $table->foreignId('estado_id')->constrained('estados');
             $table->timestamps();
 
         });

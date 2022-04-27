@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductoCotizado extends Model
 {
+    use HasFactory;
+
+    protected $table = 'producto_cotizados';
+
     protected $fillable = [
         'cotizacion_id', 'producto_id', 'presentacion_id', 'cantidad', 'precio', 'total'
     ];

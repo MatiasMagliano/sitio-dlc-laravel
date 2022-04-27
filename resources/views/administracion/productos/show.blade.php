@@ -11,7 +11,7 @@
 @section('content_header')
     <div class="row">
         <div class="col-md-8">
-            <h1>Administración de clientes</h1>
+            <h1>Vista general de productos</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-md-end">
             <a href="{{ url()->previous() }}" role="button" class="btn btn-md btn-secondary">Volver</a>

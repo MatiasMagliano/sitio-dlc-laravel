@@ -51,9 +51,9 @@
                             </td>
                             <td style="vertical-align: middle;">
                                 @if (!$cotizacion->finalizada)
-                                    <span class="text-danger">Pendiente: </span> {{ $cotizacion->estado }}
+                                    <span class="text-danger">Pendiente: </span> {{ $cotizacion->estado->estado }}
                                 @else
-                                    <span class="text-success">Finalizada: </span> {{ $cotizacion->estado }}
+                                    <span class="text-success">Finalizada: </span> {{ $cotizacion->estado->estado }}
                                 @endif
                             </td>
                             <td>
