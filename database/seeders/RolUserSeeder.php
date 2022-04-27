@@ -20,6 +20,9 @@ class RolUserSeeder extends Seeder
             $user->roles()->attach(
                 $roles->where('nombre', 'sist-admin')->pluck('id')
             );
+            $user->roles()->attach(
+                $roles->where('nombre', 'administracion')->pluck('id')
+            );
         });
     }
 }

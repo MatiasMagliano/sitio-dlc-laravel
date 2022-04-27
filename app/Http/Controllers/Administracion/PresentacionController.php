@@ -29,6 +29,7 @@ class PresentacionController extends Controller
                 ->select('productos.id', 'productos.droga')
                 ->join('lote_presentacion_producto', 'lote_presentacion_producto.producto_id', '=', 'productos.id')
                 ->where('lote_presentacion_producto.presentacion_id', $request->presentacion_id)
+                ->distinct()
                 ->get();
             return Response()->json($productos);
         }
