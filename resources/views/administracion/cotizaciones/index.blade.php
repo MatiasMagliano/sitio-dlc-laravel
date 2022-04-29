@@ -43,17 +43,17 @@
                             <td style="vertical-align: middle;">{{$cotizacion->productos->count()}}</td>
                             <td style="vertical-align: middle;">{{$cotizacion->productos->sum('cantidad')}}</td>
                             <td style="vertical-align: middle;">
-                                @if ($cotizacion->finalizada)
-                                    ${{$cotizacion->productos->sum('monto_total')}}
-                                @else
-                                    -
-                                @endif
+                                ${{$cotizacion->monto_total}}
                             </td>
                             <td style="vertical-align: middle;">
                                 @if (!$cotizacion->finalizada)
-                                    <span class="text-danger">Pendiente: </span> {{ $cotizacion->estado->estado }}
+                                    <span class="text-danger">{{$cotizacion->estado->estado}}</span>
                                 @else
-                                    <span class="text-success">Finalizada: </span> {{ $cotizacion->estado->estado }}
+                                    @if (!$cotizacion->confirmada)
+                                        <span class="text-success">{{$cotizacion->estado->estado}} {{$cotizacion->finalizada->format('d/m/Y')}}</span>
+                                    @else
+                                        <span class="text-success">{{$cotizacion->estado->estado}} {{$cotizacion->confirmada>format('d/m/Y')}}</span>
+                                    @endif
                                 @endif
                             </td>
                             <td>
@@ -74,10 +74,16 @@
                                         </button>
                                     </form>
                                 @else
+                                    <a href="{{ route('administracion.cotizaciones.generarpdf', ['cotizacion' => $cotizacion]) }}"
+                                        class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
+                                        title="Descargar cotización" target="_blank">
+                                        <i class="fas fa-file-download"></i>
+                                    </a>
+                                    &nbsp;
                                     <a href="{{ route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]) }}"
                                         class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
                                         title="Ver cotización">
-                                        <i class="fal fa-search"></i>
+                                        <i class="fas fa-search "></i>
                                     </a>
                                 @endif
                             </td>
@@ -165,7 +171,11 @@
                 }],
                 "columnDefs": [{
                         targets: 7,
-                        width: 70,
+                        width: 80,
+                    },
+                    {
+                        targets: 7,
+                        width: 80,
                     },
                 ],
             });

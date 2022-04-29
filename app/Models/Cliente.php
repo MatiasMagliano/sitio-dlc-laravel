@@ -17,7 +17,8 @@ class Cliente extends Model
 
     // casteos
     protected $casts = [
-        'ultima_compra' => 'datetime'
+        'ultima_cotizacion' => 'datetime',
+        'ultima_compra'     => 'datetime'
     ];
 
     // relaciones
@@ -28,8 +29,9 @@ class Cliente extends Model
      */
     public function direccionesEntrega(): HasMany
     {
-        return $this->hasMany(DireccionEntrega::class);
+        return $this->hasMany(DireccionEntrega::class, 'cliente_id');
     }
+
     /* hasMany --> cotizacion
     *  hasMany --> ¿transacciones?
      */

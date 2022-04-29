@@ -15,7 +15,16 @@ class Cotizacion extends Model
     protected $table = 'cotizacions';
 
     protected $fillable = [
-        'identificador', 'user_id', 'cliente_id', 'estado'
+        'identificador', 'user_id', 'cliente_id', 'dde_id', 'estado'
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'finalizada' => 'datetime',
+        'presentada' => 'datetime',
+        'confirmada' => 'datetime',
+        'rechazada' => 'datetime',
     ];
 
     // relaciones
@@ -27,6 +36,15 @@ class Cotizacion extends Model
     public function cliente(): BelongsTo
     {
         return $this->belongsTo(Cliente::class);
+    }
+
+    public function direccionEntrega($punto){
+        return DireccionEntrega::select('*')
+            ->join('clientes', 'direcciones_entrega.cliente_id', '=', 'clientes.id')
+            ->join('cotizacions', 'cotizacions.cliente_id', '=', 'clientes.id')
+            ->where('direcciones_entrega.id', '=', $punto)
+            ->where('cotizacions.id', $this->id)
+            ->get();
     }
 
     /**

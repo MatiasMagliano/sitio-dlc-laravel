@@ -10,6 +10,7 @@ use App\Http\Controllers\Administracion\TrazabilidadController;
 use App\Http\Controllers\Administracion\CotizacionController;
 use App\Http\Controllers\Administracion\ListaPrecioController;
 use App\Http\Controllers\Administracion\ClienteController;
+use App\Models\Cotizacion;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -76,10 +77,11 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::resource('/listaprecios', ListaPrecioController::class);
     //Route::post('importListaPrecioExcel', 'ListaPrecioController@importExcel')->name('ListaPrecio.import.excel');
 
-
-    Route::resource('/cotizaciones', CotizacionController::class)->except('edit', 'update');
+    // rutas de COTIZACIONES
     Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])
         ->name('cotizaciones.finalizar');
+    Route::get('/cotizaciones/{cotizacion}/generarpdf', [CotizacionController::class, 'generarpdf'])
+    ->name('cotizaciones.generarpdf');
     Route::get('/cotizaciones/{cotizacion}/agregar/producto', [CotizacionController::class, 'agregarProducto'])
         ->name('cotizaciones.agregar.producto');
     Route::get('/cotizaciones/{cotizacion}/producto/{productoCotizado}/edit', [CotizacionController::class, 'editarProductoCotizado'])
@@ -90,4 +92,5 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
         ->name('cotizaciones.actualizar.producto');
     Route::delete('/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class, 'borrarProductoCotizado'])
         ->name('cotizaciones.borrar.producto');
+    Route::resource('/cotizaciones', CotizacionController::class)->except('edit', 'update');
 });

@@ -25,6 +25,7 @@ class ClienteFactory extends Factory
             'telefono'      => $this->faker->bothify('### #### ###'),
             'email'         => $this->faker->safeEmail(),
             'contacto'      => $this->faker->name(),
+            'ultima_cotizacion' => $this->faker->dateTimeBetween('-2 month', 'now'),
             'ultima_compra' => $this->faker->dateTimeBetween('-2 years', '-2 month'),
         ];
     }

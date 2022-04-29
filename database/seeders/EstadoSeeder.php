@@ -17,6 +17,7 @@ class EstadoSeeder extends Seeder
         //
         $datos = [
             ['estado' => 'Pendiente: agregando líneas'],
+            ['estado' => 'Finalizada el:'],
             ['estado' => 'Presentada el:'],
             ['estado' => 'Confirmada el:'],
             ['estado' => 'Rechazada el:'],

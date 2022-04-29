@@ -9,6 +9,8 @@ use App\Models\Cliente;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\ProductoCotizado;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class CotizacionController extends Controller
 {
@@ -115,9 +117,22 @@ class CotizacionController extends Controller
 
 
     // MÉTODOS ESPECIALES
-    public function finalizar(Cotizacion $cotizacion)
+    public function finalizar(Cotizacion $cotizacion, Request $request)
     {
         //FINALIZAR COTIZACION
+        $cotizacion->monto_total = $cotizacion->productos->sum('total');
+
+        //GENERAR foreach que descuente y sume en disponible y cotizado respectivamente
+        // foreach($cotizacion->productos as $producto_cotizado){
+
+        // }
+
+        $cotizacion->finalizada = Carbon::now();
+        $cotizacion->cliente->ultima_cotizacion = Carbon::now();
+        $cotizacion->estado_id = 2;
+        $cotizacion->save();
+        $request->session()->flash('success', 'La cotización se finalizó con éxito.\nSe habilita la descarga de la cotización para presentar al cliente.');
+        return redirect(route('administracion.cotizaciones.index'));
     }
 
     public function agregarProducto(Cotizacion $cotizacion)
@@ -189,5 +204,15 @@ class CotizacionController extends Controller
 
         $request->session()->flash('success', 'Producto agregado con éxito.');
         return response()->json();
+    }
+
+    public function generarpdf(Cotizacion $cotizacion){
+        // estado-3 --> "Presentada el"
+        $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout', compact('cotizacion'));
+        $cotizacion->estado_id = 3;
+        $cotizacion->save();
+
+        return $pdf->stream('cotizacion.pdf');
+        //return view('administracion.cotizaciones.pdfLayout', compact('cotizacion'));
     }
 }

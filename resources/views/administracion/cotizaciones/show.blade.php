@@ -82,7 +82,7 @@
                             @if (!$cotizacion->finalizada)
                                 <span class="text-danger">{{$cotizacion->estado->estado}}</span>
                             @else
-                                <span class="text-success">Presentada el: </span> {{$cotizacion->finalizada->format('d/m/Y')}}
+                                <span class="text-success">{{$cotizacion->estado->estado}} {{$cotizacion->finalizada->format('d/m/Y')}}</span>
                             @endif
                         </td>
                     </tr>
@@ -180,7 +180,7 @@
         function confirmarCotizacion(){
             Swal.fire({
                 icon: 'warning',
-                title: 'Presentar cotización',
+                title: 'Finalizar cotización',
                 text: 'A continuación se le presentará un archivo PDF para descargar y presentar al cliente',
                 confirmButtonText: 'Presentar',
                 showCancelButton: true,
