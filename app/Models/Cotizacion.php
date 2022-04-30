@@ -42,6 +42,8 @@ class Cotizacion extends Model
         return DireccionEntrega::select('*')
             ->join('clientes', 'direcciones_entrega.cliente_id', '=', 'clientes.id')
             ->join('cotizacions', 'cotizacions.cliente_id', '=', 'clientes.id')
+            ->join('provincias', 'direcciones_entrega.provincia_id', '=', 'provincias.id')
+            ->join('localidades', 'direcciones_entrega.localidad_id', '=', 'localidades.id')
             ->where('direcciones_entrega.id', '=', $punto)
             ->where('cotizacions.id', $this->id)
             ->get();

@@ -208,7 +208,12 @@ class CotizacionController extends Controller
 
     public function generarpdf(Cotizacion $cotizacion){
         // estado-3 --> "Presentada el"
-        $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout', compact('cotizacion'));
+        $presentaciones = Presentacion::all();
+        $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout', compact('cotizacion', 'presentaciones'));
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf ->get_canvas();
+        $canvas->page_text(500, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
         $cotizacion->estado_id = 3;
         $cotizacion->save();
 
