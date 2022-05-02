@@ -6,9 +6,7 @@
             content: "" !important;
         }
 
-        #tabla1.dataTable thead th {
-            border-bottom: none;
-        }
+        #tabla1.dataTable thead th {border-bottom: none;}
 
         #tabla1.dataTable tfoot th {
             border-top: none;
@@ -20,9 +18,7 @@
             color:#333;
         }
 
-        #tabla2.dataTable{
-            overflow: auto;
-        }
+        #tabla2.dataTable{overflow: auto;}
 
         .search input[type=text] {
             font-size: 17px;
@@ -42,6 +38,8 @@
             opacity: 0.4;
         }
         .hide{display:none}
+
+
     </style>
 @endsection
 
@@ -52,16 +50,71 @@
         <div class="col-xl-8">
             <h1>Listado de Precios</h1>
         </div>
-        <div class="col-xl-4 d-flex justify-content-xl-end">
+        <div class="col-md-4 d-flex justify-content-md-end">
+            <a href="{{ route('administracion.productos.create') }}" role="button" class="btn btn-md btn-success"
+            data-toggle="modal" data-target="#agregarregistro">Nuevo</a>
+        </div>
+    </div>
 
+    <div class="modal fade" id="agregarregistro" tabindex="-1" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Alta de registro<span id="nombrePresentacion"></span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div id="tipoalta" class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" 
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span>Tipo de Alta</span>
+                        </button>
+                        <div id="dropdown-menu-button" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#"><span>Listado de Productos de Proveedor</span></a>
+                          <a class="dropdown-item" href="#"><span>Producto de Poveedores</span></a>
+                        </div>
+                        <p></p>
+                        <div id="form_add">
+                            <div id="opt1">
+                                <label for="search-input">Seleccione el proveedor: </label>
+                                <span class="algolia-autocomplete algolia-autocomplete-left" style="position: relative; display: inline-block; direction: ltr;">
+                                    <input type="search" class="form-control ds-input" id="search-input" placeholder="Buscar proveedor..." autocomplete="off" spellcheck="false" role="combobox" 
+                                        list="lista_prov" style="position: relative; vertical-align: top;" dir="auto">
+                                    <datalist id="lista_prov">
+                                        @foreach ($proveedors as $proveedor)
+                                        <option value="{{ $proveedor->razon_social }}"></option>
+                                        @endforeach
+                                    </datalist>
+                                </span>
+                                <button id="ver" type="submit" class="btn btn-md btn-success" data-target="#descargarregistro">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <a href="{{ route('administracion.listaprecios.export') }}" role="button" class="btn btn-md btn-success"
+            data-toggle="modal" data-target="#agregarregistro">Nuevo</a>
+                                <label for="">Adjuntar Listado: </label>
+                            </div>
+                            <div id="opt2">2</div> 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
         </div>
     </div>
 @stop
 
 {{-- aquí va contenido --}}
 @section('content')
-<div class="row" style="width: 100%;">
-    <div class= "col-sm-3">
+<div class="card-group mb-12">
+    <div class= "col-md-3">
         <div class="card" >
             <div class="card-header" >
                 <div id="nav_search" class="search">
@@ -84,10 +137,9 @@
             </div>
         </div>
     </div>
-    <div class="col-ms-6" style="width: 75
-    %; padding-left: 10px">
+    <div class="col-md-9">
         <div class="card " id="ListadoDePrecios">
-            {{-- <a class="btn btn-success mt-3 mb-3" href="{{ route('ListaPrecio.excel')}}">
+                {{-- <a class="btn btn-success mt-3 mb-3" href="{{ route('ListaPrecio.excel')}}">
             Exportar</a>
             <form action="{{route('ListaPRecios.import.excel')}}" method="post" enctype="multipart/form-data">
                @csrf
@@ -120,15 +172,6 @@
                         <th>Costo</th>
                     </thead>
                     <tbody>
-                        {{-- @foreach ($users as $user)
-                        <tr class="hide">
-                            {{-- <td calss="hide">{{ $user->razon_social }}</td>
-                            <td>{{ $user->codigoProv }}</td>
-                            <td>{{ $user->droga }}</td>
-                            <td>{{ $user->presentacion }}</td>
-                            <td>${{ $user->costo }}</td>
-                        </tr>
-                        @endforeach --}}
                         <tr>
                             <td>*</td>
                             <td>*</td>
@@ -157,8 +200,9 @@
          $(document).ready(function() {            
             // VARIABLES LOCALES
             var tabla2;
-
+            
             $('#tabla1 tbody tr').removeClass('selected');
+
             // Tabla 2
             tabla2 = $('#tabla2').DataTable({
                 "scrollY": "57vh",
@@ -177,13 +221,6 @@
                     {targets: [3], data: 'costo'}],
             });
 
-            // tabla2.row.add({
-            //     codigoProv: '*',
-            //     producto_id: '*',
-            //     presentacion_id: '*',
-            //     costo: '*',
-            // }).draw();
-
             //Filtrar Proveedor
             $('#searchbar').on('keyup', function(){
                 var filter = $('#searchbar').val().toUpperCase();
@@ -200,7 +237,7 @@
                         }
                    });
 
-                   //Cantidad de <td> en el <tr> seleccionado
+            //Cantidad de <td> en el <tr> seleccionado
                     nTds = $(this).children("td").length
                     
                     nTdsSin = $(this).children(".sin").length
@@ -215,7 +252,6 @@
 
             //Tomar id Proveedor seleccionado
             $('#tabla1 tbody tr').on('click', function(){
-                //alert($(this).attr("id"));
                 if($(this).hasClass('selected')){
                     $(this).removeClass('selected');
                 }
@@ -242,8 +278,51 @@
                });
             };
 
+            //Abre formulario de Alta
+            $('#agregarregistro').on('show.bs.modal', function(event){
+                $('#tipoalta button span').text('Tipo de Alta');
+                //Se coloca el título del modal
+                $('#nombrePresentacion').empty();
+                $('#nombrePresentacion').append(event.relatedTarget.value);
+                $('#form_add div').hide();
+            });
 
-            //Agrega item a la lista del Proveedor ---Pendiente
+            //Toma Tipo de Alta
+            $('#dropdown-menu-button a').on('click', function(){
+
+                var newliporv = 0;
+
+                $('#form_add div').hide();
+                var textTipo = $(this).text();
+
+                $('#tipoalta button span').text(textTipo);
+                if(textTipo == 'Listado de Productos de Proveedor'){
+                    $('#opt1').show();
+                }
+                if(textTipo == 'Producto de Poveedores'){
+                    $('#opt2').show();
+                }
+
+            });
+
+            
+            //Descarga listado de proveedor
+            $('#descargarregistro').on('click', function(){
+                
+                newliporv = $('#opt1 span input').val();
+
+                var datos = { razon_social: newliporv};
+                $.ajax({
+                    url: "{{ route('administracion.listaprecios.export') }}",
+                    type: "POST",
+                    data: datos,
+               }).done(function(resultado) {
+                   alert('Planilla exportada con éxito');
+               });
+            });
+
+            
+
 
             // Quita un item de la lista de precios del proveedor
             

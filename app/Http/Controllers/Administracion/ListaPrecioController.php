@@ -1,16 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\Administracion;
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Controller;
 use App\Models\ListaPrecio;
 use App\Models\Proveedor;
 
-use Illuminate\Http\Request;
-
-use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ListaPrecioImport;
+use App\Exports\ListaPrecioExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ListaPrecioController extends Controller
 {
@@ -22,7 +23,6 @@ class ListaPrecioController extends Controller
 
     //     return back()->with('message', 'Importación de listado completada');
     // }
-
 
 
     /**
@@ -56,15 +56,20 @@ class ListaPrecioController extends Controller
     }
 
 
-
-
     public function destroy(Request $request){
          if($request->ajax()){
               $ListaPrecios = ListaPrecio::destroy($request->id);
-
-
               return response()->json($ListaPrecios);
           }
-          return response()->json(['mensaje' => 'No se encuentra la Lista de PRecios del Proveedor'+$request->id]);
-     }
+          return response()->json(['mensaje' => 'No se encuentra la Lista de Ppecios del Proveedor'+$request->razon_social]);
+    }
+
+    public function export(Request $request){
+        return Excel::download(new ListaPrecioExport, 'listado-list.xls');
+        
+        // if($request->ajax()){
+        //     $listaPrecios = ListaPrecio::listaDeProveedorExcel($request->razon_social);
+        //     return Response()->json($listaPrecios);
+        // }
+    }
 }
