@@ -1,5 +1,7 @@
 <?php
 //Agregado líena 11-12 ; 46 ; 62-64
+
+use App\Exports\ListaPrecioExport;
 use App\Http\Controllers\Admin\RolController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Administracion\LoteController;
@@ -12,6 +14,8 @@ use App\Http\Controllers\Administracion\ListaPrecioController;
 use App\Http\Controllers\Administracion\ClienteController;
 use App\Models\Cotizacion;
 use Illuminate\Support\Facades\Route;
+use App\Exports\ProductsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +79,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     // rutas especiales para LISTA DE PRECIOS
     Route::resource('/listaprecios', ListaPrecioController::class);
+    Route::get('/listaprecios/export', [ListaPrecioController::class, 'export'])->name('listaprecios.export');
+
     //Route::post('importListaPrecioExcel', 'ListaPrecioController@importExcel')->name('ListaPrecio.import.excel');
 
     // rutas de COTIZACIONES
