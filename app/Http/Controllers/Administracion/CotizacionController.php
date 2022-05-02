@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Administracion;
 use App\Models\Cotizacion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ArchivoCotizacion;
 use App\Models\Cliente;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\ProductoCotizado;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class CotizacionController extends Controller
 {
@@ -22,7 +24,13 @@ class CotizacionController extends Controller
     public function index()
     {
         $cotizaciones = Cotizacion::latest()->get();
-        return view('administracion.cotizaciones.index', compact('cotizaciones'));
+        $config = [
+            'format' => 'DD/MM/YYYY',
+            'dayViewHeaderFormat' => 'MMM YYYY',
+            'minDate' => "js:moment().startOf('today')",
+        ];
+
+        return view('administracion.cotizaciones.index', compact('cotizaciones', 'config'));
     }
 
     /**
@@ -135,6 +143,22 @@ class CotizacionController extends Controller
         return redirect(route('administracion.cotizaciones.index'));
     }
 
+    public function aprobarCotizacion(Cotizacion $cotizacion, Request $request)
+    {
+        if($request->file('archivo')){
+            $ruta = $request->file('archivo')->storeAs(
+                'licitaciones-aprobadas', $cotizacion->identificador
+            );
+            $archivo = new ArchivoCotizacion();
+            $archivo->cotizacion_id = $cotizacion->id;
+            $archivo->ruta = $ruta;
+            $archivo->nombre_archivo = $cotizacion->identificador;
+            $archivo->causa_subida = $request->causa_subida;
+            $archivo->save();
+        }
+        $cotizacion->confirmada = $request->confirmada;
+    }
+
     public function agregarProducto(Cotizacion $cotizacion)
     {
         //AGREGAR PRESENTACION A COTIZACION
@@ -202,22 +226,31 @@ class CotizacionController extends Controller
         //BORRADO DEL PRODUCTO COTIZADO
         $productoCotizado->delete();
 
-        $request->session()->flash('success', 'Producto agregado con éxito.');
+        $request->session()->flash('success', 'Cotización eliminada con éxito.');
         return response()->json();
     }
 
-    public function generarpdf(Cotizacion $cotizacion){
-        // estado-3 --> "Presentada el"
-        $presentaciones = Presentacion::all();
-        $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout', compact('cotizacion', 'presentaciones'));
-        $dom_pdf = $pdf->getDomPDF();
+    public function generarpdf(Cotizacion $cotizacion, Request $request){
+        if($cotizacion->finalizada){
+            $presentaciones = Presentacion::all();
+            $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout', compact('cotizacion', 'presentaciones'));
+            $dom_pdf = $pdf->getDomPDF();
 
-        $canvas = $dom_pdf ->get_canvas();
-        $canvas->page_text(500, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
-        $cotizacion->estado_id = 3;
-        $cotizacion->save();
+            $canvas = $dom_pdf ->get_canvas();
+            $canvas->page_text(500, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
+            if(!$cotizacion->presentada){
+                // estado-3 --> "Presentada el:"
+                $cotizacion->estado_id = 3;
+                $cotizacion->presentada = Carbon::now();
+                $cotizacion->save();
+            }
 
-        return $pdf->stream('cotizacion.pdf');
+            return $pdf->stream('cotizacion.pdf');
+        }
+        else{
+            $request->session()->flash('error', 'La cotización aún no ha finalizado. Por favor finalice la cotización para descargar el PDF.');
+            return redirect('/administracion/cotizaciones/');
+        }
         //return view('administracion.cotizaciones.pdfLayout', compact('cotizacion'));
     }
 }

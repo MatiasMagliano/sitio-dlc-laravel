@@ -78,6 +78,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     //Route::post('importListaPrecioExcel', 'ListaPrecioController@importExcel')->name('ListaPrecio.import.excel');
 
     // rutas de COTIZACIONES
+    Route::post('/cotizaciones/{cotizacion}/aprobarCotizacion', [CotizacionController::class, 'aprobarCotizacion'])
+        ->name('cotizaciones.aprobarCotizacion');
     Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])
         ->name('cotizaciones.finalizar');
     Route::get('/cotizaciones/{cotizacion}/generarpdf', [CotizacionController::class, 'generarpdf'])

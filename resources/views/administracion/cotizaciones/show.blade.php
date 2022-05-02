@@ -77,7 +77,7 @@
                         <td style="vertical-align: middle;">{{$cotizacion->user->name}}</td>
                         <td style="vertical-align: middle;">{{$cotizacion->productos->count()}}</td>
                         <td style="vertical-align: middle;">{{$cotizacion->productos->sum('cantidad')}}</td>
-                        <td style="vertical-align: middle;">${{$cotizacion->productos->sum('total')}}</td>
+                        <td style="vertical-align: middle;">$ {{number_format($cotizacion->productos->sum('total'), 2, ',', '.')}}</td>
                         <td style="vertical-align: middle;">
                             @if (!$cotizacion->finalizada)
                                 <span class="text-danger">{{$cotizacion->estado->estado}}</span>
@@ -128,11 +128,11 @@
                         <td>
                             {{$cotizado->cantidad}}
                         </td>
-                        <td>
-                            ${{$cotizado->precio}}
+                        <td class="text-center">
+                            $ {{number_format($cotizado->precio, 2, ',', '.')}}
                         </td>
-                        <td>
-                            ${{$cotizado->total}}
+                        <td class="text-right">
+                            $ {{number_format($cotizado->total, 2, ',', '.')}}
                         </td>
                         <td>
                             @if (!$cotizacion->finalizada)

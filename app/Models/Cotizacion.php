@@ -72,5 +72,15 @@ class Cotizacion extends Model
     public function estado(){
         return $this->belongsTo(Estado::class);
     }
+
+    /**
+     * Get all of the archivos for the Cotizacion
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function archivos(): HasMany
+    {
+        return $this->hasMany(ArchivoCotizacion::class);
+    }
     /* hasMany->ventas */
 }
