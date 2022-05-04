@@ -12,7 +12,10 @@ use App\Models\Producto;
 use App\Models\ProductoCotizado;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+
+use function PHPUnit\Framework\returnSelf;
 
 class CotizacionController extends Controller
 {
@@ -145,9 +148,9 @@ class CotizacionController extends Controller
 
     public function aprobarCotizacion(Cotizacion $cotizacion, Request $request)
     {
-        if($request->file('archivo')){
+        if($request->hasFile('archivo')){
             $ruta = $request->file('archivo')->storeAs(
-                'licitaciones-aprobadas', $cotizacion->identificador
+                'licitaciones-aprobadas', $cotizacion->identificador.'.pdf'
             );
             $archivo = new ArchivoCotizacion();
             $archivo->cotizacion_id = $cotizacion->id;
@@ -156,7 +159,36 @@ class CotizacionController extends Controller
             $archivo->causa_subida = $request->causa_subida;
             $archivo->save();
         }
-        $cotizacion->confirmada = $request->confirmada;
+        $cotizacion->confirmada = Carbon::createFromFormat('d/m/Y', $request->confirmada);
+        // estado 4: Aceptada el: ...
+        $cotizacion->estado_id = 4;
+        $cotizacion->save();
+
+        $request->session()->flash('success', 'La cotización se aprobó con éxito.\nAhora podrá generar la orden de trabajo para esta licitación.');
+        return redirect(route('administracion.cotizaciones.index'));
+    }
+
+    public function rechazarCotizacion(Cotizacion $cotizacion, Request $request)
+    {
+        if($request->hasFile('archivo')){
+            $ruta = $request->file('archivo')->storeAs(
+                'licitaciones-rechazadas', $cotizacion->identificador.'.pdf'
+            );
+            $archivo = new ArchivoCotizacion();
+            $archivo->cotizacion_id = $cotizacion->id;
+            $archivo->ruta = $ruta;
+            $archivo->nombre_archivo = $cotizacion->identificador;
+            $archivo->causa_subida = $request->causa_subida;
+            $archivo->save();
+        }
+        $cotizacion->rechazada = Carbon::createFromFormat('d/m/Y', $request->rechazada);
+        // estado 5: Rechazada el: ...
+        $cotizacion->estado_id = 5;
+        $cotizacion->motivo_rechazo = $request->motivo_rechazo;
+        $cotizacion->save();
+
+        $request->session()->flash('success', 'La cotización se rechazó con éxito.');
+        return redirect(route('administracion.cotizaciones.index'));
     }
 
     public function agregarProducto(Cotizacion $cotizacion)
@@ -245,12 +277,30 @@ class CotizacionController extends Controller
                 $cotizacion->save();
             }
 
-            return $pdf->stream('cotizacion.pdf');
+            return $pdf->stream('cotizacion_'.$cotizacion->identificador.'.pdf');
         }
         else{
-            $request->session()->flash('error', 'La cotización aún no ha finalizado. Por favor finalice la cotización para descargar el PDF.');
+            $request->session()->flash('error', 'La cotización aún no ha terminado de agregar líneas. Por favor finalice la cotización para descargar el PDF.');
             return redirect('/administracion/cotizaciones/');
         }
         //return view('administracion.cotizaciones.pdfLayout', compact('cotizacion'));
+    }
+
+    public function descargapdf(Cotizacion $cotizacion, $doc, Request $request){
+        switch($doc){
+            case 'cotizacion':
+                return redirect(route('administracion.cotizaciones.generarpdf', $cotizacion));
+                break;
+            case 'provision':
+                return Storage::download('licitaciones-aprobadas/'.$cotizacion->identificador .'.pdf', 'provision_'.$cotizacion->identificador.'.pdf');
+                break;
+            case 'rechazo':
+                return Storage::download('licitaciones-rechazadas/'.$cotizacion->identificador .'.pdf', 'comparativo_'.$cotizacion->identificador.'.pdf');
+                break;
+            default:
+                $request->session()->flash('error', 'La acción que desea ejecutar no es posible procesarla.');
+                return redirect(route('home'));
+                break;
+        }
     }
 }

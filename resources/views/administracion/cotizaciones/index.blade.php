@@ -31,8 +31,8 @@
                 <thead>
                     <tr>
                         <th>Fecha</th>
+                        <th>Ident./Usuario</th>
                         <th>Cliente</th>
-                        <th>Usuario</th>
                         <th>Productos cotizados</th>
                         <th>Total unidades</th>
                         <th>Importe total</th>
@@ -42,26 +42,29 @@
                 </thead>
                 <tbody>
                     @foreach ($cotizaciones as $cotizacion)
-                        <tr>
+                        <tr class="{{$cotizacion->rechazada ? 'table-secondary' : ''}}">
                             <td style="vertical-align: middle;">
                                 {{ $cotizacion->created_at->format('d/m/Y') }}
+                            </td>
+                            <td style="vertical-align: middle;">
+                                <strong>{{ $cotizacion->identificador }}</strong>
                                 <br>
-                                {{ $cotizacion->identificador }}
+                                {{ $cotizacion->user->name }}
                             </td>
                             <td style="vertical-align: middle;">
                                 {{ $cotizacion->cliente->razon_social }}<br>
                                 {{ $cotizacion->cliente->tipo_afip }}: {{ $cotizacion->cliente->afip }}
                             </td>
-                            <td style="vertical-align: middle;">{{ $cotizacion->user->name }}</td>
                             <td style="vertical-align: middle; text-align:center;">{{$cotizacion->productos->count()}}</td>
-                            <td style="vertical-align: middle;  text-align:center;">{{$cotizacion->productos->sum('cantidad')}}</td>
-                            <td style="vertical-align: middle;  text-align:center;">
+                            <td style="vertical-align: middle; text-align:center;">{{$cotizacion->productos->sum('cantidad')}}</td>
+                            <td style="vertical-align: middle; text-align:center;">
                                 $ {{number_format($cotizacion->monto_total, 2, ',', '.')}}
                             </td>
+                            {{-- ESTADOS DINAMICOS --}}
                             <td style="vertical-align: middle;">
                                 @switch($cotizacion->estado_id)
                                     @case(1)
-                                        <span class="text-danger">{{$cotizacion->estado->estado}}</span>
+                                        <span class="text-fuchsia">{{$cotizacion->estado->estado}}</span>
                                         @break
                                     @case(2)
                                         <span class="text-success">{{$cotizacion->estado->estado}} {{$cotizacion->finalizada->format('d/m/Y')}}</span>
@@ -73,13 +76,13 @@
                                         <span class="text-success">{{$cotizacion->estado->estado}} {{$cotizacion->confirmada->format('d/m/Y')}}</span>
                                         @break
                                     @case(5)
-                                        <span class="text-danger">{{$cotizacion->estado->estado}} {{$cotizacion->rechazada>format('d/m/Y')}}</span>
+                                        <span class="text-danger">{{$cotizacion->estado->estado}} {{$cotizacion->rechazada->format('d/m/Y')}}</span>
                                         @break
                                     @default
-
                                 @endswitch
                             </td>
-                            <td>
+                            {{-- ACCIONES DINAMICAS --}}
+                            <td style="vertical-align: middle; text-align:center;">
                                 @switch($cotizacion->estado_id)
                                     @case(1)
                                         <a href="{{ route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]) }}"
@@ -99,34 +102,41 @@
                                         </form>
                                         @break
                                     @case(2)
-                                        <a href="{{ route('administracion.cotizaciones.generarpdf', ['cotizacion' => $cotizacion]) }}"
-                                            class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
-                                            title="Descargar cotización" target="_blank">
-                                            <i class="fas fa-file-download"></i>
+                                        <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
+                                            class="btn btn-sm btn-default" target="_blank">
+                                            Presentar
                                         </a>
-                                        &nbsp;
+                                        @break
+                                    @case(3)
+                                        <div class="btn-group-vertical">
+                                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
+                                                data-target="#modalAprobarCotizacion" id="{{$cotizacion->id}}">Aprobar</button>
+                                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+                                                data-target="#modalRechazarCotizacion" id="{{$cotizacion->id}}">Rechazar</button>
+                                        </div>
+                                        @break
+                                    @case(4)
+                                        <div class="btn-group-vertical">
+                                            <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
+                                                class="btn btn-sm btn-default" target="_blank">
+                                                Cotización
+                                            </a>
+                                            <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'provision']) }}"
+                                                class="btn btn-sm btn-default" target="_blank">
+                                                Provisión
+                                            </a>
+                                        </div>
+                                        @break
+                                    @case(5)
                                         <a href="{{ route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]) }}"
                                             class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
                                             title="Ver cotización">
                                             <i class="fas fa-search "></i>
                                         </a>
-                                        @break
-                                    @case(3)
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
-                                            data-target="#modalAprobarCotizacion" id="{{$cotizacion->id}}">Aprobar</button>
-                                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-                                                data-target="#modalRechazarCotizacion" id="{{$cotizacion->id}}">Rechazar</button>
-                                        </div>
-                                        @break
-                                    @case(5)
-                                        <div class="alert alert-danger">
-                                            <a href="#"
-                                                class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
-                                                role="button" title="Subir justificación">
-                                                <i class="fas fa-file-upload"></i>
-                                            </a>
-                                        </div>
+                                        <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'rechazo']) }}"
+                                            class="btn btn-link" target="_blank">
+                                            <i class="fas fa-file-download"></i>
+                                        </a>
                                         @break
                                     @default
                                 @endswitch
@@ -149,12 +159,12 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{route('cotizaciones.aprobarCotizacion')}}" method="POST">
+                <form action="" method="POST" id="formAprobada" enctype="multipart/form-data">
                     @csrf
                     {{-- CAUSAS: aprobada/rechazada --}}
-                    <input type="hidden" id="causa_subida" name="causa_subida" value="aprobada">
+                    <input type="hidden" name="causa_subida" value="aprobada">
                     <div class="modal-body">
-                        <p>Podrá adjuntar la Orden de Compra provista por el cliente. Esto se adjuntará como información respaldatoria a la cotización.</p>
+                        <p>Deberá consignar la fecha de aprobación. Opcionalmente podrá adjuntar la Orden de Compra provista por el cliente. Esto comformará información respaldatoria a la cotización.</p>
                         <hr>
                         <div class="row">
                             <div class="col form-group">
@@ -170,15 +180,13 @@
                                 </x-adminlte-input-date>
                             </div>
                             <div class="col custom-file">
-                                <label for="archivo">Adjuntar OC</label>
-                                <input type="file" class="custom-file-input" id="archivo" name="archivo"
-                                    accept=".jpg,.png,.pdf">
-                                <label class="custom-file-label" for="archivo">*.jpg *.png *.pdf</label>
-                              </div>
+                                <input type="file" class="custom-file-input" id="customFile" name="archivo" accept=".jpg,.png,.pdf">
+                                <label class="custom-file-label" for="customFile">Seleccionar archivo</label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Continuar</button>
+                        <button type="submit" id="guardarAprobada" class="btn btn-success">Continuar</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                     </div>
                 </form>
@@ -197,15 +205,42 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <p>Podrá adjuntar el <strong>pliego procesado</strong> con coparativo de precios, provisto por el cliente. Se adjuntará como información respaldatoria a la cotización rechazada.</p>
-                        <div class="input-group mb-3">
-                            {{-- AGREGAR FORMULARIO DE SUBIDA DE ARCHIVO --}}
+                <form action="" method="POST" id="formRechazada" enctype="multipart/form-data">
+                    @csrf
+                    {{-- CAUSAS: aprobada/rechazada --}}
+                    <input type="hidden" name="causa_subida" value="rechazada">
+                    <div class="modal-body">
+                        <p>Deberá consignar la fecha de rechazo y un motivo. Opcionalmente, podrá adjuntar el <strong>pliego procesado</strong> con comparativo de precios, provisto por el cliente. Se adjuntará como información respaldatoria a la cotización rechazada.</p>
+                        <div class="form-group">
+                            <label for="input-motivo_rechazo">Motivo del rechazo</label>
+                            <textarea name="motivo_rechazo" class="form-control @error('motivo_rechazo') is-invalid @enderror" id="input-motivo_rechazo" rows="2" required></textarea>
+                            <small id="input-motivo_rechazo" class="form-text text-muted">Datos relevantes como cliente ganador, fuera de término, errores de cotización, etc..</small>
+                            @error('motivo_rechazo')<div class="invalid-feedback">{{$message}}</div>@enderror
                         </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                </div>
+                        <div class="row">
+                            <div class="col form-group">
+                                @section('plugins.TempusDominusBs4', true)
+                                <x-adminlte-input-date name="rechazada" id="rechazada" igroup-size="md"
+                                    :config="$config" placeholder="{{ __('formularios.date_placeholder') }}"
+                                    autocomplete="off" required>
+                                    <x-slot name="appendSlot">
+                                        <div class="input-group-text bg-dark">
+                                            <i class="fas fa-calendar"></i>
+                                        </div>
+                                    </x-slot>
+                                </x-adminlte-input-date>
+                            </div>
+                            <div class="col custom-file">
+                                <input type="file" class="custom-file-input" id="customFile" name="archivo" accept=".jpg,.png,.pdf">
+                                <label class="custom-file-label" for="customFile">Seleccionar archivo</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="guardarRechazada" class="btn btn-success">Continuar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -236,7 +271,7 @@
             var tabla2 = $('#tabla2').DataTable({
                 "processing": true,
                 "dom": 'Bfrtip',
-                "order": [1, 'asc'],
+                "order": [0, 'desc'],
                 "buttons": [{
                         extend: 'copyHtml5',
                         text: 'Copiar al portapapeles'
@@ -286,8 +321,8 @@
                     }
                 }],
                 "columnDefs": [{
-                        targets: 7,
-                        width: 80,
+                        targets: 0,
+                        type: 'date'
                     },
                     {
                         targets: 7,
@@ -300,6 +335,16 @@
             $(".custom-file-input").on("change", function() {
                 var fileName = $(this).val().split("\\").pop();
                 $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+
+            // se coloca el ACTION en el form: guardarAprobada
+            $('#modalAprobarCotizacion').on('show.bs.modal', function(event){
+                $('#formAprobada').attr('action', 'cotizaciones/'+event.relatedTarget.id+'/aprobarCotizacion');
+            });
+
+            // se coloca el ACTION en el form: guardarRechazada
+            $('#modalRechazarCotizacion').on('show.bs.modal', function(event){
+                $('#formRechazada').attr('action', 'cotizaciones/'+event.relatedTarget.id+'/rechazarCotizacion');
             });
         });
     </script>

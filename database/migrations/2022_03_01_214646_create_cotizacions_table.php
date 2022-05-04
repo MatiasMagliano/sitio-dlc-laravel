@@ -30,6 +30,7 @@ class CreateCotizacionsTable extends Migration
             $table->timestamp('presentada')->nullable();
             $table->timestamp('confirmada')->nullable();
             $table->timestamp('rechazada')->nullable();
+            $table->string('motivo_rechazo')->nullable();
             $table->foreignId('estado_id')->constrained('estados');
             $table->timestamps();
 

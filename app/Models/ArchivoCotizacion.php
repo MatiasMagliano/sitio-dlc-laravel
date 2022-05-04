@@ -10,7 +10,7 @@ class ArchivoCotizacion extends Model
     protected $table = 'archivo_cotizacions';
 
     protected $fillable = [
-        'nombre_archivo', 'causa_subida', 'motivo_rechazo'
+        'ruta', 'nombre_archivo', 'causa_subida', 'motivo_rechazo'
     ];
 
     // RELACIONES

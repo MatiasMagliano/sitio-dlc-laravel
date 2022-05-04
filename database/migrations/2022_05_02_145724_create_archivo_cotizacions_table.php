@@ -20,7 +20,6 @@ class CreateArchivoCotizacionsTable extends Migration
             $table->string('ruta');
             $table->string('nombre_archivo');
             $table->string('causa_subida');
-            $table->string('motivo_rechazo')->nullable();
             $table->timestamps();
         });
     }

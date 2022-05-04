@@ -84,8 +84,6 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     //Route::post('importListaPrecioExcel', 'ListaPrecioController@importExcel')->name('ListaPrecio.import.excel');
 
     // rutas de COTIZACIONES
-    Route::post('/cotizaciones/{cotizacion}/aprobarCotizacion', [CotizacionController::class, 'aprobarCotizacion'])
-        ->name('cotizaciones.aprobarCotizacion');
     Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])
         ->name('cotizaciones.finalizar');
     Route::get('/cotizaciones/{cotizacion}/generarpdf', [CotizacionController::class, 'generarpdf'])
@@ -94,8 +92,14 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
         ->name('cotizaciones.agregar.producto');
     Route::get('/cotizaciones/{cotizacion}/producto/{productoCotizado}/edit', [CotizacionController::class, 'editarProductoCotizado'])
         ->name('cotizaciones.editar.producto');
+    Route::get('/cotizaciones/{cotizacion}/descargarpdf/{doc}', [CotizacionController::class, 'descargapdf'])
+        ->name('cotizaciones.descargapdf');
     Route::post('/cotizaciones/{cotizacion}/producto', [CotizacionController::class, 'guardarProductoCotizado'])
         ->name('cotizaciones.guardar.producto');
+    Route::post('/cotizaciones/{cotizacion}/aprobarCotizacion', [CotizacionController::class, 'aprobarCotizacion'])
+        ->name('cotizaciones.aprobarCotizacion');
+    Route::post('/cotizaciones/{cotizacion}/rechazarCotizacion', [CotizacionController::class, 'rechazarCotizacion'])
+        ->name('cotizaciones.rechazarCotizacion');
     Route::match(['put', 'patch'], '/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class], 'actualizarProductoCotizado')
         ->name('cotizaciones.actualizar.producto');
     Route::delete('/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class, 'borrarProductoCotizado'])

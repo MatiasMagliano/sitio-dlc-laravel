@@ -79,17 +79,50 @@
                         <td style="vertical-align: middle;">{{$cotizacion->productos->sum('cantidad')}}</td>
                         <td style="vertical-align: middle;">$ {{number_format($cotizacion->productos->sum('total'), 2, ',', '.')}}</td>
                         <td style="vertical-align: middle;">
-                            @if (!$cotizacion->finalizada)
-                                <span class="text-danger">{{$cotizacion->estado->estado}}</span>
-                            @else
-                                <span class="text-success">{{$cotizacion->estado->estado}} {{$cotizacion->finalizada->format('d/m/Y')}}</span>
-                            @endif
+                            @switch($cotizacion->estado_id)
+                                @case(1)
+                                    <span class="text-fuchsia">{{$cotizacion->estado->estado}}</span>
+                                    @break
+                                @case(2)
+                                    <span class="text-success">{{$cotizacion->estado->estado}} {{$cotizacion->finalizada->format('d/m/Y')}}</span>
+                                    @break
+                                @case(3)
+                                    <span class="text-secondary">{{$cotizacion->estado->estado}} {{$cotizacion->presentada->format('d/m/Y')}}</span>
+                                    @break
+                                @case(4)
+                                    <span class="text-success">{{$cotizacion->estado->estado}} {{$cotizacion->confirmada->format('d/m/Y')}}</span>
+                                    @break
+                                @case(5)
+                                    <span class="text-danger">{{$cotizacion->estado->estado}} {{$cotizacion->rechazada->format('d/m/Y')}}</span>
+                                    @break
+                                @default
+                            @endswitch
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    @if ($cotizacion->rechazada)
+        <div class="card bg-gradient-danger">
+            <div class="card-header">
+                <h5 class="card-title">Motivo de rechazo</h5>
+            </div>
+            <div class="card-body">
+                <p>{{$cotizacion->motivo_rechazo}}</p>
+            </div>
+            <div class="card-footer">
+                @if ($cotizacion->archivos->contains('causa_subida', 'rechazada'))
+                    <p>El rechazo contiene un archivo comparativo, puede descargarlo en este
+                        <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'rechazo']) }}"target="_blank">
+                            link
+                        </a>
+                    </p>
+                @endif
+            </div>
+        </div>
+    @endif
 
     <div class="card">
         <div class="card-header">
@@ -182,7 +215,7 @@
                 icon: 'warning',
                 title: 'Finalizar cotización',
                 text: 'A continuación se le presentará un archivo PDF para descargar y presentar al cliente',
-                confirmButtonText: 'Presentar',
+                confirmButtonText: 'Finalizar',
                 showCancelButton: true,
                 cancelButtonText: 'Cancelar',
             }).then((result) => {
