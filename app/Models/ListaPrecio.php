@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ListaPrecio extends Model
 {
-    use HasFactory;
-    
+
     protected $table = 'lista_precios';
+
     //Llenables
     /**
      * @var array
@@ -19,8 +19,6 @@ class ListaPrecio extends Model
     protected $fillable = [
         'costo',
     ];
-
-    
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

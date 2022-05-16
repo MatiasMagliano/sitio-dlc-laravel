@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LotePresentacionProductoSeeder::class);
 
         //orden necesario de populado
-        $this->call(ListaPrecioSeeder::class);
+        //$this->call(ListaPrecioSeeder::class);
         $this->call(CotizacionSeeder::class);
     }
 }

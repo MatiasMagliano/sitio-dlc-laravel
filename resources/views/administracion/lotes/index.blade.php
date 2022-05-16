@@ -55,7 +55,6 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-    {{$lotes[0]->deposito}}
     <div class="card-group mb-4">
         <div class="card mr-2">
             <div class="card-header">
@@ -70,16 +69,14 @@
                 <table id="tabla1" class="table table-borderless" style="width: 100%; cursor:pointer">
                     <thead style="display: none">
                         <th>droga</th>
-                        <th>forma</th>
-                        <th>presentacion</th>
+                        <th>forma/presentacion</th>
                     </thead>
                     <tbody>
                         @foreach ($productos as $producto)
                             @foreach ($producto->presentaciones as $presentacion)
                                 <tr id="{{$producto->id}}" value="{{$presentacion->id}}">
                                     <td>{{ $producto->droga }}</td>
-                                    <td>{{ $presentacion->forma }}</td>
-                                    <td>{{ $presentacion->presentacion }}</td>
+                                    <td>{{ $presentacion->forma }}, {{ $presentacion->presentacion }}</td>
                                 </tr>
                             @endforeach
                         @endforeach
@@ -351,7 +348,7 @@
                 "scrollCollapse": true,
                 "paging": false,
                 "select": true,
-                "order": [1, 'asc'],
+                "order": [0, 'asc'],
                 "bInfo": false,
             });
 

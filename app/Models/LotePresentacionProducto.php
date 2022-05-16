@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class LotePresentacionProducto extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
     protected $table = 'lote_presentacion_producto';
 
