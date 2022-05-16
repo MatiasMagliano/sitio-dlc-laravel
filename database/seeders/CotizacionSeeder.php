@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Cliente;
 use App\Models\Cotizacion;
+use App\Models\DepositoCasaCentral;
+use App\Models\LotePresentacionProducto;
+use App\Models\Producto;
 use App\Models\ProductoCotizado;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +35,23 @@ class CotizacionSeeder extends Seeder
                         'cotizacion_id' => $cotizacion->id,
                     ]);
                 }
+            }
+        }
+
+        //actualiza el stock para todos los productos...
+        //Se podría hacer con un observer, pero se carece de modelo DepositoCasaCentral relacionado
+        //se lo busca a través de una DBQUERY
+        foreach(Producto::all() as $producto){
+            $presentaciones = DB::table('lote_presentacion_producto')
+            ->where('producto_id', $producto->id)
+            ->get('presentacion_id')
+            ->unique();
+            //dd($presentaciones);
+            foreach($presentaciones as $presentacion){
+                $deposito = DepositoCasaCentral::find(
+                    LotePresentacionProducto::getIdDeposito($producto->id, $presentacion->presentacion_id) //devuelve un solo pivot relacionado a prod/pres
+                );
+                $deposito->increment('disponible', ($deposito->existencia - $deposito->cotizacion));
             }
         }
     }

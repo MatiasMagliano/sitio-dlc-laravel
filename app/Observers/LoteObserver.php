@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Lote;
+use Illuminate\Support\Facades\DB;
 
 class LoteObserver
 {
@@ -14,7 +15,7 @@ class LoteObserver
      */
     public function created(Lote $lote)
     {
-        $lote->presentacion()->increment('existencia', $lote->cantidad);
+        //
     }
 
     /**
@@ -25,11 +26,7 @@ class LoteObserver
      */
     public function updated(Lote $lote)
     {
-        if($lote->presentacion()->isDirty('updated_at'))
-        {
-            $cantidad = $lote->getOriginal('cantidad') - $lote->cantidad;
-            $lote->presentacion()->decrement('existencia', $cantidad);
-        }
+        //
     }
 
     /**

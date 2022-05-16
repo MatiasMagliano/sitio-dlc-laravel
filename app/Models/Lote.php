@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lote extends Model
@@ -52,5 +54,9 @@ class Lote extends Model
             ->where('lote_presentacion_producto.presentacion_id', '=', $presentacion)
             ->where('lote_presentacion_producto.producto_id', '=', $producto)
             ->get();
+    }
+
+    public function deposito(){
+        return $this->belongsToMany(DepositoCasaCentral::class, 'lote_presentacion_producto', 'id', 'dcc_id');
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\DepositoCasaCentral;
+use App\Models\LotePresentacionProducto;
 use App\Models\Producto;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -16,14 +18,27 @@ class ProductoCotizadoFactory extends Factory
      */
     public function definition()
     {
-        $producto = Producto::inRandomOrder()->first();
+        $producto = Producto::inRandomOrder()->first(); //devuelve un objeto/modelo
+        $presentacion = DB::table('lote_presentacion_producto')
+            ->where('producto_id', $producto->id)
+            ->pluck('presentacion_id')
+            ->get('0'); //devuelve un solo valor relacionado al producto
+
+        $deposito = DepositoCasaCentral::find(
+            LotePresentacionProducto::getIdDeposito($producto->id, $presentacion) //devuelve un solo pivot relacionado a prod/pres
+        );
+
         $cantidad = $this->faker->numberBetween(50, 1000);
         $precio   = $this->faker->randomFloat(2, 10, 500);
+
+        //actualiza el stock
+        $deposito->decrement('existencia', $cantidad);
+        $deposito->increment('cotizacion', $cantidad);
 
         return [
             //
             'producto_id'       => $producto->id,
-            'presentacion_id'   => DB::table('lote_presentacion_producto')->where('producto_id', $producto->id)->pluck('presentacion_id')->get('0'),
+            'presentacion_id'   => $presentacion,
             'cantidad'          => $cantidad,
             'precio'            => $precio,
             'total'             => $cantidad * $precio,

@@ -55,6 +55,7 @@
 
 {{-- aquí va contenido --}}
 @section('content')
+    {{$lotes[0]->deposito}}
     <div class="card-group mb-4">
         <div class="card mr-2">
             <div class="card-header">

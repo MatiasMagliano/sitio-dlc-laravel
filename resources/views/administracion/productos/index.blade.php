@@ -38,7 +38,8 @@
                             <tr>
                                 <td>{{$producto->id}}</td>
                                 <td style="vertical-align: middle;">
-                                    <a href="{{route('administracion.productos.edit', $producto)}}" class="btn-link justify-content-md-end">
+                                    <a href="{{route('administracion.productos.show', ['producto_id' => $producto->id, 'presentacion_id' => $presentacion->id])}}"
+                                        class="btn-link justify-content-md-end">
                                         {{$producto->droga}}
                                     </a>
                                 </td>

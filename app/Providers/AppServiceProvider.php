@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Lote::observe(LoteObserver::class);
+        //Lote::observe(LoteObserver::class);
 
         // Configuración para fechas en español
         Carbon::setUTF8(true);

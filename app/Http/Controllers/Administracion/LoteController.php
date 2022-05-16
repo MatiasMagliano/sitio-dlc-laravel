@@ -21,13 +21,14 @@ class LoteController extends Controller
     {
         // se crea una colección de líneas específicas
         $productos = Producto::with('presentaciones')->get();
+        $lotes = Lote::all();
         $config = [
             'format' => 'DD/MM/YYYY',
             'dayViewHeaderFormat' => 'MMM YYYY',
             'minDate' => "js:moment().startOf('month')",
         ];
 
-        return view('administracion.lotes.index', compact('productos', 'config'));
+        return view('administracion.lotes.index', compact('productos', 'lotes', 'config'));
     }
 
     public function buscarLotes(Request $request)

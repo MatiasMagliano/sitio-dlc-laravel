@@ -160,7 +160,7 @@
             </table>
         </div>
         <div class="card-footer">
-            <h4>Total en stock: <strong>{{ $producto->lotesDeProducto->sum('cantidad') }}</strong></43>
+            <h4>Total en stock: <strong>{{ $producto->lotesDeProducto->sum('cantidad') }}</strong></h4>
           </div>
     </div>
 @endsection

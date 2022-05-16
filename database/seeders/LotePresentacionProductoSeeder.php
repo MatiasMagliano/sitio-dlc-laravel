@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DepositoCasaCentral;
 use App\Models\Lote;
 use App\Models\LotePresentacionProducto;
 use App\Models\Presentacion;
@@ -22,8 +23,8 @@ class LotePresentacionProductoSeeder extends Seeder
         foreach (Producto::all() as $producto){
             $maxPresentacion = rand(1, 3);
             for($i = 1; $i <= $maxPresentacion; $i++){
-                $randPresentacion = rand(1, 50);
-                $presentacion = Presentacion::findOrFail($randPresentacion);
+                $presentacion = Presentacion::factory()->create();
+                $deposito = DepositoCasaCentral::factory()->create();
 
                 $maxLote = rand(1, 5);
                 for($i = 1; $i <= $maxLote; $i++){
@@ -33,7 +34,9 @@ class LotePresentacionProductoSeeder extends Seeder
                         'producto_id' => $producto->id,
                         'presentacion_id' => $presentacion->id,
                         'lote_id' => $lote->id,
+                        'dcc_id' => $deposito->id,
                     ]);
+                    $deposito->increment('existencia', $lote->cantidad);
                 }
             }
         }

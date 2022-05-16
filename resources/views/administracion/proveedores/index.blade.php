@@ -62,13 +62,13 @@
                         extend: 'print',
                         text: 'Imprimir',
                         exportOptions: {
-                            columns: [0, 1, 2, 3]
+                            columns: ':visible'
                         }
                     },
                     {
                         extend: 'pdfHtml5',
                         exportOptions: {
-                            columns: [0, 1, 2, 3]
+                            columns: ':visible'
                         }
                     },
                     {

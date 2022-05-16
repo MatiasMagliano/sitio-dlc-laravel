@@ -156,7 +156,7 @@
             $.ajax({
                 Type: 'GET',
                 data: datos,
-                url: "{{route('administracion.cotizaciones.producto.precios')}}",
+                url: "",
             }).done(function (resultado) {
                 tablaPreciosSugerido.clear();
                 tablaPreciosSugerido.rows.add(resultado).draw();

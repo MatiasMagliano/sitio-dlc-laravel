@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RolSeeder::class);
         $this->call(ProductoSeeder::class);
         $this->call(ProveedorSeeder::class);
-        $this->call(PresentacionSeeder::class);
+        //$this->call(PresentacionSeeder::class);
         //$this->call(LoteSeeder::class);
         $this->call(ProvinciasSeeder::class);
         $this->call(LocalidadSeeder::class);
