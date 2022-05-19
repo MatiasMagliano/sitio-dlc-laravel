@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ArchivoCotizacion;
 use App\Models\Cliente;
+use App\Models\EsquemaPrecio;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\ProductoCotizado;
+use App\Models\LotePresentacionProducto;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
@@ -195,8 +197,13 @@ class CotizacionController extends Controller
     {
         //AGREGAR PRESENTACION A COTIZACION
         $productos = Producto::all();
+        $porcentajes = Cotizacion::select('clientes.razon_social','porcentaje_1', 'porcentaje_2', 'porcentaje_3', 'porcentaje_4', 'porcentaje_5')
+        ->join('clientes', 'cotizacions.cliente_id','=','clientes.id')
+        ->join('esquema_precios', 'clientes.id','=','esquema_precios.cliente_id')
+        ->where('cotizacions.id','=', 2)
+        ->get();
 
-        return view('administracion.cotizaciones.agregarProducto', compact('cotizacion', 'productos'));
+        return view('administracion.cotizaciones.agregarProducto', compact('cotizacion', 'productos', 'porcentajes'));
     }
 
     // AJAX QUE OBTIENE LOS PRECIOS SUGERIDOS
@@ -205,7 +212,8 @@ class CotizacionController extends Controller
         if($request->ajax()){
             // la lógica de la función sería obtener todos los precios para esa presentación
             // por ahora, se envía la misma lista para todos los productos
-            $sugerencias = [];
+            //$sugerencias = [];
+            $sugerencias = LotePresentacionProducto::listarDescuentos($request->producto_id, $request->presentacion_id, $request->id);
 
             return response()->json($sugerencias);
         }

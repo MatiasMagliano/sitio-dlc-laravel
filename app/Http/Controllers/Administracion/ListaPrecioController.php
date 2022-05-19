@@ -3,15 +3,18 @@
 namespace App\Http\Controllers\Administracion;
 
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Controller;
 use App\Models\ListaPrecio;
 use App\Models\Proveedor;
 
-use App\Imports\ListaPrecioImport;
 use App\Exports\ListaPrecioExport;
+use App\Exports\ArchivoPrimarioExport;
 use Maatwebsite\Excel\Facades\Excel;
+
+
 
 class ListaPrecioController extends Controller
 {
@@ -46,7 +49,10 @@ class ListaPrecioController extends Controller
         return view('administracion.listaprecios.index', compact('listaPrecios','users','proveedors'));
     }
 
-
+    
+    /**
+    * @return \Illuminate\Support\Collection
+    */
     public function actualizarLista(Request $request){
 
         if($request->ajax()){
@@ -55,7 +61,9 @@ class ListaPrecioController extends Controller
         }
     }
 
-
+    /**
+    * @return \Illuminate\Support\Collection
+    */
     public function destroy(Request $request){
          if($request->ajax()){
               $ListaPrecios = ListaPrecio::destroy($request->id);
@@ -64,12 +72,21 @@ class ListaPrecioController extends Controller
           return response()->json(['mensaje' => 'No se encuentra la Lista de Ppecios del Proveedor'+$request->razon_social]);
     }
 
-    public function export(Request $request){
-        return Excel::download(new ListaPrecioExport, 'listado-list.xls');
-        
-        // if($request->ajax()){
-        //     $listaPrecios = ListaPrecio::listaDeProveedorExcel($request->razon_social);
-        //     return Response()->json($listaPrecios);
-        // }
-    }
+    // /**
+    // * @return \Illuminate\Support\Collection
+    // */
+    // public function export(Request $prov_id){
+    //     return Excel::download(new ListaPrecioExport($prov_id), 'lista_precios.xlsx');
+    // }
+    // public function exportlist(ListaPrecio $proveedor_id){
+    //     return Excel::download(new ListaPrecioExport($proveedor_id), 'lista_precios.xlsx');
+    // }
+
+
+    public function exportlist(Request $request){
+        $RS = $request->collect('search-rs');
+
+        return Excel::download(new ListaPrecioExport($RS), 'ListadoPrecios.xlsx');
+    }  
+
 }

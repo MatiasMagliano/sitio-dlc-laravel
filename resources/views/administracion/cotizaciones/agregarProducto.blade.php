@@ -47,7 +47,7 @@
 @section('content')
     <form action="{{ route('administracion.cotizaciones.guardar.producto', $cotizacion) }}" method="post" class="needs-validation" autocomplete="off" novalidate>
         @csrf
-        <input type="hidden" name="cotizacion_id" value="{{$cotizacion->id}}">
+        <input id="cotProv" type="hidden" name="cotizacion_id" value="{{$cotizacion->id}}">
         <div class="card">
             <div class="card-header">
                 <div class="row d-flex">
@@ -84,6 +84,7 @@
                 </div>
                 <hr>
                 <div class="row d-flex">
+                    
                     <div class="col">
                         {{-- SELECCIONAR Y SUGERIR LOS PRECIOS --> debe terminar siendo FLOAT --}}
                         <div class="card mx-auto" style="width: 80%;">
@@ -96,6 +97,8 @@
                                         <th>Descuento 1</th>
                                         <th>Descuento 2</th>
                                         <th>Descuento 3</th>
+                                        <th>Descuento 4</th>
+                                        <th>Descuento 5</th>
                                     </thead>
                                     <tbody>
                                     </tbody>
@@ -147,16 +150,19 @@
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
         var tablaPreciosSugerido;
+        var tablaPorcentaje; 
 
-        function obtenerDatos(id_producto, id_presentacion){
+        function obtenerDatos(id_producto, id_presentacion, id_cotizacion){
+            $cotizacion = id_cotizacion
             let datos = {
                 producto_id: id_producto,
-                presentacion_id: id_presentacion
+                presentacion_id: id_presentacion,
+                id: id_cotizacion
             };
             $.ajax({
                 Type: 'GET',
                 data: datos,
-                url: "",
+                url: "{{ route('administracion.cotizaciones.agregar.producto.descuentos', ['cotizacion' => $cotizacion]) }}",
             }).done(function (resultado) {
                 tablaPreciosSugerido.clear();
                 tablaPreciosSugerido.rows.add(resultado).draw();
@@ -180,33 +186,40 @@
         });
 
         $(document).ready(function(){
+            var idcotizacion = $('#cotProv').val();
+
             tablaPreciosSugerido = $('#tablaPreciosSugeridos').DataTable({
                 "paging": false,
                 "info": false,
                 "searching": false,
                 "select": false,
                 "columns": [
-                    {"data": "proveedor"},
-                    {"data": "precio_1"},
-                    {"data": "precio_2"},
-                    {"data": "precio_3"},
+                    {data: "razon_social"},
+                    {data: "costo_1"},
+                    {data: "costo_2"},
+                    {data: "costo_3"},
+                    {data: "costo_4"},
+                    {data: "costo_5"},
                 ],
             });
 
+
             tablaPreciosSugerido.row.add({
-                proveedor: '*',
-                precio_1: '*',
-                precio_2: '*',
-                precio_3: '*',
+                razon_social: '*',
+                costo_1: '*',
+                costo_2: '*',
+                costo_3: '*',
+                costo_4: '*',
+                costo_5: '*',
             }).draw();
 
             // SOLICITUD DE LENADO DE SUGERENCIA DE PRECIOS
             $( "#btnBuscarPrecios" ).on('click', function() {
                 // DISPARAR EL AJAX Y LLENAR EL DATATABLE CON PRECIOS
-                debugger;
                 let productoSeleccionado = selProducto.selected();
                 let prodPres = productoSeleccionado.split("|");
-                obtenerDatos(prodPres[0], prodPres[1]);
+                let idcotizacion = $('#cotProv').val();
+                obtenerDatos(prodPres[0], prodPres[1], idcotizacion);
             });
         });
     </script>

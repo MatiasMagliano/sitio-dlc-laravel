@@ -27,15 +27,10 @@ class ListaPrecio extends Model
         return $this->belongsTo(Proveedor::class);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function lotepresentacionproducto(): BelongsTo{
         return $this->belongsTo(LotePresentacionProducto::class);
     }
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+
     public static function listaDeProveedor($proveedor)
     {
         return ListaPrecio::select('codigoProv','droga','presentacion','forma','costo')
