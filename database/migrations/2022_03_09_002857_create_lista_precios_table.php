@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\LotePresentacionProducto;
+use App\Models\Presentacion;
+use App\Models\Producto;
 use App\Models\Proveedor;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,11 +18,10 @@ class CreateListapreciosTable extends Migration
     {
         Schema::create('lista_precios', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Producto::class)->constrained();
+            $table->foreignIdFor(Presentacion::class)->constrained();
             $table->foreignIdFor(Proveedor::class)->constrained();
             $table->string('codigoProv', 18)->constrained();
-            //$table->foreignIdFor(LotePresentacionProducto::class)->constrained();
-            $table->unsignedBigInteger('lpp_id');
-            $table->foreign('lpp_id')->references('id')->on('lote_presentacion_producto');
             $table->decimal('costo', 10, 2);
             $table->timestamps();
         });

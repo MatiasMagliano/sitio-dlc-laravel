@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ArchivoCotizacion;
 use App\Models\Cliente;
 use App\Models\EsquemaPrecio;
+use App\Models\ListaPrecio;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\ProductoCotizado;
@@ -209,11 +210,12 @@ class CotizacionController extends Controller
     // AJAX QUE OBTIENE LOS PRECIOS SUGERIDOS
     public function preciosSugeridos(Request $request)
     {
+
         if($request->ajax()){
             // la lógica de la función sería obtener todos los precios para esa presentación
             // por ahora, se envía la misma lista para todos los productos
             //$sugerencias = [];
-            $sugerencias = LotePresentacionProducto::listarDescuentos($request->producto_id, $request->presentacion_id, $request->id);
+            $sugerencias = ListaPrecio::listarDescuentos($request->producto_id, $request->presentacion_id, $request->id);
 
             return response()->json($sugerencias);
         }

@@ -12,6 +12,7 @@ use App\Models\Proveedor;
 
 use App\Exports\ListaPrecioExport;
 use App\Exports\ArchivoPrimarioExport;
+use App\Models\ProductoCotizado;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -40,9 +41,8 @@ class ListaPrecioController extends Controller
 
         $users = DB::table('lista_precios')
             ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
-            ->join('lote_presentacion_producto', 'lista_precios.lpp_id','=','lote_presentacion_producto.id')
-            ->join('productos','lote_presentacion_producto.producto_id','=','productos.id')
-            ->join('presentacions','lote_presentacion_producto.presentacion_id','=','presentacions.id')
+            ->join('productos','lista_precios.producto_id','=','productos.id')
+            ->join('presentacions','lista_precios.presentacion_id','=','presentacions.id')
             ->select('lista_precios.*','productos.droga','presentacions.presentacion','proveedors.razon_social')
             ->get();
    
