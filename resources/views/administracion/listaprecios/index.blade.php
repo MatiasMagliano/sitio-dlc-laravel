@@ -51,8 +51,7 @@
             <h1>Listado de Precios</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-md-end">
-            <a href="{{ route('administracion.productos.create') }}" role="button" class="btn btn-md btn-success"
-            data-toggle="modal" data-target="#agregarregistro">Nuevo</a>
+            <a href="" role="button" class="btn btn-md btn-success" data-toggle="modal" data-target="#agregarregistro">Crear Lista de Precios</a>
         </div>
     </div>
 
@@ -77,28 +76,29 @@
                           <a class="dropdown-item" href="#"><span>Listado de Productos de Proveedor</span></a>
                           <a class="dropdown-item" href="#"><span>Producto de Poveedores</span></a>
                         </div>
-                        <p></p>
-                        <div id="form_add">
-                            <div id="opt1">
-                                <label for="search-input">Seleccione el proveedor: </label>
-                                <span class="algolia-autocomplete algolia-autocomplete-left" style="position: relative; display: inline-block; direction: ltr;">
-                                    <input type="search" class="form-control ds-input" id="search-input" placeholder="Buscar proveedor..." autocomplete="off" spellcheck="false" role="combobox" 
-                                        list="lista_prov" style="position: relative; vertical-align: top;" dir="auto">
-                                    <datalist id="lista_prov">
-                                        @foreach ($proveedors as $proveedor)
-                                        <option value="{{ $proveedor->razon_social }}"></option>
-                                        @endforeach
-                                    </datalist>
-                                </span>
-                                <button id="ver" type="submit" class="btn btn-md btn-success" data-target="#descargarregistro">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <a href="{{ route('administracion.listaprecios.export') }}" role="button" class="btn btn-md btn-success"
-            data-toggle="modal" data-target="#agregarregistro">Nuevo</a>
-                                <label for="">Adjuntar Listado: </label>
+                        
+
+
+                        <div id="form_add" style="margin-top: 0.5rem">
+                            <div id="opt1" style="float:left" >
+                                
+                                    <label for="search-input">Seleccione el proveedor: </label>
+                                    <span class="algolia-autocomplete algolia-autocomplete-left" style="position: relative; display: inline-block; direction: ltr;">
+                                        <input type="search" class="form-control ds-input" id="search-input" placeholder="Buscar proveedor..." autocomplete="off" spellcheck="false" role="combobox" 
+                                            list="lista_prov" name="search-rs" style="position: relative; vertical-align: top;" dir="auto">
+                                        <datalist id="lista_prov">
+                                            @foreach ($proveedors as $proveedor)
+                                            <option value="{{ $proveedor->razon_social }}"></option>
+                                            @endforeach
+                                        </datalist>
+                                    </span>
+                                    <a id="getlistad" href="{{ route('administracion.listaprecios.exportlist') }}" class="btn btn-warning" type="submit">Exportar planilla</a> 
+                                    <label for="">Adjuntar Listado: </label>
                             </div>
                             <div id="opt2">2</div> 
                         </div>
+
+
                     </div>
                 </div>
 
@@ -200,9 +200,9 @@
          $(document).ready(function() {            
             // VARIABLES LOCALES
             var tabla2;
-            
-            $('#tabla1 tbody tr').removeClass('selected');
 
+            $('#tabla1 tbody tr').removeClass('selected');
+            $razon_social = 'no';
             // Tabla 2
             tabla2 = $('#tabla2').DataTable({
                 "scrollY": "57vh",
@@ -285,6 +285,7 @@
                 $('#nombrePresentacion').empty();
                 $('#nombrePresentacion').append(event.relatedTarget.value);
                 $('#form_add div').hide();
+                $('#desc-planilla').hide();
             });
 
             //Toma Tipo de Alta
@@ -298,6 +299,7 @@
                 $('#tipoalta button span').text(textTipo);
                 if(textTipo == 'Listado de Productos de Proveedor'){
                     $('#opt1').show();
+                    $('#desc-planilla').show();
                 }
                 if(textTipo == 'Producto de Poveedores'){
                     $('#opt2').show();
@@ -305,23 +307,46 @@
 
             });
 
+
+            // Exporta listado
+            // $(document).on('click', '#getlistad', function(){ 
+            //     $RS = $('#search-input').val();
+            //     $loc = "{{ route('administracion.listaprecios.exportlist') }}";
+            //     window.location=$loc;
+            // });
+
             
+
+            // //function listadoexport(rs) {
+            //     $('#getlistadd').on('click', function(){
+            //         var rs = $('#search-input').val();
+            //         var datos = { razonsocial: rs};
+            //         $.ajax({
+            //             url: "{{ route('administracion.listaprecios.exportlist') }}",
+            //             type: "GET",
+            //             data: datos
+            //         }).done(function(resultado) {
+            //             alert("Listado exportado exitosamente");
+            //    });
+            //     });
+            // };
+
+
             //Descarga listado de proveedor
-            $('#descargarregistro').on('click', function(){
+            // $('#getlistado').on('click', function(){
                 
-                newliporv = $('#opt1 span input').val();
+            //     pj = $('#search-input').val();
 
-                var datos = { razon_social: newliporv};
-                $.ajax({
-                    url: "{{ route('administracion.listaprecios.export') }}",
-                    type: "POST",
-                    data: datos,
-               }).done(function(resultado) {
-                   alert('Planilla exportada con éxito');
-               });
-            });
-
-            
+            //     var datos = {razon_social: pj};
+            //     $.ajax({
+            //         url: "{{ route('administracion.listaprecios.exportlist') }}",
+            //         type: "GET",
+            //         data: datos,
+            //    }).done(function(resultado) {
+            //        alert(pj);
+            //        alert('Error en exportación de planillacon');
+            //    });         
+            // });
 
 
             // Quita un item de la lista de precios del proveedor
