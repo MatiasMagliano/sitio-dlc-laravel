@@ -49,20 +49,38 @@ class ListaPrecio extends Model
             ->get();
     }
 
-    public static function listarDescuentos($producto, $presentacion, $cliente)
+    public static function listarDescuentos($producto, $presentacion, $cotizacion)
     {   
+        
+        $mercaderia = ListaPrecio::select('proveedors.razon_social','costo AS costo_1','costo AS costo_2','costo AS costo_3','costo AS costo_4','costo AS costo_5')
+        ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
+        ->where('lista_precios.id', ListaPrecio::getIdListaPrecio($producto, $presentacion))
+        ->get();
 
-        $descuentos = DB::table('esquema_precios')
+        $descuentos = EsquemaPrecio::select('porcentaje_1','porcentaje_2','porcentaje_3','porcentaje_4','porcentaje_5')
         ->join('clientes','esquema_precios.cliente_id','=','clientes.id')
-        ->where('clientes.id', $cliente)
+        ->join('cotizacions','clientes.id','=','cotizacions.cliente_id')
+        ->where('cotizacions.id', $cotizacion)
         ->get();        
 
+        foreach($mercaderia as $m_row){
+            $m_row->razon_social;
+            foreach($descuentos as $d_row){
+                $m_row->costo_1 = $m_row->costo_1 * (1 + ($d_row->porcentaje_1 / 100));
+                $m_row->costo_2 = $m_row->costo_2 * (1 + ($d_row->porcentaje_2 / 100));
+                $m_row->costo_3 = $m_row->costo_3 * (1 + ($d_row->porcentaje_3 / 100));
+                $m_row->costo_4 = $m_row->costo_4 * (1 + ($d_row->porcentaje_4 / 100));
+                $m_row->costo_5 = $m_row->costo_5 * (1 + ($d_row->porcentaje_5 / 100));
+            }
+        }
+
+        return $mercaderia;
 
 
-        return ListaPrecio::select('proveedors.razon_social','costo AS costo_1','costo AS costo_2','costo AS costo_3','costo AS costo_4','costo AS costo_5')
-            ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
-            ->where('lista_precios.id', ListaPrecio::getIdListaPrecio($producto, $presentacion))
-            ->get();
+        // return ListaPrecio::select('proveedors.razon_social','costo AS costo_1','costo AS costo_2','costo AS costo_3','costo AS costo_4','costo AS costo_5')
+        //     ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
+        //     ->where('lista_precios.id', ListaPrecio::getIdListaPrecio($producto, $presentacion))
+        //     ->get();
     }
 
 }
