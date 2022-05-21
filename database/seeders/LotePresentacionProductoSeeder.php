@@ -44,15 +44,17 @@ class LotePresentacionProductoSeeder extends Seeder
                         'lote_id' => $lote->id,
                         'dcc_id' => $deposito->id,
                     ]);
-                    ListaPrecio::create([
-                        'codigoProv' => $codigoProv,
-                        'lpp_id' => $lpp->id,
-                        'proveedor_id' => $proveedor,
-                        'costo' => $this->faker->numberBetween($min = 450.00,$max = 8200.00),
-                    ]);
                     $deposito->increment('existencia', $lote->cantidad);
                 }
+                ListaPrecio::create([
+                    'codigoProv' => $codigoProv,
+                    'producto_id' => $producto->id,
+                    'presentacion_id' => $presentacion->id,                      
+                    'proveedor_id' => $proveedor,
+                    'costo' => $this->faker->numberBetween($min = 450.00,$max = 8200.00),
+                ]);
             }
         }
+
     }
 }
