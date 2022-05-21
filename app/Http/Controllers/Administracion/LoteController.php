@@ -79,7 +79,6 @@ class LoteController extends Controller
         $lote->cantidad = $request->cantidad;
         $lote->desde = Carbon::now()->format('Y-m-d H:i:s');
         $lote->hasta = Carbon::createFromFormat('d/m/Y', $request->vencimiento);
-        $lote->producto_id = $request->producto_id;
 
         $lote->save();
 

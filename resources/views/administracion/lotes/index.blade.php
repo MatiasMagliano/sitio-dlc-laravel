@@ -111,10 +111,8 @@
                     <form action="javascript:void(0)" method="post" id="formAgregarLote">
                         @csrf
 
-                        <input type="hidden" id="producto_id" name="producto_id"
-                            value="@isset($idProducto){{ $idProducto }}@endisset">
-                        <input type="hidden" id="presentacion_id" name="presentacion_id"
-                            value="@isset($idProducto){{ $idProducto }}@endisset">
+                        <input type="hidden" id="producto_id" name="producto_id" value="">
+                        <input type="hidden" id="presentacion_id" name="presentacion_id" value="">
 
                         {{-- Campo identificador de lote --}}
                         <div class="form-group mb-3">
@@ -318,10 +316,8 @@
                                 );
 
                                 // Se actualiza la segunda tabla
-                                var idProducto = $(
-                                    'input[type=hidden][name=producto_id]').val();
-                                let idPresentacion = $(
-                                    'input[type=hidden][name=presentacion_id]').val();
+                                var idProducto = $('input[type=hidden][name=producto_id]').val();
+                                let idPresentacion = $('input[type=hidden][name=presentacion_id]').val();
                                 getLotes(idProducto, idPresentacion);
                             },
                             error: function(response) {
@@ -352,7 +348,7 @@
                 "bInfo": false,
             });
 
-            //RELOCACIÓN DE EL TEXTBOX DE BÚSQUEDA
+            //RELOCACIÓN DEL TEXTBOX DE BÚSQUEDA
             $('#search_box').keyup(function(){
                 tabla1.search($(this).val()).draw() ;
             });

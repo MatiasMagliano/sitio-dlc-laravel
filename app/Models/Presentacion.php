@@ -2,13 +2,14 @@
 //Agregado líena 8 y de 83-92
 namespace App\Models;
 
+use App\Models\LotePresentacionProducto as ModelsLotePresentacionProducto;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
+use LotePresentacionProducto;
 
 class Presentacion extends Model
 {
@@ -60,6 +61,14 @@ class Presentacion extends Model
             ->where('lote_presentacion_producto.presentacion_id', '=', $this->id)
             ->where('lote_presentacion_producto.producto_id', '=', $producto)
             ->get();
+    }
+
+    //devuelve el depósito para la presentación y producto solicitado
+    public function deposito($producto, $presentacion){
+        $deposito = DepositoCasaCentral::find(
+            ModelsLotePresentacionProducto::getIdDeposito($producto, $presentacion)
+        );
+        return $deposito;
     }
 
     /**

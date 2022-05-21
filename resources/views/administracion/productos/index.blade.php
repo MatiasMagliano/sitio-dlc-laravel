@@ -29,6 +29,7 @@
                         <th>Presentaciones</th>
                         <th>Lotes vigentes</th>
                         <th>Proveedores</th>
+                        <th>STOCK</th>
                         <th>ACCIONES</th>
                     </tr>
                 </thead>
@@ -46,18 +47,25 @@
                                 <td style="vertical-align: middle;">
                                     {{$presentacion->forma}}, {{$presentacion->presentacion}}
                                 </td>
-                                <td>
-                                    @foreach ($presentacion->lotesPorPresentacion($producto->id) as $lote)
-                                        <div class="row">
-                                            <div class="col">L: {{$lote->identificador}}</div>
-                                            <div class="col">Vto: {{$lote->fecha_vencimiento->format('d/m/Y')}}</div>
-                                        </div>
-                                    @endforeach
+                                <td style="vertical-align: middle; text-align: center;">
+                                    {{-- SE REEMPLAZA POR UN BOTÓN AJAX --}}
+                                    <a role="button" id="{{$producto->id}}|{{$presentacion->id}}"
+                                        class="btn btn-link"
+                                        data-toggle="modal" data-target="#modalVerLotes">
+                                        <i class="fas fa-search "></i>
+                                    </a>
                                 </td>
-                                <td style="vertical-align: middle;">
-                                    @foreach ($presentacion->ProveedoresPorPresentacion($producto->id) as $proveedor)
-                                        {{$proveedor->razon_social}}<br>
-                                    @endforeach
+                                <td style="vertical-align: middle; text-align: center;">
+                                    {{-- SE REEMPLAZA POR UN BOTÓN AJAX --}}
+                                    <a role="button" id="{{$producto->id}}|{{$presentacion->id}}"
+                                        class="btn btn-link"
+                                        data-toggle="modal" data-target="#modalVerProveedores">
+                                        <i class="fas fa-search "></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <u>disponible</u><br>
+                                    {{$presentacion->deposito($producto->id, $presentacion->id)->disponible}}
                                 </td>
                                 <td class="text-center" style="vertical-align: middle;" width="100px">
                                     {{-- PROCEDIMIENTO DE BORRADO --}}
@@ -95,13 +103,66 @@
             </table>
         </div>
     </x-adminlte-card>
+
+    {{-- MODAL VER LOTES VIGENTES --}}
+    @section('plugins.TempusDominusBs4', true)
+    <div class="modal fade" id="modalVerLotes" tabindex="-1"
+        aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Lotes vigentes</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <table id="tablaLotes" class="table data-table table-bordered" style="width: 100%;">
+                    <thead>
+                        <th>Identificador</th>
+                        <th>Precio compra</th>
+                        <th>F. Compra</th>
+                        <th>F. Vencimiento</th>
+                    </thead>
+                </table>
+                &nbsp;
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- MODAL VER PROVEEDORES --}}
+    <div class="modal fade" id="modalVerProveedores" tabindex="-1"
+        aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Lotes vigentes</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <table id="tablaProveedores" class="table data-table table-bordered" style="width: 100%;">
+                    <thead>
+                        <th>Razón social</th>
+                        <th>Contacto</th>
+                        <th>Dirección</th>
+                    </thead>
+                </table>
+                &nbsp;
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
     @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
-        $('#loading').html('Loading table')
         $(document).ready(function() {
             // el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
             var tabla2 = $('#tabla2').DataTable({
@@ -140,6 +201,141 @@
                    {targets: 0, visible: false}
                 ]
             });
+
+            // VARIABLES LOCALES
+            var tablaLotes;
+            var tablaProveedores;
+
+            tablaLotes = $('#tablaLotes').DataTable({
+                "processing": true,
+                "order": [
+                    [3, "asc"]
+                ],
+                "paging": false,
+                "info": false,
+                "searching": false,
+                "select": false,
+                "columns": [
+                    {
+                        targets: [0],
+                        data: 'identificador',
+                    },
+                    {
+                        targets: [1],
+                        data: 'precio_compra'
+                    },
+                    {
+                        targets: [2],
+                        data: 'fecha_compra'
+                    },
+                    {
+                        targets: [3],
+                        data: 'fecha_vencimiento'
+                    }
+                ],
+                "columnDefs": [
+                    {
+                        targets: 2,
+                        type: 'datetime',
+                        //render: $.fn.dataTable.render.moment(data, 'DD/MM/YYYY'),
+                        render: function (data) {
+                            return moment(new Date(data)).format('DD/MM/YYYY');
+                        }
+                    },
+                    {
+                        targets: 3,
+                        type: 'datetime',
+                        //render: $.fn.dataTable.render.moment(data, 'DD/MM/YYYY'),
+                        render: function (data) {
+                            return moment(new Date(data)).format('DD/MM/YYYY');
+                        }
+                    },
+                ],
+            });
+
+            tablaProveedores = $('#tablaProveedores').DataTable({
+                "processing": true,
+                "order": [
+                    [0, "asc"]
+                ],
+                "paging": false,
+                "info": false,
+                "searching": false,
+                "select": false,
+                "columns": [
+                    {
+                        targets: [0],
+                        data: 'razon_social',
+                    },
+                    {
+                        targets: [1],
+                        data: 'contacto'
+                    },
+                    {
+                        targets: [2],
+                        data: 'direccion'
+                    },
+                ],
+            });
+
+            // FUNCIÓN QUE GENERA LA TABLA DE LOS LOTES
+            function getLotes(idProducto, idPresentacion) {
+                var datos = {
+                    producto_id: idProducto,
+                    presentacion_id: idPresentacion
+                };
+
+                $.ajax({
+                    url: "{{ route('administracion.lotes.ajax.obtener') }}",
+                    type: "GET",
+                    data: datos,
+                }).done(function(resultado) {
+                    tablaLotes.clear();
+                    tablaLotes.rows.add(resultado).draw();
+                });
+            }
+
+            // FUNCIÓN QUE GENERA LA TABLA DE LOS PROVEEDORES
+            function getProveedores(idProducto, idPresentacion) {
+                var datos = {
+                    producto_id: idProducto,
+                    presentacion_id: idPresentacion
+                };
+
+                $.ajax({
+                    url: "{{ route('administracion.presentaciones.ajax.obtenerProveedores') }}",
+                    type: "GET",
+                    data: datos,
+                }).done(function(resultado) {
+                    tablaProveedores.clear();
+                    tablaProveedores.rows.add(resultado).draw();
+                });
+            }
+
+            tablaLotes.row.add({
+                identificador: '*',
+                precio_compra: '*',
+                fecha_compra: '*',
+                fecha_vencimiento: '*',
+            }).draw();
+
+            tablaProveedores.row.add({
+                razon_social: '*',
+                contacto: '*',
+                direccion: '*',
+            }).draw();
+
+            $('#modalVerLotes').on('show.bs.modal', function(event){
+                let temporal = event.relatedTarget.id;
+                let aux = temporal.split('|');
+                getLotes(aux[0], aux[1]);
+            })
+
+            $('#modalVerProveedores').on('show.bs.modal', function(event){
+                let temporal = event.relatedTarget.id;
+                let aux = temporal.split('|');
+                getProveedores(aux[0], aux[1]);
+            })
         });
     </script>
 @endsection

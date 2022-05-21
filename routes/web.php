@@ -64,10 +64,13 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::post('/clientes/{cliente}/editarPuntoEntrega/{ptoEntrega}', [ClienteController::class, 'updatePuntoEntrega'])->name('clientes.updatePuntoEntrega');
 
     // rutas de PROVEEDORES
+    Route::get('/presentaciones/ajaxObtenerProveedores', [PresentacionController::class, 'obtenerProveedores'])
+        ->name('presentaciones.ajax.obtenerProveedores');
     Route::resource('/proveedores', ProveedorController::class);
 
     // rutas de PRESENTACIONES
-    Route::get('/presentaciones/ajaxObtenerProductos', [PresentacionController::class, 'obtenerProductos'])->name('presentaciones.ajax.obtenerProductos');
+    Route::get('/presentaciones/ajaxObtenerProductos', [PresentacionController::class, 'obtenerProductos'])
+        ->name('presentaciones.ajax.obtenerProductos');
     Route::resource('/presentaciones', PresentacionController::class)->except('edit');
 
     // rutas de LOTES

@@ -63,10 +63,10 @@
                         <td>{{ $presentacion->presentacion }}</td>
                         <td>{{ $presentacion->created_at->format('d/m/Y') }}</td>
                         <td>
-                            <a role="button" id="{{$presentacion->id}}" value="{{$presentacion->forma}} {{$presentacion->presentacion}}"
-                                class="btn btn-link"
+                            <a role="button" id="{{$presentacion->id}}|{{$presentacion->forma}} {{$presentacion->presentacion}}" class="btn btn-link"
                                 data-toggle="modal" data-target="#modalVerProductos">
-                                <i class="fas fa-search "></i></a>
+                                <i class="fas fa-search "></i>
+                            </a>
                         </td>
                     </tr>
                 @endforeach
@@ -90,8 +90,7 @@
                 </div>
                 &nbsp;
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -155,14 +154,16 @@
             });
 
             $('#modalVerProductos').on('show.bs.modal', function(event){
+                let temporal = event.relatedTarget.id;
+                let aux = temporal.split('|');
                 $('#listaProductos').empty();
 
                 //Se coloca el título del modal
                 $('#nombrePresentacion').empty();
-                $('#nombrePresentacion').append(event.relatedTarget.value);
+                $('#nombrePresentacion').append(aux[1]);
 
                 let datos = {
-                    presentacion_id: event.relatedTarget.id,
+                    presentacion_id: aux[0],
                 };
 
                 $.ajax({

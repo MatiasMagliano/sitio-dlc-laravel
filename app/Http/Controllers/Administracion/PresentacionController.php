@@ -34,4 +34,18 @@ class PresentacionController extends Controller
             return Response()->json($productos);
         }
     }
+
+    public function obtenerProveedores(Request $request){
+        if($request->ajax()){
+            $proveedores = DB::table('proveedors')
+                ->select('razon_social', 'contacto', 'direccion')
+                ->join('lista_precios', 'lista_precios.proveedor_id', '=', 'proveedors.id')
+                ->join('lote_presentacion_producto', 'lote_presentacion_producto.id', '=', 'lista_precios.lpp_id')
+                ->where('lote_presentacion_producto.producto_id', $request->producto_id)
+                ->where('lote_presentacion_producto.presentacion_id', $request->presentacion_id)
+                ->distinct()
+                ->get();
+        }
+        return Response()->json($proveedores);
+    }
 }
