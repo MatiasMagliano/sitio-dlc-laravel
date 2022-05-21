@@ -66,11 +66,32 @@ class ListaPrecio extends Model
         foreach($mercaderia as $m_row){
             $m_row->razon_social;
             foreach($descuentos as $d_row){
-                $m_row->costo_1 = $m_row->costo_1 * (1 + ($d_row->porcentaje_1 / 100));
-                $m_row->costo_2 = $m_row->costo_2 * (1 + ($d_row->porcentaje_2 / 100));
-                $m_row->costo_3 = $m_row->costo_3 * (1 + ($d_row->porcentaje_3 / 100));
-                $m_row->costo_4 = $m_row->costo_4 * (1 + ($d_row->porcentaje_4 / 100));
-                $m_row->costo_5 = $m_row->costo_5 * (1 + ($d_row->porcentaje_5 / 100));
+
+                if($d_row->porcentaje_1 <= 0){
+                    $m_row->costo_1 = '';
+                }else{
+                    $m_row->costo_1 = $m_row->costo_1 * (1 + ($d_row->porcentaje_1 / 100)); 
+                }
+                if($d_row->porcentaje_2 <= 0){
+                    $m_row->costo_2 = '';
+                }else{
+                    $m_row->costo_2 = $m_row->costo_2 * (1 + ($d_row->porcentaje_2 / 100));
+                }
+                if($d_row->porcentaje_3 <= 0){
+                    $m_row->costo_3 = '';
+                }else{
+                    $m_row->costo_3 = $m_row->costo_3 * (1 + ($d_row->porcentaje_3 / 100));
+                }
+                if($d_row->porcentaje_4 <= 0){
+                    $m_row->costo_4 = '';
+                }else{
+                    $m_row->costo_4 = $m_row->costo_4 * (1 + ($d_row->porcentaje_4 / 100));
+                }
+                if($d_row->porcentaje_5 <= 0){
+                    $m_row->costo_5 = '';
+                }else{
+                    $m_row->costo_5 = $m_row->costo_5 * (1 + ($d_row->porcentaje_5 / 100));
+                }
             }
         }
 

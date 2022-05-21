@@ -18,6 +18,13 @@
             border-top: none;
             border-bottom: 1px solid #111;
         }
+        #tablaPreciosSugeridos tbody tr td{
+            transition: background-color 0.3s;
+        }
+        .tdhover{
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
 
         .dataTables_filter {
             display: none;
@@ -28,6 +35,7 @@
                 display: none;
             }
         }
+
     </style>
 @endsection
 
@@ -142,6 +150,7 @@
             </div>
         </div>
     </form>
+    <input type="text">
 @endsection
 
 @section('js')
@@ -166,7 +175,22 @@
             }).done(function (resultado) {
                 tablaPreciosSugerido.clear();
                 tablaPreciosSugerido.rows.add(resultado).draw();
+                
+                $tdporcentajes = $('#tablaPreciosSugeridos tbody tr td:not(:first-of-type)');
+                $tdporcentajes.hover(
+                    function () {
+                                if($(this).text() != ''){
+                                    $(this).addClass('tdhover');
+                                    $(this).click(function(){
+                                        //Script para agregar valor al imput Precio al seleccionar un precio del esquema de precios mostrado
+	                                });
+                                };}, 
+                    function () {
+                                $(this).removeClass('tdhover');
+                                }
+                );
             });
+            
         }
 
         // SCRIPT DEL SLIMSELECT
