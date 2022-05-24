@@ -12,10 +12,8 @@ use App\Http\Controllers\Administracion\TrazabilidadController;
 use App\Http\Controllers\Administracion\CotizacionController;
 use App\Http\Controllers\Administracion\ListaPrecioController;
 use App\Http\Controllers\Administracion\ClienteController;
-use App\Models\Cotizacion;
+use App\Http\Controllers\Administracion\OrdenTrabajoController;
 use Illuminate\Support\Facades\Route;
-use App\Exports\ProductsExport;
-use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,7 +82,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     // rutas especiales para LISTA DE PRECIOS
     Route::get('/listaprecios/exportlist', [ListaPrecioController::class, 'exportlist'])->name('listaprecios.exportlist');
     Route::resource('/listaprecios', ListaPrecioController::class);
-    
+
     //Route::post('importListaPrecioExcel', 'ListaPrecioController@importExcel')->name('ListaPrecio.import.excel');
 
     // rutas de COTIZACIONES
@@ -109,4 +107,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::delete('/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class, 'borrarProductoCotizado'])
         ->name('cotizaciones.borrar.producto');
     Route::resource('/cotizaciones', CotizacionController::class)->except('edit', 'update');
+
+    // rutas de ORDENES DE TRABAJO
+    Route::get('/ordentrabajo/ajaxObtenerLineas', [OrdenTrabajoController::class, 'obtenerLineasCotizacion'])->name('cotizadas.ajax.obtener');
+    Route::resource('/ordentrabajo', OrdenTrabajoController::class);
 });

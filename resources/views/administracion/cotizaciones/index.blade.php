@@ -19,6 +19,8 @@
         <div class="col-xl-4 d-flex justify-content-xl-end">
             <a href="{{ route('administracion.cotizaciones.create') }}" role="button" class="btn btn-md btn-success">Crear
                 cotización</a>
+            &nbsp;
+            <a href="{{ url()->previous() }}" role="button" class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
 @stop
@@ -31,7 +33,7 @@
                 <thead>
                     <tr>
                         <th>Fecha</th>
-                        <th>Ident./Usuario</th>
+                        <th>Identificador/Usuario</th>
                         <th>Cliente</th>
                         <th>Productos cotizados</th>
                         <th>Total unidades</th>
@@ -102,8 +104,9 @@
                                         </form>
                                         @break
                                     @case(2)
-                                        <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
-                                            class="btn btn-sm btn-default" target="_blank">
+                                        <a id="botonPresentar" class="btn btn-sm btn-default"
+                                            href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
+                                            target="_blank">
                                             Presentar
                                         </a>
                                         @break
@@ -139,6 +142,7 @@
                                         </a>
                                         @break
                                     @default
+                                        <p>-</p>
                                 @endswitch
                             </td>
                         </tr>
@@ -346,6 +350,28 @@
             $('#modalRechazarCotizacion').on('show.bs.modal', function(event){
                 $('#formRechazada').attr('action', 'cotizaciones/'+event.relatedTarget.id+'/rechazarCotizacion');
             });
+
+            // REDIRECCIONA LA PÁGINA LUEGO DEL CLICK
+            $('#botonPresentar').click(function(){
+                let newWindow = $('#botonPresentar').attr('href');
+                if (newWindow) {
+                    //Browser has allowed it to be opened
+                    //newWindow.focus();
+                } else {
+                    //Browser has blocked it
+                    Swal.fire(
+                        'Información',
+                        'El navegador no permite la apertura de nuevas ventanas. Habilite los popups para continuar.',
+                        'info'
+                        )
+                }
+
+                let delay = 1000;
+                setTimeout(function() {
+                    window.location.href='{{route('administracion.cotizaciones.index')}}';
+                    return false;
+                }, delay);
+            })
         });
     </script>
 @endsection

@@ -28,5 +28,6 @@ return [
     'clients'                       => 'Clientes',
     'admin_tools'                   => 'Sist-admin',
     'users_admin'                   => 'Administración de usuarios',
-    'add_clients'                   => 'Crear cliente'
+    'add_clients'                   => 'Crear cliente',
+    'work_orders'                   => 'Ordenes de trabajo'
 ];

@@ -242,9 +242,9 @@ return [
             'text' => 'search',
         ],
         [
-            'text'  => 'clients',
-            'icon'  => 'fas fa-users',
-            'can'   => 'es-administracion',
+            'text'    => 'clients',
+            'icon'    => 'fas fa-users',
+            'can'     => 'es-administracion',
             'submenu' => [
                 [
                     'text'  => 'clients',
@@ -292,16 +292,22 @@ return [
             'can'   => 'es-administracion',
         ],
         [
-            'text' => 'quotations',
-            'icon' => 'fab fa-shopify',
+            'text'   => 'quotations',
+            'icon'   => 'fab fa-shopify',
             'route'  => 'administracion.cotizaciones.index',
-            'can'  => 'es-administracion',
+            'can'    => 'es-administracion',
+        ],
+        [
+            'text'   => 'work_orders',
+            'icon'   => 'fas fa-tools',
+            'route'  => 'administracion.ordentrabajo.index',
+            'can'    => 'es-administracion',
         ],
         ['header' => 'account_settings'],
         [
-            'text'   => 'admin_tools',
-            'icon'   => 'fas fa-cog',
-            'can'    => 'es-sist-admin',
+            'text'    => 'admin_tools',
+            'icon'    => 'fas fa-cog',
+            'can'     => 'es-sist-admin',
             'submenu' => [
                 [
                     'text'  => 'users_admin',

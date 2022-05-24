@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\EsquemaPrecio;
-use App\Models\ProductoCotizado;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -50,11 +47,20 @@ class LotePresentacionProducto extends Model
     }
 
     //obtiene el deposito con local scope
-    public static function getIdDeposito($producto, $presentacion){
+    public static function getIdDeposito($producto, $presentacion)
+    {
         return DB::table('lote_presentacion_producto')
             ->where('producto_id', $producto)
             ->where('presentacion_id', $presentacion)
             ->pluck('dcc_id')
             ->get('0');
+    }
+
+    public static function getLotes($producto, $presentacion)
+    {
+        return DB::table('lote_presentacion_producto')
+        ->where('producto_id', $producto)
+        ->where('presentacion_id', $presentacion)
+        ->pluck('lote_id');
     }
 }
