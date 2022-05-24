@@ -60,13 +60,17 @@ class OrdenTrabajoController extends Controller
                 LotePresentacionProducto::getIdDeposito($producto->producto_id, $producto->presentacion_id) //devuelve un solo pivot relacionado a prod/pres
             );
 
-            if($deposito->cotizado > 0)
+            if($deposito->disponible >= 0)
             {
+                // lógica que genera un array de lotes disponibles para la O.D.
+                $cant_lotes = ceil($deposito->existencia / $producto->cantidad);
+                $lotes = LotePresentacionProducto::getLotes($producto->producto_id, $producto->presentacion_id, $cant_lotes);
+
                 $productoOrdenTrabajo->create([
                     'orden_trabajo_id'  => $orden->id,
                     'producto_id'       => $producto->producto_id,
                     'presentacion_id'   => $producto->presentacion_id,
-                    'lotes'             => '', // lógica necesaria que asignaría los lotes disponibles
+                    'lotes'             => $lotes,
                 ]);
             }
             else

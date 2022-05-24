@@ -56,11 +56,14 @@ class LotePresentacionProducto extends Model
             ->get('0');
     }
 
-    public static function getLotes($producto, $presentacion)
+    public static function getLotes($producto, $presentacion, $cantidad)
     {
         return DB::table('lote_presentacion_producto')
-        ->where('producto_id', $producto)
-        ->where('presentacion_id', $presentacion)
-        ->pluck('lote_id');
+            ->join('lotes', 'lotes.id', '=', 'lote_presentacion_producto.lote_id')
+            ->where('lote_presentacion_producto.producto_id', $producto)
+            ->where('lote_presentacion_producto.presentacion_id', $presentacion)
+            ->take($cantidad)
+            ->orderby('fecha_vencimiento')
+            ->pluck('lote_id');
     }
 }

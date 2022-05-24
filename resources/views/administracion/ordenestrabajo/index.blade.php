@@ -24,9 +24,71 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-    <x-adminlte-card title="Órdenes por generar">
-        <div class="processing height-control">
-            <table id="ordenesPotenciales" class="table table-bordered table-responsive-md" width="100%">
+    @can('es-administracion')
+        <x-adminlte-card title="Órdenes por generar">
+            <div class="processing height-control">
+                <table id="ordenesPotenciales" class="table table-bordered table-responsive-md" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Identificador/Usuario</th>
+                            <th>Cliente</th>
+                            <th>Productos cotizados</th>
+                            <th>Total unidades</th>
+                            <th>Importe total</th>
+                            <th>ESTADO</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($ordenes_potenciales as $orden)
+                            <tr>
+                                <td style="vertical-align: middle;">
+                                    {{ $orden->created_at->format('d/m/Y') }}
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    <strong>{{ $orden->identificador }}</strong>
+                                    <br>
+                                    {{ $orden->user->name }}
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    {{ $orden->cliente->razon_social }}<br>
+                                    {{ $orden->cliente->tipo_afip }}: {{ $orden->cliente->afip }}
+                                </td>
+                                <td style="vertical-align: middle; text-align:center;">{{$orden->productos->count()}}</td>
+                                <td style="vertical-align: middle; text-align:center;">{{$orden->productos->sum('cantidad')}}</td>
+                                <td style="vertical-align: middle; text-align:center;">
+                                    $ {{number_format($orden->monto_total, 2, ',', '.')}}
+                                </td>
+                                {{-- SE RESUME TODO A UN SOLO SWITCH, a diferencia del index de cotizaciones --}}
+                                    @switch($orden->estado_id)
+                                        @case(4)
+                                            {{-- ESTADOS DINAMICOS --}}
+                                            <td style="vertical-align: middle;">
+                                                <span class="text-fuchsia">MODIFICANDO O.D.</span>
+                                            </td>
+
+                                            {{-- ACCIONES DINAMICAS --}}
+                                            <td style="vertical-align: middle; text-align:center;">
+                                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
+                                                    data-target="#modalModificarOrden" id="{{$orden->id}}">Generar</button>
+                                            </td>
+                                            @break
+                                        @default
+                                            <p>-</p>
+                                    @endswitch
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </x-adminlte-card>
+    @endcan
+
+    <x-adminlte-card title="Órdenes en producción">
+        <div class="processing">
+            <table id="ordenesDeTrabajo" class="table table-bordered table-responsive-md" width="100%">
                 <thead>
                     <tr>
                         <th>Fecha</th>
@@ -40,7 +102,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($ordenes_potenciales as $orden)
+                    @foreach ($ordenes as $orden)
                         <tr>
                             <td style="vertical-align: middle;">
                                 {{ $orden->created_at->format('d/m/Y') }}
@@ -61,49 +123,26 @@
                             </td>
                             {{-- SE RESUME TODO A UN SOLO SWITCH, a diferencia del index de cotizaciones --}}
                                 @switch($orden->estado_id)
-                                    @case(4)
+                                    @case(6)
                                         {{-- ESTADOS DINAMICOS --}}
                                         <td style="vertical-align: middle;">
-                                            <span class="text-fuchsia">MODIFICANDO O.D.</span>
+                                            <span class="text-success">{{$orden->estado->estado}} {{$orden->en_produccion->format('d/m/Y')}}</span>
                                         </td>
 
                                         {{-- ACCIONES DINAMICAS --}}
                                         <td style="vertical-align: middle; text-align:center;">
-                                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                data-target="#modalModificarOrden" id="{{$orden->id}}">Generar</button>
+                                            @can('es-expedicion')
+                                                <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
+                                                    class="btn btn-sm btn-default" target="_blank">
+                                                    Generar Doc
+                                                </a>
+                                            @endcan
                                         </td>
                                         @break
                                     @default
                                         <p>-</p>
                                 @endswitch
                             </td>
-
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </x-adminlte-card>
-
-    <x-adminlte-card title="Órdenes en producción">
-        <div class="processing">
-            <table id="ordenesDeTrabajo" class="table table-bordered table-responsive-md" width="100%">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Identificador/Usuario</th>
-                        <th>Cliente</th>
-                        <th>Productos cotizados</th>
-                        <th>Total unidades</th>
-                        <th>Importe total</th>
-                        <th>ESTADO</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($ordenes as $orden)
-                        <tr>
-
                         </tr>
                     @endforeach
                 </tbody>
