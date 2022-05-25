@@ -134,6 +134,7 @@
                 $letras = 'En letras: '. Str::ucfirst($montoLetras->format($total[0])). ' pesos, con ' .Str::ucfirst($montoLetras->format($total[1])). ' centavos.';
             @endphp
             <strong style="font-size: 11px">{{$letras}}</strong>
+            <p>ACLARACIÓN: La presente cotización, no incluye precios con IVA.</p>
 
             <div class="fixed-bottom">
                 <ul class="list-group">

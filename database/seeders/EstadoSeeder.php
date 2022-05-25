@@ -21,6 +21,7 @@ class EstadoSeeder extends Seeder
             ['estado' => 'Presentada el:'],
             ['estado' => 'Aprobada el:'],
             ['estado' => 'Rechazada el:'],
+            ['estado' => 'En producción el:'],
         ];
         DB::table('estados')->insert($datos);
     }
