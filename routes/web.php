@@ -44,10 +44,11 @@ Route::prefix('admin')->middleware(['auth', 'auth.esSistAdmin'])->name('admin.')
 
 Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->name('administracion.')->group(function () {
     // rutas especiales para ajax de búsqueda y eliminación
-    Route::get('/listaprecios/actualizarLista', [ListaPrecioController::class, 'actualizarLista'])->name('listaprecios.actualizarLista');
+    Route::get('/listaprecios/mostrarLista', [ListaPrecioController::class, 'mostrarLista'])->name('listaprecios.mostrarLista');
     Route::get('/cotizaciones/{cotizacion}/agregar/producto/descuentos', [CotizacionController::class, 'preciosSugeridos'])
         ->name('cotizaciones.agregar.producto.descuentos');
-    // rutas de PRODUCTOS
+    
+        // rutas de PRODUCTOS
     Route::get('/productos/ajaxBuscarProductos', [ProductoController::class, 'buscar'])->name('productos.ajax.obtener');
     Route::resource('/productos', ProductoController::class)->except('show');
     Route::get('/productos/{producto_id}/show/{presentacion_id}', [ProductoController::class, 'show'])->name('productos.show');

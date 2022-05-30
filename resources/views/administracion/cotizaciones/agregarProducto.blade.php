@@ -57,6 +57,7 @@
         @csrf
         <input id="cotProv" type="hidden" name="cotizacion_id" value="{{$cotizacion->id}}">
         <div class="card">
+
             <div class="card-header">
                 <div class="row d-flex">
                     <div class="col-8">
@@ -67,8 +68,8 @@
                     </div>
                 </div>
             </div>
+            
             <div class="card-body">
-
                 {{-- producto=producto+presentacion. Se retienen los dos ID combinados. Luego el controller los separa --}}
                 <label for="input-producto">Producto y presentación</label>
                 <div class="form-group row">
@@ -118,7 +119,7 @@
                         </div>
                         <div class="form-group">
                             <label for="input-precio">Precio</label>
-                            <input type="number" name="precio" id="input-precio"
+                            <input type="number" name="precio" id="input-precio" min="0" pattern="[0-9]"
                                 class="form-control @error('precio') is-invalid @enderror"
                                 value="@if(old('precio')){{old('precio')}}@endif"
                                 step=".01">
@@ -131,7 +132,7 @@
                     <div class="col">
                         <div class="form-group">
                             <label for="input-cantidad">Cantidad</label>
-                            <input type="number" name="cantidad" id="input-cantidad"
+                            <input type="number" name="cantidad" id="input-cantidad" min="0"
                                 class="form-control @error('cantidad') is-invalid @enderror"
                                 value="@if(old('cantidad')){{old('cantidad')}}@else{{0}}@endif">
                                 @error('cantidad')<div class="invalid-feedback">{{$message}}</div>@enderror
@@ -175,22 +176,27 @@
             }).done(function (resultado) {
                 tablaPreciosSugerido.clear();
                 tablaPreciosSugerido.rows.add(resultado).draw();
-                
-                $tdporcentajes = $('#tablaPreciosSugeridos tbody tr td:not(:first-of-type)');
-                $tdporcentajes.hover(
-                    function () {
-                                if($(this).text() != ''){
-                                    $(this).addClass('tdhover');
-                                    $(this).click(function(){
-                                        //Script para agregar valor al imput Precio al seleccionar un precio del esquema de precios mostrado
-	                                });
-                                };}, 
-                    function () {
-                                $(this).removeClass('tdhover');
-                                }
-                );
+                selectprecio();
             });
-            
+        }
+
+        //Convierte en objeto seleccionador para agregar precio sugerido
+        function selectprecio(){
+            $tdporcentajes = $('#tablaPreciosSugeridos tbody tr td');
+            $tdporcentajes.hover(
+                function () {
+                            $argument = $(this).text();
+                            if($argument != '' && $.isNumeric($argument) == true){
+                                $(this).addClass('tdhover');
+                                $(this).click(function(){
+                                        $precio = $argument.replace(".",",");
+                                        $('#input-precio').val($precio);
+	                            });
+                            }}, 
+                function () {
+                            $(this).removeClass('tdhover');
+                            }
+            );
         }
 
         // SCRIPT DEL SLIMSELECT

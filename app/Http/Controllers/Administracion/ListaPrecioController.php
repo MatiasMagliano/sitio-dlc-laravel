@@ -11,8 +11,6 @@ use App\Models\ListaPrecio;
 use App\Models\Proveedor;
 
 use App\Exports\ListaPrecioExport;
-use App\Exports\ArchivoPrimarioExport;
-use App\Models\ProductoCotizado;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -45,15 +43,12 @@ class ListaPrecioController extends Controller
             ->join('presentacions','lista_precios.presentacion_id','=','presentacions.id')
             ->select('lista_precios.*','productos.droga','presentacions.presentacion','proveedors.razon_social')
             ->get();
-   
+            
         return view('administracion.listaprecios.index', compact('listaPrecios','users','proveedors'));
     }
 
-    
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function actualizarLista(Request $request){
+
+    public function mostrarLista(Request $request){
 
         if($request->ajax()){
             $listaPrecios = ListaPrecio::listaDeProveedor($request->proveedor_id);
@@ -61,9 +56,6 @@ class ListaPrecioController extends Controller
         }
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
     public function destroy(Request $request){
          if($request->ajax()){
               $ListaPrecios = ListaPrecio::destroy($request->id);
