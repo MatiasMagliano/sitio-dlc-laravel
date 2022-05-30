@@ -301,7 +301,7 @@ return [
             'text'   => 'work_orders',
             'icon'   => 'fas fa-tools',
             'route'  => 'administracion.ordentrabajo.index',
-            'can'    => 'es-administracion',
+            'can'    => ['es-administracion', 'es-expedicion'],
         ],
         ['header' => 'account_settings'],
         [

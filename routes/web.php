@@ -107,7 +107,10 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::delete('/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class, 'borrarProductoCotizado'])
         ->name('cotizaciones.borrar.producto');
     Route::resource('/cotizaciones', CotizacionController::class)->except('edit', 'update');
+});
 
+// RUTAS PARA EXPEDICION y, se incluye administración
+Route::prefix('administracion')->middleware(['auth', 'auth.esExpedicion'])->name('administracion.')->group(function () {
     // rutas de ORDENES DE TRABAJO
     Route::get('/ordentrabajo/ajaxObtenerLineas', [OrdenTrabajoController::class, 'obtenerLineasCotizacion'])->name('cotizadas.ajax.obtener');
     Route::resource('/ordentrabajo', OrdenTrabajoController::class);

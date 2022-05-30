@@ -27,9 +27,9 @@ class OrdenTrabajo extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function cliente(): BelongsTo
+    public function coticacion(): BelongsTo
     {
-        return $this->belongsTo(Cliente::class);
+        return $this->belongsTo(Cotizacion::class);
     }
 
     public function productos(): HasMany

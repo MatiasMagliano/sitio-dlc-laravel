@@ -10,6 +10,10 @@
 {{-- aquí va contenido --}}
 @endsection
 
+@section('js')
+    @include('partials.alerts')
+@endsection
+
 @section('footer')
     <strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
     <div class="float-right d-none d-sm-inline-block">

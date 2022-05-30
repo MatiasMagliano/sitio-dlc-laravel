@@ -108,13 +108,13 @@
                                 {{ $orden->created_at->format('d/m/Y') }}
                             </td>
                             <td style="vertical-align: middle;">
-                                <strong>{{ $orden->identificador }}</strong>
+                                <strong>{{ $orden->cotizacion }}</strong>
                                 <br>
                                 {{ $orden->user->name }}
                             </td>
                             <td style="vertical-align: middle;">
-                                {{ $orden->cliente->razon_social }}<br>
-                                {{ $orden->cliente->tipo_afip }}: {{ $orden->cliente->afip }}
+                                {{ $orden->cotizacion }}<br>
+                                {{ $orden->cotizacion }}: {{ $orden->cotizacion }}
                             </td>
                             <td style="vertical-align: middle; text-align:center;">{{$orden->productos->count()}}</td>
                             <td style="vertical-align: middle; text-align:center;">{{$orden->productos->sum('cantidad')}}</td>

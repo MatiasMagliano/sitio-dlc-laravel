@@ -82,6 +82,9 @@ class OrdenTrabajoController extends Controller
                     'lotes'             => -1
                 ]);
             }
+
+            $request->session()->flash('success', 'La orden de trabajo se creó con éxito. Ahora puede asignarle lotes disponibles.');
+            return redirect(route('administracion.ordentrabajo.index'));
         }
     }
 }
