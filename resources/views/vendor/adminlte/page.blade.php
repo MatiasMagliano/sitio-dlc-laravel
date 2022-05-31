@@ -3,6 +3,14 @@
 @inject('layoutHelper', 'JeroenNoten\LaravelAdminLte\Helpers\LayoutHelper')
 
 @section('adminlte_css')
+    <style>
+        #boton-arriba {
+            position: fixed;
+            bottom: 80px;
+            right: 40px;
+            display: none;
+        }
+    </style>
     @stack('css')
     @yield('css')
 @stop
@@ -47,6 +55,7 @@
 @stop
 
 @section('adminlte_js')
+    <script type="text/javascript" src="{{ asset('js/top-button.js') }}" defer></script>
     @stack('js')
     @yield('js')
 @stop

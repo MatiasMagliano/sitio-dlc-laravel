@@ -28,7 +28,7 @@ class ProductoCotizadoFactory extends Factory
             LotePresentacionProducto::getIdDeposito($producto->id, $presentacion) //devuelve un solo pivot relacionado a prod/pres
         );
 
-        $cantidad = $this->faker->numberBetween(50, 1000);
+        $cantidad = $this->faker->numberBetween(50, 500);
         $precio   = $this->faker->randomFloat(2, 10, 500);
 
         //actualiza el stock

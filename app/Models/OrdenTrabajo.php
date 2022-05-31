@@ -27,7 +27,7 @@ class OrdenTrabajo extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function coticacion(): BelongsTo
+    public function cotizacion(): BelongsTo
     {
         return $this->belongsTo(Cotizacion::class);
     }

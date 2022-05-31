@@ -65,13 +65,13 @@
                                         @case(4)
                                             {{-- ESTADOS DINAMICOS --}}
                                             <td style="vertical-align: middle;">
-                                                <span class="text-fuchsia">MODIFICANDO O.D.</span>
+                                                <span class="text-fuchsia">Modificando OT</span>
                                             </td>
 
                                             {{-- ACCIONES DINAMICAS --}}
                                             <td style="vertical-align: middle; text-align:center;">
-                                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#modalModificarOrden" id="{{$orden->id}}">Generar</button>
+                                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal"
+                                                    data-target="#modalModificarOrden" id="{{$orden->id}}">Generar OT</button>
                                             </td>
                                             @break
                                         @default
@@ -96,7 +96,6 @@
                         <th>Cliente</th>
                         <th>Productos cotizados</th>
                         <th>Total unidades</th>
-                        <th>Importe total</th>
                         <th>ESTADO</th>
                         <th></th>
                     </tr>
@@ -108,41 +107,36 @@
                                 {{ $orden->created_at->format('d/m/Y') }}
                             </td>
                             <td style="vertical-align: middle;">
-                                <strong>{{ $orden->cotizacion }}</strong>
+                                <strong>{{ $orden->cotizacion->identificador }}</strong>
                                 <br>
                                 {{ $orden->user->name }}
                             </td>
                             <td style="vertical-align: middle;">
-                                {{ $orden->cotizacion }}<br>
-                                {{ $orden->cotizacion }}: {{ $orden->cotizacion }}
+                                {{ $orden->cotizacion->cliente->razon_social }}<br>
+                                {{ $orden->cotizacion->cliente->tipo_afip }}: {{ $orden->cotizacion->cliente->afip }}
                             </td>
                             <td style="vertical-align: middle; text-align:center;">{{$orden->productos->count()}}</td>
                             <td style="vertical-align: middle; text-align:center;">{{$orden->productos->sum('cantidad')}}</td>
-                            <td style="vertical-align: middle; text-align:center;">
-                                $ {{number_format($orden->monto_total, 2, ',', '.')}}
-                            </td>
                             {{-- SE RESUME TODO A UN SOLO SWITCH, a diferencia del index de cotizaciones --}}
-                                @switch($orden->estado_id)
-                                    @case(6)
-                                        {{-- ESTADOS DINAMICOS --}}
-                                        <td style="vertical-align: middle;">
-                                            <span class="text-success">{{$orden->estado->estado}} {{$orden->en_produccion->format('d/m/Y')}}</span>
-                                        </td>
+                            @switch($orden->estado_id)
+                                @case(6 || 7)
+                                    {{-- ESTADOS DINAMICOS --}}
+                                    <td style="vertical-align: middle;">
+                                        <span class="text-success">{{$orden->estado->estado}} desde el: {{$orden->en_produccion->format('d/m/Y')}}</span>
+                                    </td>
 
-                                        {{-- ACCIONES DINAMICAS --}}
-                                        <td style="vertical-align: middle; text-align:center;">
-                                            @can('es-expedicion')
-                                                <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
-                                                    class="btn btn-sm btn-default" target="_blank">
-                                                    Generar Doc
-                                                </a>
-                                            @endcan
-                                        </td>
-                                        @break
-                                    @default
-                                        <p>-</p>
-                                @endswitch
-                            </td>
+                                    {{-- ACCIONES DINAMICAS --}}
+                                    <td style="vertical-align: middle; text-align:center;">
+                                        <a href="{{ route('administracion.ordentrabajo.show', ['ordentrabajo' => $orden]) }}"
+                                            class="btn btn-sm btn-info">
+                                            Generar OT
+                                        </a>
+                                    </td>
+                                    @break
+                                @default
+                                    <td><p>-</p></td>
+                                    <td><p>-</p></td>
+                            @endswitch
                         </tr>
                     @endforeach
                 </tbody>
@@ -190,36 +184,9 @@
     <script>
          $(document).ready(function() {
             $('#ordenesDeTrabajo').DataTable({
-                "dom": 'Bfrtip',
+                "dom": 'rtip',
+                "pageLength": 2,
                 "order": [0, 'desc'],
-                "buttons": [{
-                        extend: 'copyHtml5',
-                        text: 'Copiar al portapapeles'
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        text: 'Imprimir',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3]
-                        }
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3]
-                        }
-                    },
-                    {
-                        extend: 'colvis',
-                        text: 'Seleccionar columnas'
-                    }
-                ],
                 "responsive": [{
                     "details": {
                         renderer: function(api, rowIdx, columns) {
@@ -245,43 +212,16 @@
                         type: 'date'
                     },
                     {
-                        targets: 7,
+                        targets: 6,
                         width: 80,
                     },
                 ],
             });
 
             $('#ordenesPotenciales').DataTable({
-                "dom": 'Bfrtip',
+                "dom": 'rtip',
+                "pageLength": 2,
                 "order": [0, 'desc'],
-                "buttons": [{
-                        extend: 'copyHtml5',
-                        text: 'Copiar al portapapeles'
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        text: 'Imprimir',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3]
-                        }
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3]
-                        }
-                    },
-                    {
-                        extend: 'colvis',
-                        text: 'Seleccionar columnas'
-                    }
-                ],
                 "responsive": [{
                     "details": {
                         renderer: function(api, rowIdx, columns) {

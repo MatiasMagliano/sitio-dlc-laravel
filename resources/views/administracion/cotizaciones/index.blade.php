@@ -4,10 +4,18 @@
 
 @section('css')
     <style>
-        $custom-file-text: (
-            en: "Browse",
-            es: "Elegir"
-        );
+        #data_wrapper.dataTables_wrapper
+        {
+            height: 200px !important;
+            background-color: #F1F1F1 !important;
+        }
+
+        #data_wrapper .fg-toolbar.ui-toolbar.ui-widget-header.ui-helper-clearfix.ui-corner-bl.ui-corner-br
+        {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+        }
     </style>
 @endsection
 
@@ -62,31 +70,16 @@
                             <td style="vertical-align: middle; text-align:center;">
                                 $ {{number_format($cotizacion->monto_total, 2, ',', '.')}}
                             </td>
-                            {{-- ESTADOS DINAMICOS --}}
-                            <td style="vertical-align: middle;">
-                                @switch($cotizacion->estado_id)
-                                    @case(1)
+                            {{-- ESTADOS DINAMICOS y ACCIONES DINÁMICAS--}}
+                            @switch($cotizacion->estado_id)
+                                @case(1)
+                                    {{-- ESTADOS DINAMICOS --}}
+                                    <td style="vertical-align: middle;">
                                         <span class="text-fuchsia">{{$cotizacion->estado->estado}}</span>
-                                        @break
-                                    @case(2)
-                                        <span class="text-success">{{$cotizacion->estado->estado}} {{$cotizacion->finalizada->format('d/m/Y')}}</span>
-                                        @break
-                                    @case(3)
-                                        <span class="text-secondary">{{$cotizacion->estado->estado}} {{$cotizacion->presentada->format('d/m/Y')}}</span>
-                                        @break
-                                    @case(4)
-                                        <span class="text-success">{{$cotizacion->estado->estado}} {{$cotizacion->confirmada->format('d/m/Y')}}</span>
-                                        @break
-                                    @case(5)
-                                        <span class="text-danger">{{$cotizacion->estado->estado}} {{$cotizacion->rechazada->format('d/m/Y')}}</span>
-                                        @break
-                                    @default
-                                @endswitch
-                            </td>
-                            {{-- ACCIONES DINAMICAS --}}
-                            <td style="vertical-align: middle; text-align:center;">
-                                @switch($cotizacion->estado_id)
-                                    @case(1)
+                                    </td>
+
+                                    {{-- ACCIONES DINÁMICAS--}}
+                                    <td style="vertical-align: middle; text-align:center;">
                                         <a href="{{ route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]) }}"
                                             class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
                                             title="Editar cotización">
@@ -102,23 +95,50 @@
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </form>
-                                        @break
-                                    @case(2)
-                                        <a id="botonPresentar" class="btn btn-sm btn-default"
+                                    </td>
+                                    @break
+                                @case(2)
+                                    {{-- ESTADOS DINAMICOS --}}
+                                    <td style="vertical-align: middle;">
+                                        <span class="text-success">{{$cotizacion->estado->estado}}</span><br>
+                                        <span>{{$cotizacion->finalizada->format('d/m/Y')}}</span>
+                                    </td>
+
+                                    {{-- ACCIONES DINÁMICAS--}}
+                                    <td style="vertical-align: middle; text-align:center;">
+                                        <a id="botonPresentar" class="btn btn-sm btn-info"
                                             href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
                                             target="_blank">
                                             Presentar
                                         </a>
-                                        @break
-                                    @case(3)
+                                    </td>
+                                    @break
+                                @case(3)
+                                    {{-- ESTADOS DINAMICOS --}}
+                                    <td style="vertical-align: middle;">
+                                        <span class="text-secondary">{{$cotizacion->estado->estado}}</span><br>
+                                        <span>{{$cotizacion->presentada->format('d/m/Y')}}</span>
+                                    </td>
+
+                                    {{-- ACCIONES DINÁMICAS--}}
+                                    <td style="vertical-align: middle; text-align:center;">
                                         <div class="btn-group-vertical">
                                             <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
                                                 data-target="#modalAprobarCotizacion" id="{{$cotizacion->id}}">Aprobar</button>
                                             <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
                                                 data-target="#modalRechazarCotizacion" id="{{$cotizacion->id}}">Rechazar</button>
                                         </div>
-                                        @break
-                                    @case(4)
+                                    </td>
+                                    @break
+                                @case(4)
+                                    {{-- ESTADOS DINAMICOS --}}
+                                    <td style="vertical-align: middle;">
+                                        <span class="text-success">{{$cotizacion->estado->estado}}</span><br>
+                                        <span>{{$cotizacion->confirmada->format('d/m/Y')}}</span>
+                                    </td>
+
+                                    {{-- ACCIONES DINÁMICAS--}}
+                                    <td style="vertical-align: middle; text-align:center;">
                                         <div class="btn-group-vertical">
                                             <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
                                                 class="btn btn-sm btn-default" target="_blank">
@@ -129,8 +149,17 @@
                                                 Provisión
                                             </a>
                                         </div>
-                                        @break
-                                    @case(5)
+                                    </td>
+                                    @break
+                                @case(5)
+                                    {{-- ESTADOS DINAMICOS --}}
+                                    <td style="vertical-align: middle;">
+                                        <span class="text-danger">{{$cotizacion->estado->estado}}</span><br>
+                                        <span>{{$cotizacion->rechazada->format('d/m/Y')}}</span>
+                                    </td>
+
+                                    {{-- ACCIONES DINÁMICAS--}}
+                                    <td style="vertical-align: middle; text-align:center;">
                                         <a href="{{ route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]) }}"
                                             class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
                                             title="Ver cotización">
@@ -140,11 +169,39 @@
                                             class="btn btn-link" target="_blank">
                                             <i class="fas fa-file-download"></i>
                                         </a>
-                                        @break
-                                    @default
+                                    </td>
+                                    @break
+                                @case(6 || 7)
+                                    {{-- ESTADOS DINAMICOS --}}
+                                    <td style="vertical-align: middle;">
+                                        <span class="text-success">APROBADA</span><br>
+                                        <span>{{$cotizacion->confirmada->format('d/m/Y')}}</span>
+                                    </td>
+
+                                    {{-- ACCIONES DINÁMICAS--}}
+                                    <td style="vertical-align: middle; text-align:center;">
+                                        <div class="btn-group-vertical">
+                                            <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
+                                                class="btn btn-sm btn-default" target="_blank">
+                                                Cotización
+                                            </a>
+                                            <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'provision']) }}"
+                                                class="btn btn-sm btn-default" target="_blank">
+                                                Provisión
+                                            </a>
+                                        </div>
+                                    </td>
+                                    @break
+                                @default
+                                    <td style="vertical-align: middle;">
                                         <p>-</p>
-                                @endswitch
-                            </td>
+                                    </td>
+
+                                    {{-- ACCIONES DINÁMICAS--}}
+                                    <td style="vertical-align: middle;">
+                                        <small class="form-text text-muted">Sin acciones</small>
+                                    </td>
+                            @endswitch
                         </tr>
                     @endforeach
                 </tbody>
@@ -366,11 +423,10 @@
                         )
                 }
 
-                let delay = 1000;
                 setTimeout(function() {
-                    window.location.href='{{route('administracion.cotizaciones.index')}}';
+                    document.location.href = '{{route('administracion.cotizaciones.index')}}';
                     return false;
-                }, delay);
+                }, 500);
             })
         });
     </script>
