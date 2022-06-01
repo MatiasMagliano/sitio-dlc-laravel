@@ -18,35 +18,28 @@ class LotePresentacionProducto extends Model
     ];
 
     // RELACIONES
-
-    /**
-     * The lotes that belong to the LotePresentacionProducto
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
+    public function presentaciones(): BelongsToMany
+    {
+        return $this->belongsToMany(Presentacion::class, 'lote_presentacion_producto', 'presentacion_id');
+    }
     public function lotes(): BelongsToMany
     {
-        return $this->belongsToMany(Lote::class, 'lote_presentacion_producto');
+        return $this->belongsToMany(Lote::class, 'lote_presentacion_producto', 'lote_id');
     }
-        /**
-    * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    */
+
     public function productos(): BelongsToMany
     {
-        return $this->belongsToMany(Producto::class, 'lote_presentacion_producto');
+        return $this->belongsToMany(Producto::class, 'lote_presentacion_producto', 'producto_id');
     }
 
-    /**
-        * The deposito that belong to the LotePresentacionProducto
-        *
-        * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-        */
-    public function deposito(): BelongsToMany
+    public function depositos(): BelongsToMany
     {
-        return $this->belongsToMany(DepositoCasaCentral::class, 'lote_presentacion_producto', 'producto_id', 'presentacion_id');
+        return $this->belongsToMany(DepositoCasaCentral::class, 'lote_presentacion_producto', 'dcc_id', 'dcc_id');
     }
 
-    //obtiene el deposito con local scope
+
+    /* --- RELACIONES PARTICULARES --- */
+    //obtiene el DEPOSITO relacionado a producto-presentacion
     public static function getIdDeposito($producto, $presentacion)
     {
         return DB::table('lote_presentacion_producto')
@@ -56,6 +49,7 @@ class LotePresentacionProducto extends Model
             ->get('0');
     }
 
+    //obtiene los LOTES relacionados a producto-presentacion
     public static function getLotes($producto, $presentacion)
     {
         return DB::table('lote_presentacion_producto')

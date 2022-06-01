@@ -19,7 +19,7 @@
         }
 
         .texto-header::-webkit-scrollbar-thumb {
-            background-color: #3bd136;
+            background-color: #ffc107;
         }
 
     </style>
@@ -31,8 +31,7 @@
             <h1>Administración de clientes</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-md-end">
-            <a href="{{ route('administracion.clientes.create') }}" role="button" class="btn btn-md btn-success">Crear
-                cliente</a>
+            <a href="{{ route('administracion.clientes.create') }}" role="button" class="btn btn-md btn-success">Crear cliente</a>
             &nbsp;
             <a href="{{ url()->previous() }}" role="button" class="btn btn-md btn-secondary">Volver</a>
         </div>

@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use LotePresentacionProducto;
 
 class ProductoOrdenTrabajo extends Model
 {
@@ -30,13 +28,8 @@ class ProductoOrdenTrabajo extends Model
         return $this->belongsTo(OrdenTrabajo::class);
     }
 
-    public function lotes(): HasManyThrough
+    public function lotes()
     {
-        return $this->hasManyThrough(
-            Lote::class,
-            LotePresentacionProducto::class,
-            'abc',
-            'xyz'
-        );
+        return Lote::wherein('id', $this->lotes());
     }
 }

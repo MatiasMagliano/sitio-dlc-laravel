@@ -38,11 +38,11 @@ class EstadoSeeder extends Seeder
             ],
             [
                 'id'     => 6,
-                'estado' => 'GENERANDO OT COMPLETA'
+                'estado' => 'EN PRODUCCION CON LOTES COMPLETOS'
             ],
             [
                 'id'     => 7,
-                'estado' => 'GENERANDO OT PARCIAL'
+                'estado' => 'EN PRODUCCION CON LOTES INCOMPLETOS'
             ],
             [
                 'id'     => 8,
@@ -50,7 +50,16 @@ class EstadoSeeder extends Seeder
             ],
             [
                 'id'     => 9,
-                'estado' => 'EN PRODUCCIÓN'
+                'estado' => 'OT FINALIZADA, ESPERANDO FACTURACION'
+            ],
+            [
+                'id'     => 10,
+                'estado' => 'OT FACTURADA, ESPERANDO DESPACHO'
+            ],
+
+            [
+                'id'     => 11,
+                'estado' => 'OT DESPACHADA'
             ],
         ];
 

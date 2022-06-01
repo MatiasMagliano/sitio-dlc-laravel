@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class OrdenTrabajo extends Model
 {
@@ -39,5 +40,25 @@ class OrdenTrabajo extends Model
 
     public function estado(){
         return $this->belongsTo(Estado::class);
+    }
+
+
+    /* --- RELACIONES ESPECIALES --- */
+    public static function LotesCompletos($orden)
+    {
+        $productos = DB::table('producto_orden_trabajos')
+            ->where('orden_trabajo_id', $orden)
+            ->get('lotes');
+
+        $con_lotes = true;
+        foreach($productos as $producto)
+        {
+            if($producto->lotes === '-1')
+            {
+                $con_lotes = false;
+            }
+        }
+
+        return $con_lotes;
     }
 }

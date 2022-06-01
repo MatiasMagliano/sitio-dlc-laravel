@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Cotizacion extends Model
 {
@@ -37,6 +38,26 @@ class Cotizacion extends Model
         return $this->belongsTo(Cliente::class);
     }
 
+    public function productos(): HasMany
+    {
+        return $this->hasMany(ProductoCotizado::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function estado(){
+        return $this->belongsTo(Estado::class);
+    }
+
+    public function archivos(): HasOne
+    {
+        return $this->hasOne(ArchivoCotizacion::class);
+    }
+
+    /* --- RELACIONES ESPECIALES ---*/
     public function direccionEntrega($punto){
         return DireccionEntrega::select('*')
             ->join('clientes', 'direcciones_entrega.cliente_id', '=', 'clientes.id')
@@ -47,39 +68,4 @@ class Cotizacion extends Model
             ->where('cotizacions.id', $this->id)
             ->get();
     }
-
-    /**
-     * Get all of the productos for the Cotizacion
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function productos(): HasMany
-    {
-        return $this->hasMany(ProductoCotizado::class);
-    }
-
-    /**
-     * Get the user that owns the Cotizacion
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function estado(){
-        return $this->belongsTo(Estado::class);
-    }
-
-    /**
-     * Get all of the archivos for the Cotizacion
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function archivos(): HasMany
-    {
-        return $this->hasMany(ArchivoCotizacion::class);
-    }
-    /* hasMany->ventas */
 }

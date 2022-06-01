@@ -9,21 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use LotePresentacionProducto;
 
 class Presentacion extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $table = 'presentacions';
-
-    //Se setean los campos "llenables" en masa
-    /**
-     * EXISTENCIA: SUMA DE TODOS LOS LOTES EXISTENTES
-     * COTIZACION: número positivo con suma de los cotizado
-     * DISPONIBLE: diferencia entre EXISTENCIA - COTIZACION
-     * @var array
-     */
+    
     protected $fillable = [
         'forma', 'presentacion', 'existencia', 'cotizacion', 'disponible', 'hospitalario', 'trazabilidad'
     ];

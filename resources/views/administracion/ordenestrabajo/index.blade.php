@@ -4,10 +4,24 @@
 
 @section('css')
     <style>
-        $custom-file-text: (
-            en: "Browse",
-            es: "Elegir"
-        );
+        .texto-header {
+            padding: 0 20px;
+            height: 60px;
+            overflow-y: auto;
+            /*font-size: 14px;*/
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .texto-header::-webkit-scrollbar {
+            width: 5px;
+            background-color: #282828;
+        }
+
+        .texto-header::-webkit-scrollbar-thumb {
+            background-color: #ffc107;
+        }
+
     </style>
 @endsection
 
@@ -24,71 +38,19 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-    @can('es-administracion')
-        <x-adminlte-card title="Órdenes por generar">
-            <div class="processing height-control">
-                <table id="ordenesPotenciales" class="table table-bordered table-responsive-md" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Identificador/Usuario</th>
-                            <th>Cliente</th>
-                            <th>Productos cotizados</th>
-                            <th>Total unidades</th>
-                            <th>Importe total</th>
-                            <th>ESTADO</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($ordenes_potenciales as $orden)
-                            <tr>
-                                <td style="vertical-align: middle;">
-                                    {{ $orden->created_at->format('d/m/Y') }}
-                                </td>
-                                <td style="vertical-align: middle;">
-                                    <strong>{{ $orden->identificador }}</strong>
-                                    <br>
-                                    {{ $orden->user->name }}
-                                </td>
-                                <td style="vertical-align: middle;">
-                                    {{ $orden->cliente->razon_social }}<br>
-                                    {{ $orden->cliente->tipo_afip }}: {{ $orden->cliente->afip }}
-                                </td>
-                                <td style="vertical-align: middle; text-align:center;">{{$orden->productos->count()}}</td>
-                                <td style="vertical-align: middle; text-align:center;">{{$orden->productos->sum('cantidad')}}</td>
-                                <td style="vertical-align: middle; text-align:center;">
-                                    $ {{number_format($orden->monto_total, 2, ',', '.')}}
-                                </td>
-                                {{-- SE RESUME TODO A UN SOLO SWITCH, a diferencia del index de cotizaciones --}}
-                                    @switch($orden->estado_id)
-                                        @case(4)
-                                            {{-- ESTADOS DINAMICOS --}}
-                                            <td style="vertical-align: middle;">
-                                                <span class="text-fuchsia">Modificando OT</span>
-                                            </td>
-
-                                            {{-- ACCIONES DINAMICAS --}}
-                                            <td style="vertical-align: middle; text-align:center;">
-                                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal"
-                                                    data-target="#modalModificarOrden" id="{{$orden->id}}">Generar OT</button>
-                                            </td>
-                                            @break
-                                        @default
-                                            <p>-</p>
-                                    @endswitch
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+    <div class="card">
+        <div class="card-body">
+            <div class="texto-header">
+                <h5>Generación de Órdenes de trabajo</h5>
+                <p>Aquí se listan todas las Cotizaciones aprobadas y con Orden de Provisión aceptada. El sistema automáticamente genera la Orden de Trabajo, le asigna Lotes disponibles y finalmente la transfiere a producción.</p>
+                <p>En caso de no disponer de lotes, se genera una grilla en la siguiente sección con una vista general de los lotes asignados y de aquellos que se deberán comprar en un futuro cercano.</p>
             </div>
-        </x-adminlte-card>
-    @endcan
-
-    <x-adminlte-card title="Órdenes en producción">
-        <div class="processing">
-            <table id="ordenesDeTrabajo" class="table table-bordered table-responsive-md" width="100%">
+        </div>
+    </div>
+    @can('es-administracion')
+    <x-adminlte-card title="Órdenes por generar" collapsible>
+        <div class="processing height-control">
+            <table id="ordenesPotenciales" class="table table-bordered table-responsive-md" width="100%">
                 <thead>
                     <tr>
                         <th>Fecha</th>
@@ -96,57 +58,132 @@
                         <th>Cliente</th>
                         <th>Productos cotizados</th>
                         <th>Total unidades</th>
+                        <th>Importe total</th>
                         <th>ESTADO</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($ordenes as $orden)
+                    @foreach ($ordenes_potenciales as $orden)
                         <tr>
                             <td style="vertical-align: middle;">
                                 {{ $orden->created_at->format('d/m/Y') }}
                             </td>
                             <td style="vertical-align: middle;">
-                                <strong>{{ $orden->cotizacion->identificador }}</strong>
+                                <strong>{{ $orden->identificador }}</strong>
                                 <br>
                                 {{ $orden->user->name }}
                             </td>
                             <td style="vertical-align: middle;">
-                                {{ $orden->cotizacion->cliente->razon_social }}<br>
-                                {{ $orden->cotizacion->cliente->tipo_afip }}: {{ $orden->cotizacion->cliente->afip }}
+                                {{ $orden->cliente->razon_social }}<br>
+                                {{ $orden->cliente->tipo_afip }}: {{ $orden->cliente->afip }}
                             </td>
                             <td style="vertical-align: middle; text-align:center;">{{$orden->productos->count()}}</td>
                             <td style="vertical-align: middle; text-align:center;">{{$orden->productos->sum('cantidad')}}</td>
+                            <td style="vertical-align: middle; text-align:center;">
+                                $ {{number_format($orden->monto_total, 2, ',', '.')}}
+                            </td>
                             {{-- SE RESUME TODO A UN SOLO SWITCH, a diferencia del index de cotizaciones --}}
-                            @switch($orden->estado_id)
-                                @case(6 || 7)
-                                    {{-- ESTADOS DINAMICOS --}}
-                                    <td style="vertical-align: middle;">
-                                        <span class="text-success">{{$orden->estado->estado}} desde el: {{$orden->en_produccion->format('d/m/Y')}}</span>
-                                    </td>
+                                @switch($orden->estado_id)
+                                    @case(4)
+                                        {{-- ESTADOS DINAMICOS --}}
+                                        <td style="vertical-align: middle;">
+                                            <span class="text-fuchsia">Modificando OT</span>
+                                        </td>
 
-                                    {{-- ACCIONES DINAMICAS --}}
-                                    <td style="vertical-align: middle; text-align:center;">
-                                        <a href="{{ route('administracion.ordentrabajo.show', ['ordentrabajo' => $orden]) }}"
-                                            class="btn btn-sm btn-info">
-                                            Generar OT
-                                        </a>
-                                    </td>
-                                    @break
-                                @default
-                                    <td><p>-</p></td>
-                                    <td><p>-</p></td>
-                            @endswitch
+                                        {{-- ACCIONES DINAMICAS --}}
+                                        <td style="vertical-align: middle; text-align:center;">
+                                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal"
+                                                data-target="#modalModificarOrden" id="{{$orden->id}}">Generar OT</button>
+                                        </td>
+                                        @break
+                                    @default
+                                        <p>-</p>
+                                @endswitch
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
     </x-adminlte-card>
+    @endcan
 
-     {{-- MODAL MODIFICACIÓN ITEMS DEFINITIVOS --}}
-     <div class="modal fade" id="modalModificarOrden" tabindex="-1"
-        aria-labelledby="" aria-hidden="true">
+    <x-adminlte-card title="Órdenes en producción" collapsible>
+    <div class="processing">
+        <table id="ordenesDeTrabajo" class="table table-bordered table-responsive-md" width="100%">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Identificador/Usuario</th>
+                    <th>Cliente</th>
+                    <th>Productos cotizados</th>
+                    <th>Total unidades</th>
+                    <th>ESTADO</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($ordenes as $orden)
+                    <tr>
+                        <td style="vertical-align: middle;">
+                            {{ $orden->created_at->format('d/m/Y') }}
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <strong>{{ $orden->cotizacion->identificador }}</strong>
+                            <br>
+                            {{ $orden->user->name }}
+                        </td>
+                        <td style="vertical-align: middle;">
+                            {{ $orden->cotizacion->cliente->razon_social }}<br>
+                            {{ $orden->cotizacion->cliente->tipo_afip }}: {{ $orden->cotizacion->cliente->afip }}
+                        </td>
+                        <td style="vertical-align: middle; text-align:center;">{{$orden->productos->count()}}</td>
+                        <td style="vertical-align: middle; text-align:center;">{{$orden->productos->sum('cantidad')}}</td>
+                        {{-- SE RESUME TODO A UN SOLO SWITCH, a diferencia del index de cotizaciones --}}
+                        @switch($orden->estado_id)
+                            @case(6)
+                                {{-- ESTADOS DINAMICOS --}}
+                                <td style="vertical-align: middle;">
+                                    <span class="text-success">{{$orden->estado->estado}} desde el: {{$orden->en_produccion->format('d/m/Y')}}</span>
+                                </td>
+
+                                {{-- ACCIONES DINAMICAS --}}
+                                <td style="vertical-align: middle; text-align:center;">
+                                    <a href="{{ route('administracion.ordentrabajo.descargapdf', ['ordentrabajo' => $orden]) }}"
+                                        class="btn btn-sm btn-info">
+                                        Imprimir OT
+                                    </a>
+                                </td>
+                                @break
+
+                            @case(7)
+                                {{-- ESTADOS DINAMICOS --}}
+                                <td style="vertical-align: middle;">
+                                    <span class="text-success">{{$orden->estado->estado}} desde el: {{$orden->en_produccion->format('d/m/Y')}}</span>
+                                </td>
+
+                                {{-- ACCIONES DINAMICAS --}}
+                                <td style="vertical-align: middle; text-align:center;">
+                                    <a href="{{ route('administracion.ordentrabajo.show', ['ordentrabajo' => $orden]) }}"
+                                        class="btn btn-sm btn-danger">
+                                        Asignar lotes
+                                    </a>
+                                </td>
+                                @break
+                            @default
+                                <td><p>-</p></td>
+                                <td><p>-</p></td>
+                        @endswitch
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    </x-adminlte-card>
+
+    {{-- MODAL MODIFICACIÓN ITEMS DEFINITIVOS --}}
+    <div class="modal fade" id="modalModificarOrden" tabindex="-1" aria-labelledby="" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-gradient-danger">
@@ -183,9 +220,9 @@
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
          $(document).ready(function() {
-            $('#ordenesDeTrabajo').DataTable({
+            $('#ordenesPotenciales').DataTable({
                 "dom": 'rtip',
-                "pageLength": 2,
+                "pageLength": 3,
                 "order": [0, 'desc'],
                 "responsive": [{
                     "details": {
@@ -212,15 +249,19 @@
                         type: 'date'
                     },
                     {
-                        targets: 6,
+                        targets: 2,
+                        width: 300,
+                    },
+                    {
+                        targets: 7,
                         width: 80,
                     },
                 ],
             });
 
-            $('#ordenesPotenciales').DataTable({
+            $('#ordenesDeTrabajo').DataTable({
                 "dom": 'rtip',
-                "pageLength": 2,
+                "pageLength": 3,
                 "order": [0, 'desc'],
                 "responsive": [{
                     "details": {
@@ -247,8 +288,12 @@
                         type: 'date'
                     },
                     {
-                        targets: 7,
-                        width: 80,
+                        targets: 2,
+                        width: 300,
+                    },
+                    {
+                        targets: 6,
+                        width: 100,
                     },
                 ],
             });

@@ -6,7 +6,7 @@
     <style>
         #boton-arriba {
             position: fixed;
-            bottom: 80px;
+            bottom: 60px;
             right: 40px;
             display: none;
         }

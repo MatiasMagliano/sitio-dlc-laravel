@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administracion;
 use App\Http\Controllers\Controller;
 use App\Models\Cotizacion;
 use App\Models\DepositoCasaCentral;
+use App\Models\Estado;
 use App\Models\Lote;
 use App\Models\LotePresentacionProducto;
 use App\Models\OrdenTrabajo;
@@ -17,7 +18,7 @@ class OrdenTrabajoController extends Controller
 {
     public function index()
     {
-        // Estado 6: aprobada, modificando orden de trabajo
+        // Estado 4: aprobada
         $ordenes_potenciales = Cotizacion::where('estado_id', 4)->get();
         $ordenes = OrdenTrabajo::all();
 
@@ -54,37 +55,26 @@ class OrdenTrabajoController extends Controller
 
         $cotizacion = Cotizacion::findOrFail($productos[0]->cotizacion_id);
 
-        // elección del estado de acuerdo a la cantidad de productos
-        if ($cotizacion->productos->count() == $productos->count())
-        {
-            $estado = 6;
-        }
-        else{
-            $estado = 7;
-        }
-
-        // Se cambia el estado de la cotización a Aprobada + generando OT
-        $cotizacion->estado_id = $estado;
-        $cotizacion->save(); //se actualiza la cotización
-
         // Se agregan los datos necesarios en el request para generar
         // la OT y los productos que dependen de ella
         $request->request->add([
             'cotizacion_id' => $productos[0]->cotizacion_id,
             'user_id'       => Auth::user()->id,
-            'estado_id'     => $estado,
+            'estado_id'     => 4,
             'en_produccion' => Carbon::now(),
         ]);
 
         $orden = new OrdenTrabajo($request->all());
-        $orden->save();
+        $orden->save(); // para crearla en la BD
 
         foreach($productos as $producto)
         {
             $deposito = DepositoCasaCentral::find(
                 LotePresentacionProducto::getIdDeposito($producto->producto_id, $producto->presentacion_id) //devuelve un solo pivot relacionado a prod/pres
             );
-            // lógica que genera un array->tostring de lotes disponibles o asigna -1 cuando no hay lotes
+            // Si hay lotes disponibles, el proceso termina con la impresión de la OT
+            // de lo contrario, se deberán asignar manualmente los lotes una vez arquiridos.
+            // Lógica que genera un array->tostring de lotes disponibles o asigna -1 cuando no hay lotes
             if($deposito->disponible > 0)
             {
                 $lotes = array();
@@ -118,7 +108,25 @@ class OrdenTrabajoController extends Controller
             }
         }
 
-        $request->session()->flash('success', 'La orden de trabajo se creó con éxito. Ahora puede asignarle lotes disponibles.');
+        if(OrdenTrabajo::LotesCompletos($orden->id))
+        {
+            $estado = 6;
+            $request->session()->flash('success', 'La orden de trabajo se creó con éxito. Estará disponible para imprimir desde el panel inferior.');
+        }
+        else
+        {
+            $estado = 7;
+            $request->session()->flash('error', 'La orden de trabajo se creó con éxito, pero con lotes incompletos. Deberá agregarlos manualmente una vez adquiridos.');
+        }
+        $cotizacion->estado_id = $estado;
+        $orden->estado_id = $estado;
+        $cotizacion->save();
+        $orden->save();
         return redirect(route('administracion.ordentrabajo.index'));
+    }
+
+    public function descargapdf()
+    {
+        return "IMRESION DE ORDEN DE TRABAJO";
     }
 }

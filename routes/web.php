@@ -47,7 +47,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::get('/listaprecios/mostrarLista', [ListaPrecioController::class, 'mostrarLista'])->name('listaprecios.mostrarLista');
     Route::get('/cotizaciones/{cotizacion}/agregar/producto/descuentos', [CotizacionController::class, 'preciosSugeridos'])
         ->name('cotizaciones.agregar.producto.descuentos');
-    
+
         // rutas de PRODUCTOS
     Route::get('/productos/ajaxBuscarProductos', [ProductoController::class, 'buscar'])->name('productos.ajax.obtener');
     Route::resource('/productos', ProductoController::class)->except('show');
@@ -114,5 +114,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 Route::prefix('administracion')->middleware(['auth', 'auth.esExpedicion'])->name('administracion.')->group(function () {
     // rutas de ORDENES DE TRABAJO
     Route::get('/ordentrabajo/ajaxObtenerLineas', [OrdenTrabajoController::class, 'obtenerLineasCotizacion'])->name('cotizadas.ajax.obtener');
+    Route::get('/ordentrabajo/{ordentrabajo}/descargarpdf/', [OrdenTrabajoController::class, 'descargapdf'])
+        ->name('ordentrabajo.descargapdf');
     Route::resource('/ordentrabajo', OrdenTrabajoController::class);
 });
