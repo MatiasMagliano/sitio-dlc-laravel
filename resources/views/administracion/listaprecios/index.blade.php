@@ -1,21 +1,18 @@
 @extends('adminlte::page')
+
+@section('title', 'Administrar Productos')
+
 @section('css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.css" />
     <style>
         .dataTable>thead>tr>th[class*="sort"]:before,
         .dataTable>thead>tr>th[class*="sort"]:after {
             content: "" !important;
         }
 
-        #tabla1.dataTable thead th {border-bottom: none;}
-
         #tabla1.dataTable tfoot th {
             border-top: none;
             border-bottom: 1px solid #111;
-        }
-
-        #tabla1 tbody tr td a{
-            text-decoration: none;
-            color:#333;
         }
 
         #tabla2.dataTable{overflow: auto;}
@@ -43,233 +40,163 @@
     </style>
 @endsection
 
-@section('title', 'Administrar Productos')
-
 @section('content_header')
     <div class="row">
         <div class="col-xl-8">
             <h1>Listado de Precios</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-md-end">
-            <a href="" role="button" class="btn btn-md btn-success" data-toggle="modal" data-target="#agregarregistro">Crear Lista de Precios</a>
-        </div>
-    </div>
-
-    <div class="modal fade" id="agregarregistro" tabindex="-1" aria-labelledby="" aria-hidden="true">
-        <div class="modal-dialog  modal-dialog-centered">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">Alta de registro<span id="nombrePresentacion"></span></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                
-                <div class="modal-body">
-                    <div id="tipoalta" class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" 
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span>Tipo de Alta</span>
-                        </button>
-                        <div id="dropdown-menu-button" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <a class="dropdown-item" href="#"><span>Listado de Productos de Proveedor</span></a>
-                          <a class="dropdown-item" href="#"><span>Producto de Poveedores</span></a>
-                        </div>
-                        
-
-
-                        <div id="form_add" style="margin-top: 0.5rem">
-                            <div id="opt1" style="float:left" >
-                                
-                                    <label for="search-input">Seleccione el proveedor: </label>
-                                    <span class="algolia-autocomplete algolia-autocomplete-left" style="position: relative; display: inline-block; direction: ltr;">
-                                        <input type="search" class="form-control ds-input" id="search-input" placeholder="Buscar proveedor..." autocomplete="off" spellcheck="false" role="combobox" 
-                                            list="lista_prov" name="search-rs" style="position: relative; vertical-align: top;" dir="auto">
-                                        <datalist id="lista_prov">
-                                            @foreach ($proveedors as $proveedor)
-                                            <option value="{{ $proveedor->razon_social }}"></option>
-                                            @endforeach
-                                        </datalist>
-                                    </span>
-                                    <a id="getlistad" href="{{ route('administracion.listaprecios.exportlist') }}" class="btn btn-warning" type="submit">Exportar planilla</a> 
-                                    <label for="">Adjuntar Listado: </label>
-                            </div>
-                            <div id="opt2">2</div> 
-                        </div>
-
-
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
+            <a href="{{ route('administracion.listaprecios.create') }}" role="button" 
+                class="btn btn-md btn-success">Crear Lista de Precios</a>
+            
         </div>
     </div>
 @stop
 
 {{-- aquí va contenido --}}
 @section('content')
-<div class="card-group mb-12">
-    <div class= "col-md-3">
-        <div class="card" >
-            <div class="card-header" >
-                <div id="nav_search" class="search">
-                    <input id="searchbar" type="text" placeholder="Seleccionar Proveedor">
-                    <button type="submit"><i class="fas fa-search "></i></button>
-                </div>
-            </div>
-            <div class="card-body" >
-                <div class="card-body" style="height: 61.55vh;overflow-y: scroll">
-                    <table id="tabla1" class="tabla1 " style="cursor:pointer" >
-                        <tbody>
-                            @foreach ($proveedors as $proveedor)
-                                <tr id="{{ $proveedor->id}}" value="{{ $proveedor->razon_social }}">
-                                    <td>{{ $proveedor->razon_social }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+<x-adminlte-card>
+    <div class="processing">
+        <table id="tabla2" class="table table-bordered table-responsive-md" width="100%">
+            <thead>
+                <tr>
+                    <th>Cuit</th>
+                    <th>Razon Social</th>
+                    <th>Productos</th>
+                    <th>Alta Listado</th>
+                    <th>Último Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($listaPrecios as $listaPrecio)
+                    <tr id={{ $listaPrecio->cuit }}>
+                        <td>{{ $listaPrecio->cuit }}</td>
+                        <td>{{ strtoupper($listaPrecio->razon_social) }}</td>
+                        <td>{{ $listaPrecio->prods }}</td>
+                        <td>{{ $listaPrecio->creado }}</td>
+                        <td>{{ $listaPrecio->modificado }}</td>
+                        <td><a href=""
+                            class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
+                            title="Editar cotización">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                        <form action=""
+                            id="borrar" method="post" class="d-inline">
+                            @csrf
+                            @method('delete')
+                            <button type="button" class="btn btn-link" data-toggle="tooltip"
+                                data-placement="bottom" title="Borrar cotización"
+                                onclick="borrarListadoProveedor({{$listaPrecio->cuit}})">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form></td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-    <div class="col-md-9">
-        <div class="card " id="ListadoDePrecios">
-                {{-- <a class="btn btn-success mt-3 mb-3" href="{{ route('ListaPrecio.excel')}}">
-            Exportar</a>
-            <form action="{{route('ListaPRecios.import.excel')}}" method="post" enctype="multipart/form-data">
-               @csrf
-                @if(Session::has('message'))
-                <p>{{Session::has('message')}}</p>
-                @endif
-                <input type="file" name="file">
-                <button>Importar Listado</button>
-            </form> --}}
-            <div class="card-header">
-                <h3 class="card-title" id="tituloListadoDePrecios" >
-                    Lista de Precios de
-                </h3>
-                <Form action="" method="post">
-                    <button class="">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                    <button class="">
-                        <i class="fas fa-file-upload"></i>
-                    </button>
-                </Form>
-            </div>
-            <div class="card-body">
-                <table id="tabla2" class="display nowrap" style="cursor:pointer">
-                    <thead>
-                        <th>Cód. Proveedor</th>
-                        <th>Producto</th>
-                        <th>Presentacion</th>
-                        <th>Forma</th>
-                        <th>Costo</th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>*</td>
-                            <td>*</td>
-                            <td>*</td>
-                            <td>*</td>
-                            <td>*</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="overlay"><i class="fas fa-ban text-gray"></i>
-        </div>
-    </div>
-</div>
-</div>
+</x-adminlte-card>
 
 @endsection
 
 @section('js')
+    @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/localization/methods_pt.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
+    <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
 
+    function borrarListadoProveedor(id){
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Borrar cotización',
+                    text: 'Su cotización no contiene líneas, esto borrará la referencia en el registro.',
+                    confirmButtonText: 'Borrar',
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        debugger;
+                        $('#borrar-' + id).submit();
+                        window.location.replace('{{ route('administracion.cotizaciones.index') }}');
+                    }
+                });
+            }
 
          $(document).ready(function() {            
             // VARIABLES LOCALES
             var tabla2;
-
-            $('#tabla1 tbody tr').removeClass('selected');
-            $razon_social = 'no';
-            // Tabla 2
+            Tabla 2
             tabla2 = $('#tabla2').DataTable({
-                "scrollY": "57vh",
-                "scrollCollapse": true,
-                "processing": true,
+                //"scrollY": "57vh",
+                //"scrollCollapse": true,
+                //"processing": true,
                 "order": [1, "asc"],
                 "paging": false,
                 "info": false,
                 "searching": false,
                 "select": false,
+
                 "columns": [
-                    {targets: [0], data: 'codigoProv',},
-                    {targets: [1], data: 'droga'},
-                    {targets: [2], data: 'presentacion'},
-                    {targets: [2], data: 'forma'},
-                    {targets: [3], data: 'costo'}],
-            });
+                    {targets: [1], data: 'cuit',},
+                    {targets: [1], data: 'razon_social'},
+                    {targets: [1], data: 'prods'},
+                    {targets: [2], data: 'creado'},
+                    {targets: [2], data: 'modificado'}
+                ],
 
-            //Filtrar Proveedor
-            $('#searchbar').on('keyup', function(){
-                var filter = $('#searchbar').val().toUpperCase();
+                "buttons": [{
+                    extend: 'copyHtml5', text: 'Copiar al portapapeles',
+                    exportOptions: {columns: ':visible'}
+                },
+                    {extend: 'excelHtml5',
+                    exportOptions: {columns: ':visible'}
+                },
+                    {extend: 'print', text: 'Imprimir',
+                    exportOptions: {columns: ':visible'}
+                },
+                    {extend: 'pdfHtml5',
+                    exportOptions: {columns: ':visible'}
+                },
+                    {extend: 'colvis',
+                    text: 'Seleccionar columnas'}
+                ],
 
-               $('#tabla1 tbody tr').each(function(){
-                   
-                    $(this).children("td").each(function(){
-                        var tdText = $(this).text().toUpperCase();
-
-                        if(tdText.indexOf(filter) < 0){
-                            $(this).addClass("sin");
-                        }else{
-                            $(this).removeClass("sin");
-                        }
-                   });
-
-            //Cantidad de <td> en el <tr> seleccionado
-                    nTds = $(this).children("td").length
-                    
-                    nTdsSin = $(this).children(".sin").length
-                    
-                    if(nTdsSin == nTds){
-                        $(this).hide();
-                    }else{
-                        $(this).show();
+                "columnDefs": [{
+                    targets: 2,
+                    type: 'datetime',
+                        render: function (data) {return moment(new Date(data)).format('DD/MM/YYYY');
                     }
-                });         
+                }]
             });
 
             //Tomar id Proveedor seleccionado
-            $('#tabla1 tbody tr').on('click', function(){
-                if($(this).hasClass('selected')){
-                    $(this).removeClass('selected');
-                }
+            // $('#btnBuscarListado').on('click', function(){
+            //     if($(this).hasClass('selected')){
+            //         $(this).removeClass('selected');
+            //     }
 
-                $('#ListadoDePrecios .overlay').remove();
-                var idSupplier = $(this).attr("id");
-                var Supplier = $(this).attr("value");
+            //     $('#ListadoDePrecios .overlay').remove();
+            //     var idSupplier = $(this).attr("id");
+            //     var Supplier = $(this).attr("value");
                 
-                $('#tituloListadoDePrecios').text('Lotes vigentes para ' + Supplier);     
+            //     $('#tituloListadoDePrecios').text('Lotes vigentes para ' + Supplier);     
                 
-                getListadoProveedor(idSupplier);
+            //     getListadoProveedor(idSupplier);
+            // });
+
+            $( "#btnBuscarListado" ).on('click', function() {
+                $idSupplier = $('#input-proveedor').val();
+                getListadoProveedor($idSupplier);
             });
 
             // Llena Tabla2
-            function getListadoProveedor(idSupplier) {
-                var datos = { proveedor_id: idSupplier};
+            function getListadoProveedor($idSupplier) {
+                var datos = { proveedor_id: $idSupplier};
+                $('#ListadoDePrecios .overlay').remove();
                 $.ajax({
-                    url: "{{ route('administracion.listaprecios.actualizarLista') }}",
+                    url: "{{ route('administracion.listaprecios.mostrarLista') }}",
                     type: "GET",
                     data: datos,
                }).done(function(resultado) {
@@ -277,36 +204,6 @@
                     tabla2.rows.add(resultado).draw();
                });
             };
-
-            //Abre formulario de Alta
-            $('#agregarregistro').on('show.bs.modal', function(event){
-                $('#tipoalta button span').text('Tipo de Alta');
-                //Se coloca el título del modal
-                $('#nombrePresentacion').empty();
-                $('#nombrePresentacion').append(event.relatedTarget.value);
-                $('#form_add div').hide();
-                $('#desc-planilla').hide();
-            });
-
-            //Toma Tipo de Alta
-            $('#dropdown-menu-button a').on('click', function(){
-
-                var newliporv = 0;
-
-                $('#form_add div').hide();
-                var textTipo = $(this).text();
-
-                $('#tipoalta button span').text(textTipo);
-                if(textTipo == 'Listado de Productos de Proveedor'){
-                    $('#opt1').show();
-                    $('#desc-planilla').show();
-                }
-                if(textTipo == 'Producto de Poveedores'){
-                    $('#opt2').show();
-                }
-
-            });
-
 
             // Exporta listado
             // $(document).on('click', '#getlistad', function(){ 
@@ -352,7 +249,11 @@
             // Quita un item de la lista de precios del proveedor
             
 
-
+        // SCRIPT DEL SLIMSELECT
+        var selProducto = new SlimSelect({
+            select: '.seleccion-producto',
+            placeholder: 'Seleccione el nombre de la droga y luego su presentación...',
+        });
 
 
         });
