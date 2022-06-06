@@ -37,7 +37,7 @@
 @section('content')
     <x-adminlte-card>
         <div class="processing">
-            <table id="tabla2" class="table table-bordered table-responsive-md" width="100%">
+            <table id="cotizaciones" class="table table-bordered table-responsive-md" width="100%">
                 <thead>
                     <tr>
                         <th>Fecha</th>
@@ -349,10 +349,10 @@
         }
 
         $(document).ready(function() {// el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
-            var tabla2 = $('#tabla2').DataTable({
+            var cotizaciones = $('#cotizaciones').DataTable({
                 "processing": true,
+                "order": [[0, 'desc']],
                 "dom": 'Bfrtip',
-                "order": [0, 'desc'],
                 "buttons": [{
                         extend: 'copyHtml5',
                         text: 'Copiar al portapapeles'
@@ -403,7 +403,7 @@
                 }],
                 "columnDefs": [{
                         targets: 0,
-                        type: 'date'
+                        type: 'date',
                     },
                     {
                         targets: 7,

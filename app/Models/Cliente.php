@@ -21,15 +21,10 @@ class Cliente extends Model
         'ultima_compra'     => 'datetime'
     ];
 
-    // relaciones
-    /**
-     * Get all of the direccionesEntrega for the Cliente
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function direccionesEntrega(): HasMany
+    // RELACIONES
+    public function direcciones(): HasMany
     {
-        return $this->hasMany(DireccionEntrega::class, 'cliente_id');
+        return $this->hasMany(DireccionEntrega::class);
     }
 
     /* hasMany --> cotizacion

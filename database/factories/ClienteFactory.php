@@ -14,12 +14,11 @@ class ClienteFactory extends Factory
      */
     public function definition()
     {
-        $nombre = $this->faker->company();
         $afip = ['cuit', 'cuil'];
 
         return [
-            'nombre_corto'  => Str::words($nombre, 1, ''),
-            'razon_social'  => $nombre,
+            'nombre_corto'  => $this->faker->word(),
+            'razon_social'  => $this->faker->company(),
             'tipo_afip'     => $afip[rand(0,1)],
             'afip'          => $this->faker->bothify('##-########-#'),
             'telefono'      => $this->faker->bothify('### #### ###'),

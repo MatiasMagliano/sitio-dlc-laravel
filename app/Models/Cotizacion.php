@@ -15,7 +15,7 @@ class Cotizacion extends Model
     protected $table = 'cotizacions';
 
     protected $fillable = [
-        'identificador', 'user_id', 'cliente_id', 'dde_id', 'estado', 'motivo_rechazo'
+        'identificador', 'user_id', 'cliente_id', 'dde_id', 'estado_id', 'motivo_rechazo'
     ];
 
     protected $casts = [

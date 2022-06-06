@@ -57,11 +57,12 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::get('/clientes/ajaxObtenerClientes', [ClienteController::class, 'obtenerClientes'])->name('clientes.ajax.obtener');
     Route::get('/clientes/ajaxObtenerLocalidades', [ClienteController::class, 'obtenerLocalidades'])->name('clientes.ajax.obtenerLocalidades');
     Route::get('/clientes/ajaxObtenerPuntosEntrega', [ClienteController::class, 'obtenerPuntosEntrega'])->name('clientes.ajax.obtenerPuntosEntrega');
-    Route::resource('/clientes', ClienteController::class);
+    Route::get('/clientes/ajaxObtenerDde', [ClienteController::class, 'obtenerDde'])->name('clientes.ajax.obtenerDde');
     Route::get('/clientes/agregarPuntoEntrega', [ClienteController::class, 'agregarPuntoEntrega'])->name('clientes.agregarPuntoEntrega');
     Route::post('/clientes/{cliente}/agregarPuntoEntrega', [ClienteController::class, 'guardarPuntoEntrega'])->name('clientes.guardarPuntoEntrega');
     Route::get('/clientes/{cliente}/editarPuntoEntrega/{ptoEntrega}', [ClienteController::class, 'editarPuntoEntrega'])->name('clientes.editarPuntoEntrega');
     Route::post('/clientes/{cliente}/editarPuntoEntrega/{ptoEntrega}', [ClienteController::class, 'updatePuntoEntrega'])->name('clientes.updatePuntoEntrega');
+    Route::resource('/clientes', ClienteController::class);
 
     // rutas de PROVEEDORES
     Route::get('/presentaciones/ajaxObtenerProveedores', [PresentacionController::class, 'obtenerProveedores'])

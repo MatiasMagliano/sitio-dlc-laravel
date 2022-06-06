@@ -74,7 +74,7 @@ class CotizacionController extends Controller
             return redirect()->route('administracion.cotizaciones.index');
         }
 
-        $request->request->add(['estado' => 1]);
+        $request->request->add(['estado_id' => 1]);
         $cotizacion = new Cotizacion($request->all());
         $cotizacion->save();
 

@@ -68,7 +68,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="card-body">
                 {{-- producto=producto+presentacion. Se retienen los dos ID combinados. Luego el controller los separa --}}
                 <label for="input-producto">Producto y presentación</label>
@@ -80,7 +80,7 @@
                         @foreach ($productos as $producto)
                             @foreach ($producto->presentaciones as $presentacion)
                                 @if ($presentacion->id == old('producto'))
-                                    <option value="{{$producto->id}}|{{$presentacion->id}}" selected>[{{ $producto->droga }}]
+                                    <option value="{{$producto->id}}|{{$presentacion->id}}" selected>{{ $producto->droga }} -
                                         {{ $presentacion->forma }}, {{ $presentacion->presentacion }}</option>
                                 @else
                                     <option value="{{$producto->id}}|{{$presentacion->id}}">[{{ $producto->droga }}]
@@ -93,7 +93,7 @@
                 </div>
                 <hr>
                 <div class="row d-flex">
-                    
+
                     <div class="col">
                         {{-- SELECCIONAR Y SUGERIR LOS PRECIOS --> debe terminar siendo FLOAT --}}
                         <div class="card mx-auto" style="width: 80%;">
@@ -160,7 +160,7 @@
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
         var tablaPreciosSugerido;
-        var tablaPorcentaje; 
+        var tablaPorcentaje;
 
         function obtenerDatos(id_producto, id_presentacion, id_cotizacion){
             $cotizacion = id_cotizacion
@@ -192,7 +192,7 @@
                                         $precio = $argument.replace(".",",");
                                         $('#input-precio').val($precio);
 	                            });
-                            }}, 
+                            }},
                 function () {
                             $(this).removeClass('tdhover');
                             }
