@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Administracion;
 
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\DB;
-
 use App\Http\Controllers\Controller;
 use App\Models\ListaPrecio;
-use App\Models\Proveedor;
-
 use App\Exports\ListaPrecioExport;
+use App\Models\Producto;
+use App\Models\Presentacion;
+use App\Models\Proveedor;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -18,41 +17,64 @@ use Maatwebsite\Excel\Facades\Excel;
 class ListaPrecioController extends Controller
 {
 
-
-    // public function importExcel(Request $request){
-    //     $file = $request->file('file');
-    //     Excel::import(new ListaPrecioImport, $file);
-
-    //     return back()->with('message', 'Importación de listado completada');
-    // }
-
-
-    /**
-     * Devuelve una vista para agregar lotes a un producto
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $listaPrecios = ListaPrecio::all();
-        $proveedors = Proveedor::all();
-
-        $users = DB::table('lista_precios')
+        $listaPrecios = ListaPrecio::select('proveedors.cuit AS cuit','proveedors.razon_social AS razon_social', 
+        ListaPrecio::raw('count(lista_precios.id) AS prods') , ListaPrecio::raw('min(lista_precios.created_at) AS creado'), 
+        ListaPrecio::raw('max(lista_precios.updated_at) AS modificado'))
             ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
-            ->join('productos','lista_precios.producto_id','=','productos.id')
-            ->join('presentacions','lista_precios.presentacion_id','=','presentacions.id')
-            ->select('lista_precios.*','productos.droga','presentacions.presentacion','proveedors.razon_social')
+            ->groupBy('proveedors.cuit', 'proveedors.razon_social')
             ->get();
+
+        // $proveedors = Proveedor::all();
+
+        // $users = DB::table('lista_precios')
+        //     ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
+        //     ->join('productos','lista_precios.producto_id','=','productos.id')
+        //     ->join('presentacions','lista_precios.presentacion_id','=','presentacions.id')
+        //     ->select('lista_precios.*','productos.droga','presentacions.presentacion','proveedors.razon_social')
+        //     ->get();
             
-        return view('administracion.listaprecios.index', compact('listaPrecios','users','proveedors'));
+        return view('administracion.listaprecios.index', compact('listaPrecios'));
     }
 
+    public function create()
+    {
+        $productos = Producto::select('id', 'droga')->whereNull('deleted_at')->get();
+        $presentaciones = Presentacion::select('id', 'forma', 'presentacion')->whereNull('deleted_at')->get();
+
+        $proveedores = Proveedor::select('proveedors.id AS id', 'razon_social', 'cuit')
+        ->leftjoin('lista_precios','proveedors.id','lista_precios.proveedor_id')
+        ->whereNull(['proveedors.deleted_at'])
+        ->whereNull('lista_precios.proveedor_id')
+        ->get(); 
+
+        $config = [
+            'format' => 'DD/MM/YYYY',
+            'dayViewHeaderFormat' => 'MMM YYYY'
+        ];
+        return view('administracion.listaprecios.create', compact('productos','presentaciones', 'proveedores'))->with('config', $config);
+    }
 
     public function mostrarLista(Request $request){
-
         if($request->ajax()){
             $listaPrecios = ListaPrecio::listaDeProveedor($request->proveedor_id);
             return Response()->json($listaPrecios);
+        }
+    }
+
+    public function addListadoProveedor(Request $request){
+        if($request->ajax()){
+            $addLista = new ListaPrecio();
+
+            $addLista->producto_id = $request('producto_id');
+            $addLista->presentacion_id = $request('presentacion_id');
+            $addLista->codigoProv = $request('codigoProv');
+            $addLista->costo = $request('costo');
+
+            $addLista->save();
+
+            
         }
     }
 
@@ -77,7 +99,6 @@ class ListaPrecioController extends Controller
 
     public function exportlist(Request $request){
         $RS = $request->collect('search-rs');
-
         return Excel::download(new ListaPrecioExport($RS), 'ListadoPrecios.xlsx');
     }  
 
