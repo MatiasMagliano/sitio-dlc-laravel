@@ -45,8 +45,10 @@ Route::prefix('admin')->middleware(['auth', 'auth.esSistAdmin'])->name('admin.')
 Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->name('administracion.')->group(function () {
     // rutas especiales para ajax de búsqueda y eliminación
     Route::get('/listaprecios/mostrarLista', [ListaPrecioController::class, 'mostrarLista'])->name('listaprecios.mostrarLista');
+    Route::post('/listaprecios/deleteLista', [ListaPrecioController::class, 'deleteLista'])->name('listaprecios.deleteLista');
     Route::get('/cotizaciones/{cotizacion}/agregar/producto/descuentos', [CotizacionController::class, 'preciosSugeridos'])
         ->name('cotizaciones.agregar.producto.descuentos');
+
 
         // rutas de PRODUCTOS
     Route::get('/productos/ajaxBuscarProductos', [ProductoController::class, 'buscar'])->name('productos.ajax.obtener');
@@ -84,7 +86,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     // rutas especiales para LISTA DE PRECIOS
     Route::get('/listaprecios/exportlist', [ListaPrecioController::class, 'exportlist'])->name('listaprecios.exportlist');
     Route::resource('/listaprecios', ListaPrecioController::class);
-
+    Route::post('/listaprecios/create', [ListaPrecioController::class, 'addListadoProveedor'])->name('listaprecios.create');
     //Route::post('importListaPrecioExcel', 'ListaPrecioController@importExcel')->name('ListaPrecio.import.excel');
 
     // rutas de COTIZACIONES
