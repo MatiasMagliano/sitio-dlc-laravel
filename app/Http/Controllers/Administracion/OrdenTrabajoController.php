@@ -116,7 +116,7 @@ class OrdenTrabajoController extends Controller
         else
         {
             $estado = 7;
-            $request->session()->flash('error', 'La orden de trabajo se creó con éxito, pero con lotes incompletos. Deberá agregarlos manualmente una vez adquiridos.');
+            $request->session()->flash('warning', 'La orden de trabajo se creó con éxito, pero con <strong>lotes incompletos</strong>. Deberá agregarlos manualmente una vez adquiridos.');
         }
         $cotizacion->estado_id = $estado;
         $orden->estado_id = $estado;

@@ -10,6 +10,17 @@
     </script>
 @endif
 
+@if (session('warning'))
+    <script>
+        Swal.fire({
+        icon: 'warning',
+        title: 'ADVERTENCIA',
+        html: '{!! session('warning') !!}',
+        showConfirmButton: true,
+        })
+    </script>
+@endif
+
 @if (session('error'))
     <script>
         Swal.fire({
