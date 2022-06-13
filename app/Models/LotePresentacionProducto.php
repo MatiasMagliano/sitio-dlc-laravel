@@ -18,23 +18,34 @@ class LotePresentacionProducto extends Model
     ];
 
     // RELACIONES
+    public function productos(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Producto::class,
+            'lote_presentacion_producto',
+            'id',
+            'producto_id'
+        );
+    }
+
     public function presentaciones(): BelongsToMany
     {
-        return $this->belongsToMany(Presentacion::class, 'lote_presentacion_producto', 'presentacion_id');
+        return $this->belongsToMany(
+            Presentacion::class,
+            'lote_presentacion_producto',
+            'id',
+            'presentacion_id'
+        );
     }
+
     public function lotes(): BelongsToMany
     {
         return $this->belongsToMany(Lote::class, 'lote_presentacion_producto', 'lote_id');
     }
 
-    public function productos(): BelongsToMany
-    {
-        return $this->belongsToMany(Producto::class, 'lote_presentacion_producto', 'producto_id');
-    }
-
     public function depositos(): BelongsToMany
     {
-        return $this->belongsToMany(DepositoCasaCentral::class, 'lote_presentacion_producto', 'dcc_id', 'dcc_id');
+        return $this->belongsToMany(DepositoCasaCentral::class, 'lote_presentacion_producto', 'dcc_id');
     }
 
 
