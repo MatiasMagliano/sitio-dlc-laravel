@@ -23,7 +23,8 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        $productos = Producto::all();
+        $productos = LotePresentacionProducto::with('productos', 'presentaciones')
+            ->get();
         return view('administracion.productos.index', compact('productos'));
     }
 
@@ -157,14 +158,12 @@ class ProductoController extends Controller
         $borrado = Producto::destroy($id);
 
         if(!$borrado){
-            $request->session()->flash('error', 'Ocurrió un error al borrar el producto');
-            return redirect()
-                ->route('administracion.productos.index');
+            $request->session()->flash('error', 'Ocurrió un error al intentar borrar el producto');
         }else{
             $request->session()->flash('success', 'El producto ha sido eliminado correctamente');
-            return redirect()
-                ->route('administracion.productos.index');
         }
+
+        return redirect()->route('administracion.productos.index');
     }
 
     /**
