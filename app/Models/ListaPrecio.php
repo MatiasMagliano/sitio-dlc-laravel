@@ -49,6 +49,14 @@ class ListaPrecio extends Model
             ->get();
     }
 
+    public static function deletelistaDeProveedor($proveedor_id)
+    {
+        $listaPrecios = ListaPrecio::find($proveedor_id);
+        $listaPrecios->softDeletes();
+        return back();
+    }
+    
+
     public static function listarDescuentos($producto, $presentacion, $cotizacion)
     {   
         
@@ -103,5 +111,6 @@ class ListaPrecio extends Model
         //     ->where('lista_precios.id', ListaPrecio::getIdListaPrecio($producto, $presentacion))
         //     ->get();
     }
+    
 
 }

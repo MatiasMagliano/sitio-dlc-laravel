@@ -75,19 +75,18 @@
                         <td>{{ strtoupper($listaPrecio->razon_social) }}</td>
                         <td>{{ $listaPrecio->prods }}</td>
                         <td>{{ $listaPrecio->creado }}</td>
-                        <td>{{ $listaPrecio->modificado }}</td>
+                        <td class="fechaUpdate">{{ $listaPrecio->modificado }}</td>
                         <td><a href=""
                             class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
-                            title="Editar cotización">
+                            title="Editar listado">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
-                        <form action=""
-                            id="borrar" method="post" class="d-inline">
+                        <form action="{{ route('administracion.listaprecios.index') }}"
+                        id="{{$listaPrecio->proveedor_id}}" method="POST" class="d-inline">
                             @csrf
                             @method('delete')
-                            <button type="button" class="btn btn-link" data-toggle="tooltip"
-                                data-placement="bottom" title="Borrar cotización"
-                                onclick="borrarListadoProveedor({{$listaPrecio->cuit}})">
+                            <button type="button" class="btn btn-link" data-toggle="tooltip" title="Borrar listado"
+                                onclick="borrarListadoProveedor({{$listaPrecio->proveedor_id}})">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </form></td>
@@ -107,27 +106,33 @@
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
 
-    function borrarListadoProveedor(id){
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Borrar cotización',
-                    text: 'Su cotización no contiene líneas, esto borrará la referencia en el registro.',
-                    confirmButtonText: 'Borrar',
-                    showCancelButton: true,
-                    cancelButtonText: 'Cancelar',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        debugger;
-                        $('#borrar-' + id).submit();
-                        window.location.replace('{{ route('administracion.cotizaciones.index') }}');
-                    }
-                });
+    function borrarListadoProveedor($proveedor_id){
+        var datos = { proveedor_id: $proveedor_id};
+        Swal.fire({
+            icon: 'warning',
+            title: 'Borrar listado',
+            text: 'Su cotización no contiene líneas, esto borrará la referencia en el registro.',
+            confirmButtonText: 'Borrar',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    data: datos,
+                    url: "{{ route('administracion.listaprecios.deleteLista') }}",
+                    type: "POST",
+                    
+               }).done(function(resultado) {
+               });
             }
+        });
+    }
 
          $(document).ready(function() {            
             // VARIABLES LOCALES
             var tabla2;
             Tabla 2
+
             tabla2 = $('#tabla2').DataTable({
                 //"scrollY": "57vh",
                 //"scrollCollapse": true,
@@ -171,21 +176,10 @@
                 }]
             });
 
-            //Tomar id Proveedor seleccionado
-            // $('#btnBuscarListado').on('click', function(){
-            //     if($(this).hasClass('selected')){
-            //         $(this).removeClass('selected');
-            //     }
-
-            //     $('#ListadoDePrecios .overlay').remove();
-            //     var idSupplier = $(this).attr("id");
-            //     var Supplier = $(this).attr("value");
-                
-            //     $('#tituloListadoDePrecios').text('Lotes vigentes para ' + Supplier);     
-                
-            //     getListadoProveedor(idSupplier);
-            // });
-
+            $listaPrecios.forEach(modificado => {
+                alert("hola");
+            });
+            
             $( "#btnBuscarListado" ).on('click', function() {
                 $idSupplier = $('#input-proveedor').val();
                 getListadoProveedor($idSupplier);
@@ -194,16 +188,17 @@
             // Llena Tabla2
             function getListadoProveedor($idSupplier) {
                 var datos = { proveedor_id: $idSupplier};
-                $('#ListadoDePrecios .overlay').remove();
                 $.ajax({
                     url: "{{ route('administracion.listaprecios.mostrarLista') }}",
                     type: "GET",
                     data: datos,
                }).done(function(resultado) {
-                    tabla2.clear();
+                tabla2.clear();
                     tabla2.rows.add(resultado).draw();
                });
             };
+
+
 
             // Exporta listado
             // $(document).on('click', '#getlistad', function(){ 

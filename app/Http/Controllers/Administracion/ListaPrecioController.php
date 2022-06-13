@@ -9,13 +9,15 @@ use App\Exports\ListaPrecioExport;
 use App\Models\Producto;
 use App\Models\Presentacion;
 use App\Models\Proveedor;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Maatwebsite\Excel\Facades\Excel;
 
 
 
 class ListaPrecioController extends Controller
 {
+
+    use SoftDeletes;
 
     public function index()
     {
@@ -25,16 +27,6 @@ class ListaPrecioController extends Controller
             ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
             ->groupBy('proveedors.cuit', 'proveedors.razon_social')
             ->get();
-
-        // $proveedors = Proveedor::all();
-
-        // $users = DB::table('lista_precios')
-        //     ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
-        //     ->join('productos','lista_precios.producto_id','=','productos.id')
-        //     ->join('presentacions','lista_precios.presentacion_id','=','presentacions.id')
-        //     ->select('lista_precios.*','productos.droga','presentacions.presentacion','proveedors.razon_social')
-        //     ->get();
-            
         return view('administracion.listaprecios.index', compact('listaPrecios'));
     }
 
@@ -63,28 +55,35 @@ class ListaPrecioController extends Controller
         }
     }
 
-    public function addListadoProveedor(Request $request){
+    public function deleteLista(Request $request){
         if($request->ajax()){
-            $addLista = new ListaPrecio();
-
-            $addLista->producto_id = $request('producto_id');
-            $addLista->presentacion_id = $request('presentacion_id');
-            $addLista->codigoProv = $request('codigoProv');
-            $addLista->costo = $request('costo');
-
-            $addLista->save();
-
-            
+            $listaPrecios = ListaPrecio::deletelistaDeProveedor($request->proveedor_id);
+            return back();
         }
     }
+    public function addListadoProveedor(Request $request){
+        
+        $myarray = explode("|", $request->cadena);
 
-    public function destroy(Request $request){
-         if($request->ajax()){
-              $ListaPrecios = ListaPrecio::destroy($request->id);
-              return response()->json($ListaPrecios);
-          }
-          return response()->json(['mensaje' => 'No se encuentra la Lista de Ppecios del Proveedor'+$request->razon_social]);
+        $save = new ListaPrecio;
+
+        $save->proveedor_id = $myarray[0];
+        $save->codigoProv = $myarray[1];
+        $save->producto_id = $myarray[2];
+        $save->presentacion_id = $myarray[3];
+        $save->costo = $myarray[4];
+
+        $save->save(); 
     }
+
+    // public function destroy(Request $request){
+    //     if($request->ajax()){
+    //         $ListaPrecios = ListaPrecio::destroy($request->id);
+    //         return response()->json($ListaPrecios);
+    //     }
+    //     return response()->json(['mensaje' => 'No se encuentra la Lista de Precios del Proveedor'+$request->razon_social]);
+    // }
+
 
     // /**
     // * @return \Illuminate\Support\Collection
