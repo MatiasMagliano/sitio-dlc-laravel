@@ -40,12 +40,22 @@ class LotePresentacionProducto extends Model
 
     public function lotes(): BelongsToMany
     {
-        return $this->belongsToMany(Lote::class, 'lote_presentacion_producto', 'lote_id');
+        return $this->belongsToMany(
+            Lote::class,
+            'lote_presentacion_producto',
+            'id',
+            'lote_id'
+        );
     }
 
     public function depositos(): BelongsToMany
     {
-        return $this->belongsToMany(DepositoCasaCentral::class, 'lote_presentacion_producto', 'dcc_id');
+        return $this->belongsToMany(
+            DepositoCasaCentral::class,
+            'lote_presentacion_producto',
+            'id',
+            'dcc_id'
+        );
     }
 
 

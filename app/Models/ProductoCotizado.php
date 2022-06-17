@@ -18,22 +18,17 @@ class ProductoCotizado extends Model
 
 
 
-    // relaciones
-    /**
-     * Get the producto that owns the ProductoCotizado
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    // RELACIONES
     public function producto(): BelongsTo
     {
         return $this->belongsTo(Producto::class);
     }
 
-    /**
-     * Get the cotizaciones that owns the ProductoCotizado
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    public function presentacion(): BelongsTo
+    {
+        return $this->belongsTo(Presentacion::class);
+    }
+
     public function cotizaciones(): BelongsTo
     {
         return $this->belongsTo(Cotizacion::class);

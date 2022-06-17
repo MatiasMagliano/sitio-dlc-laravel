@@ -4,15 +4,12 @@ namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductoRequest;
-use App\Models\DepositoCasaCentral;
 use App\Models\Lote;
-use App\Models\LotePresentacionProducto;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ProductoController extends Controller
 {
@@ -23,8 +20,8 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        $productos = LotePresentacionProducto::with('productos', 'presentaciones')
-            ->get();
+        $productos = Producto::sortable('droga')->paginate(10);
+        //$productos = $productos->sortBy(['droga', 'asc']);
         return view('administracion.productos.index', compact('productos'));
     }
 
@@ -91,10 +88,10 @@ class ProductoController extends Controller
 
             // se crea una nueva relación con TODOS LOS DATOS y guarda el modelo producto
             $producto->save();
-            $producto->presentaciones()->attach($request->presentacion, [
-                'proveedor_id' => $request->proveedor,
-                'lote_id' => $lote->id
-            ]);
+            // $producto->presentaciones()->attach($request->presentacion, [
+            //     'proveedor_id' => $request->proveedor,
+            //     'lote_id' => $lote->id
+            // ]);
 
             $request->session()->flash('success', 'El producto y su lote, se han creado con éxito');
             return redirect(route('administracion.productos.index'));
@@ -102,10 +99,10 @@ class ProductoController extends Controller
 
         // se fuerza la relación pero SIN LOS DATOS DE LOTE y se guarda el modelo producto
         $producto->save();
-        $producto->presentaciones()->attach($request->presentacion, [
-            'proveedor_id' => $request->proveedor,
-            'lote_id' => '-1'
-        ]);
+        // $producto->presentaciones()->attach($request->presentacion, [
+        //     'proveedor_id' => $request->proveedor,
+        //     'lote_id' => '-1'
+        // ]);
 
         $request->session()->flash('success', 'El producto SIN LOTE, se ha creado con éxito');
         return redirect(route('administracion.productos.index'));
@@ -177,5 +174,27 @@ class ProductoController extends Controller
         }
 
         return response()->json(['droga' => 'No hay resultados']);
+    }
+
+    public function busqueda(Request $request)
+    {
+        $termino = $request->input('termino');
+        if($termino != "")
+        {
+            $productos = Producto::where('droga','like','%'.$request->termino.'%')->paginate(10);
+
+            // ESTA LÍNEA ES LA SALVADORA!!! Se utiliza para que los links de paginación no vuelvan al listado original
+            $productos->appends(['termino' => $termino]);
+
+            if(count($productos))
+            {
+                return view('administracion.productos.index', compact('productos'));
+            }
+            else
+            {
+                $request->session()->flash('error', 'La búsqueda no dio resultado.');
+                return redirect(route('administracion.productos.index'));
+            }
+        }
     }
 }

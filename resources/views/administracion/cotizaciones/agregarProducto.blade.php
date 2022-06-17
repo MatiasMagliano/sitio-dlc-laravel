@@ -57,7 +57,6 @@
         @csrf
         <input id="cotProv" type="hidden" name="cotizacion_id" value="{{$cotizacion->id}}">
         <div class="card">
-
             <div class="card-header">
                 <div class="row d-flex">
                     <div class="col-8">
@@ -73,17 +72,16 @@
                 {{-- producto=producto+presentacion. Se retienen los dos ID combinados. Luego el controller los separa --}}
                 <label for="input-producto">Producto y presentación</label>
                 <div class="form-group row">
-                    <div id="btnBuscarPrecios" class="btn btn-sm btn-outline-secondary col-1 text-nowrap font-weight-light">Obtener precios</div>
                     <select name="producto" id="input-producto"
                         class="seleccion-producto col @error('producto') is-invalid @enderror">
                         <option data-placeholder="true"></option>
                         @foreach ($productos as $producto)
-                            @foreach ($producto->presentaciones as $presentacion)
+                            @foreach ($producto->presentaciones($producto->id) as $presentacion)
                                 @if ($presentacion->id == old('producto'))
                                     <option value="{{$producto->id}}|{{$presentacion->id}}" selected>{{ $producto->droga }} -
                                         {{ $presentacion->forma }}, {{ $presentacion->presentacion }}</option>
                                 @else
-                                    <option value="{{$producto->id}}|{{$presentacion->id}}">[{{ $producto->droga }}]
+                                    <option value="{{$producto->id}}|{{$presentacion->id}}">{{ $producto->droga }} -
                                         {{ $presentacion->forma }}, {{ $presentacion->presentacion }}</option>
                                 @endif
                             @endforeach
@@ -92,31 +90,28 @@
                     @error('producto')<div class="invalid-feedback">{{$message}}</div>@enderror
                 </div>
                 <hr>
+                {{-- SELECCIONAR Y SUGERIR LOS PRECIOS --> debe terminar siendo FLOAT --}}
+                <div class="card mx-auto" style="width: 80%;">
+                    <div class="card-body">
+                        <h5 class="card-title">Precios sugeridos</h5>
+                        <br>
+                        <table id="tablaPreciosSugeridos" class="table table-responsive-md table-bordered table-condensed" width="100%">
+                            <thead>
+                                <th>Proveedor</th>
+                                <th>Descuento 1</th>
+                                <th>Descuento 2</th>
+                                <th>Descuento 3</th>
+                                <th>Descuento 4</th>
+                                <th>Descuento 5</th>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <hr>
                 <div class="row d-flex">
-
                     <div class="col">
-                        {{-- SELECCIONAR Y SUGERIR LOS PRECIOS --> debe terminar siendo FLOAT --}}
-                        <div class="card mx-auto" style="width: 80%;">
-                            <div class="card-body">
-                                <h5 class="card-title">Precios sugeridos</h5>
-                                <br>
-                                <table id="tablaPreciosSugeridos" class="table table-responsive-md table-bordered table-condensed" width="100%">
-                                    <thead>
-                                        <th>Proveedor</th>
-                                        <th>Descuento 1</th>
-                                        <th>Descuento 2</th>
-                                        <th>Descuento 3</th>
-                                        <th>Descuento 4</th>
-                                        <th>Descuento 5</th>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <ul id="lista-precio-sugerido" class="list-group list-group-flush">
-                                {{-- LA LISTA SE LLENA POR JS, YA QUE ES UN AJAX QUE SE ACTIVA CUANDO SE SELECCIONA UN PRODUCTO --}}
-                            </ul>
-                        </div>
                         <div class="form-group">
                             <label for="input-precio">Precio</label>
                             <input type="number" name="precio" id="input-precio" min="0" pattern="[0-9]"
@@ -126,9 +121,7 @@
                                 @error('precio')<div class="invalid-feedback">{{$message}}</div>@enderror
                         </div>
                     </div>
-                </div>
 
-                <div class="row d-flex">
                     <div class="col">
                         <div class="form-group">
                             <label for="input-cantidad">Cantidad</label>
@@ -138,6 +131,7 @@
                                 @error('cantidad')<div class="invalid-feedback">{{$message}}</div>@enderror
                         </div>
                     </div>
+
                     <div class="col">
                         <div class="form-group">
                             <label for="input-total">Total</label>
@@ -151,7 +145,6 @@
             </div>
         </div>
     </form>
-    <input type="text">
 @endsection
 
 @section('js')
@@ -203,6 +196,13 @@
         var selProducto = new SlimSelect({
             select: '.seleccion-producto',
             placeholder: 'Seleccione el nombre de la droga y luego su presentación...',
+            onChange: (seleccionado) => {
+                // DISPARAR EL AJAX Y LLENAR EL DATATABLE CON PRECIOS
+                let productoSeleccionado = seleccionado.value;
+                let prodPres = productoSeleccionado.split("|");
+                let idcotizacion = $('#cotProv').val();
+                obtenerDatos(prodPres[0], prodPres[1], idcotizacion);
+            }
         });
 
         // SCRIPT QUE ACTUALIZA EL TOTAL EN EL CAMPO TOTAL
@@ -242,15 +242,6 @@
                 costo_4: '*',
                 costo_5: '*',
             }).draw();
-
-            // SOLICITUD DE LENADO DE SUGERENCIA DE PRECIOS
-            $( "#btnBuscarPrecios" ).on('click', function() {
-                // DISPARAR EL AJAX Y LLENAR EL DATATABLE CON PRECIOS
-                let productoSeleccionado = selProducto.selected();
-                let prodPres = productoSeleccionado.split("|");
-                let idcotizacion = $('#cotProv').val();
-                obtenerDatos(prodPres[0], prodPres[1], idcotizacion);
-            });
         });
     </script>
 @endsection

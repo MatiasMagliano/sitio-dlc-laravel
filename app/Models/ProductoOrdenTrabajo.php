@@ -23,6 +23,11 @@ class ProductoOrdenTrabajo extends Model
         return $this->belongsTo(Producto::class);
     }
 
+    public function presentacion(): BelongsTo
+    {
+        return $this->belongsTo(Presentacion::class);
+    }
+
     public function ordenTrabajo(): BelongsTo
     {
         return $this->belongsTo(OrdenTrabajo::class);

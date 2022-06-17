@@ -156,7 +156,7 @@
                     <tr>
                         <td style="text-align: center;">{{++$i}}</td>
                         <td>{{--Producto: producto+presentacion--}}
-                            {{$cotizado->producto->droga}}, {{$presentaciones[$cotizado->presentacion_id-1]->forma}} {{$presentaciones[$cotizado->presentacion_id-1]->presentacion}}
+                            {{$cotizado->producto->droga}}, {{$cotizado->presentacion->forma}} {{$cotizado->presentacion->presentacion}}
                         </td>
                         <td>
                             {{$cotizado->cantidad}}
@@ -197,7 +197,7 @@
             $('#tablaProductos').DataTable( {
                 "responsive": true,
                 "dom": 'Pfrtip',
-                "scrollY": "50vh",
+                "scrollY": "25vh",
                 "scrollCollapse": true,
                 "paging": false,
                 "order": [0, 'asc'],

@@ -29,7 +29,7 @@ class CotizacionSeeder extends Seeder
                     'cliente_id' => $cliente->id,
                     'dde_id' => $dirEntrega->random(1)->get('0'),
                 ]);
-                $maxProductos = rand(2, 7);
+                $maxProductos = rand(2, 100);
                 for($i = 1; $i <= $maxProductos; $i++){
                     ProductoCotizado::factory()->create([
                         'cotizacion_id' => $cotizacion->id,

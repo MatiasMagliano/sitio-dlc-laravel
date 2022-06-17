@@ -22,6 +22,10 @@
             background-color: #ffc107;
         }
 
+        .pre-scrollable{
+            max-height: 230px;
+        }
+
     </style>
 @endsection
 
@@ -167,7 +171,7 @@
                                 <td style="vertical-align: middle; text-align:center;">
                                     <a href="{{ route('administracion.ordentrabajo.show', ['ordentrabajo' => $orden]) }}"
                                         class="btn btn-sm btn-danger">
-                                        Asignar lotes
+                                        Ver
                                     </a>
                                 </td>
                                 @break
@@ -198,7 +202,11 @@
                         <p>Para generar la <strong>Orden de Trabajo</strong>, destilde solo aquellas líneas que no fueron aprobadas en la <strong>Orden de Provisión</strong>, luego indique el plazo de entrega y por último presione Continuar.</p>
                         <hr>
 
-                        <div id="lineasCotizadas" class="form-group"></div>
+                        <div>
+                            <a class="btn-link" onclick="selectAll()" style="cursor: pointer;">Seleccionar</a>
+                            <a class="btn-link" onclick="UnSelectAll()" style="cursor: pointer;">| Deseleccionar</a>
+                        </div>
+                        <div id="lineasCotizadas" class="form-group pre-scrollable"></div>
                         <div class="form-group">
                             <label for="plazoDeEntrega">Plazo de entrega</label>
                             <textarea name="plazo_entrega" class="form-control" id="plazoDeEntrega" rows="2"></textarea>
@@ -219,7 +227,23 @@
     @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
-         $(document).ready(function() {
+        function selectAll(){
+            var items=document.getElementsByName('lineasOrdenTrabajo[]');
+            for(var i=0; i<items.length; i++){
+                if(items[i].type=='checkbox')
+                    items[i].checked=true;
+            }
+        }
+
+        function UnSelectAll(){
+            var items=document.getElementsByName('lineasOrdenTrabajo[]');
+            for(var i=0; i<items.length; i++){
+                if(items[i].type=='checkbox')
+                    items[i].checked=false;
+            }
+        }
+
+        $(document).ready(function() {
             $('#ordenesPotenciales').DataTable({
                 "dom": 'rtip',
                 "pageLength": 3,
@@ -244,13 +268,22 @@
                         }
                     }
                 }],
-                "columnDefs": [{
+                "columnDefs": [
+                    {
                         targets: 0,
                         type: 'date'
                     },
                     {
                         targets: 2,
-                        width: 300,
+                        width: 250,
+                    },
+                    {
+                        targets: 3,
+                        width: 70
+                    },
+                    {
+                        targets: 4,
+                        width: 70
                     },
                     {
                         targets: 7,
@@ -283,19 +316,28 @@
                         }
                     }
                 }],
-                "columnDefs": [{
+                "columnDefs": [
+                    {
                         targets: 0,
                         type: 'date'
                     },
                     {
                         targets: 2,
-                        width: 300,
+                        width: 250,
+                    },
+                    {
+                        targets: 3,
+                        width: 70
+                    },
+                    {
+                        targets: 4,
+                        width: 70
                     },
                     {
                         targets: 6,
-                        width: 100,
+                        width: 80,
                     },
-                ],
+                ]
             });
 
             $('#modalModificarOrden').on('show.bs.modal', function(event){

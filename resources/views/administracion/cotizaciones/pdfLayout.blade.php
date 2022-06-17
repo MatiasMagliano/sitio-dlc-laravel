@@ -10,6 +10,12 @@
             margin: 0cm;
             font-family: Arial, Helvetica, sans-serif;
             font-size: 9px;
+            display: block;
+        }
+
+        .nueva-linea{
+            break-before: always;
+            break-after: auto;
         }
 
         .contenedor-encabezado{
@@ -38,7 +44,7 @@
 <body class="d-flex flex-column">
     <div class="card">
         <div class="card-header">
-            <p class="text-right">Córdoba, {{\Carbon\Carbon::now()->format('l jS F Y')}}</p>
+            <p class="text-right">Córdoba, {{\Carbon\Carbon::now()->translatedFormat('l j F Y')}}</p>
             <div class="contenedor-encabezado text-center">
                 <span class="titulo">Droguería de la Ciudad - COTIZACION</span>
                 <br>
@@ -58,13 +64,13 @@
                         {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('nombre')->get('0')}},
                         {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('nombre_completo')->get('0')}}
                 </li>
-                <li class="list-group-item  py-1">
+                <li class="list-group-item py-1">
                     <strong>Correo electrónico</strong>: {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('email')->get('0')}}
                 </li>
             </ul>
         </div>
         <div class="card-body">
-            <table class="table table-bordered" width="100%">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th class="encabezado">Fecha</th>
@@ -94,32 +100,32 @@
                 <span>Detalle</span>
             </div>
             <br>
-            <table class="table table-sm" width="100%">
+            <table id="tabla-detalle" class="table table-sm" data-show-print="true" width="100%">
                 <thead>
                     <th scope="col">Línea</th>
                     <th scope="col">Producto</th>
                     <th scope="col">Cantidad</th>
                     <th scope="col">Precio unitario</th>
-                    <th scope="col">Total</th>
+                    <th scope="col">Subtotal</th>
                 </thead>
                 <tbody>
                     @php $i = 0; /*variable contadora del Nº Orden*/@endphp
                     @foreach ($cotizacion->productos as $cotizado)
-                    <tr>
-                        <th scope="row" class="text-center">{{++$i}}</td>
-                        <td>{{--Producto: producto+presentacion--}}
-                            {{$cotizado->producto->droga}}, {{$presentaciones[$cotizado->presentacion_id-1]->forma}} {{$presentaciones[$cotizado->presentacion_id-1]->presentacion}}
-                        </td>
-                        <td class="text-center">
-                            {{$cotizado->cantidad}}
-                        </td>
-                        <td class="text-center">
-                            $ {{number_format($cotizado->precio, 2, ',', '.')}}
-                        </td>
-                        <td class="text-right">
-                            $ {{number_format($cotizado->total, 2, ',', '.')}}
-                        </td>
-                    </tr>
+                        <tr>
+                            <th scope="row" class="text-center">{{++$i}}</td>
+                            <td>{{--Producto: producto+presentacion--}}
+                                {{$cotizado->producto->droga}}, {{$presentaciones[$cotizado->presentacion_id-1]->forma}} {{$presentaciones[$cotizado->presentacion_id-1]->presentacion}}
+                            </td>
+                            <td class="text-center">
+                                {{$cotizado->cantidad}}
+                            </td>
+                            <td class="text-center">
+                                $ {{number_format($cotizado->precio, 2, ',', '.')}}
+                            </td>
+                            <td class="text-right">
+                                $ {{number_format($cotizado->total, 2, ',', '.')}}
+                            </td>
+                        </tr>
                     @endforeach
                     <tr>
                         <td colspan="4" style="background-color: #ccc; text-align: center;"> IMPORTE TOTAL</td>
@@ -127,25 +133,38 @@
                     </tr>
                 </tbody>
             </table>
-            @php
-                $total = $cotizacion->productos->sum('total');
-                $total = explode('.', $total);
-                $montoLetras = new NumberFormatter('es_AR', NumberFormatter::SPELLOUT);
-                $letras = 'En letras: '. Str::ucfirst($montoLetras->format($total[0])). ' pesos, con ' .Str::ucfirst($montoLetras->format($total[1])). ' centavos.';
-            @endphp
-            <strong style="font-size: 11px">{{$letras}}</strong>
-            <p>ACLARACIÓN: La presente cotización, no incluye precios con IVA.</p>
+            <ul class="list-group nueva-linea">
+                <li class="list-group-item">
+                    @php
+                        $montoLetras = new NumberFormatter('es_AR', NumberFormatter::SPELLOUT);
+                        $total = $cotizacion->productos->sum('total');
+                        $total = explode('.', $total);
+                        // SE DETERMINA SI EL TOTAL TIENE CENTAVOS O NO (porque el explode detecta los ceros)
+                        if(sizeof($total)>1)
+                        {
+                            $letras = 'En letras: '. Str::ucfirst($montoLetras->format($total[0])). ' pesos, con ' .Str::ucfirst($montoLetras->format($total[1])). ' centavos.';
+                        }
+                        else
+                        {
+                            $letras = 'En letras: '. Str::ucfirst($montoLetras->format($total[0])). ' pesos, con cero centavos.';
+                        }
+                    @endphp
+                    <strong style="font-size: 11px">{{$letras}}</strong>
+                    <p>ACLARACIÓN: La presente cotización, no incluye precios con IVA.</p>
+                </li>
+            </ul>
 
-            <div class="fixed-bottom">
+            {{-- PIE DE PÁGINA --}}
+            <div class="fixed-bottom nueva-linea">
                 <ul class="list-group">
                     <li class="list-group-item">
                         <div class="d-flex w-100 justify-content-between">
-                            <span class="encabezado mb-1">Condiciones</span>
+                            <span class="encabezado mb-1">Condiciones*</span>
                         </div>
                         <p class="mb-1">
                             {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('condiciones')->get('0')}}
                         </p>
-                        <small class="text-muted">Proveídas por el cliente.</small>
+                        <small class="text-muted">*Provistas por el cliente.</small>
                     </li>
 
                     <li class="list-group-item">
@@ -163,7 +182,6 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/jquery.slim.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>

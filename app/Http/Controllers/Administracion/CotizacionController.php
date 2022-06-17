@@ -91,8 +91,7 @@ class CotizacionController extends Controller
     public function show(Cotizacion $cotizacione)
     {
         $cotizacion = $cotizacione;
-        $presentaciones = Presentacion::all();
-        return view('administracion.cotizaciones.show', compact('cotizacion', 'presentaciones'));
+        return view('administracion.cotizaciones.show', compact('cotizacion'));
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Carbon\Carbon;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,7 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
+        // configuración de bootstrap para el paginador
+        Paginator::useBootstrap();
         // Configuración para fechas en español
         Carbon::setUTF8(true);
         Carbon::setLocale(config('app.locale'));

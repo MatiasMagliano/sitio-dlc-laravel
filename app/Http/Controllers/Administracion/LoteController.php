@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\Controller;
+use App\Models\DepositoCasaCentral;
 use App\Models\Lote;
+use App\Models\LotePresentacionProducto;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use Carbon\Carbon;
@@ -20,22 +22,19 @@ class LoteController extends Controller
     public function index()
     {
         // se crea una colección de líneas específicas
-        $productos = Producto::with('presentaciones')->get();
+        $productos = Producto::all();
         $config = [
+            'format' => 'DD/MM/YYYY',
+            'dayViewHeaderFormat' => 'MMM YYYY',
+        ];
+
+        $config_vencimiento = [
             'format' => 'DD/MM/YYYY',
             'dayViewHeaderFormat' => 'MMM YYYY',
             'minDate' => "js:moment().startOf('month')",
         ];
 
-        return view('administracion.lotes.index', compact('productos', 'config'));
-    }
-
-    public function buscarLotes(Request $request)
-    {
-        if($request->ajax()){
-	        $lotes = Lote::lotesPorPresentacion($request->producto_id, $request->presentacion_id);
-            return Response()->json($lotes);
-        }
+        return view('administracion.lotes.index', compact('productos', 'config', 'config_vencimiento'));
     }
 
     public function show($id)
@@ -66,21 +65,35 @@ class LoteController extends Controller
     /**
      * FUNCIÓN DECLARADA COMO AJAX
      */
-    public function store(Request $request){
+    public function store(Request $request, LotePresentacionProducto $lpp){
         // No se puede agregar un nuevo lote con el mismo identificador
         $isValid = $request->validate([
             'identificador' => 'required|unique:lotes'
         ]);
 
         $lote = new Lote;
-
         $lote->identificador = $request->identificador;
-        $lote->precioCompra = $request->precio;
+        $lote->precio_compra = $request->precio_compra;
         $lote->cantidad = $request->cantidad;
-        $lote->desde = Carbon::now()->format('Y-m-d H:i:s');
-        $lote->hasta = Carbon::createFromFormat('d/m/Y', $request->vencimiento);
-
+        $lote->fecha_compra = Carbon::createFromFormat('d/m/Y', $request->fecha_compra);
+        $lote->fecha_elaboracion = Carbon::createFromFormat('d/m/Y', $request->fecha_elaboracion);
+        $lote->fecha_vencimiento = Carbon::createFromFormat('d/m/Y', $request->fecha_vencimiento);
         $lote->save();
+
+        // agregado en lote_presentacion_producto
+        $lpp->lotes()->attach($lote, [
+            'producto_id'       => $request->producto_id,
+            'presentacion_id'   => $request->presentacion_id,
+            'dcc_id'            => LotePresentacionProducto::getIdDeposito($request->producto_id, $request->presentacion_id),
+            'created_at'        => Carbon::now(),
+            'updated_at'        => Carbon::now(),
+        ]);
+
+        // actualizo las cantidades
+        $deposito = DepositoCasaCentral::find(
+            LotePresentacionProducto::getIdDeposito($request->producto_id, $request->presentacion_id)
+        );
+        $deposito->increment('existencia', $lote->cantidad);
 
         return response()->json(['mensaje' => 'El lote fue guardado con éxito']);
     }
@@ -93,5 +106,14 @@ class LoteController extends Controller
             //['mensaje' => 'El lote ha sido eliminado correctamente']
         }
         return response()->json(['mensaje' => 'No se encuentra el identificador del lote'+$request->id]);
+    }
+
+    // FUNCIONES AJAX
+    public function buscarLotes(Request $request)
+    {
+        if($request->ajax()){
+	        $lotes = Lote::lotesPorPresentacion($request->producto_id, $request->presentacion_id);
+            return Response()->json($lotes);
+        }
     }
 }

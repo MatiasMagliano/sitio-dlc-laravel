@@ -49,9 +49,9 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::get('/cotizaciones/{cotizacion}/agregar/producto/descuentos', [CotizacionController::class, 'preciosSugeridos'])
         ->name('cotizaciones.agregar.producto.descuentos');
 
-
-        // rutas de PRODUCTOS
+    // rutas de PRODUCTOS
     Route::get('/productos/ajaxBuscarProductos', [ProductoController::class, 'buscar'])->name('productos.ajax.obtener');
+    Route::get('/productos/busqueda', [ProductoController::class, 'busqueda'])->name('productos.busqueda');
     Route::resource('/productos', ProductoController::class)->except('show');
     Route::get('/productos/{producto_id}/show/{presentacion_id}', [ProductoController::class, 'show'])->name('productos.show');
 
@@ -78,6 +78,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     // rutas de LOTES
     Route::get('/lotes/ajaxObtenerLotes', [LoteController::class, 'buscarLotes'])->name('lotes.ajax.obtener');
+    Route::delete('/lotes/eliminarLote', [LoteController::class, 'destroy'])->name('ajaxEliminar');
     Route::resource('/lotes', LoteController::class)->except('destroy');
 
     // rutas de TRAZABILIDAD

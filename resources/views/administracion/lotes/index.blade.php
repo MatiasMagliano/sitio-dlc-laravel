@@ -69,14 +69,12 @@
                 <table id="tabla1" class="table table-borderless" style="width: 100%; cursor:pointer">
                     <thead style="display: none">
                         <th>droga</th>
-                        <th>forma/presentacion</th>
                     </thead>
                     <tbody>
                         @foreach ($productos as $producto)
-                            @foreach ($producto->presentaciones as $presentacion)
+                            @foreach ($producto->presentaciones($producto->id) as $presentacion)
                                 <tr id="{{$producto->id}}" value="{{$presentacion->id}}">
-                                    <td>{{ $producto->droga }}</td>
-                                    <td>{{ $presentacion->forma }}, {{ $presentacion->presentacion }}</td>
+                                    <td>{{ $producto->droga }} - {{ $presentacion->forma }}, {{ $presentacion->presentacion }}</td>
                                 </tr>
                             @endforeach
                         @endforeach
@@ -87,83 +85,123 @@
 
         <div class="card ml-2" id="lotesVigentes">
             <div class="card-header">
-                <h3 id="tituloLotesVigentes" class="card-title">
-                    <i class="fas fa-plus mr-2"></i>
+                <h3>
                     Lotes vigentes
                 </h3>
             </div>
             <div class="card-body">
-                <table id="tabla2" class="display nowrap" style="width: 100%; cursor:pointer">
-                    <thead>
-                        <th>ID</th>
-                        <th>Nº</th>
-                        <th>Precio</th>
-                        <th>Cantidad</th>
-                        <th>Vencimiento</th>
-                        <th></th>
-                    </thead>
-                </table>
-                <p style="font-size: 1.3em"><u>TOTAL EN STOCK:</u>&nbsp;&nbsp;<strong id="totalLotes"></strong></p>
-                <hr>
-                <x-adminlte-card title="Agregar nuevo lote" id="agregarLote" theme="lime" class="flex-fill">
+                <div class="card">
+                    <div class="card-header bg-gradient-blue">
+                        <h5 id="tituloLotesVigentes" class="card-title">
+                            <i class="fas fa-plus mr-2"></i>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <table id="tabla2" class="display nowrap" style="width: 100%; cursor:pointer">
+                            <thead>
+                                <th>ID</th>
+                                <th>Nº</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th>Vencimiento</th>
+                                <th></th>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
 
-                    {{-- FORMULARIO TIPO JQUERY.VALIDATE --}}
-                    <form action="javascript:void(0)" method="post" id="formAgregarLote">
-                        @csrf
+                <div class="card">
+                    <div class="card-header bg-gradient-green">
+                        <h5>Agregar nuevo lote</h5>
+                    </div>
+                    <div class="card-body">
+                        {{-- FORMULARIO TIPO JQUERY.VALIDATE --}}
+                        <form action="javascript:void(0)" method="post" id="formAgregarLote">
+                            @csrf
 
-                        <input type="hidden" id="producto_id" name="producto_id" value="">
-                        <input type="hidden" id="presentacion_id" name="presentacion_id" value="">
+                            <input type="hidden" id="producto_id" name="producto_id" value="">
+                            <input type="hidden" id="presentacion_id" name="presentacion_id" value="">
 
-                        {{-- Campo identificador de lote --}}
-                        <div class="form-group mb-3">
-                            <label for="identificador"
-                                class="label">{{ __('formularios.batch_identification') }}</label>
-                            <div class="input-group mb-3">
-                                <input type="text" name="identificador" id="identificador" class="form-control"
-                                    value="" required>
-                                <div class="input-group-append">
-                                    <button type="button" id="escanear" class="btn btn-sm btn-dark">
-                                        <i class="fas fa-barcode"></i>
-                                        Escanear
-                                    </button>
+                            {{-- Campo identificador de lote, cantidad y precio --}}
+                            <div class="row">
+                                <div class="form-group col-md-4 mb-3">
+                                    <label for="identificador"
+                                        class="label">Identificador/Nº de Lote</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" name="identificador" id="identificador" class="form-control"
+                                            value="" required>
+                                        <div class="input-group-append">
+                                            <button type="button" id="escanear" class="btn btn-sm btn-dark">
+                                                <i class="fas fa-barcode"></i>
+                                                Escanear
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-4 mb-3">
+                                    <label for="cantidad"
+                                        class="label">Cantidad</label>
+                                    <input type="text" name="cantidad" id="cantidad" class="form-control" value="" required>
+                                </div>
+
+                                <div class="form-group col-md-4 mb-3">
+                                    <label for="precio_compra" class="label">Precio de compra</label>
+                                    <input type="text" name="precio_compra" id="precio_compra" class="form-control" value="" required>
                                 </div>
                             </div>
-                        </div>
 
-                        {{-- Campos de precio, cantidad y vencimiento --}}
-                        <div class="row">
-                            <div class="col-md-4 form-group mb-3">
-                                <label for="precio" class="label">{{ __('formularios.batch_price') }}</label>
-                                <input type="text" name="precio" id="precio" class="form-control" value="" required>
-                            </div>
-
-                            <div class="col-md-4 form-group mb-3">
-                                <label for="cantidad"
-                                    class="label">{{ __('formularios.batch_quantity') }}</label>
-                                <input type="text" name="cantidad" id="cantidad" class="form-control" value="" required>
-                            </div>
-
-                            <div class="col-md-4 form-group mb-3">
+                            {{-- Campos de fecha de compra, elaboración y vencimiento --}}
+                            <div class="row">
                                 @section('plugins.TempusDominusBs4', true)
-                                <x-adminlte-input-date name="vencimiento" id="vencimiento"
-                                    label="{{ __('formularios.batch_expiration') }}" igroup-size="md"
-                                    :config="$config" placeholder="{{ __('formularios.date_placeholder') }}"
-                                    autocomplete="off" required>
-                                    <x-slot name="appendSlot">
-                                        <div class="input-group-text bg-dark">
-                                            <i class="fas fa-calendar"></i>
-                                        </div>
-                                    </x-slot>
-                                </x-adminlte-input-date>
-                            </div>
-                        </div>
 
-                        {{-- Guardar lote nuevo --}}
-                        <div class="d-flex justify-content-end">
-                            <x-adminlte-button type="submit" theme="success" label="Guardar" id="guardarCliente" />
-                        </div>
-                    </form>
-                </x-adminlte-card>
+                                <div class="form-group col-md-4 mb-3">
+                                    <x-adminlte-input-date name="fecha_compra" id="fecha_compra"
+                                        label="Fecha de compra" igroup-size="md"
+                                        :config="$config" placeholder="{{ __('formularios.date_placeholder') }}"
+                                        autocomplete="off" required>
+                                        <x-slot name="appendSlot">
+                                            <div class="input-group-text bg-dark">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
+                                        </x-slot>
+                                    </x-adminlte-input-date>
+                                </div>
+
+                                <div class="form-group col-md-4 mb-3">
+                                    <x-adminlte-input-date name="fecha_elaboracion" id="fecha_elaboracion"
+                                        label="Fecha de elaboración" igroup-size="md"
+                                        :config="$config" placeholder="{{ __('formularios.date_placeholder') }}"
+                                        autocomplete="off" required>
+                                        <x-slot name="appendSlot">
+                                            <div class="input-group-text bg-dark">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
+                                        </x-slot>
+                                    </x-adminlte-input-date>
+                                </div>
+
+                                <div class="form-group col-md-4 mb-3">
+                                    <x-adminlte-input-date name="fecha_vencimiento" id="fecha_vencimiento"
+                                        label="Fecha de vencimiento" igroup-size="md"
+                                        :config="$config_vencimiento" placeholder="{{ __('formularios.date_placeholder') }}"
+                                        autocomplete="off" required>
+                                        <x-slot name="appendSlot">
+                                            <div class="input-group-text bg-dark">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
+                                        </x-slot>
+                                    </x-adminlte-input-date>
+                                </div>
+                            </div>
+
+                            {{-- Guardar lote nuevo --}}
+                            <div class="d-flex justify-content-end">
+                                <x-adminlte-button type="submit" theme="success" label="Guardar" id="guardarCliente" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="overlay"><i class="fas fa-ban text-gray"></i></div>
         </div>
@@ -247,27 +285,11 @@
                         defaultContent: "<button id='btnBorrar' class='btn-xs btn-primary'><i class='fa fa-lg fa-fw fa-trash'></i></button>"
                     }
                 ],
-                "fnDrawCallback": function(row, data, start, end, display) {
-                    var api = this.api(), data;
-
-                    var intVal = function ( i ) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '')*1 :
-                            typeof i === 'number' ?
-                                i : 0;
-                    };
-
-                    var total = api
-                        .column(3)
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        },
-                        0
-                    );
-
-                    $('#totalLotes').text(total);
-                }
+                "rowCallback": function(row, data, index) {
+                    if (data.eliminado != null) {
+                        $('td', row).css('background-color', 'Red');
+                    }
+                },
             });
 
             tabla2.row.add({
@@ -292,6 +314,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var idLote = tabla2.row($(this).parents('tr')).data().id;
+                        //alert("lote_id: "+ idLote);
                         var datos = {
                             id: idLote,
                             method: 'DELETE',
@@ -304,16 +327,12 @@
                         });
 
                         $.ajax({
-                            url: "{{ url('borrar-lote') }}",
+                            url: "{{ url('administracion/lotes/eliminarLote') }}",
                             type: "DELETE",
                             data: datos,
                             success: function(response) {
                                 //sweet alert
-                                Swal.fire(
-                                    'Eliminado',
-                                    response.mensaje,
-                                    'success'
-                                );
+                                Swal.fire('Eliminado', response.mensaje, 'success');
 
                                 // Se actualiza la segunda tabla
                                 var idProducto = $('input[type=hidden][name=producto_id]').val();
@@ -321,9 +340,9 @@
                                 getLotes(idProducto, idPresentacion);
                             },
                             error: function(response) {
-                                console.log(response);
+                                //console.log(response);
                                 //sweet alert
-                                Swal('Algo salió mal...', response.mensaje, 'error');
+                                Swal.fire('Algo salió mal...', response.message, 'error');
                             }
                         });
                     }
@@ -340,7 +359,7 @@
                 "responsive": true,
                 "dom": 'Pfrtip',
                 "sDom": '<"search-box"r>lftip',
-                "scrollY": "50vh",
+                "scrollY": "70vh",
                 "scrollCollapse": true,
                 "paging": false,
                 "select": true,
@@ -368,7 +387,7 @@
 
                 let idx = tabla1.cell('.selected', 0).index();
                 let prod_sel = tabla1.row( idx.row ).data();
-                $('#tituloLotesVigentes').text('Lotes vigentes para ' + prod_sel[0]);
+                $('#tituloLotesVigentes').text('Detalle de ' + prod_sel[0]);
 
                 // se guardan el producto_id y presentacion_id en los inputs ocultos
                 $('#producto_id').val($(this).attr("id"));
@@ -398,7 +417,15 @@
                             digits: true,
 
                         },
-                        vencimiento: {
+                        fecha_compra: {
+                            required: true,
+                            date: true,
+                        },
+                        fecha_elaboracion: {
+                            required: true,
+                            date: true,
+                        },
+                        fecha_vencimiento: {
                             required: true,
                             date: true,
                         }
@@ -418,7 +445,15 @@
                             number: "El campo es numérico",
                             digits: "El campo es numérico entero"
                         },
-                        vencimiento: {
+                        fecha_compra: {
+                            required: "Este es un campo requerido",
+                            date: "La fecha ingresada no es valida"
+                        },
+                        fecha_elaboracion: {
+                            required: "Este es un campo requerido",
+                            date: "La fecha ingresada no es valida"
+                        },
+                        fecha_vencimiento: {
                             required: "Este es un campo requerido",
                             date: "La fecha ingresada no es valida"
                         },
@@ -468,7 +503,7 @@
                                 //sweet alert
                                 Swal.fire({
                                     icon: 'error',
-                                    text: respuesta.errors.identificador,
+                                    text: respuesta.message,
                                     showConfirmButton: true,
                                 });
 
