@@ -114,7 +114,7 @@
                     <div class="col">
                         <div class="form-group">
                             <label for="input-precio">Precio</label>
-                            <input type="number" name="precio" id="input-precio" min="0" pattern="[0-9]"
+                            <input type="number" name="precio" id="input-precio" min="0"
                                 class="form-control @error('precio') is-invalid @enderror"
                                 value="@if(old('precio')){{old('precio')}}@endif"
                                 step=".01">
@@ -175,20 +175,22 @@
 
         //Convierte en objeto seleccionador para agregar precio sugerido
         function selectprecio(){
-            $tdporcentajes = $('#tablaPreciosSugeridos tbody tr td');
-            $tdporcentajes.hover(
+            tdporcentajes = $('#tablaPreciosSugeridos tbody tr td');
+            tdporcentajes.hover(
                 function () {
-                            $argument = $(this).text();
-                            if($argument != '' && $.isNumeric($argument) == true){
-                                $(this).addClass('tdhover');
-                                $(this).click(function(){
-                                        $precio = $argument.replace(".",",");
-                                        $('#input-precio').val($precio);
-	                            });
-                            }},
+                    //debugger;
+                    let argument = parseFloat($(this).text());
+                    if(argument != '' && $.isNumeric(argument) == true){
+                        $(this).addClass('tdhover');
+                        $(this).click(function(){
+                                //debugger;
+                                $('#input-precio').val(argument);
+                        });
+                    }
+                },
                 function () {
-                            $(this).removeClass('tdhover');
-                            }
+                    $(this).removeClass('tdhover');
+                }
             );
         }
 
@@ -231,6 +233,28 @@
                     {data: "costo_4"},
                     {data: "costo_5"},
                 ],
+                "columnDefs": [
+                    {
+                        targets: 1,
+                        className: "text-center",
+                    },
+                    {
+                        targets: 2,
+                        className: "text-center",
+                    },
+                    {
+                        targets: 3,
+                        className: "text-center",
+                    },
+                    {
+                        targets: 4,
+                        className: "text-center",
+                    },
+                    {
+                        targets: 5,
+                        className: "text-center",
+                    },
+                ]
             });
 
 

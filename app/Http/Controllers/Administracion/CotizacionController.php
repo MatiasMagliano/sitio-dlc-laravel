@@ -216,6 +216,8 @@ class CotizacionController extends Controller
             //$sugerencias = [];
             $sugerencias = ListaPrecio::listarDescuentos($request->producto_id, $request->presentacion_id, $request->id);
 
+            // AQUÍ DEBERÍA IR LA LÓGICA DE REARMADO DEL ARRAY
+
             return response()->json($sugerencias);
         }
     }
@@ -286,7 +288,7 @@ class CotizacionController extends Controller
                 $cotizacion->save();
             }
 
-            return $pdf->stream('cotizacion_'.$cotizacion->identificador.'.pdf');
+            return $pdf->download('cotizacion_'.$cotizacion->identificador.'.pdf');
         }
         else{
             $request->session()->flash('error', 'La cotización aún no ha terminado de agregar líneas. Por favor finalice la cotización para descargar el PDF.');
@@ -307,7 +309,7 @@ class CotizacionController extends Controller
                 return Storage::download('licitaciones-rechazadas/'.$cotizacion->identificador .'.pdf', 'comparativo_'.$cotizacion->identificador.'.pdf');
                 break;
             default:
-                $request->session()->flash('error', 'La acción que desea ejecutar no es posible procesarla.');
+                $request->session()->flash('error', 'La acción que desea ejecutar no es posible de procesar.');
                 return redirect(route('home'));
                 break;
         }

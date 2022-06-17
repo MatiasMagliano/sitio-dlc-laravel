@@ -153,32 +153,31 @@
                     <p>ACLARACIÓN: La presente cotización, no incluye precios con IVA.</p>
                 </li>
             </ul>
-
+        </div>
+        <div class="card-footer" style="background-color: #fff;">
             {{-- PIE DE PÁGINA --}}
-            <div class="fixed-bottom nueva-linea">
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <span class="encabezado mb-1">Condiciones*</span>
-                        </div>
-                        <p class="mb-1">
-                            {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('condiciones')->get('0')}}
-                        </p>
-                        <small class="text-muted">*Provistas por el cliente.</small>
-                    </li>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <span class="encabezado mb-1">Condiciones*</span>
+                    </div>
+                    <p class="mb-1">
+                        {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('condiciones')->get('0')}}
+                    </p>
+                    <small class="text-muted">*Provistas por el cliente.</small>
+                </li>
 
-                    <li class="list-group-item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <span class="encabezado mb-1">Observaciones</span>
-                        </div>
-                        <p class="mb-1">
-                            {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('observaciones')->get('0')}}
-                        </p>
-                    </li>
-                </ul>
+                <li class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <span class="encabezado mb-1">Observaciones</span>
+                    </div>
+                    <p class="mb-1">
+                        {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('observaciones')->get('0')}}
+                    </p>
+                </li>
+            </ul>
 
-                <p class=" text-right">Documento PDF generado por: {{auth()->user()->name}}</p>
-            </div>
+            <p class=" text-right">Documento PDF generado por: {{auth()->user()->name}}</p>
         </div>
     </div>
 

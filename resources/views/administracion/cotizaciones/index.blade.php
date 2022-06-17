@@ -108,7 +108,7 @@
                                     <td style="vertical-align: middle; text-align:center;">
                                         <a id="botonPresentar" class="btn btn-sm btn-info"
                                             href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
-                                            target="_blank">
+                                            onclick="recargar()">
                                             Presentar
                                         </a>
                                     </td>
@@ -331,6 +331,57 @@
     @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
+        // Reload manual de la página
+        function recargar(){
+            setTimeout(
+                function() {
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Cotización presentada',
+                    text: 'La cotización quedará en espera de ser aprobada o rechazada.',
+                    confirmButtonText: 'Aceptar',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.location.href = '{{route('administracion.cotizaciones.index')}}';
+                            return false;
+                        }
+                    }),
+                    500
+                }
+            );
+        }
+
+        var popupBlockerChecker = {
+            check: function(popup_window){
+                var scope = this;
+                if (popup_window) {
+                    if(/chrome/.test(navigator.userAgent.toLowerCase())){
+                        setTimeout(function () {
+                            scope.is_popup_blocked(scope, popup_window);
+                        },200);
+                    }else{
+                        popup_window.onload = function () {
+                            scope.is_popup_blocked(scope, popup_window);
+                        };
+                    }
+                } else {
+                    scope.displayError();
+                }
+            },
+            is_popup_blocked: function(scope, popup_window){
+                if ((popup_window.innerHeight > 0)==false){
+                    scope.displayError();
+                }
+            },
+            displayError: function(){
+                Swal.fire(
+                    'Información',
+                    'El navegador no permite la apertura de nuevas ventanas. Habilite los popups para continuar.',
+                    'info'
+                )
+            }
+        };
+
         function borrarCotizacion(id){
             Swal.fire({
                 icon: 'warning',
@@ -427,27 +478,6 @@
             $('#modalRechazarCotizacion').on('show.bs.modal', function(event){
                 $('#formRechazada').attr('action', 'cotizaciones/'+event.relatedTarget.id+'/rechazarCotizacion');
             });
-
-            // REDIRECCIONA LA PÁGINA LUEGO DEL CLICK
-            $('#botonPresentar').click(function(){
-                let newWindow = $('#botonPresentar').attr('href');
-                if (newWindow) {
-                    //Browser has allowed it to be opened
-                    //newWindow.focus();
-                } else {
-                    //Browser has blocked it
-                    Swal.fire(
-                        'Información',
-                        'El navegador no permite la apertura de nuevas ventanas. Habilite los popups para continuar.',
-                        'info'
-                        )
-                }
-
-                setTimeout(function() {
-                    document.location.href = '{{route('administracion.cotizaciones.index')}}';
-                    return false;
-                }, 500);
-            })
         });
     </script>
 @endsection

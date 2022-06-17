@@ -93,10 +93,9 @@
                 <div class="card">
                     <div class="card-header bg-gradient-blue">
                         <h5 id="tituloLotesVigentes" class="card-title">
-                            <i class="fas fa-plus mr-2"></i>
                         </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body h-25">
                         <table id="tabla2" class="display nowrap" style="width: 100%; cursor:pointer">
                             <thead>
                                 <th>ID</th>
@@ -234,8 +233,11 @@
                 });
             }
 
+            // datatable LOTES
             tabla2 = $('#tabla2').DataTable({
                 "processing": true,
+                "scrollY": '20vh',
+                "scrollCollapse": true,
                 "order": [
                     [4, "asc"]
                 ],
@@ -354,7 +356,7 @@
                 alert("Escanee el código de barras");
             });
 
-            // DEFINICION DE tabla1
+            // DEFINICION DE tabla1 --> PRODUCTO/PRESENTACION
             var tabla1 = $('#tabla1').DataTable({
                 "responsive": true,
                 "dom": 'Pfrtip',
@@ -372,7 +374,7 @@
                 tabla1.search($(this).val()).draw() ;
             });
 
-            // CAPTURA DEL CLICK EN EL DATATABLE tabla1
+            // CAPTURA DEL CLICK EN EL DATATABLE PRODUCTO/PRESENTACION
             $('#tabla1 tbody tr').on('click', function() {
                 // marcado/desmarcado del row seleccionado
                 if ($(this).hasClass('selected')) {
