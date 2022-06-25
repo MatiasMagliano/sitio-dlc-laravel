@@ -35,6 +35,8 @@
 
 {{-- aquí va contenido --}}
 @section('content')
+@section('plugins.Datatables', true)
+@section('plugins.DatatablesPlugins', true)
     <x-adminlte-card>
         <div class="processing">
             <table id="cotizaciones" class="table table-bordered table-responsive-md" width="100%">
@@ -43,8 +45,6 @@
                         <th>Fecha</th>
                         <th>Identificador/Usuario</th>
                         <th>Cliente</th>
-                        <th>Productos cotizados</th>
-                        <th>Total unidades</th>
                         <th>Importe total</th>
                         <th>ESTADO</th>
                         <th></th>
@@ -65,8 +65,6 @@
                                 {{ $cotizacion->cliente->razon_social }}<br>
                                 {{ $cotizacion->cliente->tipo_afip }}: {{ $cotizacion->cliente->afip }}
                             </td>
-                            <td style="vertical-align: middle; text-align:center;">{{$cotizacion->productos->count()}}</td>
-                            <td style="vertical-align: middle; text-align:center;">{{$cotizacion->productos->sum('cantidad')}}</td>
                             <td style="vertical-align: middle; text-align:center;">
                                 $ {{number_format($cotizacion->monto_total, 2, ',', '.')}}
                             </td>
@@ -333,23 +331,20 @@
     <script>
         // Reload manual de la página
         function recargar(){
-            setTimeout(
-                function() {
-                    Swal.fire({
-                    icon: 'success',
-                    title: 'Cotización presentada',
-                    text: 'La cotización quedará en espera de ser aprobada o rechazada.',
-                    confirmButtonText: 'Aceptar',
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            document.location.href = '{{route('administracion.cotizaciones.index')}}';
-                            return false;
-                        }
-                    }),
-                    500
-                }
-            );
-        }
+            setTimeout(function() {
+                Swal.fire({
+                icon: 'success',
+                title: 'Cotización presentada',
+                text: 'La cotización quedará en espera de ser aprobada o rechazada.',
+                confirmButtonText: 'Aceptar',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.location.href = '{{route('administracion.cotizaciones.index')}}';
+                        return false;
+                    }
+                })
+            }, 2000)
+            };
 
         var popupBlockerChecker = {
             check: function(popup_window){
@@ -418,13 +413,13 @@
                         extend: 'print',
                         text: 'Imprimir',
                         exportOptions: {
-                            columns: [0, 1, 2, 3]
+                            columns: [0, 1, 2, 3, 4]
                         }
                     },
                     {
                         extend: 'pdfHtml5',
                         exportOptions: {
-                            columns: [0, 1, 2, 3]
+                            columns: [0, 1, 2, 3, 4]
                         }
                     },
                     {
@@ -457,7 +452,7 @@
                         type: 'date',
                     },
                     {
-                        targets: 7,
+                        targets: 5,
                         width: 80,
                     },
                 ],

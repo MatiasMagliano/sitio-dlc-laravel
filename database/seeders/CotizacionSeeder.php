@@ -23,16 +23,17 @@ class CotizacionSeeder extends Seeder
         //
         foreach(Cliente::all() as $cliente){
             $dirEntrega = DB::table('direcciones_entrega')->where('cliente_id', $cliente->id)->pluck('id');
-            $maxCotizaciones = rand(1, 5);
+            $maxCotizaciones = rand(3, 10);
             for($i = 1; $i <= $maxCotizaciones; $i++){
                 $cotizacion = Cotizacion::factory()->create([
                     'cliente_id' => $cliente->id,
-                    'dde_id' => $dirEntrega->random(1)->get('0'),
+                    'dde_id' => $dirEntrega->random(1)->get('0')
                 ]);
+
                 $maxProductos = rand(2, 100);
-                for($i = 1; $i <= $maxProductos; $i++){
+                for($j = 1; $j <= $maxProductos; $j++){
                     ProductoCotizado::factory()->create([
-                        'cotizacion_id' => $cotizacion->id,
+                        'cotizacion_id' => $cotizacion->id
                     ]);
                 }
             }
@@ -43,9 +44,9 @@ class CotizacionSeeder extends Seeder
         //se lo busca a través de una DBQUERY
         foreach(Producto::all() as $producto){
             $presentaciones = DB::table('lote_presentacion_producto')
-            ->where('producto_id', $producto->id)
-            ->get('presentacion_id')
-            ->unique();
+                ->where('producto_id', $producto->id)
+                ->get('presentacion_id')
+                ->unique();
             //dd($presentaciones);
             foreach($presentaciones as $presentacion){
                 $deposito = DepositoCasaCentral::find(

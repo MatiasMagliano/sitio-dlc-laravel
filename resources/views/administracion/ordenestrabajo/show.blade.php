@@ -26,6 +26,9 @@
 
 {{-- aquí va contenido --}}
 @section('content')
+
+@section('plugins.Datatables', true)
+@section('plugins.DatatablesPlugins', true)
     <div class="card">
         <div class="card-header">
             <h5 class="heading-small text-muted mb-1">Datos básicos de Orden de trabajo</h5>
@@ -104,7 +107,11 @@
                             {{$itemOT->cantidad}}
                         </td>
                         <td class="text-center">
-                            {{$itemOT->lotes}}
+                            @if ($itemOT->lotes == -1)
+                                Lote sin asignar
+                            @else
+                                {{$itemOT->lotes}}
+                            @endif
                         </td>
                         <td style="vertical-align: middle; text-align:center;">
                             <a href=""

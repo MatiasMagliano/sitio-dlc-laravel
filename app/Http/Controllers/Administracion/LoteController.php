@@ -113,7 +113,7 @@ class LoteController extends Controller
     {
         if($request->ajax()){
 	        $lotes = Lote::lotesPorPresentacion($request->producto_id, $request->presentacion_id);
-            return Response()->json($lotes);
+            return response()->json($lotes);
         }
     }
 }

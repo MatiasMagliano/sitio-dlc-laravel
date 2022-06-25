@@ -29,5 +29,6 @@ return [
     'admin_tools'                   => 'Sist-admin',
     'users_admin'                   => 'Administración de usuarios',
     'add_clients'                   => 'Crear cliente',
-    'work_orders'                   => 'Ordenes de trabajo'
+    'work_orders'                   => 'Ordenes de trabajo',
+    'calendars'                     => 'Calendarios'
 ];

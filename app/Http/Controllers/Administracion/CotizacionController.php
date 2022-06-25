@@ -7,18 +7,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ArchivoCotizacion;
 use App\Models\Cliente;
-use App\Models\EsquemaPrecio;
 use App\Models\ListaPrecio;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\ProductoCotizado;
-use App\Models\LotePresentacionProducto;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
-
-use function PHPUnit\Framework\returnSelf;
 
 class CotizacionController extends Controller
 {
@@ -29,11 +24,10 @@ class CotizacionController extends Controller
      */
     public function index()
     {
-        $cotizaciones = Cotizacion::latest()->get();
+        $cotizaciones = Cotizacion::with('cliente', 'user', 'estado')->latest()->get();
         $config = [
             'format' => 'DD/MM/YYYY',
             'dayViewHeaderFormat' => 'MMM YYYY',
-            'minDate' => "js:moment().startOf('today')",
         ];
 
         return view('administracion.cotizaciones.index', compact('cotizaciones', 'config'));

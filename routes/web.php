@@ -13,6 +13,8 @@ use App\Http\Controllers\Administracion\CotizacionController;
 use App\Http\Controllers\Administracion\ListaPrecioController;
 use App\Http\Controllers\Administracion\ClienteController;
 use App\Http\Controllers\Administracion\OrdenTrabajoController;
+use App\Http\Controllers\CalendarioController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,9 +32,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/home', function () {
-    return view('home');
-})->middleware(['auth'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->middleware(['auth'])->name('home');
 
 require __DIR__ . '/auth.php';
 
@@ -112,9 +112,17 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::delete('/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class, 'borrarProductoCotizado'])
         ->name('cotizaciones.borrar.producto');
     Route::resource('/cotizaciones', CotizacionController::class)->except('edit', 'update');
+
+    // rutas de CALENDARIO DE VENCIMIENTOS
+    Route::get('/calendarios/obtenerVencimientos', [CalendarioController::class, 'fechasVencimiento'])->name('ajax.obtener.vencimientos');
+    Route::get('/calendarios/obtenerIniciadas', [CalendarioController::class, 'fechasIniciadas'])->name('ajax.obtener.iniciadas');
+    Route::get('/calendarios/obtenerPresentadas', [CalendarioController::class, 'fechasPresentadas'])->name('ajax.obtener.presentadas');
+    Route::get('/calendarios/obtenerConfirmadas', [CalendarioController::class, 'fechasConfirmadas'])->name('ajax.obtener.confirmadas');
+    Route::get('/calendarios/obtenerRechazadas', [CalendarioController::class, 'fechasRechazadas'])->name('ajax.obtener.rechazadas');
+    route::get('/calendarios/vencimiento', [CalendarioController::class, 'index'])->name('calendario.vencimientos');
 });
 
-// RUTAS PARA EXPEDICION y, se incluye administración
+// RUTAS PARA EXPEDICION y, se incluye administración en la configuración del GATE
 Route::prefix('administracion')->middleware(['auth', 'auth.esExpedicion'])->name('administracion.')->group(function () {
     // rutas de ORDENES DE TRABAJO
     Route::get('/ordentrabajo/ajaxObtenerLineas', [OrdenTrabajoController::class, 'obtenerLineasCotizacion'])->name('cotizadas.ajax.obtener');

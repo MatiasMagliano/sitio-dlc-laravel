@@ -192,8 +192,8 @@ return [
     'logout_url' => '/logout',
     'login_url' => 'login',
     'register_url' => '/register',
-    'password_reset_url' => '/forgot-password',
-    'password_email_url' => '/reset-password',
+    'password_reset_url' => '/reset-password',
+    'password_email_url' => '/forgot-password',
     'profile_url' => false,
 
     /*
@@ -240,6 +240,13 @@ return [
         [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
+        ],
+
+        [
+            'text'  => 'calendars',
+            'icon'  => 'fas fa-calendar-alt',
+            'can'   => 'es-administracion',
+            'route' => 'administracion.calendario.vencimientos',
         ],
         [
             'text'    => 'clients',
@@ -364,7 +371,7 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => true,
+            'active' => false,
             'files' => [
                 [
                     'type' => 'js',
@@ -404,7 +411,7 @@ return [
             ],
         ],
         'DatatablesPlugins' => [
-            'active' => true,
+            'active' => false,
             'files' => [
                 [
                     'type' => 'js',
@@ -463,12 +470,12 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
                 ],
             ],
@@ -478,8 +485,8 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
+                    'asset' => true,
+                    'location' => '//cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js',
                 ],
             ],
         ],
@@ -490,6 +497,27 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => 'https://cdn.jsdelivr.net/npm/sweetalert2@9',
+                ],
+            ],
+        ],
+        'FullCalendar' => [
+            'active' => false,
+            'files' => [
+                // Core
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/fullcalendar/main.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/fullcalendar/locales/es.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/fullcalendar/main.min.css',
                 ],
             ],
         ],

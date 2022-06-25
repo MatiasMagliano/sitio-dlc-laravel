@@ -17,7 +17,7 @@ class DireccionEntregaSeeder extends Seeder
     {
         //
         foreach(Cliente::all() as $cliente){
-            $maxDirecciones = rand(1, 3);
+            $maxDirecciones = rand(3, 5);
             for($i = 1; $i <= $maxDirecciones; $i++){
                 DireccionEntrega::factory()->create([
                     'cliente_id' => $cliente->id,

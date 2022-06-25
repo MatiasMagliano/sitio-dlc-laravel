@@ -11,6 +11,7 @@ class ProductoCotizado extends Model
     use HasFactory;
 
     protected $table = 'producto_cotizados';
+    protected $withCount = ['producto'];
 
     protected $fillable = [
         'cotizacion_id', 'producto_id', 'presentacion_id', 'cantidad', 'precio', 'total'
