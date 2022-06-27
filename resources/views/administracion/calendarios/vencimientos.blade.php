@@ -104,7 +104,7 @@
         var cc = new FullCalendar.Calendar(calCotiz, {
             locale: "es",
             themeSystem: "bootstrap",
-            dayMaxEventRows: 4,
+            dayMaxEventRows: 3,
             eventSources: [{
                     url: "{{ route('administracion.ajax.obtener.iniciadas') }}",
                     color: 'yellow',
