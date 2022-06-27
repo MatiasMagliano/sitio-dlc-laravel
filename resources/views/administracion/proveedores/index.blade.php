@@ -17,6 +17,8 @@
 @stop
 
 @section('content')
+@section('plugins.Datatables', true)
+@section('plugins.DatatablesPlugins', true)
 
     <x-adminlte-card>
         <table id="tabla2" class="table table-bordered display nowrap" style="width: 100%;">
