@@ -99,6 +99,8 @@
         </div>
     </div>
 
+    @section('plugins.Datatables', true)
+    @section('plugins.DatatablesPlugins', true)
     {{-- MODAL VER LOTES VIGENTES --}}
     @section('plugins.TempusDominusBs4', true)
     <div class="modal fade" id="modalVerLotes" tabindex="-1"

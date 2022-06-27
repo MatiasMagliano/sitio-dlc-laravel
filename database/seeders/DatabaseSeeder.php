@@ -2,6 +2,7 @@
 //Agregado líena 5 ; 24
 namespace Database\Seeders;
 use Illuminate\Database\Seeder;
+use phpDocumentor\Reflection\Types\This;
 
 class DatabaseSeeder extends Seeder
 {
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
         //tablas pivot
         $this->call(RolUserSeeder::class);
         $this->call(LotePresentacionProductoSeeder::class);
+        $this->call(LoteVencidosSeeder::class);
 
         //orden necesario de populado
         //$this->call(ListaPrecioSeeder::class);

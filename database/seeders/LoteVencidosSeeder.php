@@ -12,7 +12,7 @@ use App\Models\Proveedor;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 
-class LotePresentacionProductoSeeder extends Seeder
+class LoteVencidosSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -24,22 +24,32 @@ class LotePresentacionProductoSeeder extends Seeder
         //se genera el faker
         $this->faker = Faker::create();
 
+        // Se ejecuta lógica de lotes próximos a vencer
         // se hace de esta manera, para evitar lotes duplicados en productos diferentes
         foreach (Producto::all() as $producto){
             $maxPresentacion = rand(1, 3);
             for($i = 1; $i <= $maxPresentacion; $i++){
-                $presentacion = Presentacion::factory()->create();
-                $deposito = DepositoCasaCentral::factory()->create();
+                $presentacion = Producto::presentaciones($producto->id)->random(1)->pluck('id')->get(0);
+                $deposito = DepositoCasaCentral::find(
+                    LotePresentacionProducto::getIdDeposito($producto->id, $presentacion) //devuelve un solo pivot relacionado a prod/pres
+                );
 
                 $codigoProv =  $this->faker->numberBetween(1000000, 9999999);
 
-                $maxLote = rand(1, 10);
+                $maxLote = rand(1, 3);
                 for($j = 1; $j <= $maxLote; $j++){
-                    $lote = Lote::factory()->create();
+                    $lote = Lote::factory()->create([
+                        'identificador' => $this->faker->numberBetween(1000000, 9999999),
+                        'precio_compra' => $this->faker->randomFloat(2, 10, 1000),
+                        'fecha_elaboracion' => $this->faker->dateTimeBetween('-3 years', '-1 years'),
+                        'fecha_compra' => $this->faker->dateTimeBetween('-11 months','-1 months'),
+                        'fecha_vencimiento' => $this->faker->dateTimeBetween('+1 months', '+6 months'),
+                        'cantidad' => $this->faker->randomNumber(4)
+                    ]);
 
                     $lpp = LotePresentacionProducto::create([
                         'producto_id' => $producto->id,
-                        'presentacion_id' => $presentacion->id,
+                        'presentacion_id' => $presentacion,
                         'lote_id' => $lote->id,
                         'dcc_id' => $deposito->id,
                     ]);
@@ -52,7 +62,7 @@ class LotePresentacionProductoSeeder extends Seeder
                     ListaPrecio::create([
                         'codigoProv' => $codigoProv,
                         'producto_id' => $producto->id,
-                        'presentacion_id' => $presentacion->id,
+                        'presentacion_id' => $presentacion,
                         'proveedor_id' => $proveedor,
                         'costo' => $this->faker->randomFloat(2, 50, 1000),
                     ]);

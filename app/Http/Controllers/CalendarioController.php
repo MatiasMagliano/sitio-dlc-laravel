@@ -16,11 +16,14 @@ class CalendarioController extends Controller
     public function fechasVencimiento(Request $request)
     {
         $vencimientos = DB::table('lotes')
-            ->select(
-                'lotes.identificador as title',
-                'lotes.fecha_vencimiento as start',
-                'lotes.fecha_vencimiento as end',
-                )
+            ->select(DB::raw('
+            lotes.identificador as title,
+            CONCAT(productos.droga, ", ", presentacions.forma, " - ", presentacions.presentacion) as description,
+            date(lotes.fecha_vencimiento) as start
+            '))
+            ->join('lote_presentacion_producto', 'lotes.id', '=', 'lote_presentacion_producto.lote_id')
+            ->join('productos', 'productos.id', '=', 'lote_presentacion_producto.producto_id')
+            ->join('presentacions', 'presentacions.id', '=', 'lote_presentacion_producto.presentacion_id')
             ->where('lotes.fecha_vencimiento', '>', $request->start)
             ->where('lotes.fecha_vencimiento', '<', $request->end)
             ->get();
@@ -32,11 +35,10 @@ class CalendarioController extends Controller
     public function fechasIniciadas(Request $request)
     {
         $cotizaciones = DB::table('cotizacions')
-            ->select(
-                'cotizacions.identificador as title',
-                'cotizacions.created_at as start',
-                'cotizacions.created_at as end',
-            )
+            ->select(DB::raw('
+                cotizacions.identificador as title,
+                DATE(cotizacions.created_at) as start
+            '))
             ->where('estado_id', 1)
             ->where('cotizacions.created_at', '>', $request->start)
             ->where('cotizacions.created_at', '<', $request->end)
@@ -49,11 +51,10 @@ class CalendarioController extends Controller
     public function fechasPresentadas(Request $request)
     {
         $cotizaciones = DB::table('cotizacions')
-            ->select(
-                'cotizacions.identificador as title',
-                'cotizacions.presentada as start',
-                'cotizacions.presentada as end'
-            )
+            ->select(DB::raw('
+                cotizacions.identificador as title,
+                DATE(cotizacions.presentada) as start
+            '))
             ->where('estado_id', 3)
             ->where('cotizacions.updated_at', '>', $request->start)
             ->where('cotizacions.updated_at', '<', $request->end)
@@ -66,11 +67,10 @@ class CalendarioController extends Controller
     public function fechasConfirmadas(Request $request)
     {
         $cotizaciones = DB::table('cotizacions')
-            ->select(DB::raw("
-                CONCAT('cotizacions.identificador ', 'cotizacions.estado') as title,
-                cotizacions.confirmada as start,
-                cotizacions.confirmada as end
-            "))
+            ->select(DB::raw('
+                cotizacions.identificador as title,
+                DATE(cotizacions.confirmada) as start
+            '))
             ->where('estado_id', 4)
             ->where('cotizacions.updated_at', '>', $request->start)
             ->where('cotizacions.updated_at', '<', $request->end)
@@ -83,11 +83,10 @@ class CalendarioController extends Controller
     public function fechasRechazadas(Request $request)
     {
         $cotizaciones = DB::table('cotizacions')
-            ->select(DB::raw("
-                CONCAT('cotizacions.identificador ', 'cotizacions.estado') as title,
-                cotizacions.rechazada as start,
-                cotizacions.rechazada as end
-            "))
+            ->select(DB::raw('
+                cotizacions.identificador as title,
+                DATE(cotizacions.rechazada) as start
+            '))
             ->where('estado_id', 5)
             ->where('cotizacions.updated_at', '>', $request->start)
             ->where('cotizacions.updated_at', '<', $request->end)
