@@ -15,6 +15,8 @@ class CalendarioController extends Controller
     // LOTES PROXIMOS A VENCERSE
     public function fechasVencimiento(Request $request)
     {
+        // la consulta recolecta y concatena los datos necesarios para el fullcalendar:
+        // title, description (para el tooltip) y start (que lo toma como "todo el día")
         $vencimientos = DB::table('lotes')
             ->select(DB::raw('
             lotes.identificador as title,

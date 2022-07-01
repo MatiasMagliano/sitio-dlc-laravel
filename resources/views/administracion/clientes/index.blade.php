@@ -40,6 +40,9 @@
 
 {{-- aquí va contenido --}}
 @section('content')
+
+@section('plugins.Datatables', true)
+@section('plugins.DatatablesPlugins', true)
     <div class="card">
         <div class="card-header texto-header">
             <h5>Instrucciones para generar reportes de esta sección</h5>

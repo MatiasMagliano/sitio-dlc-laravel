@@ -107,7 +107,7 @@
         <div class="card">
             <div class="card-header bg-gradient-gray-dark">
                 <h3 class="card-title">
-                    Top-10 cotizaciones por cliente
+                    Cotizaciones aprobadas vs rechazadas
                 </h3>
             </div>
             <div class="card-body">
