@@ -127,6 +127,30 @@
             </div>
         </div>
     </div>
+     <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-gradient-gray-dark">
+                <h3 class="card-title">
+                    Top-10 cotizaciones por cliente
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
+                    <div class="chartjs-size-monitor">
+                        <div class="chartjs-size-monitor-expand">
+                            <div class=""></div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink">
+                            <div class=""></div>
+                        </div>
+                    </div>
+                    <canvas id="perdida-vencimiento" height="400"
+                        style="height: 400px; display: block; width: 901px;" width="901"
+                        class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+        </div>
+    </div> 
 </div>
 @endsection
 
@@ -191,6 +215,47 @@
                 },
             },
         });
+
+        //GRAFICO DONUT CANTIDAD DE COTIZ APROBADAS Y RECHAZADAS
+        const chartjData = JSON.parse(`<?php echo $perdidasPorVencimiento; ?>`);
+        const chartPerdida = document.getElementById("perdida-vencimiento").getContext('2d');
+        const graficoVencimiento = new Chart(chartPerdida, {
+            type: "bar",
+            data: {
+                labels: chartjData.label,
+                datasets: [
+                    {
+                    label: "Oportunidad de pérdida por venta al costo previo al vencimiento",
+                    data: chartjData.dataOportunidad,
+                    backgroundColor: "rgba(0, 191, 111, 0.8)",
+                    stack: 1
+                },{
+                    label: "Perdida por vencimiento",
+                    data: chartjData.dataPerdida,
+                    backgroundColor: "rgba(221, 191, 111, 0.8)",
+                    stack: 1
+                }],
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        stacked: true,
+                        grid: {
+                            display: true,
+                            color: "rgba(255,99,132,0.2)"
+                        },
+                    }
+
+                },
+            },
+        });
+
     });
 </script>
 @endsection
