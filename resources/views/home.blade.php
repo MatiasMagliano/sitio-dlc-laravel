@@ -78,80 +78,82 @@
 
     {{-- GRAFICO DE COTIZACIONES POR CLIENTE --}}
 @section('plugins.Chartjs', true)
-<div class="row">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-gradient-gray-dark">
-                <h3 class="card-title">
-                    Top-10 cotizaciones por cliente
-                </h3>
-            </div>
-            <div class="card-body">
-                <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
-                    <div class="chartjs-size-monitor">
-                        <div class="chartjs-size-monitor-expand">
-                            <div class=""></div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-gradient-gray-dark">
+                    <h3 class="card-title">
+                        Top-10 cotizaciones por cliente
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
+                        <div class="chartjs-size-monitor">
+                            <div class="chartjs-size-monitor-expand">
+                                <div class=""></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink">
+                                <div class=""></div>
+                            </div>
                         </div>
-                        <div class="chartjs-size-monitor-shrink">
-                            <div class=""></div>
-                        </div>
+                        <canvas id="top-ten-clientes" height="400"
+                            style="height: 400px; display: block; width: 901px;" width="901"
+                            class="chartjs-render-monitor"></canvas>
                     </div>
-                    <canvas id="top-ten-clientes" height="400"
-                        style="height: 400px; display: block; width: 901px;" width="901"
-                        class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-gradient-gray-dark">
+                    <h3 class="card-title">
+                        Cotizaciones aprobadas vs rechazadas
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
+                        <div class="chartjs-size-monitor">
+                            <div class="chartjs-size-monitor-expand">
+                                <div class=""></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink">
+                                <div class=""></div>
+                            </div>
+                        </div>
+                        <canvas id="cantidad-aprobRechaz" height="400"
+                            style="height: 400px; display: block; width: 901px;" width="901"
+                            class="chartjs-render-monitor"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-gradient-gray-dark">
-                <h3 class="card-title">
-                    Cotizaciones aprobadas vs rechazadas
-                </h3>
-            </div>
-            <div class="card-body">
-                <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
-                    <div class="chartjs-size-monitor">
-                        <div class="chartjs-size-monitor-expand">
-                            <div class=""></div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-gradient-gray-dark">
+                    <h3 class="card-title">
+                        Pérdidas por vencimientos
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
+                        <div class="chartjs-size-monitor">
+                            <div class="chartjs-size-monitor-expand">
+                                <div class=""></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink">
+                                <div class=""></div>
+                            </div>
                         </div>
-                        <div class="chartjs-size-monitor-shrink">
-                            <div class=""></div>
-                        </div>
+                        <canvas id="perdida-vencimiento" height="400"
+                            style="height: 400px; display: block; width: 901px;" width="901"
+                            class="chartjs-render-monitor"></canvas>
                     </div>
-                    <canvas id="cantidad-aprobRechaz" height="400"
-                        style="height: 400px; display: block; width: 901px;" width="901"
-                        class="chartjs-render-monitor"></canvas>
                 </div>
             </div>
         </div>
     </div>
-     <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-gradient-gray-dark">
-                <h3 class="card-title">
-                    Top-10 cotizaciones por cliente
-                </h3>
-            </div>
-            <div class="card-body">
-                <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
-                    <div class="chartjs-size-monitor">
-                        <div class="chartjs-size-monitor-expand">
-                            <div class=""></div>
-                        </div>
-                        <div class="chartjs-size-monitor-shrink">
-                            <div class=""></div>
-                        </div>
-                    </div>
-                    <canvas id="perdida-vencimiento" height="400"
-                        style="height: 400px; display: block; width: 901px;" width="901"
-                        class="chartjs-render-monitor"></canvas>
-                </div>
-            </div>
-        </div>
-    </div> 
-</div>
 @endsection
 
 @section('js')
@@ -216,7 +218,7 @@
             },
         });
 
-        //GRAFICO DONUT CANTIDAD DE COTIZ APROBADAS Y RECHAZADAS
+        //GRAFICO BARRAS PÉRDIDAS POR VENCIMIENTOS
         const chartjData = JSON.parse(`<?php echo $perdidasPorVencimiento; ?>`);
         const chartPerdida = document.getElementById("perdida-vencimiento").getContext('2d');
         const graficoVencimiento = new Chart(chartPerdida, {
@@ -255,7 +257,6 @@
                 },
             },
         });
-
     });
 </script>
 @endsection

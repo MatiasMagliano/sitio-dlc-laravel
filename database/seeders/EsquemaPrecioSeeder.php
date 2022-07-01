@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Cliente;
 use App\Models\EsquemaPrecio;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class EsquemaPrecioSeeder extends Seeder
 {
@@ -21,5 +22,13 @@ class EsquemaPrecioSeeder extends Seeder
                 'cliente_id' => $cliente->id,
             ]);
         }
+
+        DB::table('esquema_precios')
+            ->whereRaw('esquema_precios.id %2 = 0')
+            ->update([
+                'porcentaje_3' => 0,
+                'porcentaje_4' => 0,
+                'porcentaje_5' => 0
+            ]);
     }
 }

@@ -43,7 +43,7 @@ class LoteVencidosSeeder extends Seeder
                         'precio_compra' => $this->faker->randomFloat(2, 10, 1000),
                         'fecha_elaboracion' => $this->faker->dateTimeBetween('-3 years', '-1 years'),
                         'fecha_compra' => $this->faker->dateTimeBetween('-11 months','-1 months'),
-                        'fecha_vencimiento' => $this->faker->dateTimeBetween('+1 months', '+6 months'),
+                        'fecha_vencimiento' => $this->faker->dateTimeBetween('-6 months', '-1 months'),
                         'cantidad' => $this->faker->randomNumber(4)
                     ]);
 
@@ -53,7 +53,7 @@ class LoteVencidosSeeder extends Seeder
                         'lote_id' => $lote->id,
                         'dcc_id' => $deposito->id,
                     ]);
-                    $deposito->increment('existencia', $lote->cantidad);
+                    //$deposito->increment('existencia', $lote->cantidad);
                 }
                 $masProveedor = rand(1, 3);
                 for($k = 1; $k <= $masProveedor; $k++)
