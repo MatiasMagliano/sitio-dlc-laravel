@@ -27,7 +27,7 @@ class LoteVencidosSeeder extends Seeder
         // Se ejecuta lógica de lotes próximos a vencer
         // se hace de esta manera, para evitar lotes duplicados en productos diferentes
         foreach (Producto::all() as $producto){
-            $maxPresentacion = rand(1, 3);
+            $maxPresentacion = rand(1, 2);
             for($i = 1; $i <= $maxPresentacion; $i++){
                 $presentacion = Producto::presentaciones($producto->id)->random(1)->pluck('id')->get(0);
                 $deposito = DepositoCasaCentral::find(
@@ -36,7 +36,7 @@ class LoteVencidosSeeder extends Seeder
 
                 $codigoProv =  $this->faker->numberBetween(1000000, 9999999);
 
-                $maxLote = rand(1, 3);
+                $maxLote = rand(1, 2);
                 for($j = 1; $j <= $maxLote; $j++){
                     $lote = Lote::factory()->create([
                         'identificador' => $this->faker->numberBetween(1000000, 9999999),
@@ -55,7 +55,7 @@ class LoteVencidosSeeder extends Seeder
                     ]);
                     //$deposito->increment('existencia', $lote->cantidad);
                 }
-                $masProveedor = rand(1, 3);
+                $masProveedor = rand(1, 2);
                 for($k = 1; $k <= $masProveedor; $k++)
                 {
                     $proveedor = Proveedor::inRandomOrder()->first()->id;
