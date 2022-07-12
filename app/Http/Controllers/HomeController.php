@@ -48,7 +48,7 @@ class HomeController extends Controller
             WHERE cotizacions.estado_id = 1;
         ');
 
-        //LÓGICA PARA EL GRÁFICO DEL TOP 10
+        //LÓGICA PARA EL GRÁFICO DEL TOP 10 COTIZACIONES POR CLIENTES
         $cotizaciones = DB::select(DB::raw("
             SELECT clientes.razon_social as cliente, COUNT(cotizacions.id) as cantidad
             FROM clientes
@@ -82,6 +82,12 @@ class HomeController extends Controller
             ],
         );
         $cotizAprobRechaz = json_encode($cotizAprobRechaz);
+
+        // LOGICA PARA GRAFICO TOP-10 PRODUCTOS COTIZADOS
+        // SELECT pro.droga, pre.forma, pre.presentacion, COUNT(pc.producto_id) Top10 FROM producto_cotizados pc
+        // INNER JOIN presentacions pre ON pc.presentacion_id = pre.id
+        // INNER JOIN productos pro ON pc.producto_id = pro.id
+        // group by pro.droga, pre.forma, pre.presentacion ORDER BY COUNT(pc.producto_id) desc limit 10;
 
         //LÓGICA PARA EL GRÁFICO DE BARRAS perdidas-vencimiento
         $perdidasPorVencimiento = DB::select(DB::raw("
