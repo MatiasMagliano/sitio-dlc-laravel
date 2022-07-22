@@ -10,7 +10,6 @@ use App\Models\Producto;
 use App\Models\Proveedor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ProductoController extends Controller
 {
@@ -21,8 +20,7 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        $productos = Producto::sortable('droga')->paginate(10);
-        //$productos = $productos->sortBy(['droga', 'asc']);
+        $productos = Producto::sortable(['droga' => 'asc'])->paginate(5);
         return view('administracion.productos.index', compact('productos'));
     }
 

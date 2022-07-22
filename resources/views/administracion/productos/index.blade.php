@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Administrar Productos')
+@section('title', 'Administrar Cotizaciones')
 
 @section('content_header')
     <div class="row">
@@ -35,7 +35,7 @@
                 </div>
             </form>
             <br>
-            <table class="table table-bordered table-responsive-md">
+            <table class="table table-bordered table-responsive-md"  width="100%">
                 <thead>
                     <th>Droga</th>
                     <th>Presentación</th>

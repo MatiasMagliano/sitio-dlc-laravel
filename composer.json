@@ -17,8 +17,7 @@
         "laravel/ui": "^3.3",
         "maatwebsite/excel": "^3.1",
         "mbezhanov/faker-provider-collection": "^2.0",
-        "psr/simple-cache": "1.0",
-        "yajra/laravel-datatables-oracle": "~9.0"
+        "psr/simple-cache": "1.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",

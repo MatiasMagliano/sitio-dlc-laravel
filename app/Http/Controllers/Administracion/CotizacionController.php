@@ -24,13 +24,13 @@ class CotizacionController extends Controller
      */
     public function index()
     {
-        $cotizaciones = Cotizacion::with('cliente', 'user', 'estado')->latest()->get();
+        $cotizaciones = Cotizacion::sortable(['updated_at' => 'desc'])->paginate(10);
         $config = [
             'format' => 'DD/MM/YYYY',
             'dayViewHeaderFormat' => 'MMM YYYY',
         ];
 
-        return view('administracion.cotizaciones.index', compact('cotizaciones', 'config'));
+        return view('administracion.cotizaciones.index-optimal', compact('cotizaciones', 'config'));
     }
 
     /**

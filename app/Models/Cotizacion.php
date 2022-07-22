@@ -8,14 +8,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+use Kyslik\ColumnSortable\Sortable;
+
 class Cotizacion extends Model
 {
-    use HasFactory;
+    use HasFactory, Sortable;
 
     protected $table = 'cotizacions';
 
     protected $fillable = [
         'identificador', 'user_id', 'cliente_id', 'dde_id', 'estado_id', 'motivo_rechazo'
+    ];
+
+    public $sortable = [
+        'updated_at',
+        'cliente_id'
     ];
 
     protected $casts = [
