@@ -23,14 +23,14 @@ class CotizacionSeeder extends Seeder
         //
         foreach(Cliente::all() as $cliente){
             $dirEntrega = DB::table('direcciones_entrega')->where('cliente_id', $cliente->id)->pluck('id');
-            $maxCotizaciones = rand(3, 10);
+            $maxCotizaciones = rand(3, 5);
             for($i = 1; $i <= $maxCotizaciones; $i++){
                 $cotizacion = Cotizacion::factory()->create([
                     'cliente_id' => $cliente->id,
                     'dde_id' => $dirEntrega->random(1)->get('0')
                 ]);
 
-                $maxProductos = rand(2, 100);
+                $maxProductos = rand(2, 50);
                 for($j = 1; $j <= $maxProductos; $j++){
                     ProductoCotizado::factory()->create([
                         'cotizacion_id' => $cotizacion->id
