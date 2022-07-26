@@ -8,6 +8,7 @@ use App\Models\Estado;
 use App\Models\Lote;
 use App\Models\LotePresentacionProducto;
 use App\Models\OrdenTrabajo;
+use App\Models\Producto;
 use App\Models\ProductoOrdenTrabajo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -44,6 +45,12 @@ class OrdenTrabajoController extends Controller
     {
         $cotizacion = Cotizacion::find($ordentrabajo->cotizacion_id);
         return view('administracion.ordenestrabajo.show', compact('ordentrabajo', 'cotizacion'));
+    }
+
+    public function asignarLotes(OrdenTrabajo $ordentrabajo, $producto, $presentacion){
+        $lotes = Lote::findMany(LotePresentacionProducto::getLotes($producto, $presentacion));
+
+        return view('administracion.ordenestrabajo.show-lotes', compact('ordentrabajo', 'lotes'));
     }
 
     public function store(Request $request)
@@ -86,6 +93,8 @@ class OrdenTrabajoController extends Controller
                     $cantLote = Lote::find($lotesDeProducto[$cont]);
                     $resto -= $cantLote->cantidad;
                     $lotes[] = $cantLote->id; //array_push
+                    $deposito->increment('cotizacion', $deposito->cotizacion - $cantLote->cantidad);
+                    $cont++;
                 }
 
                 ProductoOrdenTrabajo::create([
