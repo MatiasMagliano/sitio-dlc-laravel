@@ -128,5 +128,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esExpedicion'])->name
     Route::get('/ordentrabajo/ajaxObtenerLineas', [OrdenTrabajoController::class, 'obtenerLineasCotizacion'])->name('cotizadas.ajax.obtener');
     Route::get('/ordentrabajo/{ordentrabajo}/descargarpdf/', [OrdenTrabajoController::class, 'descargapdf'])
         ->name('ordentrabajo.descargapdf');
+    Route::get('/ordentabajo/{ordentrabajo}/asignarlotes/{producto}/{presentacion}', [OrdenTrabajoController::class, 'asignarLotes'])
+        ->name('ordentrabajo.asignarlotes');
     Route::resource('/ordentrabajo', OrdenTrabajoController::class);
 });
