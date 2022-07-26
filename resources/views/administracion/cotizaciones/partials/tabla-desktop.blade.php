@@ -1,9 +1,10 @@
-<table class="table table-bordered table-responsive-md" width="100%">
+<table class="table table-bordered" width="100%">
     <thead>
         <tr>
             <th>Fecha</th>
             <th>Identificador/Usuario</th>
             <th>Cliente</th>
+            <th>Cantidad de Líneas</th>
             <th>Importe total</th>
             <th>ESTADO</th>
             <th></th>
@@ -18,21 +19,28 @@
                 <td style="vertical-align: middle;">
                     <strong>{{ $cotizacion->identificador }}</strong>
                     <br>
-                    {{ $cotizacion->user->name }}
+                    Creado por: {{ $cotizacion->user->name }}
                 </td>
                 <td style="vertical-align: middle;">
                     {{ $cotizacion->cliente->razon_social }}<br>
                     {{ $cotizacion->cliente->tipo_afip }}: {{ $cotizacion->cliente->afip }}
                 </td>
                 <td style="vertical-align: middle; text-align:center;">
-                    $ {{ number_format($cotizacion->monto_total, 2, ',', '.') }}
+                    {{ $cotizacion->productos->count() }}
+                </td>
+                <td style="vertical-align: middle; text-align:center;">
+                    @if ($cotizacion->monto_total == 0.00)
+                        cotización sin finalizar
+                    @else
+                        $ {{ number_format($cotizacion->monto_total, 2, ',', '.') }}
+                    @endif
                 </td>
                 {{-- ESTADOS DINAMICOS y ACCIONES DINÁMICAS --}}
                 @switch($cotizacion->estado_id)
                     @case(1)
                         {{-- ESTADOS DINAMICOS --}}
-                        <td style="vertical-align: middle;">
-                            <span class="text-fuchsia">{{ $cotizacion->estado->estado }}</span>
+                        <td style="vertical-align: middle; text-align:center;">
+                            <span class="badge badge-warning">{{ $cotizacion->estado->estado }}</span>
                         </td>
 
                         {{-- ACCIONES DINÁMICAS --}}
@@ -55,8 +63,8 @@
 
                     @case(2)
                         {{-- ESTADOS DINAMICOS --}}
-                        <td style="vertical-align: middle;">
-                            <span class="text-success">{{ $cotizacion->estado->estado }}</span><br>
+                        <td style="vertical-align: middle; text-align:center;">
+                            <span class="badge badge-info">{{ $cotizacion->estado->estado }}</span><br>
                             <span>{{ $cotizacion->finalizada->format('d/m/Y') }}</span>
                         </td>
 
@@ -72,8 +80,8 @@
 
                     @case(3)
                         {{-- ESTADOS DINAMICOS --}}
-                        <td style="vertical-align: middle;">
-                            <span class="text-secondary">{{ $cotizacion->estado->estado }}</span><br>
+                        <td style="vertical-align: middle; text-align:center;">
+                            <span class="badge badge-secondary">{{ $cotizacion->estado->estado }}</span><br>
                             <span>{{ $cotizacion->presentada->format('d/m/Y') }}</span>
                         </td>
 
@@ -90,8 +98,8 @@
 
                     @case(4)
                         {{-- ESTADOS DINAMICOS --}}
-                        <td style="vertical-align: middle;">
-                            <span class="text-success">{{ $cotizacion->estado->estado }}</span><br>
+                        <td style="vertical-align: middle; text-align:center;">
+                            <span class="badge badge-success">{{ $cotizacion->estado->estado }}</span><br>
                             <span>{{ $cotizacion->confirmada->format('d/m/Y') }}</span>
                         </td>
 
@@ -119,8 +127,8 @@
 
                     @case(5)
                         {{-- ESTADOS DINAMICOS --}}
-                        <td style="vertical-align: middle;">
-                            <span class="text-danger">{{ $cotizacion->estado->estado }}</span><br>
+                        <td style="vertical-align: middle; text-align:center;">
+                            <span class="badge badge-danger">{{ $cotizacion->estado->estado }}</span><br>
                             <span>{{ $cotizacion->rechazada->format('d/m/Y') }}</span>
                         </td>
 
@@ -148,8 +156,8 @@
 
                     @case(6 || 7)
                         {{-- ESTADOS DINAMICOS --}}
-                        <td style="vertical-align: middle;">
-                            <span class="text-success">APROBADA</span><br>
+                        <td style="vertical-align: middle; text-align:center;">
+                            <span class="badge badge-success">APROBADA</span><br>
                             <span>{{ $cotizacion->confirmada->format('d/m/Y') }}</span>
                         </td>
 
@@ -175,7 +183,7 @@
                     @break
 
                     @default
-                        <td style="vertical-align: middle;">
+                        <td style="vertical-align: middle; text-align:center;">
                             <p>-</p>
                         </td>
 

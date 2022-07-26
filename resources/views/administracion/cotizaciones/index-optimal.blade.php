@@ -40,7 +40,7 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-    <x-adminlte-card>
+    <x-adminlte-card class="wrapper">
         <div class="desktop">
             @include('administracion.cotizaciones.partials.tabla-desktop')
             <br>
