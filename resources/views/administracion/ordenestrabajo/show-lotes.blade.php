@@ -15,7 +15,8 @@
 @section('content_header')
     <div class="row">
         <div class="col-xl-8">
-            <h1>Lotes asignados a Orden de trabajo -PONER ORDEN DE TRABAJO-</h1>
+            <h1>Lotes asignados a Orden de trabajo <span
+                    style="font-weight: 700">{{ $ordentrabajo->cotizacion->identificador }}</span></h1>
         </div>
         <div class="col-md-4 d-flex justify-content-xl-end">
             <a href="{{ url()->previous() }}" role="button" class="btn btn-md btn-secondary">Volver</a>
@@ -25,16 +26,19 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-{{$ordentrabajo}} <br>
-<h1>Lotes de producto</h1>
-<table>
-    <thead>
-        <th>Identificador</th>
-    </thead>
-    <tbody>
 
-    </tbody>
-</table>
+    <hr>
+    <h1>Lotes de producto</h1>
+    <table class="tabe table-bordered" width="100%">
+        <thead>
+            <th>Identificador</th>
+            <th>Cantidad</th>
+            <th>Vencimiento</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
 @endsection
 
 @section('js')

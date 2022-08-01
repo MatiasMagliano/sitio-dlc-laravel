@@ -44,8 +44,8 @@
         <div class="desktop">
             @include('administracion.cotizaciones.partials.tabla-desktop')
             <br>
-            <div class="d-flex justify-content-end"> {{-- AGREGA LINKS DE PAGINACIÓN para desktop --}}
-                <div class="pagination">
+            <div class="d-flex justify-content-end">
+                <div class="pagination"> {{-- AGREGA LINKS DE PAGINACIÓN para desktop --}}
                     {{ $cotizaciones->links() }}
                 </div>
             </div>
@@ -54,8 +54,8 @@
         <div class="mobile">
             @include('administracion.cotizaciones.partials.tabla-mobile')
             <br>
-            <div class="d-flex justify-content-end"> {{-- AGREGA LINKS DE PAGINACIÓN para mobile --}}
-                <div class="pagination-sm">
+            <div class="d-flex justify-content-end">
+                <div class="pagination-sm">{{-- AGREGA LINKS DE PAGINACIÓN para mobile --}}
                     {{ $cotizaciones->onEachSide(1)->links() }}
                 </div>
             </div>

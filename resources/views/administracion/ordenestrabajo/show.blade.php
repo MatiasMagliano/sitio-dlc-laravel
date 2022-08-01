@@ -31,51 +31,60 @@
 @section('plugins.DatatablesPlugins', true)
 <div class="card">
     <div class="card-header">
-        <h5 class="heading-small text-muted mb-1">Datos básicos de Orden de trabajo</h5>
+        <h5 class="heading-small text-muted mb-1">Datos básicos de la orden de trabajo</h5>
     </div>
     <div class="card-body">
-        <table class="table table-bordered" width="100%">
+        <table class="table" width="100%">
             <thead>
                 <tr>
                     <th>Fecha</th>
-                    <th>Identificador/Usuario</th>
                     <th>Cliente</th>
-                    <th>Productos cotizados</th>
-                    <th>Total unidades</th>
+                    <th>Lugar de entrega</th>
+                    <th></th>
                     <th>ESTADO</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td style="vertical-align: middle;">
-                        {{ $ordentrabajo->created_at->format('d/m/Y') }}
+                        {{ $ordentrabajo->cotizacion->created_at->format('d/m/Y') }}
                     </td>
                     <td style="vertical-align: middle;">
-                        <strong>{{ $ordentrabajo->cotizacion->identificador }}</strong>
+                        {{ $ordentrabajo->cotizacion->cliente->razon_social }}
+                    </td>
+                    <td style="vertical-align: middle;">
+                        <u><strong>{{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->lugar_entrega }}:</strong></u>
                         <br>
-                        {{ $ordentrabajo->user->name }}
+                        <div class="ml-3">
+                            <strong>Dirección:</strong>
+                            {{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->domicilio }}
+                            <br>
+                            <strong>Condiciones: </strong>
+                            {{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->condiciones }}
+                            <br>
+                            <strong>Observaciones: </strong>
+                            {{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->observaciones }}
+                        </div>
                     </td>
                     <td style="vertical-align: middle;">
-                        {{ $ordentrabajo->cotizacion->cliente->razon_social }}<br>
-                        {{ $ordentrabajo->cotizacion->cliente->tipo_afip }}:
-                        {{ $ordentrabajo->cotizacion->cliente->afip }}
+                        <strong>Cotizazión creada por: </strong>{{ $ordentrabajo->cotizacion->user->name }}
+                        <strong>y aprobada el:
+                        </strong>{{ $ordentrabajo->cotizacion->confirmada->format('d/m/Y') }} <br>
+                        <strong>En producción desde el:
+                        </strong>{{ $ordentrabajo->en_produccion->format('d/m/Y') }} <br>
+                        <strong>Plazo de entrega: </strong>{{ $ordentrabajo->plazo_entrega }}
                     </td>
-                    <td style="vertical-align: middle; text-align:center;">{{ $ordentrabajo->productos->count() }}</td>
-                    <td style="vertical-align: middle; text-align:center;">
-                        {{ $ordentrabajo->productos->sum('cantidad') }}</td>
-                    {{-- SE RESUME TODO A UN SOLO SWITCH, a diferencia del index de cotizaciones --}}
-                    @switch($ordentrabajo->estado_id)
-                        @case(6)
-                            {{-- ESTADOS DINAMICOS --}}
+                    <td style="vertical-align: middle;">
+                        @switch($ordentrabajo->estado_id)
+                            @case(6)
+                                {{-- ESTADOS DINAMICOS --}}
                             <td style="vertical-align: middle;">
-                                <span class="text-success">{{ $ordentrabajo->estado->estado }} desde el:
-                                    {{ $ordentrabajo->en_produccion->format('d/m/Y') }}</span>
+                                <span class="text-success">{{ $ordentrabajo->estado->estado }}
                             </td>
                         @case(7)
                             {{-- ESTADOS DINAMICOS --}}
                             <td style="vertical-align: middle;">
-                                <span class="text-success">{{ $ordentrabajo->estado->estado }} desde el:
-                                    {{ $ordentrabajo->en_produccion->format('d/m/Y') }}</span>
+                                <span class="text-success">{{ $ordentrabajo->estado->estado }}
                             </td>
                         @break
 
@@ -87,6 +96,7 @@
                                 <p>-</p>
                             </td>
                     @endswitch
+                    </td>
                 </tr>
             </tbody>
         </table>
