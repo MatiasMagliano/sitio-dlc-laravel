@@ -111,7 +111,7 @@ class HomeController extends Controller
                 $perdidasPorVencimiento[2]->Vencimiento,
                 $perdidasPorVencimiento[3]->Vencimiento,
                 $perdidasPorVencimiento[4]->Vencimiento,
-                $perdidasPorVencimiento[5]->Vencimiento,
+                //$perdidasPorVencimiento[5]->Vencimiento,
             ],
             'dataOportunidad'  => [
                 $perdidasPorVencimiento[0]->Oportunidad,
@@ -119,7 +119,7 @@ class HomeController extends Controller
                 $perdidasPorVencimiento[2]->Oportunidad,
                 $perdidasPorVencimiento[3]->Oportunidad,
                 $perdidasPorVencimiento[4]->Oportunidad,
-                $perdidasPorVencimiento[5]->Oportunidad,
+                //$perdidasPorVencimiento[5]->Oportunidad,
             ],
             'dataPerdida'  => [
                 $perdidasPorVencimiento[0]->Perdida,
@@ -127,7 +127,7 @@ class HomeController extends Controller
                 $perdidasPorVencimiento[2]->Perdida,
                 $perdidasPorVencimiento[3]->Perdida,
                 $perdidasPorVencimiento[4]->Perdida,
-                $perdidasPorVencimiento[5]->Perdida,
+                //$perdidasPorVencimiento[5]->Perdida,
             ],
 
         );
