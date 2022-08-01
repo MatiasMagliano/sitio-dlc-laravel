@@ -27,6 +27,12 @@ class Cliente extends Model
         return $this->hasMany(DireccionEntrega::class);
     }
 
+    /* FUNCIONES ESPECIALES */
+    public function ptoEntrega($punto)
+    {
+        return DireccionEntrega::find($punto);
+    }
+
     /* hasMany --> cotizacion
     *  hasMany --> ¿transacciones?
      */
