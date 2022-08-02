@@ -23,7 +23,7 @@ class CotizacionSeeder extends Seeder
         //
         foreach(Cliente::all() as $cliente){
             $dirEntrega = DB::table('direcciones_entrega')->where('cliente_id', $cliente->id)->pluck('id');
-            $maxCotizaciones = rand(3, 5);
+            $maxCotizaciones = rand(1, 3);
             for($i = 1; $i <= $maxCotizaciones; $i++){
                 $cotizacion = Cotizacion::factory()->create([
                     'cliente_id' => $cliente->id,
@@ -39,21 +39,6 @@ class CotizacionSeeder extends Seeder
             }
         }
 
-        //actualiza el stock para todos los productos...
-        //Se podría hacer con un observer, pero se carece de modelo DepositoCasaCentral relacionado
-        //se lo busca a través de una DBQUERY
-        foreach(Producto::all() as $producto){
-            $presentaciones = DB::table('lote_presentacion_producto')
-                ->where('producto_id', $producto->id)
-                ->get('presentacion_id')
-                ->unique();
-            //dd($presentaciones);
-            foreach($presentaciones as $presentacion){
-                $deposito = DepositoCasaCentral::find(
-                    LotePresentacionProducto::getIdDeposito($producto->id, $presentacion->presentacion_id) //devuelve un solo pivot relacionado a prod/pres
-                );
-                $deposito->increment('disponible', ($deposito->existencia - $deposito->cotizacion));
-            }
-        }
+        //actualiza el stock en el factory de ProductoCotizado...
     }
 }
