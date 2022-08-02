@@ -49,8 +49,9 @@ class OrdenTrabajoController extends Controller
 
     public function asignarLotes(OrdenTrabajo $ordentrabajo, $producto, $presentacion){
         $lotes = Lote::findMany(LotePresentacionProducto::getLotes($producto, $presentacion));
+        $producto = Producto::find($producto);
 
-        return view('administracion.ordenestrabajo.show-lotes', compact('ordentrabajo', 'lotes'));
+        return view('administracion.ordenestrabajo.show-lotes', compact('ordentrabajo', 'producto', 'lotes'));
     }
 
     public function store(Request $request)
@@ -82,18 +83,18 @@ class OrdenTrabajoController extends Controller
             // Si hay lotes disponibles, el proceso termina con la impresión de la OT
             // de lo contrario, se deberán asignar manualmente los lotes una vez arquiridos.
             // Lógica que genera un array->tostring de lotes disponibles o asigna -1 cuando no hay lotes
-            if($deposito->disponible > 0)
+            if($deposito->cotizacion > 0)
             {
                 $lotes = array();
                 $lotesDeProducto = LotePresentacionProducto::getLotes($producto->producto_id, $producto->presentacion_id);
                 $resto = $producto->cantidad;
                 $cont  = 0;
-                while($resto >= 0)
+                while($resto >= 0 && $lotesDeProducto->count() >= $cont)
                 {
                     $cantLote = Lote::find($lotesDeProducto[$cont]);
                     $resto -= $cantLote->cantidad;
                     $lotes[] = $cantLote->id; //array_push
-                    $deposito->increment('cotizacion', $deposito->cotizacion - $cantLote->cantidad);
+                    $deposito->decrement('cotizacion', $cantLote->cantidad);
                     $cont++;
                 }
 
@@ -129,6 +130,8 @@ class OrdenTrabajoController extends Controller
         }
         $cotizacion->estado_id = $estado;
         $orden->estado_id = $estado;
+
+        //se actualiza el update_at...
         $cotizacion->save();
         $orden->save();
         return redirect(route('administracion.ordentrabajo.index'));

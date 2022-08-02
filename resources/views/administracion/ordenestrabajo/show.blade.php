@@ -27,128 +27,128 @@
 {{-- aquí va contenido --}}
 @section('content')
 
-@section('plugins.Datatables', true)
-@section('plugins.DatatablesPlugins', true)
-<div class="card">
-    <div class="card-header">
-        <h5 class="heading-small text-muted mb-1">Datos básicos de la orden de trabajo</h5>
-    </div>
-    <div class="card-body">
-        <table class="table" width="100%">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Cliente</th>
-                    <th>Lugar de entrega</th>
-                    <th></th>
-                    <th>ESTADO</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="vertical-align: middle;">
-                        {{ $ordentrabajo->cotizacion->created_at->format('d/m/Y') }}
-                    </td>
-                    <td style="vertical-align: middle;">
-                        {{ $ordentrabajo->cotizacion->cliente->razon_social }}
-                    </td>
-                    <td style="vertical-align: middle;">
-                        <u><strong>{{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->lugar_entrega }}:</strong></u>
-                        <br>
-                        <div class="ml-3">
-                            <strong>Dirección:</strong>
-                            {{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->domicilio }}
-                            <br>
-                            <strong>Condiciones: </strong>
-                            {{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->condiciones }}
-                            <br>
-                            <strong>Observaciones: </strong>
-                            {{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->observaciones }}
-                        </div>
-                    </td>
-                    <td style="vertical-align: middle;">
-                        <strong>Cotizazión creada por: </strong>{{ $ordentrabajo->cotizacion->user->name }}
-                        <strong>y aprobada el:
-                        </strong>{{ $ordentrabajo->cotizacion->confirmada->format('d/m/Y') }} <br>
-                        <strong>En producción desde el:
-                        </strong>{{ $ordentrabajo->en_produccion->format('d/m/Y') }} <br>
-                        <strong>Plazo de entrega: </strong>{{ $ordentrabajo->plazo_entrega }}
-                    </td>
-                    <td style="vertical-align: middle;">
-                        @switch($ordentrabajo->estado_id)
-                            @case(6)
-                                {{-- ESTADOS DINAMICOS --}}
-                            <td style="vertical-align: middle;">
-                                <span class="text-success">{{ $ordentrabajo->estado->estado }}
-                            </td>
-                        @case(7)
-                            {{-- ESTADOS DINAMICOS --}}
-                            <td style="vertical-align: middle;">
-                                <span class="text-success">{{ $ordentrabajo->estado->estado }}
-                            </td>
-                        @break
-
-                        @default
-                            <td>
-                                <p>-</p>
-                            </td>
-                            <td>
-                                <p>-</p>
-                            </td>
-                    @endswitch
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-body">
-        <table id="tablaProductos" class="table table-responsive-md table-bordered table-condensed" width="100%">
-            <thead>
-                <th>Línea</th>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Lotes asignados</th>
-                <th></th>
-            </thead>
-            <tbody>
-                @php $i = 0; /*variable contadora del Nº Orden*/@endphp
-                @foreach ($ordentrabajo->productos as $itemOT)
+    <div class="card">
+        <div class="card-header">
+            <h5 class="heading-small text-muted mb-1">Datos de la orden de trabajo: {{$ordentrabajo->cotizacion->identificador}}</h5>
+        </div>
+        <div class="card-body">
+            <table class="table" width="100%">
+                <thead>
                     <tr>
-                        <td style="text-align: center;">{{ ++$i }}</td>
-                        <td>{{-- Producto: producto+presentacion --}}
-                            {{ $itemOT->producto->droga }}, {{ $itemOT->presentacion->forma }}
-                            {{ $itemOT->presentacion->presentacion }}
-                        </td>
-                        <td style="vertical-align: middle; text-align:center;">
-                            {{ $itemOT->cantidad }}
-                        </td>
-                        @if ($itemOT->lotes == -1)
-                            <td class="text-center">
-                                Lote sin asignar
-                            </td>
-                            <td style="vertical-align: middle; text-align:center;">
-                                <a href="{{ route('administracion.ordentrabajo.asignarlotes', ['ordentrabajo' => $ordentrabajo, 'producto' => $itemOT->producto->id, 'presentacion' => $itemOT->presentacion->id]) }}"
-                                    class="btn btn-sm btn-danger">
-                                    Asignar
-                                </a>
-                            </td>
-                        @else
-                            <td style="vertical-align: middle; text-align:center;">{{ $itemOT->lotes }}</td>
-                            <td style="vertical-align: middle; text-align:center;">
-                                <a href="#" class="btn btn-link">
-                                    <i class="fas fa-search"></i>
-                                </a>
-                            </td>
-                        @endif
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Lugar de entrega</th>
+                        <th></th>
+                        <th>ESTADO</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="vertical-align: middle;">
+                            {{ $ordentrabajo->cotizacion->created_at->format('d/m/Y') }}
+                        </td>
+                        <td style="vertical-align: middle;">
+                            {{ $ordentrabajo->cotizacion->cliente->razon_social }}
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <u><strong>{{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->lugar_entrega }}:</strong></u>
+                            <br>
+                            <div class="ml-3">
+                                <strong>Dirección:</strong>
+                                {{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->domicilio }}
+                                <br>
+                                <strong>Condiciones: </strong>
+                                {{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->condiciones }}
+                                <br>
+                                <strong>Observaciones: </strong>
+                                {{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->observaciones }}
+                            </div>
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <strong>Cotizazión creada por: </strong>{{ $ordentrabajo->cotizacion->user->name }}
+                            <strong>y aprobada el:
+                            </strong>{{ $ordentrabajo->cotizacion->confirmada->format('d/m/Y') }} <br>
+                            <strong>En producción desde el:
+                            </strong>{{ $ordentrabajo->en_produccion->format('d/m/Y') }} <br>
+                            <strong>Plazo de entrega: </strong>{{ $ordentrabajo->plazo_entrega }}
+                        </td>
+                        <td style="vertical-align: middle;">
+                            @switch($ordentrabajo->estado_id)
+                                @case(6)
+                                    {{-- ESTADOS DINAMICOS --}}
+                                <td style="vertical-align: middle;">
+                                    <span class="text-success">{{ $ordentrabajo->estado->estado }}
+                                </td>
+                            @case(7)
+                                {{-- ESTADOS DINAMICOS --}}
+                                <td style="vertical-align: middle;">
+                                    <span class="text-success">{{ $ordentrabajo->estado->estado }}
+                                </td>
+                            @break
+
+                            @default
+                                <td>
+                                    <p>-</p>
+                                </td>
+                                <td>
+                                    <p>-</p>
+                                </td>
+                        @endswitch
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+
+    @section('plugins.Datatables', true)
+    @section('plugins.DatatablesPlugins', true)
+    <div class="card">
+        <div class="card-body">
+            <table id="tablaProductos" class="table table-responsive-md table-bordered table-condensed" width="100%">
+                <thead>
+                    <th>Línea</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Lotes asignados</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    @php $i = 0; /*variable contadora del Nº Orden*/@endphp
+                    @foreach ($ordentrabajo->productos as $itemOT)
+                        <tr>
+                            <td style="text-align: center;">{{ ++$i }}</td>
+                            <td>{{-- Producto: producto+presentacion --}}
+                                {{ $itemOT->producto->droga }}, {{ $itemOT->presentacion->forma }}
+                                {{ $itemOT->presentacion->presentacion }}
+                            </td>
+                            <td style="vertical-align: middle; text-align:center;">
+                                {{ $itemOT->cantidad }}
+                            </td>
+                            @if ($itemOT->lotes == -1)
+                                <td class="text-center">
+                                    Lotes sin asignar
+                                </td>
+                                <td style="vertical-align: middle; text-align:center;">
+                                    <a href="{{ route('administracion.ordentrabajo.asignarlotes', ['ordentrabajo' => $ordentrabajo, 'producto' => $itemOT->producto->id, 'presentacion' => $itemOT->presentacion->id]) }}"
+                                        class="btn btn-sm btn-danger">
+                                        Asignar
+                                    </a>
+                                </td>
+                            @else
+                                <td style="vertical-align: middle; text-align:center;">{{ $itemOT->lotes }}</td>
+                                <td style="vertical-align: middle; text-align:center;">
+                                    <a href="#" class="btn btn-link">
+                                        <i class="fas fa-search"></i>
+                                    </a>
+                                </td>
+                            @endif
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 @endsection
 
 @section('js')
@@ -162,7 +162,7 @@
             "scrollY": "25vh",
             "scrollCollapse": true,
             "paging": false,
-            "order": [0, 'asc'],
+            "order": [3, 'desc'],
             "bInfo": false,
             "searching": false,
             "columnDefs": [{

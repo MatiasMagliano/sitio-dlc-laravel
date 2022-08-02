@@ -4,6 +4,28 @@
 
 @section('css')
     <style>
+        .texto-header {
+            padding: 0 20px;
+            height: 30%;
+            overflow-y: auto;
+            /*font-size: 14px;*/
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .texto-header::-webkit-scrollbar {
+            width: 10px;
+            background-color: #282828;
+        }
+
+        .texto-header::-webkit-scrollbar-thumb {
+            background-color: #fff;
+        }
+
+        .pre-scrollable{
+            max-height: 230px;
+        }
+
         @media (max-width: 600px) {
             .hide {
                 display: none;
@@ -26,19 +48,39 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-
-    <hr>
-    <h1>Lotes de producto</h1>
-    <table class="tabe table-bordered" width="100%">
-        <thead>
-            <th>Identificador</th>
-            <th>Cantidad</th>
-            <th>Vencimiento</th>
-        </thead>
-        <tbody>
-
-        </tbody>
-    </table>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="heading-small text-muted mb-1">Producto {{ $producto->droga }},
+                {{ $producto->presentaciones($producto->id)->pluck('forma')->get('0') }}
+                {{ $producto->presentaciones($producto->id)->pluck('presentacion')->get('0') }}</h4>
+        </div>
+        <div class="card-body texto-header">
+            <table class="table" width="100%">
+                <thead>
+                    <th>Identificador</th>
+                    <th>Ubicación</th>
+                    <th>Cantidad</th>
+                    <th>Fecha de compra</th>
+                    <th>Fecha de elaboración</th>
+                    <th>Vencimiento</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    @foreach ($lotes as $lote)
+                        <tr>
+                            <td>{{$lote->identificador}}</td>
+                            <td>N/A</td>
+                            <td>{{$lote->cantidad}}</td>
+                            <td>{{$lote->fecha_compra->format('d/m/Y')}}</td>
+                            <td>{{$lote->fecha_elaboracion->format('d/m/Y')}}</td>
+                            <td>{{$lote->fecha_vencimiento->format('d/m/Y')}}</td>
+                            <td>-</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 @endsection
 
 @section('js')
