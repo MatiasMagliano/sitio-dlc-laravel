@@ -28,6 +28,13 @@ class Proveedor extends Model
     ];
 
 
+    public static function getDatosProveedor($cuit){
+        $proveedor = Proveedor::select('*')
+        ->where('proveedors.cuit','=', $cuit)
+        ->distinct()
+        ->get();
+        return $proveedor; 
+    }
     /**
      * Get the user associated with the ListaProveedor
      *
@@ -38,6 +45,8 @@ class Proveedor extends Model
         return $this->hasOne(Listaprecio::class);
         
     }
+
+
 
 
 }

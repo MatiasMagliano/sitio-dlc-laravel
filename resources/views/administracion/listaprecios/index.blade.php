@@ -78,24 +78,30 @@
                 @foreach ($listaPrecios as $listaPrecio)
                     <tr id={{ $listaPrecio->cuit }}>
                         <td>{{ $listaPrecio->cuit }}</td>
-                        <td>{{ strtoupper($listaPrecio->razon_social) }}</td>
+                        <td>{{ $listaPrecio->proveedor_id }} - {{ strtoupper($listaPrecio->razon_social) }}</td>
                         <td>{{ $listaPrecio->prods }}</td>
                         <td>{{ $listaPrecio->creado }}</td>
                         <td class="fechaUpdate">{{ $listaPrecio->modificado }}</td>
-                        <td><a href="" class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
-                                title="Editar listado">
+
+                        <td style="vertical-align: middle; text-align:center;" value="{{ $listaPrecio->cuit }}">
+                            <a href="{{ route('administracion.listaprecios.show', $listaPrecio->cuit) }}"
+                                class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
+                                title="Editar cotización">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
-                            <form action="{{ route('administracion.listaprecios.index') }}"
-                                id="{{ $listaPrecio->proveedor_id }}" method="POST" class="d-inline">
+                            <form method="GET" action="{{ route('administracion.listaprecios.deleteList', $listaPrecio->cuit) }}"
+                                class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
+                                title="Borrar cotización">
                                 @csrf
-                                @method('delete')
-                                <button type="button" class="btn btn-link" data-toggle="tooltip" title="Borrar listado"
-                                    onclick="borrarListadoProveedor({{ $listaPrecio->proveedor_id }})">
+                                @method('GET')
+                                <button id="{{ $listaPrecio->proveedor_id }}|{{ $listaPrecio->razon_social }}" type="button" 
+                                    class="btn btn-link trashListProv" data-toggle="tooltip"
+                                    data-placement="bottom" title="Borrar cotización">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </form>
                         </td>
+
                     </tr>
                 @endforeach
             </tbody>
@@ -106,38 +112,85 @@
 @endsection
 
 @section('js')
-@include('partials.alerts')
-<script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
-<script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function borrarListadoProveedor($proveedor_id) {
-        var datos = {
-            proveedor_id: $proveedor_id
-        };
-        Swal.fire({
+
+    $('.trashListProv').on('click', function() {
+        $cuit = $(this).attr('id');
+        borrarListadoProveedor($cuit);
+    });
+
+     function borrarListadoProveedor(listado){
+        var proveedor = listado.split("|");
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Borrar Listado de '+ proveedor[1],
+            text: "Esta accción quitará los productos de la lista del proveedor en futuras cotizaciones.",
             icon: 'warning',
-            title: 'Borrar listado',
-            text: 'Su cotización no contiene líneas, esto borrará la referencia en el registro.',
-            confirmButtonText: 'Borrar',
             showCancelButton: true,
+            confirmButtonText: 'Borrar',
             cancelButtonText: 'Cancelar',
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                $.ajax({
-                    data: datos,
-                    url: "{{ route('administracion.listaprecios.deleteLista') }}",
-                    type: "POST",
+            var datos = {
+                lisadoProveedor: 15
+            };
+            $.ajax({
+                url: "{{ route('administracion.listaprecios.deleteList') }}",
+                type: "DELETE",
+                data: datos,
+            });   
+                //swalWithBootstrapButtons.fire(
+                //    'Borrado',
+                //    'Se ha eliminado el listado de proveedor',
+                //    'success'
+                //    )
+                } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'Operación cancelada por usuario, no se borra el listado de proveedor',
+                    'error'
+                    )
+                }
+            })
+        }
 
-                }).done(function(resultado) {});
-            }
-        });
-    }
-
+//             Swal.fire({
+//   title: 'Are you sure?',
+//   text: "You won't be able to revert this!",
+//   icon: 'warning',
+//   showCancelButton: true,
+//   confirmButtonColor: '#3085d6',
+//   cancelButtonColor: '#d33',
+//   confirmButtonText: 'Yes, delete it!'
+// }).then((result) => {
+//   if (result.isConfirmed) {
+//     Swal.fire(
+//       'Deleted!',
+//       'Your file has been deleted.',
+//       'success'
+//     )
+//   }
+// })
+</script>
+<script>
     $(document).ready(function() {
         // VARIABLES LOCALES
         var tabla2;
         Tabla 2
+
 
         tabla2 = $('#tabla2').DataTable({
             //"scrollY": "57vh",
@@ -287,7 +340,6 @@
             select: '.seleccion-producto',
             placeholder: 'Seleccione el nombre de la droga y luego su presentación...',
         });
-
 
     });
 </script>

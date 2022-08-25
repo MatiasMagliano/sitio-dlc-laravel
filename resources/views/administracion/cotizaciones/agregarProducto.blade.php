@@ -63,7 +63,9 @@
             <div class="card-header">
                 <div class="row d-flex">
                     <div class="col-8">
-                        <h6 class="heading-small text-muted mb-1">Producto para cotización: {{$cotizacion->identificador}}</h6>
+                        @foreach ($porcentajes as $porcentaje)
+                            <h6 class="heading-small text-muted mb-1">Producto para cotización: {{$cotizacion->identificador}} de {{ $porcentaje->razon_social }}</h6>
+                        @endforeach
                     </div>
                     <div class="col-4 text-right">
                         <button type="submit" class="btn btn-sidebar btn-success"><i class="fas fa-share-square"></i>&nbsp;<span class="hide">Agregar</span></button>
@@ -100,12 +102,14 @@
                         <br>
                         <table id="tablaPreciosSugeridos" class="table table-responsive-md table-bordered table-condensed" width="100%">
                             <thead>
+                                @foreach ($porcentajes as $porcentaje)
                                 <th>Proveedor</th>
-                                <th>Descuento 1</th>
-                                <th>Descuento 2</th>
-                                <th>Descuento 3</th>
-                                <th>Descuento 4</th>
-                                <th>Descuento 5</th>
+                                <th>Desct. al {{$porcentaje->porcentaje_1}}%</th>
+                                <th>Desct. al {{$porcentaje->porcentaje_2}}%</th>
+                                <th>Desct. al {{$porcentaje->porcentaje_3}}%</th>
+                                <th>Desct. al {{$porcentaje->porcentaje_4}}%</th>
+                                <th>Desct. al {{$porcentaje->porcentaje_5}}%</th>
+                                @endforeach
                             </thead>
                             <tbody>
                             </tbody>
