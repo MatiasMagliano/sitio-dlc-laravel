@@ -40,20 +40,37 @@ class ListaPrecio extends Model
     }
 
 
-    public static function listaDeProveedor($proveedor)
+    public static function listaDeProveedor($cuit)
     {
-        return ListaPrecio::select('codigoProv','droga','presentacion','forma','costo')
+        $listado = ListaPrecio::select('proveedors.cuit','lista_precios.id as listaId','producto_id','presentacion_id','razon_social','cuit','codigoProv','droga','presentacion','forma','costo','lista_precios.updated_at')
             ->join('productos','lista_precios.producto_id','=','productos.id')
+            ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
             ->join('presentacions','lista_precios.presentacion_id','=','presentacions.id')
-            ->where('proveedor_id','=', $proveedor)
+            ->where('proveedors.cuit','=', $cuit)
             ->get();
+
+        return $listado;
     }
 
-    public static function deletelistaDeProveedor($proveedor_id)
+    public static function deletelistaDeProveedor($cuit)
     {
-        $listaPrecios = ListaPrecio::find($proveedor_id);
-        $listaPrecios->softDeletes();
-        return back();
+        $listaDeProveedor = DB::table('lista_precios')
+        ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
+        ->where('proveedors.cuit', '=', $cuit)
+        ->delete();
+        return $listaDeProveedor;
+    }
+
+    public static function getItemLista($idItem)
+    {
+        $itemLista = ListaPrecio::select('lista_precios.id','producto.droga','presentacions.forma','presentacions.presentacion','lista_precio.codigoProv','lista_precio.costo')
+        ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
+        ->join('productos','lista_precios.producto_id','=','productos.id')
+        ->join('presentacions','lista_precios.presentacion_id','=','presentacions.id')
+        ->where('lista_precios.id','=', $idItem)
+        ->get();
+
+        return $itemLista;
     }
 
 
@@ -127,6 +144,7 @@ class ListaPrecio extends Model
         //     ->where('lista_precios.id', ListaPrecio::getIdListaPrecio($producto, $presentacion))
         //     ->get();
     }
+
 
 
 }
