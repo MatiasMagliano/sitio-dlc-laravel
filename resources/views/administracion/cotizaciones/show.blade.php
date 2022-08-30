@@ -113,13 +113,13 @@
                 <p>{{$cotizacion->motivo_rechazo}}</p>
             </div>
             <div class="card-footer">
-                @if ($cotizacion->archivos->contains('causa_subida', 'rechazada'))
+                {{-- @if ($cotizacion->archivos->contains('causa_subida', 'rechazada'))
                     <p>El rechazo contiene un archivo comparativo, puede descargarlo en este
                         <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'rechazo']) }}"target="_blank">
                             link
                         </a>
                     </p>
-                @endif
+                @endif --}}
             </div>
         </div>
     @endif

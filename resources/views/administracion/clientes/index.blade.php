@@ -132,7 +132,7 @@
             var tabla_clientes = $('#tabla_clientes').DataTable({
                 "processing": true,
                 "dom": 'Bfrtip',
-                "order": [1, 'asc'],
+                "order": [0, 'asc'],
                 "buttons": [{
                         extend: 'copyHtml5',
                         text: 'Copiar al portapapeles',
