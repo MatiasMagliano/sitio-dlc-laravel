@@ -190,7 +190,7 @@ class CotizacionController extends Controller
     public function agregarProducto(Cotizacion $cotizacion)
     {
         //AGREGAR PRESENTACION A COTIZACION
-        $productos = Producto::all();
+        $productos = Producto::orderby('droga', 'ASC')->get();
         $porcentajes = Cotizacion::select('clientes.razon_social','porcentaje_1', 'porcentaje_2', 'porcentaje_3', 'porcentaje_4', 'porcentaje_5')
         ->join('clientes', 'cotizacions.cliente_id','=','clientes.id')
         ->join('esquema_precios', 'clientes.id','=','esquema_precios.cliente_id')

@@ -102,14 +102,24 @@
                         <br>
                         <table id="tablaPreciosSugeridos" class="table table-responsive-md table-bordered table-condensed" width="100%">
                             <thead>
-                                @foreach ($porcentajes as $porcentaje)
                                 <th>Proveedor</th>
                                 <th>Desct. al {{$porcentaje->porcentaje_1}}%</th>
                                 <th>Desct. al {{$porcentaje->porcentaje_2}}%</th>
-                                <th>Desct. al {{$porcentaje->porcentaje_3}}%</th>
-                                <th>Desct. al {{$porcentaje->porcentaje_4}}%</th>
-                                <th>Desct. al {{$porcentaje->porcentaje_5}}%</th>
-                                @endforeach
+                                @if ($porcentaje->porcentaje_3 != 0)
+                                    <th>Desct. al {{$porcentaje->porcentaje_3}}%</th>
+                                @else
+                                    <th>SIN DESCUENTO</th>
+                                @endif
+                                @if ($porcentaje->porcentaje_4 != 0)
+                                    <th>Desct. al {{$porcentaje->porcentaje_4}}%</th>
+                                @else
+                                    <th>SIN DESCUENTO</th>
+                                @endif
+                                @if ($porcentaje->porcentaje_5 != 0)
+                                    <th>Desct. al {{$porcentaje->porcentaje_5}}%</th>
+                                @else
+                                    <th>SIN DESCUENTO</th>
+                                @endif
                             </thead>
                             <tbody>
                             </tbody>

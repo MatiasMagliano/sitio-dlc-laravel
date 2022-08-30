@@ -87,10 +87,7 @@ class ProductoController extends Controller
 
             // se crea una nueva relación con TODOS LOS DATOS y guarda el modelo producto
             $producto->save();
-            // $producto->presentaciones()->attach($request->presentacion, [
-            //     'proveedor_id' => $request->proveedor,
-            //     'lote_id' => $lote->id
-            // ]);
+            // ACÁ MATI AGREGAR LA LÓGICA DE PROVEEDOR/LISTA
 
             $request->session()->flash('success', 'El producto y su lote, se han creado con éxito');
             return redirect(route('administracion.productos.index'));
