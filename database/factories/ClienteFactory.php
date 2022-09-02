@@ -21,7 +21,7 @@ class ClienteFactory extends Factory
             'razon_social'  => $this->faker->company(),
             'tipo_afip'     => $afip[rand(0,1)],
             'afip'          => $this->faker->bothify('##-########-#'),
-            'telefono'      => $this->faker->bothify('### #### ###'),
+            'telefono'      => $this->faker->bothify('0351-#######'),
             'email'         => $this->faker->safeEmail(),
             'contacto'      => $this->faker->name(),
             'ultima_cotizacion' => $this->faker->dateTimeBetween('-2 month', 'now'),
