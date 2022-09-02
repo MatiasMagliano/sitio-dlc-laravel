@@ -57,31 +57,37 @@
                     <th>Contacto</th>
                     <th>Dirección de envío</th>
                     <th>Última compra</th>
-                    <th>Acciones</th>
                 </thead>
                 <tbody>
                     @foreach ($clientes as $cliente)
                         <tr>
                             <td>
-                                <u>Nombre corto</u> {{ $cliente->nombre_corto }}
+                                <strong>{{ $cliente->razon_social }}</strong>
                                 <br>
-                                {{ $cliente->razon_social }}</td>
-                            <td>
-                                <span style="text-transform: uppercase;">{{ $cliente->tipo_afip }}</span>:
-                                {{ $cliente->afip }}
+                                <u>Nombre corto:</u> {{ $cliente->nombre_corto }}
+                            </td>
+                            <td style="vertical-align: middle;">
+                                Tipo: <span style="text-transform: uppercase;">{{ $cliente->tipo_afip }}</span>:
+                                <br>
+                                Número: {{ $cliente->afip }}
                             </td>
                             <td>
                                 <u>Sr/a: {{ $cliente->contacto }}</u> <br>
                                 Tel: {{ $cliente->telefono }} <br>
                                 E-mail: {{ $cliente->email }}
                             </td>
-                            <td>
+                            <td class="text-center" style="vertical-align: middle;">
                                 <a role="button" id="{{$cliente->id}}" class="btn btn-sm btn-outline-dark"
                                     data-toggle="modal" data-target="#modalVerPuntosEntrega">
                                     Puntos de entrega</a>
                             </td>
-                            <td>{{ optional($cliente->ultima_compra)->format('d/m/Y') }}</td>
-                            <td></td>
+                            <td class="text-center" style="vertical-align: middle;">
+                                @if ($cliente->ultima_compra == null)
+                                    NUNCA
+                                @else
+                                    {{$cliente->ultima_compra->format('d/m/Y')}}
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -109,10 +115,8 @@
                             <th>Localidad</th>
                             <th>Condiciones</th>
                             <th>Observaciones</th>
-                            <th></th>
                         </thead>
                         <tbody id="cuerpoTablaPtsEntrega">
-
                         </tbody>
                     </table>
                 </div>
@@ -204,8 +208,7 @@
                             +resultado[index].provincia+"</td><td>"
                             +resultado[index].localidad+"</td><td>"
                             +resultado[index].condiciones+"</td><td>"
-                            +resultado[index].observaciones+"</td><td>"
-                            +"<i class='fas fa-pencil-alt'></i></td>"
+                            +resultado[index].observaciones+"</td>"
                             +"<tr>"
                         );
                     });

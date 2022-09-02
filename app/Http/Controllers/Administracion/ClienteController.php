@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\DireccionEntrega;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Rules\ValidacionAfip;
 use Illuminate\Support\Facades\DB;
 
 class ClienteController extends Controller
@@ -47,9 +48,9 @@ class ClienteController extends Controller
             'nombre_corto'  => 'unique:clientes|required|max:30',
             'razon_social'  => 'required|max:255',
             'tipo_afip'     => 'required',
-            'afip'          => 'required|digits:11',
+            'afip'          => ['required', new ValidacionAfip],
             'contacto'      => 'required|max:50',
-            'telefono'      => 'required|numeric',
+            'telefono'      => 'required|string|max:20',
             'email'         => 'required|email|max:50',
         ]);
 
@@ -60,14 +61,6 @@ class ClienteController extends Controller
             'provincia_id'  => 'required|integer',
             'localidad_id'  => 'required|integer',
         ]);
-
-        //formateo del CUIL/CUIT antes de guardarlo
-        $prim = substr($request->afip, 0, 2);
-        $seg = substr($request->afip, 2, 8);
-        $ter = substr($request->afip, 8, 2);
-        $datosCliente['afip'] = $prim. '-' .$seg. '-' .$ter;
-
-        //formateo del teléfono
 
         $cliente = Cliente::create($datosCliente);
 

@@ -556,6 +556,21 @@ return [
                 ],
             ],
         ],
+        'inputmask' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/inputmask/inputmask.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/inputmask/jquery.inputmask.min.js',
+                ],
+            ],
+        ],
     ],
 
     /*

@@ -30,10 +30,10 @@
         </div>
         <div class="form-group col">
             <label for="input-afip">Número</label>
-            <input type="number" name="afip" id="input-afip"
+            <input type="text" name="afip" id="input-afip"
                 class="form-control @error('afip') is-invalid @enderror"
                 value="{{ old('afip') }}">
-            <small id="input-afip" class="form-text text-muted">Sin guiones u otros caracteres.</small>
+                <small id="input-afip-tip" class="form-text text-muted">Ingrese solo números.</small>
             @error('afip')<div class="invalid-feedback">{{$message}}</div>@enderror
         </div>
     </div>
@@ -52,7 +52,7 @@
     <div class="row d-flex">
         <div class="form-group col">
             <label for="input-telefono">Teléfono</label>
-            <input type="number" name="telefono" id="input-telefono"
+            <input type="text" name="telefono" id="input-telefono"
                 class="form-control @error('telefono') is-invalid @enderror"
                 value="{{ old('telefono') }}">
             <small id="input-afip" class="form-text text-muted">Sin guiones, paréntesis u otros caracteres especiales.</small>
