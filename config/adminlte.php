@@ -225,28 +225,23 @@ return [
     */
 
     'menu' => [
-        // Navbar items:
-        [
-            'type'         => 'navbar-search',
-            'text'         => 'search',
-            'topnav_right' => false,
-        ],
-        [
-            'type'         => 'fullscreen-widget',
-            'topnav_right' => false,
-        ],
-
-        // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
-
         [
             'text'  => 'calendars',
             'icon'  => 'fas fa-calendar-alt',
             'can'   => 'es-administracion',
             'route' => 'administracion.calendario.vencimientos',
+        ],
+        [
+            'text'   => 'quotations',
+            'icon'   => 'fab fa-shopify',
+            'route'  => 'administracion.cotizaciones.index',
+            'can'    => 'es-administracion',
+        ],
+        [
+            'text'   => 'work_orders',
+            'icon'   => 'fas fa-tools',
+            'route'  => 'administracion.ordentrabajo.index',
+            'can'    => ['es-administracion', 'es-expedicion'],
         ],
         [
             'text'    => 'clients',
@@ -266,6 +261,29 @@ return [
             ],
         ],
         [
+            'text'    => 'lists',
+            'icon'    => 'fas fa-list',
+            'can'     => 'es-administracion',
+            'submenu' => [
+                [
+                    'text'  => 'products_presentation',
+                    'route' => 'administracion.presentaciones.index',
+                    'icon'  => 'fas fa-pills'
+                ],
+                [
+                    'text'  => 'suppliers',
+                    'route' => 'administracion.proveedores.index',
+                    'icon'  => 'fas fa-truck'
+                ],
+                [
+                    'text'  => 'Lista de Precios',
+                    'route' => 'administracion.listaprecios.index',
+                    'icon'  => 'fas fa-dollar-sign',
+                    'can'   => 'es-administracion',
+                ],
+            ],
+        ],
+        [
             'text'    => 'products_maintenance',
             'icon'    => 'fas fa-shopping-basket',
             'can'     => 'es-administracion',
@@ -276,39 +294,11 @@ return [
                     'icon'  => 'fas fa-shopping-cart',
                 ],
                 [
-                    'text'  => 'products_presentation',
-                    'route' => 'administracion.presentaciones.index',
-                    'icon'  => 'fas fa-pills'
-                ],
-                [
                     'text'  => 'add_products_batches',
                     'route' => 'administracion.lotes.index',
                     'icon'  => 'fas fa-tag'
                 ],
-                [
-                    'text'  => 'suppliers',
-                    'route' => 'administracion.proveedores.index',
-                    'icon'  => 'fas fa-truck'
-                ],
             ],
-        ],
-        [
-            'text'  => 'Lista de Precios',
-            'route' => 'administracion.listaprecios.index',
-            'icon'  => 'fas fa-dollar-sign',
-            'can'   => 'es-administracion',
-        ],
-        [
-            'text'   => 'quotations',
-            'icon'   => 'fab fa-shopify',
-            'route'  => 'administracion.cotizaciones.index',
-            'can'    => 'es-administracion',
-        ],
-        [
-            'text'   => 'work_orders',
-            'icon'   => 'fas fa-tools',
-            'route'  => 'administracion.ordentrabajo.index',
-            'can'    => ['es-administracion', 'es-expedicion'],
         ],
         ['header' => 'account_settings'],
         [
