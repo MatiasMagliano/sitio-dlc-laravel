@@ -40,7 +40,9 @@
                     <h6 class="heading-small text-muted mb-1">SELECCIONAR PROVEEDOR </h6>
                 </div>
                 <div class="col-4 text-right">
-                    <button id="crearlista-btn" type="button" class="btn btn-sidebar btn-success"><i class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span></button>
+                    <button id="guardarlista-btn" type="button" class="btn btn-sidebar btn-success">
+                        <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -176,7 +178,7 @@
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
     <script>
-        let nitem = 0;
+        var nitem = 0;
         var codigosProv = [];
         var productosProv = [];
 
@@ -187,12 +189,14 @@
             $('#additem').hide();
             $('#clearitem').hide();
             $('.error').hide();
-
+            $('#guardarlista-btn').prop('disabled', true);
+         
+            //Habilita botones para agregar o remover items 
             $("#input-proveedor").change(function() {
                 if(bandera == 0){
                     $('#listitems .overlay').remove();
                     $('#additem').show();
-                    $('#clearitem').show();
+                    //$('#clearitem').show();
                     bandera++;
                 }else{
                     for(var i = 0; i <= nitem; i++){
@@ -202,61 +206,11 @@
                 }
             });
         });
-
+////////////////////////// //////////////////////// ////////////
         //Valido registros ingresados para evitar error en insersión 
         $("#additem").click(function(){ 
             if ($('#codigo').val() != '' && $("#input-producto").val() != '' && $('#input-presentacion').val() != '' && $('#precio_compra').val() !=''){
-                if(nitem == 0){
-                    addregistro();
-                }else{
-                    var prodProv = $("#input-producto").val() + "|" + $('#input-presentacion').val();
-                    var duplica = false;
-                    var duplicaCodigo = false;
-                    var duplicaMercaderia = false;
-                    cantCod = codigosProv.length;
-                    for(var c = 0; c < cantCod; c++){
-                        if ($('#codigo').val() == codigosProv[c] && prodProv == productosProv[c] ){
-                            duplica = true;
-                        }else if($('#codigo').val() == codigosProv[c] && prodProv != productosProv[c]){
-                            duplicaCodigo = true;
-                        }else if ($('#codigo').val() != codigosProv[c] && prodProv != productosProv[c]){
-                            duplicaMercaderia = true;
-                        }
-                    }
-                    if (duplica == false && duplicaMercaderia == false && duplicaCodigo == false){
-                        addregistro();
-                    }else if (duplica == true){
-                        event.preventDefault();
-                        let advertencia = '<p>El producto que intenta cargar ya fue ingresado recientemente, por favor controle e intente nuevamente</p>';
-                        Swal.fire({
-                                    icon: 'warning',
-                                    title: 'Producto duplicado',
-                                    html: advertencia,
-                                    confirmButtonText: 'Controlar',
-                                    showCancelButton: true,
-                                });
-                    }else if (duplicaCodigo == true){
-                        event.preventDefault();
-                        let advertencia = '<p>El código de proveedor que intenta cargar ya fue ingresado en otro producto recientemente, por favor controle e intente nuevamente</p>';
-                        Swal.fire({
-                                    icon: 'warning',
-                                    title: 'Código de proveedor duplicado',
-                                    html: advertencia,
-                                    confirmButtonText: 'Controlar',
-                                    showCancelButton: true,
-                                });
-                    }else if (duplicaMercaderia == true){
-                        event.preventDefault();
-                        let advertencia = '<p>El producto y presentación que intenta cargar ya fueron ingresados recientemente, por favor controle e intente nuevamente</p>';
-                        Swal.fire({
-                                    icon: 'warning',
-                                    title: 'Producto duplicado',
-                                    html: advertencia,
-                                    confirmButtonText: 'Controlar',
-                                    showCancelButton: true,
-                                });
-                    }
-                }  
+                validaRepetido($('#codigo').val(), $("#input-producto").val()+"|"+$('#input-presentacion').val(), $('#precio_compra').val());  
             }else{
                 if($('#codigo').val() == ''){
                     $('#td-codigo p').show();
@@ -281,21 +235,63 @@
             }   
     	});
 
+        //Valido que no se ingresen registros repetidos en la lista
+        function validaRepetido(addCod, addProd, addPres) {
+            nRegistros = codigosProv.length;
+            var duplica = false;
+            var duplicaCodigo = false;
+            var duplicaProducto = false;
+
+            if(nitem == 0){
+                addline(addCod, addProd, addPres);
+            }else{
+                for(var c = 0; c < nRegistros; c++){
+                    if (addCod == codigosProv[c] && addProd == productosProv[c] ){
+                        duplica = true;
+                    }else if(addCod == codigosProv[c]){
+                        duplicaCodigo = true;
+                    }else if (addProd == productosProv[c]){
+                        duplicaProducto = true;
+                    }
+                }
+                if (duplica == false && duplicaProducto == false && duplicaCodigo == false){
+                    addline(addCod, addProd, addPres);
+                }else if (duplica == true){
+                    msjAdvertencia('El producto', 'Registro');
+                }else if (duplicaCodigo == true){
+                    msjAdvertencia('El código de proveedor', 'Código de proveedor');
+                }else if (duplicaProducto == true){
+                    msjAdvertencia('El producto', 'Producto ');
+                }
+            }
+        }
+        function msjAdvertencia(mensaje, titulo){
+            event.preventDefault();
+            let advertencia = '<p>' + mensaje + ' que intenta cargar ya fue ingresado recientemente, por favor controle e intente nuevamente</p>';
+            Swal.fire({ 
+                icon: 'warning',
+                title: titulo + ' duplicado',
+                html: advertencia,
+                confirmButtonText: 'Controlar',
+                //showCancelButton: true,
+            });
+        }
+
         //Agrego registro al final de la tabla, modifico el contador de filas
-        function addregistro() {
+        function addline(addCod, addProd, addPres) {
+            $('#guardarlista-btn').prop('disabled', false);
             item = nitem;
 
-            codigosProv.push($('#codigo').val());
-            productosProv.push($("#input-producto").val() + "|" + $('#input-presentacion').val());
+            codigosProv.push(addCod);
+            productosProv.push(addProd);
             $("#tabla2 tbody").append("<tr id='row"+item+"'><td>"+$("#codigo").val()+"</td><td>"+$("#input-producto option:selected").html()+
-                "</td><td>"+$("#input-presentacion option:selected").html()+"</td><td>"+$("#precio_compra").val()+"</td><td><a type='submit'"+
+                "</td><td>"+$("#input-presentacion option:selected").html()+"</td><td>"+addPres+"</td><td><a type='submit'"+
                 "href='#' class='btn btn-sidebar btn-danger' onclick='removeline("+item+")'><i class='fas fa-minus'></i></a></td></tr>");
             nitem++;
         }
 
         //Remuevo registro y reacomodo la tabla, modifico el contador de filas
         function removeline(id){
-            
             var nfila = id;
             for(var r = id; r < nitem; r++){
                 nfila = r + 1;
@@ -314,10 +310,13 @@
                 }
             }
             nitem = nitem - 1;  
+            if (nitem == 0) {
+                $('#guardarlista-btn').prop('disabled', true);
+            }
         }
 
         //Envío por ajax la tabla para insertar en la base de datos
-        $("#crearlista-btn").click(function(){
+        $("#guardarlista-btn").click(function(){
             if(nitem > 0){
                 for(var i = 0; i < nitem; i++){
                     $idprov = $("#input-proveedor").val();
@@ -334,7 +333,11 @@
                         type: "POST",
                         data: datos,
                     }).done(function(resultado) {
-                        $("#row" + i).remove();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Listado creado',
+                            text: 'Ahora será redirigido a la pagina Listados de Precios',
+                        })
                     });
                 }
             }
