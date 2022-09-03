@@ -26,12 +26,12 @@ class Cotizacion extends Model
     ];
 
     protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'finalizada' => 'datetime',
-        'presentada' => 'datetime',
-        'confirmada' => 'datetime',
-        'rechazada'  => 'datetime',
+        'created_at' => 'datetime:d-m-Y',
+        'updated_at' => 'datetime:d-m-Y',
+        'finalizada' => 'datetime:d-m-Y',
+        'presentada' => 'datetime:d-m-Y',
+        'confirmada' => 'datetime:d-m-Y',
+        'rechazada'  => 'datetime:d-m-Y',
     ];
 
     // relaciones

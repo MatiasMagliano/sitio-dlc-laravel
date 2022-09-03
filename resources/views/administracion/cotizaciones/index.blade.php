@@ -1,20 +1,25 @@
 @extends('adminlte::page')
 
-@section('title', 'Administrar Productos')
+@section('title', 'Administrar Cotizaciones')
 
 @section('css')
     <style>
-        #data_wrapper.dataTables_wrapper
-        {
-            height: 200px !important;
-            background-color: #F1F1F1 !important;
+        .mobile {
+            display: none
         }
 
-        #data_wrapper .fg-toolbar.ui-toolbar.ui-widget-header.ui-helper-clearfix.ui-corner-bl.ui-corner-br
-        {
-            position: absolute;
-            width: 100%;
-            bottom: 0;
+        .desktop {
+            display: inline
+        }
+
+        @media (max-width: 600px) {
+            .desktop {
+                display: none
+            }
+
+            .mobile {
+                display: inline
+            }
         }
     </style>
 @endsection
@@ -35,201 +40,25 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-@section('plugins.Datatables', true)
-@section('plugins.DatatablesPlugins', true)
-    <x-adminlte-card>
-        <div class="processing">
-            <table id="cotizaciones" class="table table-bordered table-responsive-md" width="100%">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Identificador/Usuario</th>
-                        <th>Cliente</th>
-                        <th>Importe total</th>
-                        <th>ESTADO</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($cotizaciones as $cotizacion)
-                        <tr class="{{$cotizacion->rechazada ? 'table-secondary' : ''}}">
-                            <td style="vertical-align: middle;">
-                                {{ $cotizacion->created_at->format('d/m/Y') }}
-                            </td>
-                            <td style="vertical-align: middle;">
-                                <strong>{{ $cotizacion->identificador }}</strong>
-                                <br>
-                                {{ $cotizacion->user->name }}
-                            </td>
-                            <td style="vertical-align: middle;">
-                                {{ $cotizacion->cliente->razon_social }}<br>
-                                {{ $cotizacion->cliente->tipo_afip }}: {{ $cotizacion->cliente->afip }}
-                            </td>
-                            <td style="vertical-align: middle; text-align:center;">
-                                $ {{number_format($cotizacion->monto_total, 2, ',', '.')}}
-                            </td>
-                            {{-- ESTADOS DINAMICOS y ACCIONES DINÁMICAS--}}
-                            @switch($cotizacion->estado_id)
-                                @case(1)
-                                    {{-- ESTADOS DINAMICOS --}}
-                                    <td style="vertical-align: middle;">
-                                        <span class="text-fuchsia">{{$cotizacion->estado->estado}}</span>
-                                    </td>
+    @section('plugins.Datatables', true)
+    @section('plugins.DatatablesPlugins', true)
+    @section('plugins.TempusDominusBs4', true)
+    <div class="wrapper">
+        <div class="card">
+            <div class="card-header">
+                <div class="desktop">
+                    @include('administracion.cotizaciones.partials.tabla-desktop')
+                </div>
 
-                                    {{-- ACCIONES DINÁMICAS--}}
-                                    <td style="vertical-align: middle; text-align:center;">
-                                        <a href="{{ route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]) }}"
-                                            class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
-                                            title="Editar cotización">
-                                            <i class="fas fa-pencil-alt"></i>
-                                        </a>
-                                        <form action="{{ route('administracion.cotizaciones.destroy', $cotizacion) }}"
-                                            id="borrar-{{$cotizacion->id}}" method="post" class="d-inline">
-                                            @csrf
-                                            @method('delete')
-                                            <button type="button" class="btn btn-link" data-toggle="tooltip"
-                                                data-placement="bottom" title="Borrar cotización"
-                                                onclick="borrarCotizacion({{$cotizacion->id}})">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                    @break
-                                @case(2)
-                                    {{-- ESTADOS DINAMICOS --}}
-                                    <td style="vertical-align: middle;">
-                                        <span class="text-success">{{$cotizacion->estado->estado}}</span><br>
-                                        <span>{{$cotizacion->finalizada->format('d/m/Y')}}</span>
-                                    </td>
-
-                                    {{-- ACCIONES DINÁMICAS--}}
-                                    <td style="vertical-align: middle; text-align:center;">
-                                        <a id="botonPresentar" class="btn btn-sm btn-info"
-                                            href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
-                                            onclick="recargar()">
-                                            Presentar
-                                        </a>
-                                    </td>
-                                    @break
-                                @case(3)
-                                    {{-- ESTADOS DINAMICOS --}}
-                                    <td style="vertical-align: middle;">
-                                        <span class="text-secondary">{{$cotizacion->estado->estado}}</span><br>
-                                        <span>{{$cotizacion->presentada->format('d/m/Y')}}</span>
-                                    </td>
-
-                                    {{-- ACCIONES DINÁMICAS--}}
-                                    <td style="vertical-align: middle; text-align:center;">
-                                        <div class="btn-group-vertical">
-                                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                data-target="#modalAprobarCotizacion" id="{{$cotizacion->id}}">Aprobar</button>
-                                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-                                                data-target="#modalRechazarCotizacion" id="{{$cotizacion->id}}">Rechazar</button>
-                                        </div>
-                                    </td>
-                                    @break
-                                @case(4)
-                                    {{-- ESTADOS DINAMICOS --}}
-                                    <td style="vertical-align: middle;">
-                                        <span class="text-success">{{$cotizacion->estado->estado}}</span><br>
-                                        <span>{{$cotizacion->confirmada->format('d/m/Y')}}</span>
-                                    </td>
-
-                                    {{-- ACCIONES DINÁMICAS--}}
-                                    <td style="vertical-align: middle; text-align:center;">
-                                        <div class="btn-group-vertical">
-                                            <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
-                                                class="btn btn-sm btn-default" target="_blank">
-                                                Cotización
-                                            </a>
-                                            @if ($cotizacion->archivos()->exists())
-                                                <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'provision']) }}"
-                                                    class="btn btn-sm btn-default" target="_blank">
-                                                    Provisión
-                                                </a>
-                                            @else
-                                                <div class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="bottom" title="No se adjuntó provisión">
-                                                    Sin archivos
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    @break
-                                @case(5)
-                                    {{-- ESTADOS DINAMICOS --}}
-                                    <td style="vertical-align: middle;">
-                                        <span class="text-danger">{{$cotizacion->estado->estado}}</span><br>
-                                        <span>{{$cotizacion->rechazada->format('d/m/Y')}}</span>
-                                    </td>
-
-                                    {{-- ACCIONES DINÁMICAS--}}
-                                    <td style="vertical-align: middle; text-align:center;">
-                                        <div class="btn-group" role="group" aria-label="Acciones cotizacion rechazada">
-                                            <a href="{{ route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]) }}"
-                                                class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
-                                                title="Ver cotización">
-                                                <i class="fas fa-search "></i>
-                                            </a>
-                                            @if ($cotizacion->archivos()->exists())
-                                                <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'rechazo']) }}"
-                                                    class="btn btn-link" target="_blank">
-                                                    <i class="fas fa-file-download"></i>
-                                                </a>
-                                            @else
-                                                <div class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="No se adjuntó comparativo">
-                                                    <i class="fas fa-file-excel"></i>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    @break
-                                @case(6 || 7)
-                                    {{-- ESTADOS DINAMICOS --}}
-                                    <td style="vertical-align: middle;">
-                                        <span class="text-success">APROBADA</span><br>
-                                        <span>{{$cotizacion->confirmada->format('d/m/Y')}}</span>
-                                    </td>
-
-                                    {{-- ACCIONES DINÁMICAS--}}
-                                    <td style="vertical-align: middle; text-align:center;">
-                                        <div class="btn-group-vertical">
-                                            <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
-                                                class="btn btn-sm btn-default" target="_blank">
-                                                Cotización
-                                            </a>
-                                            @if ($cotizacion->archivos()->exists())
-                                                <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'provision']) }}"
-                                                    class="btn btn-sm btn-default" target="_blank">
-                                                    Provisión
-                                                </a>
-                                            @else
-                                                <div class="btn btn-sm btn-default">
-                                                    Sin archivos
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    @break
-                                @default
-                                    <td style="vertical-align: middle;">
-                                        <p>-</p>
-                                    </td>
-
-                                    {{-- ACCIONES DINÁMICAS--}}
-                                    <td style="vertical-align: middle;">
-                                        <small class="form-text text-muted">Sin acciones</small>
-                                    </td>
-                            @endswitch
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                <div class="mobile">
+                    @include('administracion.cotizaciones.partials.tabla-mobile')
+                </div>
+            </div>
         </div>
-    </x-adminlte-card>
+    </div>
 
-     {{-- MODAL APROBACIÓN LICITACIÓN --}}
-    <div class="modal fade" id="modalAprobarCotizacion" tabindex="-1"
-        aria-labelledby="" aria-hidden="true">
+{{-- MODAL APROBACIÓN LICITACIÓN --}}
+    <div class="modal fade" id="modalAprobarCotizacion" tabindex="-1" aria-labelledby="" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-gradient-blue">
@@ -243,14 +72,13 @@
                     {{-- CAUSAS: aprobada/rechazada --}}
                     <input type="hidden" name="causa_subida" value="aprobada">
                     <div class="modal-body">
-                        <p>Deberá consignar la fecha de aprobación. Opcionalmente podrá adjuntar la Orden de Compra provista por el cliente. Esto comformará información respaldatoria a la cotización.</p>
+                        <p>Deberá consignar la fecha de aprobación. Opcionalmente podrá adjuntar la Orden de Compra provista
+                            por el cliente. Esto comformará información respaldatoria a la cotización.</p>
                         <hr>
                         <div class="row">
                             <div class="col form-group">
-                                @section('plugins.TempusDominusBs4', true)
-                                <x-adminlte-input-date name="confirmada" id="confirmada" igroup-size="md"
-                                    :config="$config" placeholder="{{ __('formularios.date_placeholder') }}"
-                                    autocomplete="off" required>
+                                <x-adminlte-input-date name="confirmada" id="confirmada" igroup-size="md" :config="$config"
+                                    placeholder="{{ __('formularios.date_placeholder') }}" autocomplete="off" required>
                                     <x-slot name="appendSlot">
                                         <div class="input-group-text bg-dark">
                                             <i class="fas fa-calendar"></i>
@@ -259,7 +87,8 @@
                                 </x-adminlte-input-date>
                             </div>
                             <div class="col custom-file">
-                                <input type="file" class="custom-file-input" id="customFile" name="archivo" accept=".jpg,.png,.pdf">
+                                <input type="file" class="custom-file-input" id="customFile" name="archivo"
+                                    accept=".jpg,.png,.pdf">
                                 <label class="custom-file-label" for="customFile">Seleccionar archivo</label>
                             </div>
                         </div>
@@ -273,9 +102,8 @@
         </div>
     </div>
 
-     {{-- MODAL RECHAZO LICITACIÓN --}}
-     <div class="modal fade" id="modalRechazarCotizacion" tabindex="-1"
-        aria-labelledby="" aria-hidden="true">
+{{-- MODAL RECHAZO LICITACIÓN --}}
+    <div class="modal fade" id="modalRechazarCotizacion" tabindex="-1" aria-labelledby="" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-gradient-danger">
@@ -289,19 +117,26 @@
                     {{-- CAUSAS: aprobada/rechazada --}}
                     <input type="hidden" name="causa_subida" value="rechazada">
                     <div class="modal-body">
-                        <p>Deberá consignar la fecha de rechazo y un motivo. Opcionalmente, podrá adjuntar el <strong>pliego procesado</strong> con comparativo de precios, provisto por el cliente. Se adjuntará como información respaldatoria a la cotización rechazada.</p>
+                        <p>Deberá consignar la fecha de rechazo y un motivo. Opcionalmente, podrá adjuntar el
+                            <strong>pliego
+                                procesado</strong> con comparativo de precios, provisto por el cliente. Se adjuntará
+                            como
+                            información respaldatoria a la cotización rechazada.
+                        </p>
                         <div class="form-group">
                             <label for="input-motivo_rechazo">Motivo del rechazo</label>
-                            <textarea name="motivo_rechazo" class="form-control @error('motivo_rechazo') is-invalid @enderror" id="input-motivo_rechazo" rows="2" required></textarea>
-                            <small id="input-motivo_rechazo" class="form-text text-muted">Datos relevantes como cliente ganador, fuera de término, errores de cotización, etc..</small>
-                            @error('motivo_rechazo')<div class="invalid-feedback">{{$message}}</div>@enderror
+                            <textarea name="motivo_rechazo" class="form-control @error('motivo_rechazo') is-invalid @enderror"
+                                id="input-motivo_rechazo" rows="2" required></textarea>
+                            <small id="input-motivo_rechazo" class="form-text text-muted">Datos relevantes como cliente
+                                ganador, fuera de término, errores de cotización, etc..</small>
+                            @error('motivo_rechazo')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="row">
                             <div class="col form-group">
-                                @section('plugins.TempusDominusBs4', true)
-                                <x-adminlte-input-date name="rechazada" id="rechazada" igroup-size="md"
-                                    :config="$config" placeholder="{{ __('formularios.date_placeholder') }}"
-                                    autocomplete="off" required>
+                                <x-adminlte-input-date name="rechazada" id="rechazada" igroup-size="md" :config="$config"
+                                    placeholder="{{ __('formularios.date_placeholder') }}" autocomplete="off" required>
                                     <x-slot name="appendSlot">
                                         <div class="input-group-text bg-dark">
                                             <i class="fas fa-calendar"></i>
@@ -310,7 +145,8 @@
                                 </x-adminlte-input-date>
                             </div>
                             <div class="col custom-file">
-                                <input type="file" class="custom-file-input" id="customFile" name="archivo" accept=".jpg,.png,.pdf">
+                                <input type="file" class="custom-file-input" id="customFile" name="archivo"
+                                    accept=".jpg,.png,.pdf">
                                 <label class="custom-file-label" for="customFile">Seleccionar archivo</label>
                             </div>
                         </div>
@@ -328,34 +164,35 @@
 @section('js')
     @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.4/locale/es.js"></script>
     <script>
         // Reload manual de la página
-        function recargar(){
+        function recargar() {
             setTimeout(function() {
                 Swal.fire({
-                icon: 'success',
-                title: 'Cotización presentada',
-                text: 'La cotización quedará en espera de ser aprobada o rechazada.',
-                confirmButtonText: 'Aceptar',
+                    icon: 'success',
+                    title: 'Cotización presentada',
+                    text: 'La cotización quedará en espera de ser aprobada o rechazada.',
+                    confirmButtonText: 'Aceptar',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        document.location.href = '{{route('administracion.cotizaciones.index')}}';
+                        document.location.href = '{{ route('administracion.cotizaciones.index') }}';
                         return false;
                     }
                 })
             }, 2000)
-            };
+        };
 
         var popupBlockerChecker = {
-            check: function(popup_window){
+            check: function(popup_window) {
                 var scope = this;
                 if (popup_window) {
-                    if(/chrome/.test(navigator.userAgent.toLowerCase())){
-                        setTimeout(function () {
+                    if (/chrome/.test(navigator.userAgent.toLowerCase())) {
+                        setTimeout(function() {
                             scope.is_popup_blocked(scope, popup_window);
-                        },200);
-                    }else{
-                        popup_window.onload = function () {
+                        }, 200);
+                    } else {
+                        popup_window.onload = function() {
                             scope.is_popup_blocked(scope, popup_window);
                         };
                     }
@@ -363,12 +200,12 @@
                     scope.displayError();
                 }
             },
-            is_popup_blocked: function(scope, popup_window){
-                if ((popup_window.innerHeight > 0)==false){
+            is_popup_blocked: function(scope, popup_window) {
+                if ((popup_window.innerHeight > 0) == false) {
                     scope.displayError();
                 }
             },
-            displayError: function(){
+            displayError: function() {
                 Swal.fire(
                     'Información',
                     'El navegador no permite la apertura de nuevas ventanas. Habilite los popups para continuar.',
@@ -377,7 +214,7 @@
             }
         };
 
-        function borrarCotizacion(id){
+        function borrarCotizacion(id) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Borrar cotización',
@@ -392,68 +229,19 @@
                     window.location.replace('{{ route('administracion.cotizaciones.index') }}');
                 }
             });
-        }
+        };
 
-        $(document).ready(function() {// el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
-            var cotizaciones = $('#cotizaciones').DataTable({
-                "processing": true,
-                "order": [[0, 'desc']],
-                "dom": 'Bfrtip',
-                "buttons": [{
-                        extend: 'copyHtml5',
-                        text: 'Copiar al portapapeles'
-                    },
+        $(document).ready(function() {
+            moment.locale('es');
+            $('#tabla-cotizaciones').dataTable({
+                "order": [0, 'asc'],
+                "columnDefs": [
                     {
-                        extend: 'excelHtml5',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        text: 'Imprimir',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4]
-                        }
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4]
-                        }
-                    },
-                    {
-                        extend: 'colvis',
-                        text: 'Seleccionar columnas'
-                    }
-                ],
-                "responsive": [{
-                    "details": {
-                        renderer: function(api, rowIdx, columns) {
-                            var data = $.map(columns, function(col, i) {
-                                return col.hidden ?
-                                    '<tr data-dt-row="' + col.rowIndex +
-                                    '" data-dt-column="' +
-                                    col.columnIndex + '">' +
-                                    '<td>' + col.title + ':' + '</td> ' +
-                                    '<td>' + col.data + '</td>' +
-                                    '</tr>' :
-                                    '';
-                            }).join('');
-
-                            return data ?
-                                $('<table/>').append(data) :
-                                false;
-                        }
-                    }
-                }],
-                "columnDefs": [{
                         targets: 0,
-                        type: 'date',
-                    },
-                    {
-                        targets: 5,
-                        width: 80,
+                        width: 75,
+                        render: function (data) {
+                            return moment(new Date(data)).format("DD/MM/YYYY");
+                        }
                     },
                 ],
             });
@@ -465,21 +253,23 @@
             });
 
             // se coloca el ACTION en el form: guardarAprobada
-            $('#modalAprobarCotizacion').on('show.bs.modal', function(event){
-                $('#formAprobada').attr('action', 'cotizaciones/'+event.relatedTarget.id+'/aprobarCotizacion');
+            $('#modalAprobarCotizacion').on('show.bs.modal', function(event) {
+                $('#formAprobada').attr('action', 'cotizaciones/' + event.relatedTarget.id +
+                    '/aprobarCotizacion');
             });
 
             // se coloca el ACTION en el form: guardarRechazada
-            $('#modalRechazarCotizacion').on('show.bs.modal', function(event){
-                $('#formRechazada').attr('action', 'cotizaciones/'+event.relatedTarget.id+'/rechazarCotizacion');
+            $('#modalRechazarCotizacion').on('show.bs.modal', function(event) {
+                $('#formRechazada').attr('action', 'cotizaciones/' + event.relatedTarget.id +
+                    '/rechazarCotizacion');
             });
         });
     </script>
 @endsection
 
 @section('footer')
-    <strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
-    <div class="float-right d-none d-sm-inline-block">
-        <b>Versión</b> 2.0 (LARAVEL V.8)
-    </div>
+<strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
+<div class="float-right d-none d-sm-inline-block">
+    <b>Versión</b> 2.0 (LARAVEL V.8)
+</div>
 @endsection

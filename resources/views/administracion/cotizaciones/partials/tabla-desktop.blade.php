@@ -1,39 +1,32 @@
-<table class="table table-bordered" width="100%">
+<table id="tabla-cotizaciones" class="table table-bordered" width="100%">
     <thead>
         <tr>
-            <th>Fecha</th>
-            <th>Identificador/Usuario</th>
+            <th>Modificación</th>
+            <th>Identificador</th>
+            <th>Usuario/Fecha de creación</th>
             <th>Cliente</th>
-            <th>Cantidad de Líneas</th>
-            <th>Importe total</th>
             <th>ESTADO</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach ($cotizaciones as $cotizacion)
-            <tr class="{{ $cotizacion->rechazada ? 'table-secondary' : '' }}">
+            <tr class="{{ $cotizacion->rechazada ? 'bg-gray-light' : '' }}">
                 <td style="vertical-align: middle;">
-                    {{ $cotizacion->created_at->format('d/m/Y') }}
+                    {{ $cotizacion->updated_at }}
                 </td>
-                <td style="vertical-align: middle;">
-                    <strong>{{ $cotizacion->identificador }}</strong>
-                    <br>
+                <td style="vertical-align: middle; text-align:center;">
+                    <strong style="font-size: 1.1em">{{ $cotizacion->identificador }}</strong>
+                </td>
+                <td>
                     Creado por: {{ $cotizacion->user->name }}
+                    <br>
+                    Fecha: {{ $cotizacion->created_at->format('d/m/Y') }}
                 </td>
                 <td style="vertical-align: middle;">
-                    {{ $cotizacion->cliente->razon_social }}<br>
-                    {{ $cotizacion->cliente->tipo_afip }}: {{ $cotizacion->cliente->afip }}
-                </td>
-                <td style="vertical-align: middle; text-align:center;">
-                    {{ $cotizacion->productos->count() }}
-                </td>
-                <td style="vertical-align: middle; text-align:center;">
-                    @if ($cotizacion->monto_total == 0.00)
-                        cotización sin finalizar
-                    @else
-                        $ {{ number_format($cotizacion->monto_total, 2, ',', '.') }}
-                    @endif
+                    <strong style="font-size: 1.1em">{{ $cotizacion->cliente->razon_social }}</strong>
+                    <br>
+                    <span style="text-transform: uppercase;">{{ $cotizacion->cliente->tipo_afip }}</span>: {{ $cotizacion->cliente->afip }}
                 </td>
                 {{-- ESTADOS DINAMICOS y ACCIONES DINÁMICAS --}}
                 @switch($cotizacion->estado_id)
@@ -65,7 +58,6 @@
                         {{-- ESTADOS DINAMICOS --}}
                         <td style="vertical-align: middle; text-align:center;">
                             <span class="badge badge-info">{{ $cotizacion->estado->estado }}</span><br>
-                            <span>{{ $cotizacion->finalizada->format('d/m/Y') }}</span>
                         </td>
 
                         {{-- ACCIONES DINÁMICAS --}}
@@ -82,7 +74,6 @@
                         {{-- ESTADOS DINAMICOS --}}
                         <td style="vertical-align: middle; text-align:center;">
                             <span class="badge badge-secondary">{{ $cotizacion->estado->estado }}</span><br>
-                            <span>{{ $cotizacion->presentada->format('d/m/Y') }}</span>
                         </td>
 
                         {{-- ACCIONES DINÁMICAS --}}
@@ -100,7 +91,6 @@
                         {{-- ESTADOS DINAMICOS --}}
                         <td style="vertical-align: middle; text-align:center;">
                             <span class="badge badge-success">{{ $cotizacion->estado->estado }}</span><br>
-                            <span>{{ $cotizacion->confirmada->format('d/m/Y') }}</span>
                         </td>
 
                         {{-- ACCIONES DINÁMICAS --}}
@@ -129,7 +119,6 @@
                         {{-- ESTADOS DINAMICOS --}}
                         <td style="vertical-align: middle; text-align:center;">
                             <span class="badge badge-danger">{{ $cotizacion->estado->estado }}</span><br>
-                            <span>{{ $cotizacion->rechazada->format('d/m/Y') }}</span>
                         </td>
 
                         {{-- ACCIONES DINÁMICAS --}}
@@ -158,7 +147,6 @@
                         {{-- ESTADOS DINAMICOS --}}
                         <td style="vertical-align: middle; text-align:center;">
                             <span class="badge badge-success">APROBADA</span><br>
-                            <span>{{ $cotizacion->confirmada->format('d/m/Y') }}</span>
                         </td>
 
                         {{-- ACCIONES DINÁMICAS --}}

@@ -199,7 +199,7 @@
             $('#tablaProductos').DataTable( {
                 "responsive": true,
                 "dom": 'Pfrtip',
-                "scrollY": "25vh",
+                "scrollY": "35vh",
                 "scrollCollapse": true,
                 "paging": false,
                 "order": [0, 'asc'],
