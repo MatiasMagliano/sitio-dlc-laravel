@@ -116,13 +116,13 @@
     <div class="row d-flex">
         <div class="form-group col">
             <label for="input-condiciones">Condiciones</label>
-            <textarea name="condiciones" class="form-control @error('condiciones') is-invalid @enderror" id="input-condiciones" rows="2"></textarea>
+            <textarea name="condiciones" class="form-control @error('condiciones') is-invalid @enderror" id="input-condiciones" rows="2">{{old('condiciones')}}</textarea>
             <small id="input-condiciones" class="form-text text-muted">Datos relevantes como: encargado recepción, Nº puerta, piso, edificio, etc.</small>
             @error('condiciones')<div class="invalid-feedback">{{$message}}</div>@enderror
         </div>
         <div class="form-group col">
             <label for="input-observaciones">Observaciones</label>
-            <textarea name="observaciones" class="form-control @error('observaciones') is-invalid @enderror" id="input-observaciones" rows="2"></textarea>
+            <textarea name="observaciones" class="form-control @error('observaciones') is-invalid @enderror" id="input-observaciones" rows="2">{{old('observaciones')}}</textarea>
             @error('observaciones')<div class="invalid-feedback">{{$message}}</div>@enderror
         </div>
     </div>
