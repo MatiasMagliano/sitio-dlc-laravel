@@ -93,10 +93,9 @@
                                 class="btn btn-link" data-toggle="tooltip" data-placement="bottom" method="POST" title="Eliminar listado">
                                 @csrf
                                 @method('DELETE')
-                                <input type="submit" class="btn btn-danger btn-sm" value="Eliminar">
                                 <button id="{{ $listaPrecio->proveedor_id }}|{{ $listaPrecio->razon_social }}" type="submit" data-toggle="tooltip"
-                                    data-placement="bottom" title="Borrar cotización" class="btn btn-danger">
-                                    <i class="fas fa-trash-alt "></i>
+                                    data-placement="bottom" title="Borrar cotización" class="btn btn-link">
+                                    <i class="fas fa-trash-alt"></i>
                                 </button>
                             </form>
                         </td>
@@ -190,7 +189,7 @@
             tabla.rows.add(resultado).draw();
         });
     };
-  */  
+  */
 
     $('.trashListProv').on('click', function() {
         $cuit = $(this).attr('id');
@@ -224,7 +223,7 @@
                 url: "{{ route('administracion.listaprecios.deleteList') }}",
                 type: "DELETE",
                 data: datos,
-            });   
+            });
                 //swalWithBootstrapButtons.fire(
                 //    'Borrado',
                 //    'Se ha eliminado el listado de proveedor',
@@ -242,7 +241,7 @@
                 }
             })
         }
-        
+
 
         // SCRIPT DEL SLIMSELECT
         var selProducto = new SlimSelect({

@@ -291,12 +291,24 @@ return [
                     'route' => 'administracion.proveedores.index',
                     'icon'  => 'fas fa-truck'
                 ],
+            ],
+        ],
+        [
+            'text'    => 'price_list',
+            'icon'    => 'fas fa-tag',
+            'can'     => 'es-administracion',
+            'submenu' => [
                 [
-                    'text'  => 'price_list',
+                    'text'  => 'Administrar precios',
+                    'icon'  => 'fas fa-hand-holding-usd',
                     'route' => 'administracion.listaprecios.index',
-                    'icon'  => 'fas fa-tag',
-                    'can'   => 'es-administracion',
                 ],
+                [
+                    'text'  => 'Crear lista de precios',
+                    'icon'  => 'fas fa-money-check',
+                    'route' => 'administracion.listaprecios.create',
+                ],
+
             ],
         ],
         [

@@ -33,7 +33,7 @@ return [
     'work_orders'                   => 'Ordenes de trabajo',
     'calendars'                     => 'Calendarios',
     'lists'                         => 'Listados',
-    'price_list'                    => 'Lista de Precios',
+    'price_list'                    => 'Precios',
     'quotation_list'                => 'Lista últimas cotizaciones',
     'add_quotation'                 => 'Crear cotización',
     'quotation_history'             => 'Histórico cotizaciones',
