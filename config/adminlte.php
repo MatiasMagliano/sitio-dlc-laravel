@@ -232,12 +232,6 @@ return [
             'route' => 'administracion.calendario.vencimientos',
         ],
         [
-            'text'   => 'quotations',
-            'icon'   => 'fab fa-shopify',
-            'route'  => 'administracion.cotizaciones.index',
-            'can'    => 'es-administracion',
-        ],
-        [
             'text'   => 'work_orders',
             'icon'   => 'fas fa-tools',
             'route'  => 'administracion.ordentrabajo.index',
@@ -261,6 +255,28 @@ return [
             ],
         ],
         [
+            'text'      => 'quotations',
+            'icon'      => 'fas fa-handshake',
+            'can'       => 'es-administracion',
+            'submenu'   => [
+                [
+                    'text'  => 'quotation_list',
+                    'route' => 'administracion.cotizaciones.index',
+                    'icon'  => 'fas fa-list',
+                ],
+                [
+                    'text'  => 'quotation_history',
+                    'route' => 'administracion.cotizaciones.historicoCotizaciones',
+                    'icon'  => 'fas fa-history',
+                ],
+                [
+                    'text'  => 'add_quotation',
+                    'route' => 'administracion.cotizaciones.create',
+                    'icon'  => 'fab fa-shopify',
+                ],
+            ],
+        ],
+        [
             'text'    => 'lists',
             'icon'    => 'fas fa-list',
             'can'     => 'es-administracion',
@@ -276,9 +292,9 @@ return [
                     'icon'  => 'fas fa-truck'
                 ],
                 [
-                    'text'  => 'Lista de Precios',
+                    'text'  => 'price_list',
                     'route' => 'administracion.listaprecios.index',
-                    'icon'  => 'fas fa-dollar-sign',
+                    'icon'  => 'fas fa-tag',
                     'can'   => 'es-administracion',
                 ],
             ],
@@ -294,35 +310,17 @@ return [
                     'icon'  => 'fas fa-shopping-cart',
                 ],
                 [
+                    'text'  => 'add_products',
+                    'route' => 'administracion.productos.create',
+                    'icon'  => 'fas fa-cart-plus'
+                ],
+                [
                     'text'  => 'add_products_batches',
                     'route' => 'administracion.lotes.index',
-                    'icon'  => 'fas fa-tag'
+                    'icon'  => 'fas fa-boxes'
                 ],
             ],
         ],
-        ['header' => 'account_settings'],
-        [
-            'text'    => 'admin_tools',
-            'icon'    => 'fas fa-cog',
-            'can'     => 'es-sist-admin',
-            'submenu' => [
-                [
-                    'text'  => 'users_admin',
-                    'route'  => 'admin.users.index',
-                    'icon'  => 'fas fa-users-cog'
-                ],
-                [
-                    'text' => 'profile',
-                    'url'  => 'admin/settings',
-                    'icon' => 'fas fa-fw fa-user',
-                ],
-                [
-                    'text' => 'change_password',
-                    'url'  => 'admin/settings',
-                    'icon' => 'fas fa-fw fa-lock',
-                ],
-            ],
-        ]
     ],
 
     /*

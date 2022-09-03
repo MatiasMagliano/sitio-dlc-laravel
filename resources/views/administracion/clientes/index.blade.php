@@ -55,7 +55,7 @@
                     <th>Razón Social</th>
                     <th>Inscripción AFIP</th>
                     <th>Contacto</th>
-                    <th>Dirección de envío</th>
+                    <th>Puntos de entrega</th>
                     <th>Última compra</th>
                 </thead>
                 <tbody>
@@ -77,9 +77,9 @@
                                 E-mail: {{ $cliente->email }}
                             </td>
                             <td class="text-center" style="vertical-align: middle;">
-                                <a role="button" id="{{$cliente->id}}" class="btn btn-sm btn-outline-dark"
+                                <a role="button" id="{{$cliente->id}}" class="btn btn-link"
                                     data-toggle="modal" data-target="#modalVerPuntosEntrega">
-                                    Puntos de entrega</a>
+                                    <i class="fas fa-search"></i></a>
                             </td>
                             <td class="text-center" style="vertical-align: middle;">
                                 @if ($cliente->ultima_compra == null)

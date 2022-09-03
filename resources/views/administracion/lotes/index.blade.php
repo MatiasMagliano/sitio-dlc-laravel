@@ -131,12 +131,6 @@
                                     <div class="input-group mb-3">
                                         <input type="text" name="identificador" id="identificador" class="form-control"
                                             value="" required>
-                                        <div class="input-group-append">
-                                            <button type="button" id="escanear" class="btn btn-sm btn-dark">
-                                                <i class="fas fa-barcode"></i>
-                                                Escanear
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
 

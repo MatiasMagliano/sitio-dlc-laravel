@@ -63,8 +63,6 @@
                                     @if ($presentacion->trazabilidad)
                                         {{--MÉTODO NO IMPLEMENTADO TODAVÍA--}}
                                         <span style="color: red; font-weight:800;">TRAZABLE </span>
-                                        <a href="{{route('administracion.trazabilidad.show', $producto->id)}}"
-                                            class="btn btn-sm btn-link" role="button"><i class="fas fa-search "></i></a>
                                     @endif
                                 </td>
                                 <td class="text-center" style="vertical-align: middle;">
@@ -72,7 +70,7 @@
                                     <a role="button" id="{{$producto->id}}|{{$presentacion->id}}"
                                         class="btn btn-link"
                                         data-toggle="modal" data-target="#modalVerLotes">
-                                        <i class="fas fa-search "></i>
+                                        <i class="fas fa-search"></i>
                                     </a>
                                 </td>
                                 <td>

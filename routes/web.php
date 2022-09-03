@@ -45,9 +45,9 @@ Route::prefix('admin')->middleware(['auth', 'auth.esSistAdmin'])->name('admin.')
 Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->name('administracion.')->group(function () {
     // rutas especiales para ajax de búsqueda y eliminación
     Route::get('/listaprecios/mostrarLista', [ListaPrecioController::class, 'mostrarLista'])->name('listaprecios.mostrarLista');
-    
+
     Route::delete('/listaprecios', [ListaPrecioController::class, 'deleteList'])->name('listaprecios.deleteList');
-    
+
     Route::get('/cotizaciones/{cotizacion}/agregar/producto/descuentos', [CotizacionController::class, 'preciosSugeridos'])
         ->name('cotizaciones.agregar.producto.descuentos');
 
@@ -104,6 +104,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
         ->name('cotizaciones.editar.producto');
     Route::get('/cotizaciones/{cotizacion}/descargarpdf/{doc}', [CotizacionController::class, 'descargapdf'])
         ->name('cotizaciones.descargapdf');
+    Route::get('/cotizaciones/historico', [CotizacionController::class, 'historicoCotizaciones'])
+        ->name('cotizaciones.historicoCotizaciones');
     Route::post('/cotizaciones/{cotizacion}/producto', [CotizacionController::class, 'guardarProductoCotizado'])
         ->name('cotizaciones.guardar.producto');
     Route::post('/cotizaciones/{cotizacion}/aprobarCotizacion', [CotizacionController::class, 'aprobarCotizacion'])

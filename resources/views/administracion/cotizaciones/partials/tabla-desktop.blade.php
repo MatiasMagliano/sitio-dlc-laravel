@@ -1,6 +1,6 @@
 <table id="tabla-cotizaciones" class="table table-bordered" width="100%">
     <thead>
-        <tr>
+        <tr class="bg-gray">
             <th>Modificación</th>
             <th>Identificador</th>
             <th>Usuario/Fecha de creación</th>

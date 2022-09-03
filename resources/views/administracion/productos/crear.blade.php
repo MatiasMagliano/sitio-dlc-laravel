@@ -64,10 +64,6 @@
                         <div class="col-8">
                             <h6 class="heading-small text-muted mb-1">PROVEEDOR</h6>
                         </div>
-                        <div class="col-4 text-right">
-                            <a href="{{ route('administracion.proveedores.create') }}" class="btn btn-sm btn-info"
-                                role="button"><i class="fas fa-plus fa-sm"></i>&nbsp;<span class="hide">proveedor</span></a>
-                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -99,10 +95,6 @@
                     <div class="row d-flex">
                         <div class="col-8">
                             <h6 class="heading-small text-muted mb-1">PRESENTACION</h6>
-                        </div>
-                        <div class="col-4 text-right">
-                            <a href="{{ route('administracion.presentaciones.create') }}" class="btn btn-sm btn-info"
-                                role="button"><i class="fas fa-plus fa-sm"></i>&nbsp;<span class="hide">presentación</span></a>
                         </div>
                     </div>
                 </div>
@@ -160,12 +152,6 @@
                                 <input type="text" name="identificador" id="identificador"
                                     class="form-control @error('identificador') is-invalid @enderror"
                                     value="{{ old('identificador') }}">
-                                <div class="input-group-append">
-                                    <button type="button" id="escanear" class="btn btn-sm btn-dark">
-                                        <i class="fas fa-barcode"></i>
-                                        Escanear
-                                    </button>
-                                </div>
                                 @error('identificador')<span class="invalid-feedback" role="alert">{{$message}}</span>@enderror
                             </div>
                         </div>
