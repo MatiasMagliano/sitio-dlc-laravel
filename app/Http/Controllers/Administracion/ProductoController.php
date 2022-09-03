@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductoRequest;
+use App\Models\ListaPrecio;
 use App\Models\Lote;
 use App\Models\Presentacion;
 use App\Models\Producto;
@@ -84,10 +85,21 @@ class ProductoController extends Controller
             $lote->fecha_compra = Carbon::createFromFormat('d/m/Y', $request->fecha_compra);
             $lote->fecha_vencimiento = Carbon::createFromFormat('d/m/Y', $request->fecha_vencimiento);
             $lote->save();
-
+            
+            
             // se crea una nueva relación con TODOS LOS DATOS y guarda el modelo producto
             $producto->save();
             // ACÁ MATI AGREGAR LA LÓGICA DE PROVEEDOR/LISTA
+            $idProducto = Producto::select('id')->where('droga','=',$request->droga)->first();
+
+            $listaDePrecios = new ListaPrecio;
+            $listaDePrecios->producto_id = $idProducto->id;
+            $listaDePrecios->presentacion_id = $request->presentacion;
+            $listaDePrecios->proveedor_id = $request->proveedor;
+            $listaDePrecios->codigoProv = $request->codigoProv;
+            $listaDePrecios->costo = $request->precio_compra;
+ 
+            $listaDePrecios->save();
 
             $request->session()->flash('success', 'El producto y su lote, se han creado con éxito');
             return redirect(route('administracion.productos.index'));

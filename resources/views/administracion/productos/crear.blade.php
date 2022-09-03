@@ -90,6 +90,16 @@
                             @error('proveedor')<div class="invalid-feedback">{{$message}}</div>@enderror
                         </div>
                     </div>
+                    <div class="pl-lg-4">
+                        <div class="form-group">
+                            <label for="input-codigoProv">Codigo de Proveedor</label>
+                            <input type="text" name="codigoProv" id="input-codigoProv"
+                                class="form-control @error('codigoProv') is-invalid @enderror"
+                                placeholder="Codigo alfanumérico de facturación"
+                                value="{{ old('codigoProv') }}" autofocus>
+                                @error('codigoProv')<div class="invalid-feedback">{{$message}}</div>@enderror
+                        </div>
+                    </div>
                 </div>
             </div>
 

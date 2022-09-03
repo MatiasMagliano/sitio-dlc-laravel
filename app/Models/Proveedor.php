@@ -28,9 +28,9 @@ class Proveedor extends Model
     ];
 
 
-    public static function getDatosProveedor($cuit){
+    public static function getDatosProveedor($razon_social){
         $proveedor = Proveedor::select('*')
-        ->where('proveedors.cuit','=', $cuit)
+        ->where('proveedors.razon_social','=', $razon_social)
         ->distinct()
         ->get();
         return $proveedor; 
