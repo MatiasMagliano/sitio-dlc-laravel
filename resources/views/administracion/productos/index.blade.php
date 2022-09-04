@@ -36,7 +36,7 @@
             </form>
             <br>
             <table class="table table-bordered table-responsive-md"  width="100%">
-                <thead>
+                <thead class="bg-gray">
                     <th>Droga</th>
                     <th>Presentación</th>
                     <th>HOSP/TRAZ</th>

@@ -36,6 +36,10 @@ class CotizacionController extends Controller
         return view('administracion.cotizaciones.index', compact('cotizaciones', 'config'));
     }
 
+    public function historico()
+    {
+        return view('administracion.cotizaciones.historico');
+    }
     public function historicoCotizaciones(Request $request)
     {
         $search = $request->query('search', array('value' => '', 'regex' => false));
@@ -57,12 +61,13 @@ class CotizacionController extends Controller
         // QUERY COMPLETA DE COTIZACIONES
         $query = Cotizacion::join('clientes', 'clientes.id', '=', 'cotizacions.cliente_id')
             ->join('estados', 'estados.id', '=', 'cotizacions.estado_id')
+            ->whereIn('cotizacions.estado_id', [4, 5])
             ->select(
                 'cotizacions.*',
                 'clientes.razon_social',
                 'cotizacions.created_at as creacion',
                 'cotizacions.updated_at as modificacion',
-                'estados.estado'
+                'estados.estado',
             );
 
         if (!empty($filter)) {
@@ -71,11 +76,11 @@ class CotizacionController extends Controller
 
         $recordsTotal = $query->count();
 
-        // $sortColumnName = $sortColumns[$order[0]['column']];
+        $sortColumnName = $sortColumns[$order[0]['column']];
 
-        // $query->orderBy($sortColumnName, $order[0]['dir'])
-        //     ->take($length)
-        //     ->skip($start);
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
 
         $json = array(
             'draw' => $draw,
@@ -93,8 +98,8 @@ class CotizacionController extends Controller
                 $cotizacion->updated_at,
                 $cotizacion->identificador,
                 $cotizacion->cliente->razon_social,
-                $cotizacion->estado,
-                view('administracion.cotizaciones.historico', ['cotizacion' => $cotizacion])->render(),
+                '<span class="badge badge-secondary">'. $cotizacion->estado .'</span>',
+                view('administracion.cotizaciones.partials.acciones', ['cotizacion' => $cotizacion])->render(),
             ];
         }
 

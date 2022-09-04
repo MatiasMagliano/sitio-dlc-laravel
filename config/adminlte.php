@@ -266,7 +266,7 @@ return [
                 ],
                 [
                     'text'  => 'quotation_history',
-                    'route' => 'administracion.cotizaciones.historicoCotizaciones',
+                    'route' => 'administracion.cotizaciones.historico',
                     'icon'  => 'fas fa-history',
                 ],
                 [

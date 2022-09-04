@@ -42,7 +42,7 @@
 @section('plugins.DatatablesPlugins', true)
     <x-adminlte-card>
         <table id="tabla2" class="table table-bordered table-responsive-md" style="width: 100%;">
-            <thead>
+            <thead class="bg-gray">
                 <th>Forma</th>
                 <th>Presentación</th>
                 <th>Alta</th>

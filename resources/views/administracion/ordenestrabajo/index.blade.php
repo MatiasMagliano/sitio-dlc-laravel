@@ -57,7 +57,7 @@
     <x-adminlte-card title="Órdenes por generar" collapsible>
         <div class="processing height-control">
             <table id="ordenesPotenciales" class="table table-bordered table-responsive-md" width="100%">
-                <thead>
+                <thead class="bg-gray">
                     <tr>
                         <th>Fecha</th>
                         <th>Identificador/Usuario</th>
@@ -118,7 +118,7 @@
     <x-adminlte-card title="Órdenes en producción" collapsible>
     <div class="processing">
         <table id="ordenesDeTrabajo" class="table table-bordered table-responsive-md" width="100%">
-            <thead>
+            <thead class="bg-gray">
                 <tr>
                     <th>Fecha</th>
                     <th>Identificador/Usuario</th>

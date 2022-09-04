@@ -51,7 +51,7 @@
         </div>
         <div class="card-body">
             <table id="tabla_clientes" class="table table-bordered table-responsive-md" width="100%">
-                <thead>
+                <thead class="bg-gray">
                     <th>Razón Social</th>
                     <th>Inscripción AFIP</th>
                     <th>Contacto</th>

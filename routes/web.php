@@ -106,8 +106,12 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
         ->name('cotizaciones.editar.producto');
     Route::get('/cotizaciones/{cotizacion}/descargarpdf/{doc}', [CotizacionController::class, 'descargapdf'])
         ->name('cotizaciones.descargapdf');
-    Route::get('/cotizaciones/historico', [CotizacionController::class, 'historicoCotizaciones'])
-        ->name('cotizaciones.historicoCotizaciones');
+    //historico cotizaciones
+    Route::get('/cotizaciones/historico', [CotizacionController::class, 'historico'])
+        ->name('cotizaciones.historico');
+    Route::get('/cotizaciones/ajaxhistorico', [CotizacionController::class, 'historicoCotizaciones'])
+        ->name('cotizaciones.ajax.historico');
+
     Route::post('/cotizaciones/{cotizacion}/producto', [CotizacionController::class, 'guardarProductoCotizado'])
         ->name('cotizaciones.guardar.producto');
     Route::post('/cotizaciones/{cotizacion}/aprobarCotizacion', [CotizacionController::class, 'aprobarCotizacion'])

@@ -64,15 +64,13 @@
 <x-adminlte-card>
     <div class="processing">
         <table id="tabla" class="table table-bordered table-responsive-md" width="100%">
-            <thead>
-                <tr>
-                    <th>Proveedor</th>
-                    <th>Cuit</th>
-                    <th>Productos</th>
-                    <th>Alta Listado</th>
-                    <th>Último Estado</th>
-                    <th>Acciones</th>
-                </tr>
+            <thead class="bg-gray">
+                <th>Proveedor</th>
+                <th>Cuit</th>
+                <th>Productos</th>
+                <th>Alta Listado</th>
+                <th>Último Estado</th>
+                <th>Acciones</th>
             </thead>
             <tbody>
                 @foreach ($listaPrecios as $listaPrecio)
@@ -89,12 +87,15 @@
                                 title="Editar cotización">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
-                            <form action="{{ route('administracion.listaprecios.deleteList', $listaPrecio->proveedor_id) }}"
-                                class="btn btn-link" data-toggle="tooltip" data-placement="bottom" method="POST" title="Eliminar listado">
+                            <form
+                                action="{{ route('administracion.listaprecios.deleteList', $listaPrecio->proveedor_id) }}"
+                                class="btn btn-link" data-toggle="tooltip" data-placement="bottom" method="POST"
+                                title="Eliminar listado">
                                 @csrf
                                 @method('DELETE')
-                                <button id="{{ $listaPrecio->proveedor_id }}|{{ $listaPrecio->razon_social }}" type="submit" data-toggle="tooltip"
-                                    data-placement="bottom" title="Borrar cotización" class="btn btn-link">
+                                <button id="{{ $listaPrecio->proveedor_id }}|{{ $listaPrecio->razon_social }}"
+                                    type="submit" data-toggle="tooltip" data-placement="bottom"
+                                    title="Borrar cotización" class="btn btn-link">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </form>
@@ -123,7 +124,7 @@
             "select": false,
         });
 
-        $("#LockCreate").click(function(){
+        $("#LockCreate").click(function() {
 
             var datos = $(this).attr('id');
             $.ajax({
@@ -146,7 +147,7 @@
     });
 </script>
 <script>
-    function mostrarMensajeBloqueo(){
+    function mostrarMensajeBloqueo() {
         /*Swal.fire({
             icon: 'error',
             title: 'Acción no permitida',
@@ -171,32 +172,32 @@
             }
         })
     }
-/*
-    $("#btnBuscarListado").on('click', function() {
-        $idSupplier = $('#input-proveedor').val();
-        getListadoProveedor($idSupplier);
-    });
-    function getListadoProveedor($idSupplier) {
-        var datos = {
-            proveedor_id: $idSupplier
-        };
-        $.ajax({
-            url: "{{ route('administracion.listaprecios.mostrarLista') }}",
-            type: "GET",
-            data: datos,
-        }).done(function(resultado) {
-            tabla.clear();
-            tabla.rows.add(resultado).draw();
+    /*
+        $("#btnBuscarListado").on('click', function() {
+            $idSupplier = $('#input-proveedor').val();
+            getListadoProveedor($idSupplier);
         });
-    };
-  */
+        function getListadoProveedor($idSupplier) {
+            var datos = {
+                proveedor_id: $idSupplier
+            };
+            $.ajax({
+                url: "{{ route('administracion.listaprecios.mostrarLista') }}",
+                type: "GET",
+                data: datos,
+            }).done(function(resultado) {
+                tabla.clear();
+                tabla.rows.add(resultado).draw();
+            });
+        };
+      */
 
     $('.trashListProv').on('click', function() {
         $cuit = $(this).attr('id');
         borrarListadoProveedor($cuit);
     });
 
-     function borrarListadoProveedor(listado){
+    function borrarListadoProveedor(listado) {
         var proveedor = listado.split("|");
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
@@ -207,7 +208,7 @@
         })
 
         swalWithBootstrapButtons.fire({
-            title: 'Borrar Listado de '+ proveedor[1],
+            title: 'Borrar Listado de ' + proveedor[1],
             text: "Esta accción quitará los productos de la lista del proveedor en futuras cotizaciones.",
             icon: 'warning',
             showCancelButton: true,
@@ -216,38 +217,38 @@
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-            var datos = {
-                lisadoProveedor: 15
-            };
-            $.ajax({
-                url: "{{ route('administracion.listaprecios.deleteList') }}",
-                type: "DELETE",
-                data: datos,
-            });
+                var datos = {
+                    lisadoProveedor: 15
+                };
+                $.ajax({
+                    url: "{{ route('administracion.listaprecios.deleteList') }}",
+                    type: "DELETE",
+                    data: datos,
+                });
                 //swalWithBootstrapButtons.fire(
                 //    'Borrado',
                 //    'Se ha eliminado el listado de proveedor',
                 //    'success'
                 //    )
-                } else if (
-            /* Read more about handling dismissals below */
-            result.dismiss === Swal.DismissReason.cancel
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
             ) {
                 swalWithBootstrapButtons.fire(
                     'Cancelado',
                     'Operación cancelada por usuario, no se borra el listado de proveedor',
                     'error'
-                    )
-                }
-            })
-        }
+                )
+            }
+        })
+    }
 
 
-        // SCRIPT DEL SLIMSELECT
-        var selProducto = new SlimSelect({
-            select: '.seleccion-producto',
-            placeholder: 'Seleccione el nombre de la droga y luego su presentación...',
-        });
+    // SCRIPT DEL SLIMSELECT
+    var selProducto = new SlimSelect({
+        select: '.seleccion-producto',
+        placeholder: 'Seleccione el nombre de la droga y luego su presentación...',
+    });
 </script>
 @endsection
 

@@ -19,7 +19,7 @@
 
 <x-adminlte-card>
     <table id="tabla2" class="table table-bordered display nowrap" style="width: 100%;">
-        <thead>
+        <thead class="bg-gray">
             <th>Razón social</th>
             <th>Cuit</th>
             <th>contacto</th>

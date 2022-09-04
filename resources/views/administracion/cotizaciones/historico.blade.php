@@ -36,19 +36,21 @@
 @stop
 
 @section('content')
+    @section('plugins.Datatables', true)
+    @section('plugins.DatatablesPlugins', true)
+    @section('plugins.TempusDominusBs4', true)
     <div class="wrapper">
         <div class="card">
             <div class="card-body">
-                <table id="tabla-cotizaciones" class="table table-bordered table-hover display" style="width:100%">
+                <table id="tabla-cotizaciones" class="table table-bordered display" style="width:100%">
                     <thead>
-                        <tr>
-                            <th>Creación</th>
-                            <th>Última modificación</th>
+                        <tr class="bg-gray">
+                            <th>Fecha creación</th>
+                            <th>Fecha modificación</th>
                             <th>Identificador</th>
-                            <th>Usuario/Fecha de creación</th>
                             <th>Cliente</th>
                             <th>ESTADO</th>
-                            <th></th>
+                            <th>ACCIONES</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,22 +63,47 @@
 
 @section('js')
     @include('partials.alerts')
+    <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
+
     <script>
         $(document).ready(function() {
             $('#tabla-cotizaciones').DataTable({
                 "serverSide": true,
                 "ajax": {
-                    url: "{{ route('administracion.cotizaciones.historicoCotizaciones') }}",
-                    method: "get"
+                    url: "{{ route('administracion.cotizaciones.ajax.historico') }}",
+                    method: "GET"
                 },
                 "columnDefs": [
                     {
                         'targets': [0],
-                        'orderable': false
+                        'class': 'align-middle text-center',
+                        'render': function (data) {
+                            return moment(new Date(data)).format("DD/MM/YYYY");
+                        }
                     },
                     {
                         'targets': [1],
-                        'orderable': false
+                        'class': 'align-middle text-center',
+                        'render': function (data) {
+                            return moment(new Date(data)).format("DD/MM/YYYY");
+                        }
+                    },
+                    {
+                        'targets': [2],
+                        'class': 'align-middle text-center',
+                    },
+                    {
+                        'targets': [3],
+                        'class': 'align-middle',
+                    },
+                    {
+                        'targets': [4],
+                        'class': 'align-middle text-center',
+                    },
+
+                    {
+                        'targets': [5],
+                        'class': 'align-middle text-center',
                     },
                 ],
             });
