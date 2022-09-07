@@ -18,8 +18,8 @@
             <h1>Administración de cotizaciones</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-xl-end">
-            <a href="{{ route('administracion.cotizaciones.index') }}" role="button"
-                class="btn btn-md btn-secondary">Volver a cotizaciones</a>
+            <a href="{{ url()->previous() }}" role="button"
+                class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
 @stop
@@ -30,7 +30,7 @@
         <div class="card-header">
             <div class="row d-flex">
                 <div class="col-8">
-                    <h5 class="heading-small text-muted mb-1">Datos básicos de la cotización</h5>
+                    <h5 class="heading-small text-muted mb-1">Básicos de la cotización</h5>
                 </div>
                 @if (!$cotizacion->finalizada)
                     <div class="col-4 text-right">
@@ -43,17 +43,22 @@
                                 </button>
                             </form>
                         @else
-                        <button type="button" class="btn btn-sm btn-primary"
-                            onclick="confirmarCotizacion()">
-                            <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Finalizar cotización</span>
-                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary"
+                        onclick="confirmarCotizacion()">
+                        <i class="far fa-trash-alt"></i>&nbsp;<span class="hide">Cancelar cotización</span>
+                    </button>
+                    &nbsp;
+                    <button type="button" class="btn btn-sm btn-success"
+                        onclick="confirmarCotizacion()">
+                        <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Finalizar cotización</span>
+                    </button>
                         @endif
                     </div>
                 @endif
             </div>
         </div>
         <div class="card-body">
-            <table class="table table-responsive-md" width="100%">
+            <table class="table" width="100%">
                 <thead>
                     <tr>
                         <th>Fecha</th>
@@ -67,33 +72,33 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="vertical-align: middle;">
+                        <td class="align-middle">
                             {{$cotizacion->created_at->format('d/m/Y')}}<br>{{$cotizacion->identificador}}
                         </td>
                         <td>
                             {{$cotizacion->cliente->razon_social}}<br>
                             {{$cotizacion->cliente->tipo_afip}}: {{$cotizacion->cliente->afip}}
                         </td>
-                        <td style="vertical-align: middle;">{{$cotizacion->user->name}}</td>
-                        <td style="vertical-align: middle;">{{$cotizacion->productos->count()}}</td>
-                        <td style="vertical-align: middle;">{{$cotizacion->productos->sum('cantidad')}}</td>
-                        <td style="vertical-align: middle;">$ {{number_format($cotizacion->productos->sum('total'), 2, ',', '.')}}</td>
-                        <td style="vertical-align: middle;">
+                        <td class="align-middle">{{$cotizacion->user->name}}</td>
+                        <td class="align-middle">{{$cotizacion->productos->count()}}</td>
+                        <td class="align-middle">{{$cotizacion->productos->sum('cantidad')}}</td>
+                        <td class="align-middle">$ {{number_format($cotizacion->productos->sum('total'), 2, ',', '.')}}</td>
+                        <td class="align-middle">
                             @switch($cotizacion->estado_id)
                                 @case(1)
                                     <span class="text-fuchsia">{{$cotizacion->estado->estado}}</span>
                                     @break
                                 @case(2)
-                                    <span class="text-success">{{$cotizacion->estado->estado}} {{$cotizacion->finalizada->format('d/m/Y')}}</span>
+                                    <span class="text-success">{{$cotizacion->estado->estado}}</span>
                                     @break
                                 @case(3)
-                                    <span class="text-secondary">{{$cotizacion->estado->estado}} {{$cotizacion->presentada->format('d/m/Y')}}</span>
+                                    <span class="text-secondary">{{$cotizacion->estado->estado}}</span>
                                     @break
                                 @case(4)
-                                    <span class="text-success">{{$cotizacion->estado->estado}} {{$cotizacion->confirmada->format('d/m/Y')}}</span>
+                                    <span class="text-success">{{$cotizacion->estado->estado}}</span>
                                     @break
                                 @case(5)
-                                    <span class="text-danger">{{$cotizacion->estado->estado}} {{$cotizacion->rechazada->format('d/m/Y')}}</span>
+                                    <span class="text-danger">{{$cotizacion->estado->estado}}</span>
                                     @break
                                 @default
                             @endswitch
@@ -104,6 +109,29 @@
         </div>
     </div>
 
+    @if ($cotizacion->confirmada)
+        <div class="card bg-gradient-success">
+            <div class="card-header">
+                <h5 class="card-title">La cotización fue aprobada el {{$cotizacion->confirmada->format('d/m/Y')}}</h5>
+            </div>
+            <div class="card-body">
+                <p>Lugar de entrega: {{$cotizacion->cliente->ptoEntrega($cotizacion->dde_id)->lugar_entrega}}</p>
+                <p>Domicilio: {{$cotizacion->cliente->ptoEntrega($cotizacion->dde_id)->domicilio}}</p>
+                <p>Condiciones: {{$cotizacion->cliente->ptoEntrega($cotizacion->dde_id)->condiciones}}</p>
+                <p>Observaciones: {{$cotizacion->cliente->ptoEntrega($cotizacion->dde_id)->observaciones}}</p>
+            </div>
+            <div class="card-footer">
+                @if ($cotizacion->archivos()->exists())
+                    <p>La aprobación recibió una Orden de Provisión, puede descargarla en este
+                        <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'provision']) }}"target="_blank">
+                            link
+                        </a>
+                    </p>
+                @endif
+            </div>
+        </div>
+    @endif
+
     @if ($cotizacion->rechazada)
         <div class="card bg-gradient-danger">
             <div class="card-header">
@@ -113,13 +141,13 @@
                 <p>{{$cotizacion->motivo_rechazo}}</p>
             </div>
             <div class="card-footer">
-                {{-- @if ($cotizacion->archivos->contains('causa_subida', 'rechazada'))
+                @if ($cotizacion->archivos()->exists())
                     <p>El rechazo contiene un archivo comparativo, puede descargarlo en este
                         <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'rechazo']) }}"target="_blank">
                             link
                         </a>
                     </p>
-                @endif --}}
+                @endif
             </div>
         </div>
     @endif
@@ -156,31 +184,33 @@
                     @php $i = 0; /*variable contadora del Nº Orden*/@endphp
                     @foreach ($cotizacion->productos as $cotizado)
                     <tr>
-                        <td style="text-align: center;">{{++$i}}</td>
+                        <td class="align-middle text-center">{{++$i}}</td>
                         <td>{{--Producto: producto+presentacion--}}
                             {{$cotizado->producto->droga}}, {{$cotizado->presentacion->forma}} {{$cotizado->presentacion->presentacion}}
                         </td>
-                        <td>
+                        <td class="align-middle text-center">
                             {{$cotizado->cantidad}}
                         </td>
-                        <td class="text-center">
+                        <td class="align-middle text-center">
                             $ {{number_format($cotizado->precio, 2, ',', '.')}}
                         </td>
                         <td class="text-right">
                             $ {{number_format($cotizado->total, 2, ',', '.')}}
                         </td>
-                        <td>
+                        <td class="align-middle text-center">
                             @if (!$cotizacion->finalizada)
                                 <a href="{{ route('administracion.cotizaciones.editar.producto', ['cotizacion' => $cotizacion, 'productoCotizado' => $cotizado]) }}"
-                                    class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
+                                    class="btn btn-link" data-toggle="tooltip" data-placement="middle"
                                     title="Editar producto cotizado">
                                     <i class="fas fa-pencil-alt"></i>
                                 </a>
-                                <button type="button" class="btn btn-link"
+                                <button type="button" class="btn btn-link text-danger"
                                     data-id="{{ $cotizado->id }}" data-action="{{ route('administracion.cotizaciones.borrar.producto', ['cotizacion' => $cotizacion, 'productoCotizado' => $cotizado]) }}"
                                     onclick="confirmarBorrado({{$cotizacion->id}}, {{$cotizado->id}})">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
+                            @else
+                                <span>-</span>
                             @endif
                         </td>
                     </tr>

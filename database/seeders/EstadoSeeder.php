@@ -18,7 +18,7 @@ class EstadoSeeder extends Seeder
         $datos = [
             [
                 'id'     => 1,
-                'estado' => 'PENDIENTE'
+                'estado' => 'COTIZANDO'
             ],
             [
                 'id'     => 2,

@@ -48,13 +48,17 @@
             <div class="contenedor-encabezado text-center">
                 <span class="titulo">Droguería de la Ciudad - COTIZACION</span>
                 <br>
+                <span class=" small">MARTIN SEGURA E HIJOS S.A. CUIT:30716556643 IB:285006678</span>
+                <br>
+                <span class=" small">- Raymundo Montenegro 2654 - CÓRDOBA -</span>
+                <br>
                 <span class="subtitulo">{{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('lugar_entrega')->get('0')}}</span>
             </div>
             <hr>
             <span style="font-size: 17px">Cotización: <strong>{{$cotizacion->identificador}}</strong></span> <br>
             <ul class="list-group">
                 <li class="list-group-item py-1">
-                    <strong>Cliente</strong>: {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('razon_social')->get('0')}}
+                    <strong>Solicitado por:</strong>: {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('razon_social')->get('0')}}
                 </li>
                 <li class="list-group-item  py-1">
                     <strong>Lugar de entrega</strong>: {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('lugar_entrega')->get('0')}}
