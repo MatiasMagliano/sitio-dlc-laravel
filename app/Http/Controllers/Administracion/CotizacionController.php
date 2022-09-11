@@ -358,12 +358,8 @@ class CotizacionController extends Controller
                 $cotizacion->presentada = Carbon::now();
                 $cotizacion->save();
             }
-            
-            
-            return $pdf->stream('cotizacion_' . $cotizacion->identificador . '.pdf');
-            
-
-            //return $pdf->download('cotizacion_' . $cotizacion->identificador . '.pdf');
+             
+            return $pdf->download('cotizacion_' . $cotizacion->identificador . '.pdf');
         } else {
             $request->session()->flash('error', 'La cotización aún no ha terminado de agregar líneas. Por favor finalice la cotización para descargar el PDF.');
             return redirect('/administracion/cotizaciones/');
@@ -372,29 +368,29 @@ class CotizacionController extends Controller
         //return view('administracion.cotizaciones.pdfLayout');
     }
     
-    public function generapdf(Cotizacion $cotizacion, Request $request)
-    {
-        if ($cotizacion->finalizada) {
-            $presentaciones = Presentacion::all();
-            $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout', compact('cotizacion', 'presentaciones'));
-            $dom_pdf = $pdf->getDomPDF();
+    // public function generapdf(Cotizacion $cotizacion, Request $request)
+    // {
+    //     if ($cotizacion->finalizada) {
+    //         $presentaciones = Presentacion::all();
+    //         $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout', compact('cotizacion', 'presentaciones'));
+    //         $dom_pdf = $pdf->getDomPDF();
 
-            $canvas = $dom_pdf->get_canvas();
-            $canvas->page_text(500, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
-            if (!$cotizacion->presentada) {
-                // estado-3 --> "Presentada el:"
-                $cotizacion->estado_id = 3;
-                $cotizacion->presentada = Carbon::now();
-                $cotizacion->save();
-            }
+    //         $canvas = $dom_pdf->get_canvas();
+    //         $canvas->page_text(500, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
+    //         if (!$cotizacion->presentada) {
+    //             // estado-3 --> "Presentada el:"
+    //             $cotizacion->estado_id = 3;
+    //             $cotizacion->presentada = Carbon::now();
+    //             $cotizacion->save();
+    //         }
 
-            return $pdf->download('cotizacion_' . $cotizacion->identificador . '.pdf');
-        } else {
-            $request->session()->flash('error', 'La cotización aún no ha terminado de agregar líneas. Por favor finalice la cotización para descargar el PDF.');
-            return redirect('/administracion/cotizaciones/');
-        }
-        //return view('administracion.cotizaciones.pdfLayout', compact('cotizacion'));
-    }
+    //         return $pdf->download('cotizacion_' . $cotizacion->identificador . '.pdf');
+    //     } else {
+    //         $request->session()->flash('error', 'La cotización aún no ha terminado de agregar líneas. Por favor finalice la cotización para descargar el PDF.');
+    //         return redirect('/administracion/cotizaciones/');
+    //     }
+    //     //return view('administracion.cotizaciones.pdfLayout', compact('cotizacion'));
+    // }
 
     public function descargapdf(Cotizacion $cotizacion, $doc, Request $request)
     {

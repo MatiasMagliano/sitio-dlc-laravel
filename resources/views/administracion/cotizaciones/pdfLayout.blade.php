@@ -13,69 +13,6 @@
     </style>
     <title>Cotización {{$cotizacion->identificador}}</title>
 </head>
-<<<<<<< HEAD
-<body>
-=======
-<body class="d-flex flex-column">
-    <div class="card">
-        <div class="card-header">
-            <p class="text-right">Córdoba, {{\Carbon\Carbon::now()->translatedFormat('l j F Y')}}</p>
-            <div class="contenedor-encabezado text-center">
-                <span class="titulo">Droguería de la Ciudad - COTIZACION</span>
-                <br>
-                <span class=" small">MARTIN SEGURA E HIJOS S.A. CUIT:30716556643 IB:285006678</span>
-                <br>
-                <span class=" small">- Raymundo Montenegro 2654 - CÓRDOBA -</span>
-                <br>
-                <span class="subtitulo">{{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('lugar_entrega')->get('0')}}</span>
-            </div>
-            <hr>
-            <span style="font-size: 17px">Cotización: <strong>{{$cotizacion->identificador}}</strong></span> <br>
-            <ul class="list-group">
-                <li class="list-group-item py-1">
-                    <strong>Solicitado por:</strong>: {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('razon_social')->get('0')}}
-                </li>
-                <li class="list-group-item  py-1">
-                    <strong>Lugar de entrega</strong>: {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('lugar_entrega')->get('0')}}
-                </li>
-                <li class="list-group-item  py-1">
-                    <strong>Domicilio</strong>: {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('domicilio')->get('0')}},
-                        {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('nombre')->get('0')}},
-                        {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('nombre_completo')->get('0')}}
-                </li>
-                <li class="list-group-item py-1">
-                    <strong>Correo electrónico</strong>: {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('email')->get('0')}}
-                </li>
-            </ul>
-        </div>
-        <div class="card-body">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th class="encabezado">Fecha</th>
-                        <th class="encabezado">Cliente</th>
-                        <th class="encabezado">Prod. cotizados</th>
-                        <th class="encabezado">Unidades</th>
-                        <th class="encabezado">Importe</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="vertical-align: middle;">
-                            {{$cotizacion->created_at->format('d/m/Y')}}<br>{{$cotizacion->identificador}}
-                        </td>
-                        <td>
-                            {{$cotizacion->cliente->razon_social}}<br>
-                            {{$cotizacion->cliente->tipo_afip}}: {{$cotizacion->cliente->afip}}
-                        </td>
-                        <td style="vertical-align: middle; text-align: center;">{{$cotizacion->productos->count()}}</td>
-                        <td style="vertical-align: middle; text-align: center;">{{$cotizacion->productos->sum('cantidad')}}</td>
-                        <td style="vertical-align: middle; text-align: center;">$ {{number_format($cotizacion->productos->sum('total'), 2, ',', '.')}}</td>
-                    </tr>
-                </tbody>
-            </table>
->>>>>>> 73f723d9c67de4daaa9d309cbba8d4cf10bc4ae8
-
     <header>
         <table class="table" style="padding-left: 2em;padding-right: 2em;">
             <tr>
@@ -99,7 +36,7 @@
                             <td style="text-align: left;border-top-style:none"> 
                                 <ul class="list-group">
                                     <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Droguería de la ciudad</li>
-                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Raymundo montenegro 2764</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Raymundo Montenegro 2654 - CÓRDOBA</li>
                                     <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"><br></li>
                                     <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Responsable Inscripto</li>
                                     <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"><br></li>
@@ -126,7 +63,7 @@
                                 <ul class="list-group">
                                     <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"><strong>{{$cotizacion->identificador}}</strong></li>
                                     <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">{{\Carbon\Carbon::now()->format('d/m/Y')}}</li>
-                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">35978254722</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">30716556643</li>
                                     <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Exento</li>
                                     <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">22/05/2001</li>
                                     <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"></li>
