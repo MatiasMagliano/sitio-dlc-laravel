@@ -345,6 +345,36 @@ class CotizacionController extends Controller
     public function generarpdf(Cotizacion $cotizacion, Request $request)
     {
         if ($cotizacion->finalizada) {
+            
+            $presentaciones = Presentacion::all();
+            $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout', compact('cotizacion', 'presentaciones'));
+            
+            $dom_pdf = $pdf->getDomPDF();
+            $canvas = $dom_pdf->get_canvas();
+            $canvas->page_text(270, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 8, array(0, 0, 0));
+            if (!$cotizacion->presentada) {
+                // estado-3 --> "Presentada el:"
+                $cotizacion->estado_id = 3;
+                $cotizacion->presentada = Carbon::now();
+                $cotizacion->save();
+            }
+            
+            
+            return $pdf->stream('cotizacion_' . $cotizacion->identificador . '.pdf');
+            
+
+            //return $pdf->download('cotizacion_' . $cotizacion->identificador . '.pdf');
+        } else {
+            $request->session()->flash('error', 'La cotización aún no ha terminado de agregar líneas. Por favor finalice la cotización para descargar el PDF.');
+            return redirect('/administracion/cotizaciones/');
+        }
+        
+        //return view('administracion.cotizaciones.pdfLayout');
+    }
+    
+    public function generapdf(Cotizacion $cotizacion, Request $request)
+    {
+        if ($cotizacion->finalizada) {
             $presentaciones = Presentacion::all();
             $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout', compact('cotizacion', 'presentaciones'));
             $dom_pdf = $pdf->getDomPDF();

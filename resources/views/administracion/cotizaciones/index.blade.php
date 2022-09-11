@@ -180,7 +180,7 @@
                         return false;
                     }
                 })
-            }, 2000)
+            }, 10000)
         };
 
         var popupBlockerChecker = {

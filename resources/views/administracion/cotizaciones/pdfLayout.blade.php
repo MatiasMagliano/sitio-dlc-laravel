@@ -5,182 +5,219 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/estilosPDF.css') }}">
     <style>
-        body{
-            margin: 0cm;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 9px;
-            display: block;
-        }
-
-        .nueva-linea{
-            break-before: always;
-            break-after: auto;
-        }
-
-        .contenedor-encabezado{
-            background-color: #eee;
-            font-family: Arial, Helvetica, sans-serif;
-            border-radius: 2%;
-        }
-
-        .contenedor-encabezado .titulo{
-            font-size: 25px;
-            font-weight: 700;
-        }
-
-        .contenedor-encabezado .subtitulo{
-            font-size: 20px;
-            font-weight: 500;
-        }
-
-        .encabezado{
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 15px;
-        }
+        /* .page-break {
+            page-break-after: always;
+        } */
     </style>
     <title>Cotización {{$cotizacion->identificador}}</title>
 </head>
-<body class="d-flex flex-column">
-    <div class="card">
-        <div class="card-header">
-            <p class="text-right">Córdoba, {{\Carbon\Carbon::now()->translatedFormat('l j F Y')}}</p>
-            <div class="contenedor-encabezado text-center">
-                <span class="titulo">Droguería de la Ciudad - COTIZACION</span>
-                <br>
-                <span class="subtitulo">{{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('lugar_entrega')->get('0')}}</span>
-            </div>
-            <hr>
-            <span style="font-size: 17px">Cotización: <strong>{{$cotizacion->identificador}}</strong></span> <br>
-            <ul class="list-group">
-                <li class="list-group-item py-1">
-                    <strong>Cliente</strong>: {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('razon_social')->get('0')}}
-                </li>
-                <li class="list-group-item  py-1">
-                    <strong>Lugar de entrega</strong>: {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('lugar_entrega')->get('0')}}
-                </li>
-                <li class="list-group-item  py-1">
-                    <strong>Domicilio</strong>: {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('domicilio')->get('0')}},
-                        {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('nombre')->get('0')}},
-                        {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('nombre_completo')->get('0')}}
-                </li>
-                <li class="list-group-item py-1">
-                    <strong>Correo electrónico</strong>: {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('email')->get('0')}}
-                </li>
-            </ul>
-        </div>
-        <div class="card-body">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th class="encabezado">Fecha</th>
-                        <th class="encabezado">Cliente</th>
-                        <th class="encabezado">Prod. cotizados</th>
-                        <th class="encabezado">Unidades</th>
-                        <th class="encabezado">Importe</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="vertical-align: middle;">
-                            {{$cotizacion->created_at->format('d/m/Y')}}<br>{{$cotizacion->identificador}}
-                        </td>
-                        <td>
-                            {{$cotizacion->cliente->razon_social}}<br>
-                            {{$cotizacion->cliente->tipo_afip}}: {{$cotizacion->cliente->afip}}
-                        </td>
-                        <td style="vertical-align: middle; text-align: center;">{{$cotizacion->productos->count()}}</td>
-                        <td style="vertical-align: middle; text-align: center;">{{$cotizacion->productos->sum('cantidad')}}</td>
-                        <td style="vertical-align: middle; text-align: center;">$ {{number_format($cotizacion->productos->sum('total'), 2, ',', '.')}}</td>
-                    </tr>
-                </tbody>
-            </table>
+<body>
 
-            <div class="text-center" style="font-size: 15px;">
-                <span>Detalle</span>
-            </div>
-            <br>
-            <table id="tabla-detalle" class="table table-sm" data-show-print="true" width="100%">
-                <thead>
-                    <th scope="col">Línea</th>
-                    <th scope="col">Producto</th>
-                    <th scope="col">Cantidad</th>
-                    <th scope="col">Precio unitario</th>
-                    <th scope="col">Subtotal</th>
-                </thead>
-                <tbody>
-                    @php $i = 0; /*variable contadora del Nº Orden*/@endphp
-                    @foreach ($cotizacion->productos as $cotizado)
+    <header>
+        <table class="table" style="padding-left: 2em;padding-right: 2em;">
+            <tr>
+                <th scope="col" style="text-align: left;padding: 1em 3em"><span>Droguería de la Ciudad</span></th>
+                <th scope="col" style="padding: 1em 3em;"><span>COTIZACION</span></th>
+            </tr>
+            <tr style="font-size:11px;margin:0;padding: 0;">
+                <td style="padding: 0;border-top-style:none">
+                    <table>
                         <tr>
-                            <th scope="row" class="text-center">{{++$i}}</td>
-                            <td>{{--Producto: producto+presentacion--}}
-                                {{$cotizado->producto->droga}}, {{$presentaciones[$cotizado->presentacion_id-1]->forma}} {{$presentaciones[$cotizado->presentacion_id-1]->presentacion}}
+                            <td style="text-align: left; width: 23%;border-top-style:none">
+                                <ul class="list-group">
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Razón Social:</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Domicilio:</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"><br></li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Condición frente al IVA:</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"><br></li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"></li>
+                                </ul>            
                             </td>
-                            <td class="text-center">
-                                {{$cotizado->cantidad}}
-                            </td>
-                            <td class="text-center">
-                                $ {{number_format($cotizado->precio, 2, ',', '.')}}
-                            </td>
-                            <td class="text-right">
-                                $ {{number_format($cotizado->total, 2, ',', '.')}}
+                            <td style="text-align: left;border-top-style:none"> 
+                                <ul class="list-group">
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Droguería de la ciudad</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Raymundo montenegro 2764</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"><br></li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Responsable Inscripto</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"><br></li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"></li>
+                                </ul>            
                             </td>
                         </tr>
-                    @endforeach
+                    </table>
+                </td>
+                <td style="padding: 0;border-top-style:none">
+                    <table>
+                        <tr>
+                            <td style="text-align: left;border-top-style:none">
+                                <ul class="list-group">
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">N° de cotización:</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Fecha emisión:</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">CUIT:</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Ingresos Brutos:</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Inicio de Actividad:</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"></li>
+                                </ul>            
+                            </td>
+                            <td style="text-align: left;border-top-style:none">
+                                <ul class="list-group">
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"><strong>{{$cotizacion->identificador}}</strong></li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">{{\Carbon\Carbon::now()->format('d/m/Y')}}</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">35978254722</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Exento</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">22/05/2001</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"></li>
+                                </ul>            
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <tr style="font-size:11px;margin:0;border: 1px solid">
+                <td style="padding: 0;border-top-style:none">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="text-align: left; width: 21%;border-top-style:none">
+                                <ul class="list-group">
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;">Señor(es):</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;">Domicilio:</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;"><br></li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;">Codigo Postal:</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;">Dir. entrega:</li>
+                                    
+                                </ul>            
+                            </td>
+                            <td style="text-align: left; width: 35%;border-top-style:none"> 
+                                <ul class="list-group">
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;">{{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('razon_social')->get('0')}}</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;">
+                                        {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('domicilio')->get('0')}},
+                                        {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('nombre')->get('0')}},
+                                        {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('nombre_completo')->get('0')}}
+                                    </li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;"><br></li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;">{{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('lugar_entrega')->get('0')}}</li>
+                                </ul>            
+                            </td>
+                        </tr>
+                    </table>              
+                </td>
+                <td style="padding: 0;border-top-style:none">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="text-align: left; width: 19%;border-top-style:none">
+                                <ul class="list-group">
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;">Cliente N°:</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;">CUIT:</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;">IVA Resp. Inscripto:</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;"><br></li>
+                                </ul>            
+                            </td>
+                            <td style="text-align: left; width: 18%;border-top-style:none">
+                                <ul class="list-group">
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;">{{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('cliente_id')->get('0')}}</li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;"><br></li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;"><br></li>
+                                    <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.1em;border-style:none;"><br></li>
+                                </ul>            
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </header>
+
+    <footer>
+        <table class="table table-sm" style="font-size: 11px;font-weight: normal;padding: 0 3em">
+            <tr>
+                <td style="border-top-style:none;">
+                    <ul class="list-group">
+                        <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;"><br></li>
+                        <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;">
+                            <div class="d-flex w-100 justify-content-between">
+                                <span class="encabezado mb-1"><strong>Condiciones*</strong></span>
+                            </div>
+                            <p class="mb-1">
+                                <br>{{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('condiciones')->get('0')}}
+                            </p>
+                            <small class="text-muted">*Provistas por el cliente.</small>
+                        </li>
+                        <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;">
+                            <div class="d-flex w-100 justify-content-between">
+                                <span class="encabezado mb-1">Observaciones</span>
+                            </div>
+                            <p class="mb-1">
+                                <br>{{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('observaciones')->get('0')}}
+                            </p>
+                        </li>
+                    </ul>
+                    <p class=" text-right">Documento PDF generado por: {{auth()->user()->name}}</p>
+                </td>
+            </tr>
+        </table>
+    </footer>
+
+    <div class="container" style="width:100%;padding: 0;font-size:11px;">
+        <table class="table table-sm" style="">
+            <thead>
+              <tr style="border-bottom: 1px solid">
+                <th scope="col" style="border-top-style:none;border-bottom-style:none;">Item</th>
+                <th scope="col" style="border-top-style:none;border-bottom-style:none;">Producto</th>
+                <th scope="col" style="border-top-style:none;border-bottom-style:none;">Cantidad</th>
+                <th scope="col" style="border-top-style:none;border-bottom-style:none;">Precio Unit.</th>
+                <th scope="col" style="border-top-style:none;border-bottom-style:none;">Importe</th>
+              </tr>
+            </thead>
+            <tbody>
+                @php $i = 0; /*variable contadora del Nº Orden*/@endphp
+                @foreach ($cotizacion->productos as $cotizado)
                     <tr>
-                        <td colspan="4" style="background-color: #ccc; text-align: center;"> IMPORTE TOTAL</td>
-                        <td style="background-color: #ccc; text-align: right;">$ {{number_format($cotizacion->productos->sum('total'), 2, ',', '.')}}</td>
+                        <th scope="row">{{++$i}}</td>
+                        <td>{{--Producto: producto+presentacion--}}
+                            {{$cotizado->producto->droga}}, {{$presentaciones[$cotizado->presentacion_id-1]->forma}} {{$presentaciones[$cotizado->presentacion_id-1]->presentacion}}
+                        </td>
+                        <td style="text-align: right;padding-right: 2em">
+                            {{$cotizado->cantidad}}
+                        </td>
+                        <td style="text-align: right;padding-right: 2em">
+                            $ {{$cotizado->precio}}
+                        </td>
+                        <td style="text-align: right;">
+                            $ {{$cotizado->total}}
+                        </td>
                     </tr>
-                </tbody>
-            </table>
-            <ul class="list-group nueva-linea">
-                <li class="list-group-item">
-                    @php
-                        $montoLetras = new NumberFormatter('es_AR', NumberFormatter::SPELLOUT);
-                        $total = $cotizacion->productos->sum('total');
-                        $total = explode('.', $total);
-                        // SE DETERMINA SI EL TOTAL TIENE CENTAVOS O NO (porque el explode detecta los ceros)
-                        if(sizeof($total)>1)
-                        {
-                            $letras = 'En letras: '. Str::ucfirst($montoLetras->format($total[0])). ' pesos, con ' .Str::ucfirst($montoLetras->format($total[1])). ' centavos.';
-                        }
-                        else
-                        {
-                            $letras = 'En letras: '. Str::ucfirst($montoLetras->format($total[0])). ' pesos, con cero centavos.';
-                        }
-                    @endphp
-                    <strong style="font-size: 11px">{{$letras}}</strong>
-                    <p>ACLARACIÓN: La presente cotización, no incluye precios con IVA.</p>
-                </li>
-            </ul>
-        </div>
-        <div class="card-footer" style="background-color: #fff;">
-            {{-- PIE DE PÁGINA --}}
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <div class="d-flex w-100 justify-content-between">
-                        <span class="encabezado mb-1">Condiciones*</span>
-                    </div>
-                    <p class="mb-1">
-                        {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('condiciones')->get('0')}}
-                    </p>
-                    <small class="text-muted">*Provistas por el cliente.</small>
-                </li>
-
-                <li class="list-group-item">
-                    <div class="d-flex w-100 justify-content-between">
-                        <span class="encabezado mb-1">Observaciones</span>
-                    </div>
-                    <p class="mb-1">
-                        {{$cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('observaciones')->get('0')}}
-                    </p>
-                </li>
-            </ul>
-
-            <p class=" text-right">Documento PDF generado por: {{auth()->user()->name}}</p>
-        </div>
+                @endforeach 
+                <br>
+                <tr style="border-top: 1px solid">
+                    <td colspan="3" style="border-top-style:none; text-align: center;"></td>
+                    <td style="text-align: right;border-top-style:none;border-left: 1px solid;border-bottom: 1px solid">
+                        <ul class="list-group">
+                            <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"><br></li>
+                            <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Neto:</li>
+                            <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">IVA:</li>
+                            <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">Total:</li>
+                        </ul> 
+                    </td>
+                    <td style="border-top-style:none;border-bottom: 1px solid;border-right: 1px solid; text-align: right;">
+                        <ul class="list-group">
+                            <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;"><br></li>
+                            <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">$ {{$cotizacion->productos->sum('total')}}</li>
+                            <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">$ 0</li>
+                            <li class="list-group-item" style="padding: 0.1em 0.1em 0.1em 1.3em;border-style:none;">$ {{$cotizacion->productos->sum('total')}}</li>
+                        </ul> 
+                    </td>
+                </tr>
+            </tbody>
+          </table>
     </div>
 
-    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+    <script type="text/php">
+        
+
+    </script>
 </body>
 </html>
