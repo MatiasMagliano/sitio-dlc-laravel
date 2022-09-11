@@ -50,7 +50,7 @@
                             <th>Identificador</th>
                             <th>Cliente</th>
                             <th>ESTADO</th>
-                            <th>ACCIONES</th>
+                            <th>ACCIONES <br><span class="small">Ver | cotización | provisión</span></th>
                         </tr>
                     </thead>
                     <tbody>
