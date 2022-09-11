@@ -4,7 +4,7 @@
 }
 
 body{
-    margin: 7.5cm 1.25cm 3cm 1.25cm;
+    margin: 7.5cm 1.25cm 4cm 1.25cm;
 }
 
 header{
@@ -21,7 +21,7 @@ header{
 
 footer{
     position: fixed;
-    bottom: 0cm;
+    bottom: 1cm;
     left: 0cm;
     right: 0cm;
     height: 4cm;
@@ -29,4 +29,22 @@ footer{
     color: white;
     text-align: center;
     line-height: 11px;
+}
+
+.list-data{
+    padding: 0.1em 0.1em 0.1em 1.3em;
+    border-style:none;
+}
+
+.list-data-header{
+    padding: 0.1em 0.1em 0.1em 1.1em;
+    border-style:none;
+}
+
+.list-data-footer{
+    padding: 0.1em;
+    margin-left: -3.7em;
+    border: black;
+    padding-left: 1em;
+    padding-top: 0.5em
 }
