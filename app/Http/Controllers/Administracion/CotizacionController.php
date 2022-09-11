@@ -359,7 +359,7 @@ class CotizacionController extends Controller
                 $cotizacion->save();
             }
              
-            return $pdf->stream('cotizacion_' . $cotizacion->identificador . '.pdf');
+            return $pdf->download('cotizacion_' . $cotizacion->identificador . '.pdf');
         } else {
             $request->session()->flash('error', 'La cotización aún no ha terminado de agregar líneas. Por favor finalice la cotización para descargar el PDF.');
             return redirect('/administracion/cotizaciones/');
