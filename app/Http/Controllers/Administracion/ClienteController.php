@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\DireccionEntrega;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\EsquemaPrecio;
 use App\Rules\ValidacionAfip;
 use Illuminate\Support\Facades\DB;
 
@@ -48,14 +49,10 @@ class ClienteController extends Controller
             'nombre_corto'  => 'unique:clientes|required|max:30',
             'razon_social'  => 'required|max:255',
             'tipo_afip'     => 'required',
-            'afip'          => ['required', new ValidacionAfip],
+            'afip'          => ['unique:clientes','required', new ValidacionAfip],
             'contacto'      => 'required|max:50',
             'telefono'      => 'required|string|max:20',
             'email'         => 'required|email|max:50',
-        ]);
-
-        // validación de los datos de entrega
-        $datosEntrega = $request->validate([
             'lugar_entrega' => 'required|max:255',
             'domicilio'     => 'required|max:255',
             'provincia_id'  => 'required|integer',
@@ -73,6 +70,15 @@ class ClienteController extends Controller
         $nuevaEntrega->condiciones = $request->condiciones;
         $nuevaEntrega->observaciones = $request->observaciones;
         $nuevaEntrega->save();
+
+        $nuevoEsquema = new EsquemaPrecio;
+        $nuevoEsquema->cliente_id = $cliente->id;
+        $nuevoEsquema->porcentaje_1 = $request->esquema[0];
+        $nuevoEsquema->porcentaje_2 = $request->esquema[1];
+        $nuevoEsquema->porcentaje_3 = $request->esquema[2];
+        $nuevoEsquema->porcentaje_4 = $request->esquema[3];
+        $nuevoEsquema->porcentaje_5 = $request->esquema[4];
+        $nuevoEsquema->save();
 
         $request->session()->flash('success', 'El registro de cliente se ha creado con éxito.');
         return redirect(route('administracion.clientes.index'));

@@ -44,33 +44,33 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-    @section('plugins.inputmask', true)
-    <form action="{{ route('administracion.clientes.store') }}" method="post" class="needs-validation" autocomplete="off"
-        novalidate>
-        @csrf
+@section('plugins.inputmask', true)
+<form action="{{ route('administracion.clientes.store') }}" method="post" class="needs-validation" autocomplete="off"
+    novalidate>
+    @csrf
 
-        <div class="card">
-            <div class="card-header">
-                <div class="row d-flex">
-                    <div class="col-10 texto-header">
-                        <h5>Nuevo cliente</h5>
-                        <p>Un nuevo cliente, corresponde a un nuevo punto de venta, independientemente de los puntos de
-                            entrega. Ingrese los valores correspondientes a un nuevo cliente. Si desea agregar un nuevo
-                            punto de entrega, vaya a la sección <a
-                                href="{{ route('administracion.clientes.agregarPuntoEntrega') }}">Cliente/Agregar puntos de
-                                entrega</a>.</p>
-                    </div>
-                    <div class="col-2 text-right">
-                        <button type="submit" class="btn btn-sidebar btn-success"><i
-                                class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span></button>
-                    </div>
+    <div class="card">
+        <div class="card-header">
+            <div class="row d-flex">
+                <div class="col-10 texto-header">
+                    <h5>Nuevo cliente</h5>
+                    <p>A cada nuevo cliente le corresponde un nuevo punto de entrega. Ingrese los valores
+                        correspondientes a un nuevo cliente. Si desea agregar un nuevo
+                        punto de entrega, vaya a la sección <a
+                            href="{{ route('administracion.clientes.agregarPuntoEntrega') }}">Cliente/Agregar puntos de
+                            entrega</a>.</p>
+                </div>
+                <div class="col-2 text-right">
+                    <button type="submit" class="btn btn-sidebar btn-success"><i
+                            class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span></button>
                 </div>
             </div>
-            <div class="card-body">
-                @include('administracion.clientes.partials.formulario')
-            </div>
         </div>
-    </form>
+        <div class="card-body">
+            @include('administracion.clientes.partials.formulario')
+        </div>
+    </div>
+</form>
 @endsection
 @section('js')
 @include('partials.alerts')
@@ -78,7 +78,13 @@
 <script>
     $(document).ready(function() {
         $('#input-afip').inputmask("9{2}-9{8}-9{1}");
-        $('#input-telefono').inputmask({"mask": "09{3}-9{7}"});
+        $('#input-telefono').inputmask({
+            "mask": "09{3}-9{7}"
+        });
+
+        $("#sin_esquema").change(function() {
+                $('#cuerpo_esquema').toggleClass('overlay');
+            });
     });
 
     var localidad = new SlimSelect({

@@ -45,7 +45,7 @@
             <thead class="bg-gray">
                 <th>Forma</th>
                 <th>Presentación</th>
-                <th>Alta</th>
+                <th>F. Alta</th>
                 <th>Productos relacionados</th>
             </thead>
             <tbody>
@@ -63,8 +63,8 @@
                             @endif
                         </td>
                         <td>{{ $presentacion->presentacion }}</td>
-                        <td>{{ $presentacion->created_at->format('d/m/Y') }}</td>
-                        <td>
+                        <td class="align-middle text-center">{{ $presentacion->created_at->format('d/m/Y') }}</td>
+                        <td class="align-middle text-center">
                             <a role="button" id="{{$presentacion->id}}|{{$presentacion->forma}} {{$presentacion->presentacion}}" class="btn btn-link"
                                 data-toggle="modal" data-target="#modalVerProductos">
                                 <i class="fas fa-search "></i>

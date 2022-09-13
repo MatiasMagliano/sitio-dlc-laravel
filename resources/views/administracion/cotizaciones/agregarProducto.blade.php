@@ -35,7 +35,6 @@
                 display: none;
             }
         }
-
     </style>
 @endsection
 
@@ -103,8 +102,16 @@
                         <table id="tablaPreciosSugeridos" class="table table-responsive-md table-bordered table-condensed" width="100%">
                             <thead>
                                 <th>Proveedor</th>
-                                <th>Desct. al {{$porcentaje->porcentaje_1}}%</th>
-                                <th>Desct. al {{$porcentaje->porcentaje_2}}%</th>
+                                @if ($porcentaje->porcentaje_1 != 0)
+                                    <th>Desct. al {{$porcentaje->porcentaje_1}}%</th>
+                                @else
+                                    <th>SIN DESCUENTO</th>
+                                @endif
+                                @if ($porcentaje->porcentaje_2 != 0)
+                                    <th>Desct. al {{$porcentaje->porcentaje_2}}%</th>
+                                @else
+                                    <th>SIN DESCUENTO</th>
+                                @endif
                                 @if ($porcentaje->porcentaje_3 != 0)
                                     <th>Desct. al {{$porcentaje->porcentaje_3}}%</th>
                                 @else

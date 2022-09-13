@@ -14,7 +14,7 @@
 @endsection
 
 @section('content_header')
-    <h1>Tablero inicial</h1>
+    <h1>INICIO</h1>
 @stop
 
 @section('content')
@@ -65,7 +65,7 @@
             <div class="small-box bg-gradient-danger">
                 <div class="inner">
                     <h3>{{ $vencimientos[0]->proximos }}</h3>
-                    <p>Productos a vencer en los proximos 30 días</p>
+                    <p>Productos por vencer, a 30 días</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-calendar-alt"></i>
@@ -76,88 +76,88 @@
         </div>
     </div>
 
-    {{-- GRAFICO DE COTIZACIONES POR CLIENTE --}}
+    {{-- GRAFICOS JS-CHART --}}
 @section('plugins.Chartjs', true)
-    <div class="row">
+<div class="row">
 
-        {{-- GRAFICO TOP-10 CLIENTES --}}
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-gradient-gray-dark">
-                    <h3 class="card-title">
-                        Top-10 cotizaciones por cliente
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
-                        <div class="chartjs-size-monitor">
-                            <div class="chartjs-size-monitor-expand">
-                                <div class=""></div>
-                            </div>
-                            <div class="chartjs-size-monitor-shrink">
-                                <div class=""></div>
-                            </div>
-                        </div>
-                        <canvas id="top-ten-clientes" height="400"
-                            style="height: 400px; display: block; width: 901px;" width="901"
-                            class="chartjs-render-monitor"></canvas>
-                    </div>
-                </div>
+    {{-- GRAFICO TOP-10 CLIENTES --}}
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-gradient-gray-dark">
+                <h3 class="card-title">
+                    Top-10 cotizaciones por cliente
+                </h3>
             </div>
-        </div>
-
-        {{-- GRAFICO APROBADAS vs RECHAZADAS --}}
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-gradient-gray-dark">
-                    <h3 class="card-title">
-                        Cotizaciones aprobadas vs rechazadas
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
-                        <div class="chartjs-size-monitor">
-                            <div class="chartjs-size-monitor-expand">
-                                <div class=""></div>
-                            </div>
-                            <div class="chartjs-size-monitor-shrink">
-                                <div class=""></div>
-                            </div>
+            <div class="card-body">
+                <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
+                    <div class="chartjs-size-monitor">
+                        <div class="chartjs-size-monitor-expand">
+                            <div class=""></div>
                         </div>
-                        <canvas id="cantidad-aprobRechaz" height="400"
-                            style="height: 400px; display: block; width: 25rem; margin: auto;" width="901"
-                            class="chartjs-render-monitor"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- GRAFICO PÉRDIDAS POR VENCIMIENTOS --}}
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-gradient-gray-dark">
-                    <h3 class="card-title">
-                        Pérdidas por vencimientos
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
-                        <div class="chartjs-size-monitor">
-                            <div class="chartjs-size-monitor-expand">
-                                <div class=""></div>
-                            </div>
-                            <div class="chartjs-size-monitor-shrink">
-                                <div class=""></div>
-                            </div>
+                        <div class="chartjs-size-monitor-shrink">
+                            <div class=""></div>
                         </div>
-                        <canvas id="perdida-vencimiento" height="400"
-                            style="height: 400px; display: block; width: 901px;" width="901"
-                            class="chartjs-render-monitor"></canvas>
                     </div>
+                    <canvas id="top-ten-clientes" height="400"
+                        style="height: 400px; display: block; width:100%; margin: auto;" width="901"
+                        class="chartjs-render-monitor"></canvas>
                 </div>
             </div>
         </div>
     </div>
+
+    {{-- GRAFICO APROBADAS vs RECHAZADAS --}}
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-gradient-gray-dark">
+                <h3 class="card-title">
+                    Cotizaciones aprobadas vs rechazadas
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
+                    <div class="chartjs-size-monitor">
+                        <div class="chartjs-size-monitor-expand">
+                            <div class=""></div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink">
+                            <div class=""></div>
+                        </div>
+                    </div>
+                    <canvas id="cantidad-aprobRechaz" height="400"
+                        style="height: 400px; display: block; width: 25rem; margin: auto;" width="901"
+                        class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- GRAFICO PÉRDIDAS POR VENCIMIENTOS --}}
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-gradient-gray-dark">
+                <h3 class="card-title">
+                    Pérdidas por vencimientos
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
+                    <div class="chartjs-size-monitor">
+                        <div class="chartjs-size-monitor-expand">
+                            <div class=""></div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink">
+                            <div class=""></div>
+                        </div>
+                    </div>
+                    <canvas id="perdida-vencimiento" height="400"
+                        style="height: 400px; display: block; width:100%; margin: auto;" width="901"
+                        class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -179,6 +179,8 @@
                 }],
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: false,
@@ -214,6 +216,8 @@
                 }],
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: false,
@@ -229,13 +233,12 @@
             type: "bar",
             data: {
                 labels: chartjData.label,
-                datasets: [
-                    {
+                datasets: [{
                     label: "Oportunidad de pérdida por venta al costo previo al vencimiento",
                     data: chartjData.dataOportunidad,
                     backgroundColor: "rgba(0, 191, 111, 0.8)",
                     stack: 1
-                },{
+                }, {
                     label: "Perdida por vencimiento",
                     data: chartjData.dataPerdida,
                     backgroundColor: "rgba(221, 191, 111, 0.8)",
@@ -243,6 +246,8 @@
                 }],
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: false,

@@ -12,8 +12,8 @@
             </a>
             @if ($cotizacion->archivos()->exists())
                 <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'provision']) }}"
-                    class="btn btn-default" target="_blank" data-toggle="tooltip" data-placement="bottom" title="Descargar provisión">
-                    <i class="fas fa-file-search"></i>
+                    class="btn btn-link" target="_blank" data-toggle="tooltip" data-placement="bottom" title="Descargar provisión">
+                    <i class="fas fa-arrow-down"></i>
                 </a>
             @else
                 <div class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="No se adjuntó provisión">

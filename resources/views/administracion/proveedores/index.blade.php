@@ -30,10 +30,10 @@
 
         @foreach ($proveedores as $proveedor)
             <tr>
-                <td width="200px" style="vertical-align: middle;">{{ $proveedor->razon_social }}</td>
-                <td width="200px" style="vertical-align: middle;">{{ $proveedor->cuit }}</td>
-                <td width="200px" style="vertical-align: middle;">{{ $proveedor->contacto }}</td>
-                <td width="200px" style="vertical-align: middle;">{{ $proveedor->direccion }}</td>
+                <td width="200px" class="align-middle">{{ $proveedor->razon_social }}</td>
+                <td width="200px" class="align-middle text-center">{{ $proveedor->cuit }}</td>
+                <td width="200px" class="align-middle">{{ $proveedor->contacto }}</td>
+                <td width="200px" class="align-middle">{{ $proveedor->direccion }}</td>
             </tr>
         @endforeach
     </table>

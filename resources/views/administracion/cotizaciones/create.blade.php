@@ -28,12 +28,13 @@
 {{-- aquí va contenido --}}
 @section('content')
     <x-adminlte-card>
-        <form action="{{ route('administracion.cotizaciones.store') }}" method="post" class="needs-validation" autocomplete="off" novalidate>
+        <form action="{{ route('administracion.cotizaciones.store') }}" method="post" class="needs-validation m-3" autocomplete="off" novalidate>
             @csrf
 
             <input type="hidden" name="user_id" value="{{ Auth::id() }}">
 
             <h6 class="heading-small text-muted mb-4">Datos básicos de la cotización</h6>
+            <hr>
             <div class="pl-lg-4">
                 <div class="form-group">
                     <label for="input-identificador">Identificador</label>
