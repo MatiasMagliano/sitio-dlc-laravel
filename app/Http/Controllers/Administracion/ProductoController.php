@@ -23,13 +23,79 @@ class ProductoController extends Controller
     {
         $productos = Producto::sortable(['droga' => 'asc'])->paginate(5);
         return view('administracion.productos.index', compact('productos'));
+        //return view('administracion.productos.index-dt');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function ajaxdt(Request $request)
+    {
+        $search = $request->query('search', array('value' => '', 'regex' => false));
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(2, 'asc'));
+
+        $filter = $search['value'];
+
+        $sortColumns = array(
+            0 => 'droga',
+            1 => 'presentacion',
+            2 => 'hosp-traz',
+            3 => 'lotes',
+            4 => 'proveedores',
+            4 => 'existencia',
+            5 => 'cotizacion',
+            6 => 'disponible'
+        );
+
+        // QUERY COMPLETA DE COTIZACIONES
+        $query = Producto::join('lote_presentacion_producto', 'lote_presentacion_producto.producto_id', '=', 'productos.id')
+            ->join('presentacions', 'lote_presentacion_producto.presentacion_id', '=', 'presentacions.id')
+            ->join('', '', '', '')
+            ->whereIn('cotizacions.estado_id', [4, 5])
+            ->select(
+                'cotizacions.*',
+                'clientes.razon_social',
+                'cotizacions.created_at as creacion',
+                'cotizacions.updated_at as modificacion',
+                'estados.estado',
+            );
+
+        if (!empty($filter)) {
+            $query->where('cotizacions.identificador', 'like', '%' . $filter . '%');
+        }
+
+        $recordsTotal = $query->count();
+
+        $sortColumnName = $sortColumns[$order[0]['column']];
+
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $json = array(
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        );
+
+        $cotizaciones = $query->get();
+
+        foreach ($cotizaciones as $cotizacion) {
+
+            $json['data'][] = [
+                $cotizacion->created_at,
+                $cotizacion->updated_at,
+                $cotizacion->identificador,
+                $cotizacion->cliente->razon_social,
+                '<span class="badge badge-secondary">'. $cotizacion->estado .'</span>',
+                view('administracion.cotizaciones.partials.acciones', ['cotizacion' => $cotizacion])->render(),
+            ];
+        }
+
+        return $json;
+    }
+
     public function create()
     {
         $presentaciones = Presentacion::select('id', 'forma', 'presentacion')->orderby('forma', 'ASC')->get();
@@ -85,8 +151,8 @@ class ProductoController extends Controller
             $lote->fecha_compra = Carbon::createFromFormat('d/m/Y', $request->fecha_compra);
             $lote->fecha_vencimiento = Carbon::createFromFormat('d/m/Y', $request->fecha_vencimiento);
             $lote->save();
-            
-            
+
+
             // se crea una nueva relación con TODOS LOS DATOS y guarda el modelo producto
             $producto->save();
             // ACÁ MATI AGREGAR LA LÓGICA DE PROVEEDOR/LISTA
@@ -98,7 +164,7 @@ class ProductoController extends Controller
             $listaDePrecios->proveedor_id = $request->proveedor;
             $listaDePrecios->codigoProv = $request->codigoProv;
             $listaDePrecios->costo = $request->precio_compra;
- 
+
             $listaDePrecios->save();
 
             $request->session()->flash('success', 'El producto y su lote, se han creado con éxito');

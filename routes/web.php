@@ -54,6 +54,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     // rutas de PRODUCTOS
     Route::get('/productos/ajaxBuscarProductos', [ProductoController::class, 'buscar'])->name('productos.ajax.obtener');
     Route::get('/productos/busqueda', [ProductoController::class, 'busqueda'])->name('productos.busqueda');
+    Route::get('/productos/ajaxdt', [ProductoController::class, 'ajaxdt'])->name('productos.ajax');
     Route::resource('/productos', ProductoController::class)->except('show');
     Route::get('/productos/{producto_id}/show/{presentacion_id}', [ProductoController::class, 'show'])->name('productos.show');
 
