@@ -37,7 +37,7 @@
             <hr>
             <div class="pl-lg-4">
                 <div class="form-group">
-                    <label for="input-identificador">Identificador</label>
+                    <label for="input-identificador">Identificador *</label>
                     <input type="text" name="identificador" id="input-identificador"
                         class="form-control @error('identificador') is-invalid @enderror"
                         placeholder="Identificador de licitación provisto por el cliente"
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="input-cliente">Cliente</label>
+                    <label for="input-cliente">Cliente *</label>
                     <select name="cliente_id" id="input-cliente"
                         class="selecion-cliente form-control-alternative @error('cliente_id') is-invalid @enderror">
                         <option data-placeholder="true"></option>

@@ -127,7 +127,7 @@
                             <div class="row">
                                 <div class="form-group col-md-4 mb-3">
                                     <label for="identificador"
-                                        class="label">Identificador/Nº de Lote</label>
+                                        class="label">Identificador/Nº de Lote *</label>
                                     <div class="input-group mb-3">
                                         <input type="text" name="identificador" id="identificador" class="form-control"
                                             value="" required>
@@ -136,12 +136,12 @@
 
                                 <div class="form-group col-md-4 mb-3">
                                     <label for="cantidad"
-                                        class="label">Cantidad</label>
+                                        class="label">Cantidad *</label>
                                     <input type="text" name="cantidad" id="cantidad" class="form-control" value="" required>
                                 </div>
 
                                 <div class="form-group col-md-4 mb-3">
-                                    <label for="precio_compra" class="label">Precio de compra</label>
+                                    <label for="precio_compra" class="label">Precio de compra *</label>
                                     <input type="text" name="precio_compra" id="precio_compra" class="form-control" value="" required>
                                 </div>
                             </div>
@@ -152,7 +152,7 @@
 
                                 <div class="form-group col-md-4 mb-3">
                                     <x-adminlte-input-date name="fecha_compra" id="fecha_compra"
-                                        label="Fecha de compra" igroup-size="md"
+                                        label="Fecha compra *" igroup-size="md"
                                         :config="$config" placeholder="{{ __('formularios.date_placeholder') }}"
                                         autocomplete="off" required>
                                         <x-slot name="appendSlot">
@@ -165,7 +165,7 @@
 
                                 <div class="form-group col-md-4 mb-3">
                                     <x-adminlte-input-date name="fecha_elaboracion" id="fecha_elaboracion"
-                                        label="Fecha de elaboración" igroup-size="md"
+                                        label="Fecha elaboración *" igroup-size="md"
                                         :config="$config" placeholder="{{ __('formularios.date_placeholder') }}"
                                         autocomplete="off" required>
                                         <x-slot name="appendSlot">
@@ -178,7 +178,7 @@
 
                                 <div class="form-group col-md-4 mb-3">
                                     <x-adminlte-input-date name="fecha_vencimiento" id="fecha_vencimiento"
-                                        label="Fecha de vencimiento" igroup-size="md"
+                                        label="Fecha vencimiento *" igroup-size="md"
                                         :config="$config_vencimiento" placeholder="{{ __('formularios.date_placeholder') }}"
                                         autocomplete="off" required>
                                         <x-slot name="appendSlot">

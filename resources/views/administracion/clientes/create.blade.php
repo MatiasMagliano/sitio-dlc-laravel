@@ -93,6 +93,7 @@
     });
 
     var provincia = new SlimSelect({
+        hideSelectedOption: true,
         select: '.selector-provincia',
         placeholder: 'Seleccione una provincia',
         onChange: (info) => {
@@ -101,7 +102,7 @@
     });
 
     function getLocalidades(provinciaSeleccionada) {
-        //debugger;
+        //localidad.empty();
         let datos = {
             provincia_id: provinciaSeleccionada.value,
         };
