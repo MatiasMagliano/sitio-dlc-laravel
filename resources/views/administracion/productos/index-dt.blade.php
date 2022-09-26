@@ -23,22 +23,6 @@
     @section('plugins.TempusDominusBs4', true)
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('administracion.productos.busqueda') }}" method="GET" role="search">
-                @csrf
-                <div class="form-inline row d-flex justify-content-end">
-                    <div class="input-group col-md-3">
-                        <input type="text" class="form-control" name="termino" id="termino"
-                            placeholder="Buscar por droga" aria-label="Búsqueda por droga o presentación"
-                            aria-describedby="boton-busqueda">
-                        <div class="input-group-append" id="boton-busqueda">
-                            <button class="btn btn-primary" type="submit">Buscar</button>
-                            <a href="{{ route('administracion.productos.index') }}" role="button"
-                                class="btn btn-secondary">Limpiar</a>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <br>
             <table id="tabla-productos" class="table table-bordered table-responsive-md" width="100%">
                 <thead class="bg-gray">
                     <th>Droga</th>
@@ -49,6 +33,7 @@
                     <th>Existencia</th>
                     <th>Cotizado</th>
                     <th>Disponible</th>
+                    <th></th>
                 </thead>
                 <tbody>
                 </tbody>
@@ -69,39 +54,6 @@
                     url: "{{ route('administracion.productos.ajax') }}",
                     method: "GET"
                 },
-                "columnDefs": [
-                    {
-                        'targets': [0],
-                        'class': 'align-middle text-center',
-                        'render': function (data) {
-                            return moment(new Date(data)).format("DD/MM/YYYY");
-                        }
-                    },
-                    {
-                        'targets': [1],
-                        'class': 'align-middle text-center',
-                        'render': function (data) {
-                            return moment(new Date(data)).format("DD/MM/YYYY");
-                        }
-                    },
-                    {
-                        'targets': [2],
-                        'class': 'align-middle text-center',
-                    },
-                    {
-                        'targets': [3],
-                        'class': 'align-middle',
-                    },
-                    {
-                        'targets': [4],
-                        'class': 'align-middle text-center',
-                    },
-
-                    {
-                        'targets': [5],
-                        'class': 'align-middle text-center',
-                    },
-                ],
             });
         });
     </script>

@@ -34,7 +34,7 @@ return [
     'calendars'                     => 'Calendarios',
     'lists'                         => 'Listados',
     'price_list'                    => 'Precios',
-    'quotation_list'                => 'Lista últimas cotizaciones',
+    'quotation_list'                => 'Últimas cotizaciones',
     'add_quotation'                 => 'Crear cotización',
     'quotation_history'             => 'Histórico cotizaciones',
 ];

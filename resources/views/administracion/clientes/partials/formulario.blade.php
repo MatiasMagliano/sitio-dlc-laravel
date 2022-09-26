@@ -158,32 +158,32 @@
 
     <div class="card">
         <div class="card-header">
-            <h6 class="heading-small text-muted">Esquema de precios - POR TERMINAR</h6>
+            <h6 class="heading-small text-muted">Esquema de precios - Descuento en %</h6>
         </div>
         <div class="card-body">
             <div class="row d-flex justify-content-center">
                 <div class="form-group col-lg-2 col-md-6 m-3 ">
-                    <label for="input-esquema">Desc. 1</label>
+                    <label for="input-esquema">Descuento 1</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
                         name="esquema[]" id="input-esquema" value="0">
                 </div>
                 <div class="form-group col-lg-2 col-md-6 m-3">
-                    <label for="input-esquema">Desc. 2</label>
+                    <label for="input-esquema">Descuento 2</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
                         name="esquema[]" id="input-esquema" value="0">
                 </div>
                 <div class="form-group col-lg-2 col-md-6 m-3">
-                    <label for="input-esquema">Desc. 3</label>
+                    <label for="input-esquema">Descuento 3</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
                         name="esquema[]" id="input-esquema" value="0">
                 </div>
                 <div class="form-group col-lg-2 col-md-6 m-3">
-                    <label for="input-esquema">Desc. 4</label>
+                    <label for="input-esquema">Descuento 4</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
                         name="esquema[]" id="input-esquema" value="0">
                 </div>
                 <div class="form-group col-lg-2 col-md-6 m-3">
-                    <label for="input-esquema">Desc. 5</label>
+                    <label for="input-esquema">Descuento 5</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
                         name="esquema[]" id="input-esquema" value="0">
                 </div>

@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductoRequest;
 use App\Models\ListaPrecio;
 use App\Models\Lote;
+use App\Models\LotePresentacionProducto;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductoController extends Controller
 {
@@ -32,7 +34,7 @@ class ProductoController extends Controller
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
-        $order = $request->query('order', array(2, 'asc'));
+        $order = $request->query('order', array(0, 'asc'));
 
         $filter = $search['value'];
 
@@ -48,20 +50,25 @@ class ProductoController extends Controller
         );
 
         // QUERY COMPLETA DE COTIZACIONES
-        $query = Producto::join('lote_presentacion_producto', 'lote_presentacion_producto.producto_id', '=', 'productos.id')
+        $query = LotePresentacionProducto::join('productos', 'lote_presentacion_producto.producto_id', '=', 'productos.id')
             ->join('presentacions', 'lote_presentacion_producto.presentacion_id', '=', 'presentacions.id')
-            ->join('', '', '', '')
-            ->whereIn('cotizacions.estado_id', [4, 5])
+            ->join('lotes', 'lote_presentacion_producto.lote_id', '=', 'lotes.id')
+            ->join('lista_precios', 'lista_precios.producto_id', '=', 'productos.id')
+            ->join('proveedors', 'lista_precios.proveedor_id', '=', 'proveedors.id')
+            ->join('deposito_casa_centrals', 'lote_presentacion_producto.dcc_id', '=', 'deposito_casa_centrals.id')
             ->select(
-                'cotizacions.*',
-                'clientes.razon_social',
-                'cotizacions.created_at as creacion',
-                'cotizacions.updated_at as modificacion',
-                'estados.estado',
+                'productos.droga',
+                DB::raw('CONCAT(presentacions.forma, " ", presentacions.presentacion) as presentacion'),
+                'presentacions.hospitalario',
+                'presentacions.trazabilidad',
+                DB::raw('CONCAT(lotes.identificador, " - vto: ", date_format(lotes.fecha_vencimiento, "%d/%m/%Y")) as lotes'),
+                'proveedors.razon_social',
+                'deposito_casa_centrals.existencia',
+                'deposito_casa_centrals.cotizacion',
+                'deposito_casa_centrals.disponible',
             );
-
         if (!empty($filter)) {
-            $query->where('cotizacions.identificador', 'like', '%' . $filter . '%');
+            $query->where('productos.droga', 'like', '%' . $filter . '%');
         }
 
         $recordsTotal = $query->count();
@@ -79,17 +86,20 @@ class ProductoController extends Controller
             'data' => [],
         );
 
-        $cotizaciones = $query->get();
+        $productos = $query->get();
 
-        foreach ($cotizaciones as $cotizacion) {
+        foreach ($productos as $producto) {
 
             $json['data'][] = [
-                $cotizacion->created_at,
-                $cotizacion->updated_at,
-                $cotizacion->identificador,
-                $cotizacion->cliente->razon_social,
-                '<span class="badge badge-secondary">'. $cotizacion->estado .'</span>',
-                view('administracion.cotizaciones.partials.acciones', ['cotizacion' => $cotizacion])->render(),
+                $producto->droga,
+                $producto->presentacion,
+                view('administracion.productos.partials.hosp-traz', ['producto' => $producto])->render(),
+                $producto->lotes,
+                $producto->razon_social,
+                $producto->existencia,
+                $producto->cotizacion,
+                $producto->disponible,
+                view('administracion.productos.partials.acciones', ['producto' => $producto])->render(),
             ];
         }
 
@@ -131,15 +141,15 @@ class ProductoController extends Controller
         $producto = new Producto;
         $producto->droga = $request->droga;
 
-        if(!$request->sin_lote){
+        if (!$request->sin_lote) {
             $hoy = Carbon::now()->format('d/m/Y');
             $request->validate([
                 'identificador' => 'required|unique:lotes|max:20',
                 'precio_compra' => 'required|numeric|max:5000',
                 'cantidad' => 'required|numeric|min:1|max:50000',
-                'fecha_elaboracion' => 'required|date_format:d/m/Y|before:'.$hoy,
-                'fecha_compra' => 'required|date_format:d/m/Y|before:'.$hoy,
-                'fecha_vencimiento' => 'required|date_format:d/m/Y|after:'.$hoy,
+                'fecha_elaboracion' => 'required|date_format:d/m/Y|before:' . $hoy,
+                'fecha_compra' => 'required|date_format:d/m/Y|before:' . $hoy,
+                'fecha_vencimiento' => 'required|date_format:d/m/Y|after:' . $hoy,
             ]);
 
             // se genera el lote
@@ -156,7 +166,7 @@ class ProductoController extends Controller
             // se crea una nueva relación con TODOS LOS DATOS y guarda el modelo producto
             $producto->save();
             // ACÁ MATI AGREGAR LA LÓGICA DE PROVEEDOR/LISTA
-            $idProducto = Producto::select('id')->where('droga','=',$request->droga)->first();
+            $idProducto = Producto::select('id')->where('droga', '=', $request->droga)->first();
 
             $listaDePrecios = new ListaPrecio;
             $listaDePrecios->producto_id = $idProducto->id;
@@ -228,9 +238,9 @@ class ProductoController extends Controller
         // hace un softdelete sobre producto
         $borrado = Producto::destroy($id);
 
-        if(!$borrado){
+        if (!$borrado) {
             $request->session()->flash('error', 'Ocurrió un error al intentar borrar el producto');
-        }else{
+        } else {
             $request->session()->flash('success', 'El producto ha sido eliminado correctamente');
         }
 
@@ -243,7 +253,7 @@ class ProductoController extends Controller
     public function buscar(Request $request)
     {
         if ($request->has('droga')) {
-            $rta = Producto::where('droga','like','%'.$request->input('droga').'%')->get();
+            $rta = Producto::where('droga', 'like', '%' . $request->input('droga') . '%')->get();
             return response()->json($rta);
         }
 
@@ -253,19 +263,15 @@ class ProductoController extends Controller
     public function busqueda(Request $request)
     {
         $termino = $request->input('termino');
-        if($termino != "")
-        {
-            $productos = Producto::where('droga','like','%'.$request->termino.'%')->paginate(10);
+        if ($termino != "") {
+            $productos = Producto::where('droga', 'like', '%' . $request->termino . '%')->paginate(10);
 
             // ESTA LÍNEA ES LA SALVADORA!!! Se utiliza para que los links de paginación no vuelvan al listado original
             $productos->appends(['termino' => $termino]);
 
-            if(count($productos))
-            {
+            if (count($productos)) {
                 return view('administracion.productos.index', compact('productos'));
-            }
-            else
-            {
+            } else {
                 $request->session()->flash('error', 'La búsqueda no dio resultado.');
                 return redirect(route('administracion.productos.index'));
             }

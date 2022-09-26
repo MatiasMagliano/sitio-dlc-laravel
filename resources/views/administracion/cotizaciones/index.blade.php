@@ -27,7 +27,7 @@
 @section('content_header')
     <div class="row">
         <div class="col-xl-8">
-            <h1>Administración de cotizaciones</h1>
+            <h1>Últimas cotizaciones</h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
             <a href="{{ route('administracion.cotizaciones.create') }}" role="button" class="btn btn-md btn-success">Crear

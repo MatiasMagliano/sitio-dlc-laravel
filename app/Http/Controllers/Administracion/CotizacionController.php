@@ -40,6 +40,7 @@ class CotizacionController extends Controller
     {
         return view('administracion.cotizaciones.historico');
     }
+
     public function historicoCotizaciones(Request $request)
     {
         $search = $request->query('search', array('value' => '', 'regex' => false));
@@ -127,7 +128,7 @@ class CotizacionController extends Controller
     {
         // se valida que los campos estén presentes
         $request->validate([
-            'identificador' => 'required|max:50',
+            'identificador' => 'required|unique:cotizacions,identificador|max:50',
             'cliente_id' => 'required'
         ]);
         // Se valida que no haya una misma validación con el mismo identificador al mismo cliente
@@ -142,6 +143,9 @@ class CotizacionController extends Controller
 
         $request->request->add(['estado_id' => 1]);
         $cotizacion = new Cotizacion($request->all());
+        //traer el punto de entrega
+        // sumarle uno al campo nuevo
+        // guardarlo
         $cotizacion->save();
 
         $request->session()->flash('success', 'Cotización registrada con éxito. Agregue líneas a la cotización.');
@@ -345,10 +349,10 @@ class CotizacionController extends Controller
     public function generarpdf(Cotizacion $cotizacion, Request $request)
     {
         if ($cotizacion->finalizada) {
-            
+
             $presentaciones = Presentacion::all();
             $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout', compact('cotizacion', 'presentaciones'));
-            
+
             $dom_pdf = $pdf->getDomPDF();
             $canvas = $dom_pdf->get_canvas();
             $canvas->page_text(270, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 8, array(0, 0, 0));
@@ -358,16 +362,16 @@ class CotizacionController extends Controller
                 $cotizacion->presentada = Carbon::now();
                 $cotizacion->save();
             }
-             
+
             return $pdf->download('cotizacion_' . $cotizacion->identificador . '.pdf');
         } else {
             $request->session()->flash('error', 'La cotización aún no ha terminado de agregar líneas. Por favor finalice la cotización para descargar el PDF.');
             return redirect('/administracion/cotizaciones/');
         }
-        
+
         //return view('administracion.cotizaciones.pdfLayout');
     }
-    
+
     // public function generapdf(Cotizacion $cotizacion, Request $request)
     // {
     //     if ($cotizacion->finalizada) {
