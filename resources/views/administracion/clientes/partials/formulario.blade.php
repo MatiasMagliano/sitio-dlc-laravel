@@ -6,7 +6,7 @@
     <hr>
     <div class="row d-flex m-3">
         <div class="form-group col">
-            <label for="input-razon_social">Razón social</label>
+            <label for="input-razon_social">Razón social *</label>
             <input type="text" name="razon_social" id="input-razon_social"
                 class="form-control @error('razon_social') is-invalid @enderror"
                 placeholder="Nombre completo del cliente o nombre de fantasía" value="{{ old('razon_social') }}"
@@ -18,7 +18,7 @@
     </div>
     <div class="row d-flex m-3">
         <div class="form-group col-2">
-            <label for="input-nombre_corto">Nombre corto</label>
+            <label for="input-nombre_corto">Nombre corto *</label>
             <input type="text" name="nombre_corto" id="input-nombre_corto"
                 class="form-control @error('nombre_corto') is-invalid @enderror" value="{{ old('nombre_corto') }}">
             @error('nombre_corto')
@@ -27,7 +27,7 @@
         </div>
 
         <div class="form-group col-2">
-            <label for="input-tipo_afip"><span class="hide">Tipo</span> de Inscripción</label>
+            <label for="input-tipo_afip"><span class="hide">Tipo *</span> de Inscripción</label>
             <select name="tipo_afip" id="input-tipo_afip" class="form-control @error('tipo_afip') is-invalid @enderror">
                 <option>Seleccione una opción</option>
                 <option value="cuil" {{ old('tipo_afip') == 'cuil' ? 'selected' : '' }}>CUIL</option>
@@ -38,7 +38,7 @@
             @enderror
         </div>
         <div class="form-group col">
-            <label for="input-afip">Número</label>
+            <label for="input-afip">Número *</label>
             <input type="text" name="afip" id="input-afip"
                 class="form-control @error('afip') is-invalid @enderror" value="{{ old('afip') }}">
             <small id="input-afip-tip" class="form-text text-muted">Ingrese solo números.</small>
@@ -48,11 +48,11 @@
         </div>
     </div>
 
-    <h6 class="heading-small text-muted mb-1 mt-5">Datos de Contacto</h6>
+    <h6 class="heading-small text-muted mb-1 mt-5">Datos de Contacto *</h6>
     <hr>
     <div class="row d-flex m-3">
         <div class="form-group col-12">
-            <label for="input-contacto">Persona de contacto</label>
+            <label for="input-contacto">Persona de contacto *</label>
             <input type="text" name="contacto" id="input-contacto"
                 class="form-control @error('contacto') is-invalid @enderror" value="{{ old('contacto') }}">
             @error('contacto')
@@ -62,7 +62,7 @@
     </div>
     <div class="row d-flex m-3">
         <div class="form-group col">
-            <label for="input-telefono">Teléfono</label>
+            <label for="input-telefono">Teléfono *</label>
             <input type="text" name="telefono" id="input-telefono"
                 class="form-control @error('telefono') is-invalid @enderror" value="{{ old('telefono') }}">
             <small id="input-afip" class="form-text text-muted">Sin guiones, paréntesis u otros caracteres
@@ -72,7 +72,7 @@
             @enderror
         </div>
         <div class="form-group col">
-            <label for="input-email">E-mail</label>
+            <label for="input-email">E-mail *</label>
             <input type="email" name="email" id="input-email"
                 class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}">
             @error('email')
@@ -85,7 +85,7 @@
     <hr>
     <div class="row d-flex m-3">
         <div class="form-group col">
-            <label for="input-lugar_entrega">Lugar de entrega</label>
+            <label for="input-lugar_entrega">Lugar de entrega *</label>
             <input type="lugar_entrega" name="lugar_entrega" id="input-lugar_entrega"
                 class="form-control form-control-sm @error('lugar_entrega') is-invalid @enderror"
                 value="{{ old('lugar_entrega') }}">
@@ -97,7 +97,7 @@
 
     <div class="row d-flex m-3">
         <div class="form-group col-md-7">
-            <label for="input-domicilio">Dirección</label>
+            <label for="input-domicilio">Dirección *</label>
             <input type="domicilio" name="domicilio" id="input-domicilio"
                 class="form-control form-control-sm @error('domicilio') is-invalid @enderror"
                 value="{{ old('domicilio') }}">
@@ -107,7 +107,7 @@
         </div>
 
         <div class="form-group col">
-            <label for="input-provincia">Provincia</label>
+            <label for="input-provincia">Provincia *</label>
             <select name="provincia_id" id="input-provincia"
                 class="selector-provincia @error('provincia_id') is-invalid @enderror">
                 <option data-placeholder="true"></option>
@@ -124,7 +124,7 @@
             @enderror
         </div>
         <div class="form-group col">
-            <label for="input-localidad">Localidad</label>
+            <label for="input-localidad">Localidad *</label>
             <select id="input-localidad" name="localidad_id"
                 class="selector-localidad @error('localidad_id') is-invalid @enderror">
                 <option data-placeholder="true"></option>

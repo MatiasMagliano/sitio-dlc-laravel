@@ -45,7 +45,7 @@
             <div class="card-body">
                 <div class="pl-lg-4">
                     <div class="form-group">
-                        <label for="input-droga">Droga</label>
+                        <label for="input-droga">Droga *</label>
                         <input type="text" name="droga" id="input-droga"
                             class="form-control @error('droga') is-invalid @enderror"
                             placeholder="Nombre genérico o compuesto principal representativo"
@@ -69,7 +69,7 @@
                 <div class="card-body">
                     <div class="pl-lg-4">
                         <div class="form-group">
-                            <label for="input-nombre">Razón social</label>
+                            <label for="input-nombre">Razón social *</label>
                             <select name="proveedor" id="input-nombre"
                                 class="selecion-proveedor form-control-alternative @error('proveedor') is-invalid @enderror">
                                 <option data-placeholder="true"></option>
@@ -88,12 +88,12 @@
                     </div>
                     <div class="pl-lg-4">
                         <div class="form-group">
-                            <label for="input-codigoProv">Codigo de Proveedor</label>
+                            <label for="input-codigoProv">Codigo de Proveedor *</label>
                             <input type="text" name="codigoProv" id="input-codigoProv"
-                                class="form-control @error('codigoProv') is-invalid @enderror"
+                                class="form-control @error('proveedor') is-invalid @enderror"
                                 placeholder="Codigo alfanumérico de facturación"
-                                value="{{ old('codigoProv') }}" autofocus>
-                                @error('codigoProv')<div class="invalid-feedback">{{$message}}</div>@enderror
+                                value="{{ old('proveedor') }}" autofocus>
+                                @error('proveedor')<div class="invalid-feedback">El campo codigo de proveedor es requerido</div>@enderror
                         </div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
                 <div class="card-body">
                     <div class="pl-lg-4">
                         <div class="form-group">
-                            <label for="input-presentacion">Forma farmacéutica y presentación</label>
+                            <label for="input-presentacion">Forma farmacéutica y presentación *</label>
                             <select name="presentacion" id="input-presentacion"
                                 class="selecion-presentacion form-control-alternative @error('presentacion') is-invalid @enderror">
                                 <option data-placeholder="true"></option>
