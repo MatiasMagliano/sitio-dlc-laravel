@@ -33,7 +33,7 @@
             <a href="{{ route('administracion.cotizaciones.create') }}" role="button" class="btn btn-md btn-success">Crear
                 cotización</a>
             &nbsp;
-            <a href="{{ url()->previous() }}" role="button" class="btn btn-md btn-secondary">Volver</a>
+            <a href="{{ route('home') }}" role="button" class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
 @stop

@@ -35,7 +35,7 @@
             <h1>Administración de órdenes de trabajo</h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
-            <a href="{{ url()->previous() }}" role="button" class="btn btn-md btn-secondary">Volver</a>
+            <a href="{{ route('home') }}" role="button" class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
 @stop

@@ -30,10 +30,6 @@ class Cliente extends Model
     /* FUNCIONES ESPECIALES */
     public function ptoEntrega($punto)
     {
-        return DireccionEntrega::find($punto);
+        return DireccionEntrega::findOrFail($punto);
     }
-
-    /* hasMany --> cotizacion
-    *  hasMany --> ¿transacciones?
-     */
 }

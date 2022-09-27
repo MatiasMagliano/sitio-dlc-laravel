@@ -37,7 +37,7 @@
             <h1>Administración de clientes</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-md-end">
-            <a href="{{ url()->previous() }}" role="button" class="btn btn-md btn-secondary">Volver</a>
+            <a href="{{ route('administracion.clientes.index') }}" role="button" class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
 @stop
@@ -87,13 +87,7 @@
             });
     });
 
-    var localidad = new SlimSelect({
-        select: '.selector-localidad',
-        placeholder: 'Seleccione una localidad',
-    });
-
     var provincia = new SlimSelect({
-        hideSelectedOption: true,
         select: '.selector-provincia',
         placeholder: 'Seleccione una provincia',
         onChange: (info) => {
@@ -101,8 +95,12 @@
         }
     });
 
+    var localidad = new SlimSelect({
+        select: '.selector-localidad',
+        placeholder: 'Seleccione una localidad',
+    });
+
     function getLocalidades(provinciaSeleccionada) {
-        //localidad.empty();
         let datos = {
             provincia_id: provinciaSeleccionada.value,
         };

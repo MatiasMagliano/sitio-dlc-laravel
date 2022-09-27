@@ -19,7 +19,7 @@
             <h1>Crear producto y sus características</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-md-end">
-            <a href="{{ url()->previous() }}" role="button"
+            <a href="{{ route('administracion.productos.index') }}" role="button"
                 class="btn btn-md btn-secondary">Volver a productos</a>
         </div>
     </div>

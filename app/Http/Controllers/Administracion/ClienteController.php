@@ -32,8 +32,9 @@ class ClienteController extends Controller
     public function create()
     {
         //
-        $provincias = DB::table('provincias')->get();
-        return view('administracion.clientes.create', compact('provincias'));
+        $provincias = DB::table('provincias')->select('id', 'nombre')->get();
+        $localidades = DB::table('localidades')->select('id', 'nombre')->get();
+        return view('administracion.clientes.create', compact('provincias', 'localidades'));
     }
 
     /**

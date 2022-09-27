@@ -26,7 +26,7 @@
             <h1>Administrar lotes del producto <strong>{{ $producto->droga }}</strong></h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
-            <a href="{{ route('administracion.productos.index') }}" role="button"
+            <a href="{{ route('administracion.lotes.index') }}" role="button"
                 class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>

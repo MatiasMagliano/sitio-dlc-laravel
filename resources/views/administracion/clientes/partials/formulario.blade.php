@@ -128,6 +128,13 @@
             <select id="input-localidad" name="localidad_id"
                 class="selector-localidad @error('localidad_id') is-invalid @enderror">
                 <option data-placeholder="true"></option>
+                @foreach ($localidades as $localidad)
+                    @if ($localidad->id == old('localidad_id'))
+                        <option value="{{ $localidad->id }}" selected>{{ $localidad->nombre }}</option>
+                    @else
+                        <option value="{{ $localidad->id }}">{{ $localidad->nombre }}</option>
+                    @endif
+                @endforeach
             </select>
             @error('localidad_id')
                 <div class="invalid-feedback">{{ $message }}</div>

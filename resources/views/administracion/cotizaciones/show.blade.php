@@ -18,7 +18,7 @@
             <h1>Administración de cotizaciones</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-xl-end">
-            <a href="{{ url()->previous() }}" role="button"
+            <a href="{{ route('administracion.cotizaciones.index') }}" role="button"
                 class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
