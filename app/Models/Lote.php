@@ -5,10 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
 
 class Lote extends Model
 {
@@ -44,6 +41,11 @@ class Lote extends Model
     ];
 
     //SE DEFINEN LAS RELACIONES
+    public function presentacion()
+    {
+        return $this->belongsToMany(Presentacion::class, 'lote_presentacion_producto');
+    }
+
     public function lpp(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -53,6 +55,7 @@ class Lote extends Model
             'id',
         );
     }
+
 
     // RELACIONES PARTICULARES
     // devuelve todos los lotes por presentacion y producto

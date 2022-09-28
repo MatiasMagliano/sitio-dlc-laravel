@@ -18,45 +18,104 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-    @section('plugins.Datatables', true)
-    @section('plugins.DatatablesPlugins', true)
-    @section('plugins.TempusDominusBs4', true)
-    <div class="card">
-        <div class="card-body">
-            <table id="tabla-productos" class="table table-bordered table-responsive-md" width="100%">
-                <thead class="bg-gray">
-                    <th>Droga</th>
-                    <th>Presentación</th>
-                    <th>HOSP/TRAZ</th>
-                    <th>Lotes</th>
-                    <th>Proveedores</th>
-                    <th>Existencia</th>
-                    <th>Cotizado</th>
-                    <th>Disponible</th>
-                    <th></th>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
+@section('plugins.Datatables', true)
+@section('plugins.DatatablesPlugins', true)
+@section('plugins.TempusDominusBs4', true)
+<div class="card">
+    <div class="card-body">
+        <table id="tabla-productos" class="table table-bordered table-responsive-md" width="100%">
+            <thead class="bg-gray">
+                <th>Droga</th>
+                <th>Presentación</th>
+                <th>HOSP/TRAZ</th>
+                <th>Lotes</th>
+                <th>Proveedores</th>
+                <th>STOCK <br><span class="small">exist. | cotiz. | disp.</span></th>
+                <th></th>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
+</div>
 @endsection
 
 @section('js')
-    @include('partials.alerts')
-    <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
-    <script>
-        $(document).ready(function() {
-            $('#tabla-productos').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('administracion.productos.ajax') }}",
-                    method: "GET"
+@include('partials.alerts')
+<script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
+<script>
+    $(document).ready(function() {
+        $('#tabla-productos').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "dom": "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+                "<'row'<'col-sm-12'B>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            "lengthMenu": [
+                [10, 25, 50, -1],
+                ['10', '25', '50', 'Todos']
+            ],
+            "ajax": {
+                url: "{{ route('administracion.productos.ajax') }}",
+                method: "GET"
+            },
+            "buttons": [{
+                    extend: 'copyHtml5',
+                    text: 'Copiar al portapapeles',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
                 },
-            });
+                {
+                    extend: 'excelHtml5',
+                    filename: 'productos',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'print',
+                    text: 'Imprimir',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+            ],
+
+            "columnDefs": [{
+                    className: "align-middle",
+                    targets: [0]
+                },
+                {
+                    className: "align-middle",
+                    targets: [1]
+                },
+                {
+                    className: "align-middle",
+                    targets: [2]
+                },
+                {
+                    className: "align-middle",
+                    targets: [3]
+                },
+                {
+                    className: "align-middle",
+                    targets: [4],
+                    width: 100
+                },
+                {
+                    className: "align-middle",
+                    targets: [5],
+                },
+                {
+                    className: "align-middle",
+                    targets: [6],
+                },
+            ]
         });
-    </script>
+    });
+</script>
 @endsection
 
 @section('footer')

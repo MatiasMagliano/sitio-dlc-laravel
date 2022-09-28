@@ -6,13 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductoRequest;
 use App\Models\ListaPrecio;
 use App\Models\Lote;
-use App\Models\LotePresentacionProducto;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ProductoController extends Controller
 {
@@ -23,9 +21,9 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        $productos = Producto::sortable(['droga' => 'asc'])->paginate(5);
-        return view('administracion.productos.index', compact('productos'));
-        //return view('administracion.productos.index-dt');
+        // $productos = Producto::sortable(['droga' => 'asc'])->paginate(5);
+        // return view('administracion.productos.index', compact('productos'));
+        return view('administracion.productos.index-dt');
     }
 
     public function ajaxdt(Request $request)
@@ -43,41 +41,51 @@ class ProductoController extends Controller
             1 => 'presentacion',
             2 => 'hosp-traz',
             3 => 'lotes',
-            4 => 'proveedores',
-            4 => 'existencia',
-            5 => 'cotizacion',
-            6 => 'disponible'
+            4 => 'dcc',
+            8 => 'acciones'
         );
 
         // QUERY COMPLETA DE COTIZACIONES
-        $query = LotePresentacionProducto::join('productos', 'lote_presentacion_producto.producto_id', '=', 'productos.id')
-            ->join('presentacions', 'lote_presentacion_producto.presentacion_id', '=', 'presentacions.id')
-            ->join('lotes', 'lote_presentacion_producto.lote_id', '=', 'lotes.id')
-            ->join('lista_precios', 'lista_precios.producto_id', '=', 'productos.id')
-            ->join('proveedors', 'lista_precios.proveedor_id', '=', 'proveedors.id')
-            ->join('deposito_casa_centrals', 'lote_presentacion_producto.dcc_id', '=', 'deposito_casa_centrals.id')
-            ->select(
-                'productos.droga',
-                DB::raw('CONCAT(presentacions.forma, " ", presentacions.presentacion) as presentacion'),
-                'presentacions.hospitalario',
-                'presentacions.trazabilidad',
-                DB::raw('CONCAT(lotes.identificador, " - vto: ", date_format(lotes.fecha_vencimiento, "%d/%m/%Y")) as lotes'),
-                'proveedors.razon_social',
-                'deposito_casa_centrals.existencia',
-                'deposito_casa_centrals.cotizacion',
-                'deposito_casa_centrals.disponible',
+        $query = Producto::select('productos.id', 'productos.droga')
+            ->with(
+                array(
+                    'presentacion' => function($query)
+                    {
+                        $query->select('presentacions.id', 'forma', 'presentacion', 'hospitalario', 'trazabilidad')
+                            ->with(
+                                array(
+                                    'lote' => function($query)
+                                    {
+                                        $query->select('identificador', 'fecha_vencimiento');
+                                    },
+                                    'dcc' => function($query){
+                                        $query->select('existencia', 'cotizacion', 'disponible');
+                                    }
+                                )
+                            );
+                    }
+                )
             );
+
         if (!empty($filter)) {
-            $query->where('productos.droga', 'like', '%' . $filter . '%');
+            $query->where('droga', 'like', '%' . $filter . '%');
         }
 
         $recordsTotal = $query->count();
 
         $sortColumnName = $sortColumns[$order[0]['column']];
 
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+        // se detecta el length -1
+        if($length == '-1')
+        {
+            $query->orderBy($sortColumnName, $order[0]['dir']);
+        }
+        else
+        {
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+        }
 
         $json = array(
             'draw' => $draw,
@@ -88,19 +96,20 @@ class ProductoController extends Controller
 
         $productos = $query->get();
 
-        foreach ($productos as $producto) {
-
-            $json['data'][] = [
-                $producto->droga,
-                $producto->presentacion,
-                view('administracion.productos.partials.hosp-traz', ['producto' => $producto])->render(),
-                $producto->lotes,
-                $producto->razon_social,
-                $producto->existencia,
-                $producto->cotizacion,
-                $producto->disponible,
-                view('administracion.productos.partials.acciones', ['producto' => $producto])->render(),
-            ];
+        foreach ($productos as $producto)
+        {
+            foreach ($producto->presentacion as $presentacion)
+            {
+                $json['data'][] = [
+                    $producto->droga,
+                    $presentacion->forma. ", " .$presentacion->presentacion,
+                    view('administracion.productos.partials.hosp-traz', ['presentacion' => $presentacion])->render(),
+                    view('administracion.productos.partials.lotes', ['presentacion' => $presentacion])->render(),
+                    "PENDIENTE",
+                    view('administracion.productos.partials.stock', ['presentacion' => $presentacion])->render(),
+                    view('administracion.productos.partials.acciones', ['producto' => $producto])->render(),
+                ];
+            }
         }
 
         return $json;

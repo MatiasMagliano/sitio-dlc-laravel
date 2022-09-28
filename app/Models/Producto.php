@@ -27,6 +27,12 @@ class Producto extends Model
     ];
 
     //Se definen las relaciones
+    public function presentacion()
+    {
+        return $this->belongsToMany(Presentacion::class, 'lote_presentacion_producto')->distinct();
+    }
+
+    //RELACIONES ESPECIALES
     public static function presentaciones($producto)
     {
         return DB::table('presentacions')

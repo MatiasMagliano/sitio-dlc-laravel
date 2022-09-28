@@ -15,6 +15,17 @@ class DepositoCasaCentral extends Model
         'existencia', 'cotizacion', 'disponible',
     ];
 
+    //SE DEFINEN RELACIONES
+    public function presentacion()
+    {
+        return $this->belongsToMany(
+            Presentacion::class,
+            'lote_presentacion_producto',
+            '',
+            'dcc_id'
+        );
+    }
+
     public function scopeGetDepCasaCentral($query, $id){
         return $query->where('id', $id);
     }

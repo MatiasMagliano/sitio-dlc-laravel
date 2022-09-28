@@ -15,12 +15,32 @@ class Presentacion extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'presentacions';
-    
+
     protected $fillable = [
         'forma', 'presentacion', 'existencia', 'cotizacion', 'disponible', 'hospitalario', 'trazabilidad'
     ];
 
     // Se definen las relaciones
+    public function producto()
+    {
+        return $this->belongsToMany(Producto::class, 'lote_presentacion_producto');
+    }
+
+    public function lote()
+    {
+        return $this->belongsToMany(Lote::class, 'lote_presentacion_producto')->distinct();
+    }
+
+    public function dcc()
+    {
+        return $this->belongsToMany(
+                DepositoCasaCentral::class,
+                'lote_presentacion_producto',
+                '',
+                'dcc_id'
+            )
+            ->distinct();
+    }
 
     //Devuelve todos los productos de una determinada presentacion
     public function productosDePresentacion($presentacion_id){
