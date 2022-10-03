@@ -42,17 +42,23 @@ class Presentacion extends Model
             ->distinct();
     }
 
+    public function productosCotizados(): HasMany
+    {
+        return $this->hasMany(ProductoCotizado::class);
+    }
+
+    public function listaprecios(): HasOne
+    {
+        return $this->hasOne(ListaPrecio::class);
+    }
+
+    // RELACIONES PARTICULARES
     //Devuelve todos los productos de una determinada presentacion
     public function productosDePresentacion($presentacion_id){
         return Producto::select('*')
         ->join('lote_presentacion_producto', 'lote_presentacion_producto.producto_id', '=', 'productos.id')
         ->where('lote_presentacion_producto.presentacion_id', $presentacion_id)
         ->get();
-    }
-    //Devuelve todos los lotes de una presentacion en particular
-    public function lotes(): BelongsToMany
-    {
-        return $this->belongsToMany(Lote::class, 'lote_presentacion_producto');
     }
 
     // devuelve todos los lotes por presentacion y producto
@@ -81,25 +87,5 @@ class Presentacion extends Model
             ModelsLotePresentacionProducto::getIdDeposito($producto, $presentacion)
         );
         return $deposito;
-    }
-
-    /**
-     * Get all of the productosCotizados for the Producto
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function productosCotizados(): HasMany
-    {
-        return $this->hasMany(ProductoCotizado::class);
-    }
-
-    /**
-     * Get all of the productosCotizados for the Producto
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function listaprecios(): HasOne
-    {
-        return $this->hasOne(ListaPrecio::class);
     }
 }

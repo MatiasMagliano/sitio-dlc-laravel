@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://dlc-laravel.ddns.net/'),
+    'url' => env('APP_URL', 'https://drogueriadelaciudad.duckdns.org/'),
 
     'asset_url' => env('ASSET_URL', null),
 

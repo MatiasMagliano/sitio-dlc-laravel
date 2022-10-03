@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-
 use Kyslik\ColumnSortable\Sortable;
 
 class Cotizacion extends Model
@@ -64,8 +63,14 @@ class Cotizacion extends Model
         return $this->hasOne(ArchivoCotizacion::class);
     }
 
+    public function dde()
+    {
+        return $this->belongsTo(DireccionEntrega::class);
+    }
+
     /* --- RELACIONES ESPECIALES ---*/
-    public function direccionEntrega($punto){
+    public function direccionEntrega($punto)
+    {
         return DireccionEntrega::select('*')
             ->join('clientes', 'direcciones_entrega.cliente_id', '=', 'clientes.id')
             ->join('cotizacions', 'cotizacions.cliente_id', '=', 'clientes.id')

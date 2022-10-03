@@ -47,7 +47,7 @@ class LoteVencidosSeeder extends Seeder
                         'cantidad' => $this->faker->randomNumber(4)
                     ]);
 
-                    $lpp = LotePresentacionProducto::create([
+                    LotePresentacionProducto::create([
                         'producto_id' => $producto->id,
                         'presentacion_id' => $presentacion,
                         'lote_id' => $lote->id,

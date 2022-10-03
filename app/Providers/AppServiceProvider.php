@@ -30,6 +30,6 @@ class AppServiceProvider extends ServiceProvider
         // Configuración para fechas en español
         Carbon::setUTF8(true);
         Carbon::setLocale(config('app.locale'));
-        setlocale(LC_ALL, 'es_AR', 'es', 'ES', 'es_AR.utf8');
+        setlocale(LC_ALL, 'es_ES', 'es', 'ES', 'es_ES.utf8');
     }
 }

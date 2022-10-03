@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Localidad extends Model
@@ -17,4 +16,15 @@ class Localidad extends Model
         'nombre',
         'departamento'
     ];
+
+    // relaciones
+    public function dde()
+    {
+        return $this->hasMany(DireccionEntrega::class);
+    }
+
+    public function provincia()
+    {
+        return $this->belongsTo(Provincia::class);
+    }
 }

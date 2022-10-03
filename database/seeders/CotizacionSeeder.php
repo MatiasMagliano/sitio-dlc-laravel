@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Cliente;
 use App\Models\Cotizacion;
 use App\Models\DepositoCasaCentral;
+use App\Models\DireccionEntrega;
 use App\Models\LotePresentacionProducto;
 use App\Models\Producto;
 use App\Models\ProductoCotizado;
@@ -22,15 +23,21 @@ class CotizacionSeeder extends Seeder
     {
         //
         foreach(Cliente::all() as $cliente){
-            $dirEntrega = DB::table('direcciones_entrega')->where('cliente_id', $cliente->id)->pluck('id');
+
             $maxCotizaciones = rand(1, 3);
             for($i = 1; $i <= $maxCotizaciones; $i++){
+                $dirEntrega = DireccionEntrega::where('cliente_id', '=', $cliente->id)
+                    ->inRandomOrder()
+                    ->first();
                 $cotizacion = Cotizacion::factory()->create([
                     'cliente_id' => $cliente->id,
-                    'dde_id' => $dirEntrega->random(1)->get('0')
+                    'dde_id' => $dirEntrega->id,
                 ]);
 
-                $maxProductos = rand(2, 50);
+                // se incrementa el ranking de puntos de entrega: "más entregado"
+                $dirEntrega->increment('mas_entregado');
+
+                $maxProductos = rand(2, 70);
                 for($j = 1; $j <= $maxProductos; $j++){
                     ProductoCotizado::factory()->create([
                         'cotizacion_id' => $cotizacion->id

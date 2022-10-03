@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DireccionEntrega extends Model
 {
@@ -23,18 +22,18 @@ class DireccionEntrega extends Model
         $this->belongsToMany(Cotizacion::class);
     }
 
-    public function clientes(): BelongsTo
+    public function clientes()
     {
         return $this->belongsTo(Cliente::class);
     }
 
-    public function provincias(): HasMany
+    public function provincia()
     {
-        return $this->hasMany(provincias::class);
+        return $this->belongsTo(Provincia::class);
     }
 
-    public function localidades(): HasMany
+    public function localidad()
     {
-        return $this->hasMany(localidades::class);
+        return $this->belongsTo(Localidad::class);
     }
 }

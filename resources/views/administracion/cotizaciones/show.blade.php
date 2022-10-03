@@ -61,23 +61,29 @@
             <table class="table" width="100%">
                 <thead>
                     <tr>
-                        <th>Fecha</th>
-                        <th>Cliente</th>
-                        <th>Usuario</th>
-                        <th>Productos cotizados</th>
-                        <th>Unidades</th>
-                        <th>Importe</th>
-                        <th>ESTADO</th>
+                        <th class="align-middle">Fecha/<br>Identificador</th>
+                        <th class="align-middle">Cliente</th>
+                        <th class="align-middle">Lugar de entrega</th>
+                        <th class="align-middle">Usuario</th>
+                        <th class="align-middle">Productos cotizados</th>
+                        <th class="align-middle">Unidades</th>
+                        <th class="align-middle">Importe</th>
+                        <th class="align-middle">ESTADO</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td class="align-middle">
-                            {{$cotizacion->created_at->format('d/m/Y')}}<br>{{$cotizacion->identificador}}
+                            {{$cotizacion->created_at->format('d/m/Y')}}<br><strong>{{$cotizacion->identificador}}</strong>
                         </td>
-                        <td>
+                        <td class="align-middle">
                             {{$cotizacion->cliente->razon_social}}<br>
-                            {{$cotizacion->cliente->tipo_afip}}: {{$cotizacion->cliente->afip}}
+                            <span style="text-transform: uppercase;">{{$cotizacion->cliente->tipo_afip}}</span>: {{$cotizacion->cliente->afip}}
+                        </td>
+                        <td class="align-middle">
+                            <strong>{{$cotizacion->dde->lugar_entrega}}</strong> <br>
+                            {{$cotizacion->dde->domicilio}} <br>
+                            {{$cotizacion->dde->localidad->nombre}}, {{$cotizacion->dde->provincia->nombre}}
                         </td>
                         <td class="align-middle">{{$cotizacion->user->name}}</td>
                         <td class="align-middle">{{$cotizacion->productos->count()}}</td>
@@ -109,16 +115,17 @@
         </div>
     </div>
 
+    {{-- EN CASO DE SER CONFIRMADA, SE AGREGA UNA LEYENDA --}}
     @if ($cotizacion->confirmada)
         <div class="card bg-gradient-success">
             <div class="card-header">
                 <h5 class="card-title">La cotización fue aprobada el {{$cotizacion->confirmada->format('d/m/Y')}}</h5>
             </div>
             <div class="card-body">
-                <p>Lugar de entrega: {{$cotizacion->cliente->ptoEntrega($cotizacion->dde_id)->lugar_entrega}}</p>
-                <p>Domicilio: {{$cotizacion->cliente->ptoEntrega($cotizacion->dde_id)->domicilio}}</p>
-                <p>Condiciones: {{$cotizacion->cliente->ptoEntrega($cotizacion->dde_id)->condiciones}}</p>
-                <p>Observaciones: {{$cotizacion->cliente->ptoEntrega($cotizacion->dde_id)->observaciones}}</p>
+                <p>Lugar de entrega: {{$cotizacion->dde->lugar_entrega}}</p>
+                <p>Domicilio: {{$cotizacion->dde->domicilio}} - {{$cotizacion->dde->localidad->nombre}}, {{$cotizacion->dde->provincia->nombre}}</p>
+                <p>Condiciones: {{$cotizacion->dde->condiciones}}</p>
+                <p>Observaciones: {{$cotizacion->dde->observaciones}}</p>
             </div>
             <div class="card-footer">
                 @if ($cotizacion->archivos()->exists())
@@ -171,7 +178,7 @@
             </div>
         </div>
         <div class="card-body">
-            <table id="tablaProductos" class="table table-responsive-md table-bordered table-condensed" width="100%">
+            <table id="tablaProductos" class="table table-bordered table-condensed" width="100%">
                 <thead>
                     <th>Línea</th>
                     <th>Producto</th>

@@ -17,10 +17,11 @@ class CreateDireccionesEntregaTable extends Migration
         Schema::create('direcciones_entrega', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Cliente::class)->constrained()->onDelete('cascade');
-            $table->string('lugar_entrega');
+            $table->string('lugar_entrega'); // palabra clave como nombre general del punto de entrega
             $table->string('domicilio');
             $table->foreignId('provincia_id')->constrained('provincias');
             $table->foreignId('localidad_id')->constrained('localidades');
+            $table->integer('mas_entregado');
             $table->string('condiciones')->nullable();
             $table->string('observaciones')->nullable();
             $table->timestamps();

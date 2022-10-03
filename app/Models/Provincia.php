@@ -17,4 +17,15 @@ class Provincia extends Model
         'nombre_completo',
         'iso_id'
     ];
+
+    // relaciones
+    public function dde()
+    {
+        return $this->hasMany(DireccionEntrega::class);
+    }
+
+    public function localidades()
+    {
+        return $this->hasMany(Localidad::class);
+    }
 }

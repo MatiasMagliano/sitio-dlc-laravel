@@ -33,11 +33,11 @@ class LotePresentacionProductoSeeder extends Seeder
 
                 $codigoProv =  $this->faker->numberBetween(1000000, 9999999);
 
-                $maxLote = rand(1, 10);
+                $maxLote = rand(1, 5);
                 for($j = 1; $j <= $maxLote; $j++){
                     $lote = Lote::factory()->create();
 
-                    $lpp = LotePresentacionProducto::create([
+                    LotePresentacionProducto::create([
                         'producto_id' => $producto->id,
                         'presentacion_id' => $presentacion->id,
                         'lote_id' => $lote->id,
@@ -45,8 +45,8 @@ class LotePresentacionProductoSeeder extends Seeder
                     ]);
                     $deposito->increment('existencia', $lote->cantidad);
                 }
-                $masProveedor = rand(1, 3);
-                for($k = 1; $k <= $masProveedor; $k++)
+                $maxProveedor = rand(1, 3);
+                for($k = 1; $k <= $maxProveedor; $k++)
                 {
                     $proveedor = Proveedor::inRandomOrder()->first()->id;
                     ListaPrecio::create([
