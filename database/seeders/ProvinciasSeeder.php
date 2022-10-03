@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Provincia;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class ProvinciasSeeder extends Seeder
 {
@@ -15,17 +16,20 @@ class ProvinciasSeeder extends Seeder
     public function run()
     {
         //
-        $archivo = fopen(base_path('database/data/provincias.csv'), 'r');
+        $provincias = json_decode(File::get('database/data/provincias.json'), true);
 
-        while(($datos = fgetcsv($archivo, 2000, ',')) !== FALSE){
-            DB::table('provincias')->insert([
-                'id'                => $datos['0'],
-                'nombre'            => $datos['1'],
-                'nombre_completo'   => $datos['2'],
-                'iso_id'            => $datos['3'],
-            ]);
+        $data = [];
+
+        foreach($provincias as $provincia)
+        {
+            $data[] = [
+                'id' => $provincia['id'],
+                'nombre' => $provincia['nombre'],
+                'nombre_completo' => $provincia['nombre_completo'],
+                'iso_id' => $provincia['iso_id'],
+            ];
         }
 
-        fclose($archivo);
+        Provincia::insert($data);
     }
 }

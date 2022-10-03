@@ -1,0 +1,146 @@
+[
+    {
+      "id": 2,
+      "nombre": "Ciudad Autónoma de Buenos Aires",
+      "nombre_completo": "Ciudad Autónoma de Buenos Aires",
+      "iso_id": "AR-C"
+    },
+    {
+      "id": 6,
+      "nombre": "Buenos Aires",
+      "nombre_completo": "Provincia de Buenos Aires",
+      "iso_id": "AR-B"
+    },
+    {
+      "id": 10,
+      "nombre": "Catamarca",
+      "nombre_completo": "Provincia de Catamarca",
+      "iso_id": "AR-K"
+    },
+    {
+      "id": 14,
+      "nombre": "Córdoba",
+      "nombre_completo": "Provincia de Córdoba",
+      "iso_id": "AR-X"
+    },
+    {
+      "id": 18,
+      "nombre": "Corrientes",
+      "nombre_completo": "Provincia de Corrientes",
+      "iso_id": "AR-W"
+    },
+    {
+      "id": 22,
+      "nombre": "Chaco",
+      "nombre_completo": "Provincia del Chaco",
+      "iso_id": "AR-H"
+    },
+    {
+      "id": 26,
+      "nombre": "Chubut",
+      "nombre_completo": "Provincia del Chubut",
+      "iso_id": "AR-U"
+    },
+    {
+      "id": 30,
+      "nombre": "Entre Ríos",
+      "nombre_completo": "Provincia de Entre Ríos",
+      "iso_id": "AR-E"
+    },
+    {
+      "id": 34,
+      "nombre": "Formosa",
+      "nombre_completo": "Provincia de Formosa",
+      "iso_id": "AR-P"
+    },
+    {
+      "id": 38,
+      "nombre": "Jujuy",
+      "nombre_completo": "Provincia de Jujuy",
+      "iso_id": "AR-Y"
+    },
+    {
+      "id": 42,
+      "nombre": "La Pampa",
+      "nombre_completo": "Provincia de La Pampa",
+      "iso_id": "AR-L"
+    },
+    {
+      "id": 46,
+      "nombre": "La Rioja",
+      "nombre_completo": "Provincia de La Rioja",
+      "iso_id": "AR-F"
+    },
+    {
+      "id": 50,
+      "nombre": "Mendoza",
+      "nombre_completo": "Provincia de Mendoza",
+      "iso_id": "AR-M"
+    },
+    {
+      "id": 54,
+      "nombre": "Misiones",
+      "nombre_completo": "Provincia de Misiones",
+      "iso_id": "AR-N"
+    },
+    {
+      "id": 58,
+      "nombre": "Neuquén",
+      "nombre_completo": "Provincia del Neuquén",
+      "iso_id": "AR-Q"
+    },
+    {
+      "id": 62,
+      "nombre": "Río Negro",
+      "nombre_completo": "Provincia de Río Negro",
+      "iso_id": "AR-R"
+    },
+    {
+      "id": 66,
+      "nombre": "Salta",
+      "nombre_completo": "Provincia de Salta",
+      "iso_id": "AR-A"
+    },
+    {
+      "id": 70,
+      "nombre": "San Juan",
+      "nombre_completo": "Provincia de San Juan",
+      "iso_id": "AR-J"
+    },
+    {
+      "id": 74,
+      "nombre": "San Luis",
+      "nombre_completo": "Provincia de San Luis",
+      "iso_id": "AR-D"
+    },
+    {
+      "id": 78,
+      "nombre": "Santa Cruz",
+      "nombre_completo": "Provincia de Santa Cruz",
+      "iso_id": "AR-Z"
+    },
+    {
+      "id": 82,
+      "nombre": "Santa Fe",
+      "nombre_completo": "Provincia de Santa Fe",
+      "iso_id": "AR-S"
+    },
+    {
+      "id": 86,
+      "nombre": "Santiago del Estero",
+      "nombre_completo": "Provincia de Santiago del Estero",
+      "iso_id": "AR-G"
+    },
+    {
+      "id": 90,
+      "nombre": "Tucumán",
+      "nombre_completo": "Provincia de Tucumán",
+      "iso_id": "AR-T"
+    },
+    {
+      "id": 94,
+      "nombre": "Tierra del Fuego, Antártida e Islas del Atlántico Sur",
+      "nombre_completo": "Provincia de Tierra del Fuego, Antártida e Islas del Atlántico Sur",
+      "iso_id": "AR-V"
+    }
+   ]

@@ -2,30 +2,29 @@
 
 namespace Database\Seeders;
 
+use App\Models\Localidad;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class LocalidadSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         //
-        $archivo = fopen(base_path('database/data/localidades.csv'), 'r');
+        $localidades = json_decode(File::get('database/data/localidades.json'), true);
 
-        while(($datos = fgetcsv($archivo, 2000, ',')) !== FALSE){
-            DB::table('localidades')->insert([
-                'id'           => $datos['0'],
-                'provincia_id' => $datos['1'],
-                'nombre'       => $datos['2'],
-                'departamento' => $datos['3'],
-            ]);
+        $data = [];
+
+        foreach($localidades as $localidad)
+        {
+            $data[] = [
+                'id' => $localidad['id'],
+                'provincia_id' => $localidad['provincia_id'],
+                'nombre' => $localidad['nombre'],
+                'departamento' => $localidad['departamento'],
+            ];
         }
 
-        fclose($archivo);
+        Localidad::insert($data);
     }
 }

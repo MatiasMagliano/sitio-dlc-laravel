@@ -14,10 +14,15 @@ class DireccionEntrega extends Model
     protected $table = 'direcciones_entrega';
 
     protected $fillable = [
-        'lugar_entrega', 'domicilio', 'condiciones', 'observaciones'
+        'lugar_entrega', 'domicilio', 'condiciones', 'observaciones', 'mas_entregado'
     ];
 
     // RELACIONES
+    public function cotizacion()
+    {
+        $this->belongsToMany(Cotizacion::class);
+    }
+
     public function clientes(): BelongsTo
     {
         return $this->belongsTo(Cliente::class);
