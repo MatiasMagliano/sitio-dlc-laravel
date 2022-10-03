@@ -226,12 +226,24 @@
     @php
         $montoLetras = new NumberFormatter('es_AR', NumberFormatter::SPELLOUT);
         $total = $cotizacion->productos->sum('total');
+        //$total = str_replace(',','.',$total);
         $total = explode('.', $total);
         // SE DETERMINA SI EL TOTAL TIENE CENTAVOS O NO (porque el explode detecta los ceros)
         if (sizeof($total) > 1) {
-            $letras = 'En letras: son ' . $montoLetras->format($total[0]) . ' pesos, con ' . $montoLetras->format($total[1]) . ' centavos.';
+            $letras = 'En letras: son ' . 
+            $montoLetras->format(
+                $total[0]
+                ) 
+                . ' pesos, con ' . 
+                $montoLetras->format(
+                    $total[1]
+                    )
+                    . ' centavos.';
         } else {
-            $letras = 'En letras: son ' . $montoLetras->format($total[0]) . ' pesos, con cero centavos.';
+            $letras = 'En letras: son ' . $montoLetras->format(
+                $total[0]
+                ) 
+                . ' pesos, con cero centavos.';
         }
     @endphp
     <strong style="font-size: 11px">{{ $letras }}</strong>
