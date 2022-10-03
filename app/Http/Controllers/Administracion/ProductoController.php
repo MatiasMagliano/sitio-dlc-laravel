@@ -105,7 +105,7 @@ class ProductoController extends Controller
                     $presentacion->forma. ", " .$presentacion->presentacion,
                     view('administracion.productos.partials.hosp-traz', ['presentacion' => $presentacion])->render(),
                     view('administracion.productos.partials.lotes', ['presentacion' => $presentacion])->render(),
-                    "PENDIENTE",
+                    "PENDIENTE DE PROGRAMAR",
                     view('administracion.productos.partials.stock', ['presentacion' => $presentacion])->render(),
                     view('administracion.productos.partials.acciones', ['producto' => $producto])->render(),
                 ];

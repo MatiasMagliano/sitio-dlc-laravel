@@ -23,7 +23,7 @@
 @section('plugins.TempusDominusBs4', true)
 <div class="card">
     <div class="card-body">
-        <table id="tabla-productos" class="table table-bordered table-responsive-md" width="100%">
+        <table id="tabla-productos" class="table table-bordered" width="100%">
             <thead class="bg-gray">
                 <th>Droga</th>
                 <th>Presentación</th>
@@ -89,27 +89,33 @@
                 },
                 {
                     className: "align-middle",
+                    orderable: false,
                     targets: [1]
                 },
                 {
                     className: "align-middle",
+                    orderable: false,
                     targets: [2]
                 },
                 {
                     className: "align-middle",
+                    orderable: false,
                     targets: [3]
                 },
                 {
                     className: "align-middle",
+                    orderable: false,
                     targets: [4],
                     width: 100
                 },
                 {
                     className: "align-middle",
+                    orderable: false,
                     targets: [5],
                 },
                 {
                     className: "align-middle",
+                    orderable: false,
                     targets: [6],
                 },
             ]
