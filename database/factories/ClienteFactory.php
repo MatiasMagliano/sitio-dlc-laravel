@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use \Illuminate\Support\Str;
 
 class ClienteFactory extends Factory
 {
@@ -15,10 +14,11 @@ class ClienteFactory extends Factory
     public function definition()
     {
         $afip = ['cuit', 'cuil'];
+        $empresa = $this->faker->company();
 
         return [
-            'nombre_corto'  => $this->faker->word(),
-            'razon_social'  => $this->faker->company(),
+            'nombre_corto'  => strtok($empresa, " "),
+            'razon_social'  => $empresa,
             'tipo_afip'     => $afip[rand(0,1)],
             'afip'          => $this->faker->bothify('##-########-#'),
             'telefono'      => $this->faker->bothify('0351-#######'),

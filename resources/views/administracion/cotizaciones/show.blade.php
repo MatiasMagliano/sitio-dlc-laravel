@@ -130,8 +130,10 @@
             <div class="card-footer">
                 @if ($cotizacion->archivos()->exists())
                     <p>La aprobación recibió una Orden de Provisión, puede descargarla en este
-                        <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'provision']) }}"target="_blank">
-                            link
+                        <a class="text-reset"
+                            href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'provision']) }}"
+                            target="_blank">
+                            <strong><u>link</u></strong>
                         </a>
                     </p>
                 @endif

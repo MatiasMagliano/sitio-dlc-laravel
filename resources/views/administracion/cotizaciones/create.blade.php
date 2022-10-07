@@ -82,22 +82,27 @@
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
     <script>
+        let old_cliente = {{@old('cliente_id', $cliente->id)}};
         var dde = new SlimSelect({
             select: '.selecion-dde',
             placeholder: 'Seleccione un punto de entrega',
         });
+
         var cliente = new SlimSelect({
             select: '.selecion-cliente',
             placeholder: 'Seleccione el nombre corto o largo del cliente',
-            onChange: (info) => {
-                getDirecciones(info);
-            }
+            @if(@old('dde_id'))
+                beforeOnChange: getDirecciones(old_cliente)
+            @else
+                onChange: (info) => {
+                    getDirecciones(info.value);
+                }
+            @endif
         });
 
         function getDirecciones(cliente){
-            //debugger;
             let datos = {
-                cliente_id: cliente.value,
+                cliente_id: cliente,
             };
 
             $.ajax({
