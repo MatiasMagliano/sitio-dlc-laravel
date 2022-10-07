@@ -1,13 +1,13 @@
 <div class="align-middle text-center">
     @if ($presentacion->hospitalario === 1 && $presentacion->trazabilidad === 1)
-        <strong>HOSPITALARIO</strong> y <span style="color: red; font-weight:800;">TRAZABLE </span>
+        HOSP y <span style="color: #9e4942;">TRAZ</span>
     @else
         @if ($presentacion->hospitalario === 1)
-            <strong>HOSPITALARIO</strong>
+            HOSP
         @endif
 
         @if ($presentacion->trazabilidad === 1)
-            <span style="color: red; font-weight:800;">TRAZABLE </span>
+            <span style="color: #9e4942;">TRAZ</span>
         @endif
     @endif
 </div>

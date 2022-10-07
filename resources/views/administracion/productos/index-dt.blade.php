@@ -28,9 +28,9 @@
                 <th>Droga</th>
                 <th>Presentación</th>
                 <th>HOSP/TRAZ</th>
-                <th>Lotes</th>
+                <th>Lotes Nº</th>
                 <th>Proveedores</th>
-                <th>STOCK <br><span class="small">exist. | cotiz. | disp.</span></th>
+                <th>STOCK - CASA CENTRAL<br><span class="small text-nowrap">existencia | cotizización | disponible</span></th>
                 <th></th>
             </thead>
             <tbody>
@@ -98,7 +98,7 @@
                     targets: [2]
                 },
                 {
-                    className: "align-middle",
+                    className: "align-middle text-center small",
                     orderable: false,
                     targets: [3]
                 },
@@ -109,7 +109,7 @@
                     width: 100
                 },
                 {
-                    className: "align-middle",
+                    className: "align-middle text-center",
                     orderable: false,
                     targets: [5],
                 },
