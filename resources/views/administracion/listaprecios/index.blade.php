@@ -110,8 +110,8 @@
 @endsection
 
 @section('js')
-<script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @include('partials.alerts')
+    <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
 
 <script>
     $(document).ready(function() {

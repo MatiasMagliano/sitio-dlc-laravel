@@ -291,6 +291,11 @@ return [
                     'route' => 'administracion.proveedores.index',
                     'icon'  => 'fas fa-truck'
                 ],
+                [
+                    'text'  => 'dde',
+                    'route' => 'administracion.dde.index',
+                    'icon'  => 'fas fa-truck-loading'
+                ],
             ],
         ],
         [

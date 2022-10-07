@@ -13,7 +13,6 @@ header{
     left: 0cm;
     right: 0cm;
     height: 3cm;
-    /* background-color: #46c66b; */
     color: white;
     text-align: center;
     line-height: 15px;
@@ -22,13 +21,12 @@ header{
 footer{
     position: fixed;
     bottom: 1cm;
-    left: 0cm;
-    right: 0cm;
-    height: 4cm;
-    /* background-color: #46c66b;  */
+    left: 1cm;
+    right: 1cm;
+    height: 1cm;
     color: white;
     text-align: center;
-    line-height: 11px;
+    line-height: 9px;
 }
 
 .list-data{
