@@ -20,6 +20,8 @@
             <th scope="col" style="text-align: left;padding: 1em 3em"><span>Droguería de la Ciudad</span></th>
             <th scope="col" style="padding: 1em 3em;"><span>COTIZACION</span></th>
         </tr>
+
+        {{-- DATOS DEL EMISOR --}}
         <tr style="font-size:11px;margin:0;padding: 0;">
             <td style="padding: 0;border-top-style:none">
                 <table>
@@ -28,9 +30,9 @@
                             <ul class="list-group">
                                 <li class="list-group-item list-data">Razón Social:</li>
                                 <li class="list-group-item list-data">Domicilio:</li>
-                                <li class="list-group-item list-data"><br></li>
-                                <li class="list-group-item list-data">Condición frente al IVA:</li>
-                                <li class="list-group-item list-data"><br></li>
+                                <li class="list-group-item list-data">CUIT:</li>
+                                <li class="list-group-item list-data">Ingresos Brutos:</li>
+                                <li class="list-group-item list-data">Inicio de Actividad:</li>
                                 <li class="list-group-item list-data"></li>
                             </ul>
                         </td>
@@ -38,9 +40,9 @@
                             <ul class="list-group">
                                 <li class="list-group-item list-data">MARTIN SEGURA E HIJOS S.A.</li>
                                 <li class="list-group-item list-data">Raymundo Montenegro 2654 - CÓRDOBA</li>
-                                <li class="list-group-item list-data"><br></li>
-                                <li class="list-group-item list-data">Responsable Inscripto</li>
-                                <li class="list-group-item list-data"><br></li>
+                                <li class="list-group-item list-data">30-71655664-3</li>
+                                <li class="list-group-item list-data">285006678</li>
+                                <li class="list-group-item list-data">22/05/2001</li>
                                 <li class="list-group-item list-data"></li>
                             </ul>
                         </td>
@@ -54,20 +56,19 @@
                             <ul class="list-group">
                                 <li class="list-group-item list-data">N° de cotización:</li>
                                 <li class="list-group-item list-data">Fecha emisión:</li>
-                                <li class="list-group-item list-data">CUIT:</li>
-                                <li class="list-group-item list-data">Ingresos Brutos:</li>
-                                <li class="list-group-item list-data">Inicio de Actividad:</li>
+                                <li class="list-group-item list-data"></li>
+                                <li class="list-group-item list-data"></li>
+                                <li class="list-group-item list-data"></li>
                                 <li class="list-group-item list-data"></li>
                             </ul>
                         </td>
                         <td style="text-align: left;border-top-style:none">
                             <ul class="list-group">
-                                <li class="list-group-item list-data"><strong>{{ $cotizacion->identificador }}</strong>
-                                </li>
+                                <li class="list-group-item list-data"><strong>{{ $cotizacion->identificador }}</strong></li>
                                 <li class="list-group-item list-data">{{ \Carbon\Carbon::now()->format('d/m/Y') }}</li>
-                                <li class="list-group-item list-data">30716556643</li>
-                                <li class="list-group-item list-data">Exento</li>
-                                <li class="list-group-item list-data">22/05/2001</li>
+                                <li class="list-group-item list-data"></li>
+                                <li class="list-group-item list-data"></li>
+                                <li class="list-group-item list-data"></li>
                                 <li class="list-group-item list-data"></li>
                             </ul>
                         </td>
@@ -76,6 +77,7 @@
             </td>
         </tr>
 
+        {{-- DATOS DEL CLIENTE --}}
         <tr style="font-size:11px;margin:0;border: 1px solid">
             <td style="padding: 0;border-top-style:none">
                 <table style="width: 100%;">
@@ -83,27 +85,22 @@
                         <td style="text-align: left; width: 21%;border-top-style:none">
                             <ul class="list-group">
                                 <li class="list-group-item list-data-header" style="">Señor(es):</li>
-                                <li class="list-group-item list-data-header">Domicilio:</li>
-                                <li class="list-group-item list-data-header"><br></li>
-                                <li class="list-group-item list-data-header">Codigo Postal:</li>
-                                <li class="list-group-item list-data-header">Dir. entrega:</li>
-
+                                <li class="list-group-item list-data-header">Lugar de entrega:</li>
+                                <li class="list-group-item list-data-header"></li>
+                                <li class="list-group-item list-data-header"></li>
+                                <li class="list-group-item list-data-header"></li>
                             </ul>
                         </td>
                         <td style="text-align: left; width: 35%;border-top-style:none">
                             <ul class="list-group">
+                                <li class="list-group-item list-data-header">{{ $cotizacion->cliente->razon_social }}</li>
+                                <li class="list-group-item list-data-header">{{ $cotizacion->dde->lugar_entrega }}</li>
                                 <li class="list-group-item list-data-header">
-                                    {{ $cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('razon_social')->get('0') }}
+                                    {{$cotizacion->dde->domicilio}},
+                                    {{$cotizacion->dde->localidad->nombre}},
+                                    {{$cotizacion->dde->provincia->nombre}}
                                 </li>
-                                <li class="list-group-item list-data-header">
-                                    {{ $cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('domicilio')->get('0') }},
-                                    {{ $cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('nombre')->get('0') }},
-                                    {{ $cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('nombre_completo')->get('0') }}
-                                </li>
-                                <li class="list-group-item list-data-header"><br></li>
-                                <li class="list-group-item list-data-header">
-                                    {{ $cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('lugar_entrega')->get('0') }}
-                                </li>
+                                <li class="list-group-item list-data-header"></li>
                             </ul>
                         </td>
                     </tr>
@@ -115,20 +112,19 @@
                         <td style="text-align: left; width: 19%;border-top-style:none">
                             <ul class="list-group">
                                 <li class="list-group-item list-data-header">Cliente N°:</li>
-                                <li class="list-group-item list-data-header">{{ $cotizacion->cliente->tipo_afip }}:
-                                </li>
-                                <li class="list-group-item list-data-header">IVA Resp. Inscripto:</li>
-                                <li class="list-group-item list-data-header"><br></li>
+                                <li class="list-group-item list-data-header text-uppercase">{{ $cotizacion->cliente->tipo_afip }}:</li>
+                                <li class="list-group-item list-data-header">Tel/fax:</li>
+                                <li class="list-group-item list-data-header"></li>
+                                <li class="list-group-item list-data-header"></li>
                             </ul>
                         </td>
                         <td style="text-align: left; width: 18%;border-top-style:none">
                             <ul class="list-group">
-                                <li class="list-group-item list-data-header">
-                                    {{ $cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('cliente_id')->get('0') }}
-                                </li>
+                                <li class="list-group-item list-data-header">{{ $cotizacion->cliente->id }}</li>
                                 <li class="list-group-item list-data-header">{{ $cotizacion->cliente->afip }}</li>
-                                <li class="list-group-item list-data-header"><br></li>
-                                <li class="list-group-item list-data-header"><br></li>
+                                <li class="list-group-item list-data-header">{{$cotizacion->cliente->telefono}}</li>
+                                <li class="list-group-item list-data-header"></li>
+                                <li class="list-group-item list-data-header"></li>
                             </ul>
                         </td>
                     </tr>
@@ -139,29 +135,13 @@
 </header>
 
 <footer>
-    <table class="table table-sm" style="font-size: 11px;font-weight: normal;padding: 0em 4em;">
+    <table class="table table-sm" style="font-size: 11px; font-weight: normal;">
         <tr>
-            <td style="border-top-style:none;">
-                <ul class="list-group;">
-                    <li class="list-group-item list-data-footer">
-                        <div class="">
-                            <span class=""><strong>Condiciones*</strong></span>
-                        </div>
-                        <p class="">
-                            <br>{{ $cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('condiciones')->get('0') }}
-                        </p>
-                        <small class="text-muted">*Provistas por el cliente.</small>
-                    </li>
-                    <li class="list-group-item list-data-footer">
-                        <div class="">
-                            <span class="">Observaciones</span>
-                        </div>
-                        <p class="">
-                            <br>{{ $cotizacion->direccionEntrega($cotizacion->dde_id)->pluck('observaciones')->get('0') }}
-                        </p>
-                    </li>
-                </ul>
-                <p class="text-right">Documento PDF generado por: {{ auth()->user()->name }}</p>
+            <td style="border-top-style:none;" class="text-left">
+                Droguería de la Ciudad
+            </td>
+            <td style="border-top-style:none;" class="text-right">
+                Documento PDF generado por: {{ auth()->user()->name }}
             </td>
         </tr>
     </table>
@@ -187,14 +167,14 @@
                         {{ $cotizado->producto->droga }}, {{ $presentaciones[$cotizado->presentacion_id - 1]->forma }}
                         {{ $presentaciones[$cotizado->presentacion_id - 1]->presentacion }}
                     </td>
-                    <td style="text-align: right;padding-right: 2em">
+                    <td class="text-center">
                         {{ $cotizado->cantidad }}
                     </td>
-                    <td style="text-align: right;padding-right: 2em">
-                        $ {{ $cotizado->precio }}
+                    <td style="text-align: left; padding-left: 2em">
+                        $ {{number_format($cotizado->precio, 2, ',', '.')}}
                     </td>
-                    <td style="text-align: right;">
-                        $ {{ $cotizado->total }}
+                    <td style="text-align: left; padding-left: 2em">
+                        $ {{number_format($cotizado->total, 2, ',', '.')}}
                     </td>
                 </tr>
             @endforeach
@@ -212,9 +192,9 @@
                 <td style="border-top-style:none;border-bottom: 1px solid;border-right: 1px solid; text-align: right;">
                     <ul class="list-group">
                         <li class="list-group-item list-data"><br></li>
-                        <li class="list-group-item list-data">$ {{ $cotizacion->productos->sum('total') }}</li>
+                        <li class="list-group-item list-data">$ {{number_format($cotizacion->productos->sum('total'), 2, ',', '.')}}</li>
                         <li class="list-group-item list-data">$ 0</li>
-                        <li class="list-group-item list-data">$ {{ $cotizacion->productos->sum('total') }}</li>
+                        <li class="list-group-item list-data">$ {{number_format($cotizacion->productos->sum('total'), 2, ',', '.')}}</li>
                     </ul>
                 </td>
             </tr>
@@ -222,19 +202,18 @@
     </table>
 </div>
 
-<section>
+<section class="container mt-3">
     @php
         $montoLetras = new NumberFormatter('es_AR', NumberFormatter::SPELLOUT);
-        $total = $cotizacion->productos->sum('total');
-        //$total = str_replace(',','.',$total);
-        $total = explode('.', $total);
+        $total = explode('.', $cotizacion->productos->sum('total'));
+
         // SE DETERMINA SI EL TOTAL TIENE CENTAVOS O NO (porque el explode detecta los ceros)
         if (sizeof($total) > 1) {
-            $letras = 'En letras: son ' . 
+            $letras = 'En letras: son ' .
             $montoLetras->format(
                 $total[0]
-                ) 
-                . ' pesos, con ' . 
+                )
+                . ' pesos, con ' .
                 $montoLetras->format(
                     $total[1]
                     )
@@ -242,12 +221,38 @@
         } else {
             $letras = 'En letras: son ' . $montoLetras->format(
                 $total[0]
-                ) 
+                )
                 . ' pesos, con cero centavos.';
         }
     @endphp
     <strong style="font-size: 11px">{{ $letras }}</strong>
     <p>La presente cotización, no incluye precios con IVA.</p>
+
+    <table class="table table-sm" style="font-size: 11px; font-weight: normal;" class="p-3">
+        <tr>
+            <td style="border-top-style:none;">
+                <ul class="list-group">
+                    <li class="list-group-item list-data-footer">
+                        <div class="">
+                            <span class=""><strong>Condiciones*</strong></span>
+                        </div>
+                        <p class="">
+                            <br>{{ $cotizacion->dde->condiciones }}
+                        </p>
+                        <small class="text-muted">*Provistas por el cliente.</small>
+                    </li>
+                    <li class="list-group-item list-data-footer">
+                        <div class="">
+                            <span class="">Observaciones</span>
+                        </div>
+                        <p class="">
+                            <br>{{ $cotizacion->dde->observaciones }}
+                        </p>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+    </table>
 </section>
 
 <script type="text/php"></script>

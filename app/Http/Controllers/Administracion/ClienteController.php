@@ -20,7 +20,12 @@ class ClienteController extends Controller
     public function index()
     {
         //
-        $clientes = Cliente::all();
+        $clientes = Cliente::
+            with(array('dde' => function($query){
+                $query->orderBy('mas_entregado', 'desc');
+            }))
+            ->get();
+        // dd($clientes);
         return view('administracion.clientes.index', compact('clientes'));
     }
 

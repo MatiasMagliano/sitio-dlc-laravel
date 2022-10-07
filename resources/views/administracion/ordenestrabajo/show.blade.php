@@ -51,17 +51,17 @@
                             {{ $ordentrabajo->cotizacion->cliente->razon_social }}
                         </td>
                         <td style="vertical-align: middle;">
-                            <u><strong>{{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->lugar_entrega }}:</strong></u>
+                            <u><strong>{{ $ordentrabajo->cotizacion->cliente->dde->lugar_entrega }}:</strong></u>
                             <br>
                             <div class="ml-3">
                                 <strong>Dirección:</strong>
-                                {{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->domicilio }}
+                                {{ $ordentrabajo->cotizacion->cliente->dde->domicilio }}
                                 <br>
                                 <strong>Condiciones: </strong>
-                                {{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->condiciones }}
+                                {{ $ordentrabajo->cotizacion->cliente->dde->condiciones }}
                                 <br>
                                 <strong>Observaciones: </strong>
-                                {{ $ordentrabajo->cotizacion->cliente->ptoEntrega($ordentrabajo->cotizacion->dde_id)->observaciones }}
+                                {{ $ordentrabajo->cotizacion->cliente->dde->observaciones }}
                             </div>
                         </td>
                         <td style="vertical-align: middle;">

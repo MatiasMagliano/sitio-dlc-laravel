@@ -24,7 +24,7 @@ class DireccionEntrega extends Model
 
     public function clientes()
     {
-        return $this->belongsTo(Cliente::class);
+        return $this->belongsToMany(Cliente::class);
     }
 
     public function provincia()

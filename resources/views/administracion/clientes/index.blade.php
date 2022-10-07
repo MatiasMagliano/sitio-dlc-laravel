@@ -50,26 +50,27 @@
             set de herramientas disponible y luego genere la extensión que necesite.</p>
     </div>
     <div class="card-body">
-        <table id="tabla_clientes" class="table table-bordered table-responsive-md" width="100%">
+        <table id="tabla_clientes" class="table table-bordered" width="100%">
             <thead class="bg-gray">
-                <th>Razón Social</th>
-                <th>Inscripción AFIP</th>
+                <th>Nombre corto</th>
+                <th>Razón social</th>
+                <th>Cond. AFIP</th>
                 <th>Contacto</th>
-                <th>Puntos de entrega</th>
+                <th>Punto de entrega principal</th>
                 <th>Última compra</th>
             </thead>
             <tbody>
                 @foreach ($clientes as $cliente)
                     <tr>
-                        <td class="align-middle">
-                            <strong>{{ $cliente->razon_social }}</strong>
-                            <br>
-                            <u>Nombre corto:</u> {{ $cliente->nombre_corto }}
+                        <td class="align-middle text-center">
+                            <span class="text-uppercase">{{$cliente->nombre_corto}}</span>
                         </td>
                         <td class="align-middle">
-                            Tipo: <span style="text-transform: uppercase;">{{ $cliente->tipo_afip }}</span>
-                            <br>
-                            Número: {{ $cliente->afip }}
+                            {{$cliente->razon_social}}
+                        </td>
+                        <td class="align-middle">
+                            <span style="text-transform: uppercase;">{{ $cliente->tipo_afip }}: </span>
+                            {{ $cliente->afip }}
                         </td>
                         <td class="align-middle">
                             <u>Sr/a: {{ $cliente->contacto }}</u>
@@ -78,13 +79,13 @@
                             <br>
                             E-mail: {{ $cliente->email }}
                         </td>
-                        <td class="align-middle text-center">
-                            <a role="button" id="{{ $cliente->id }}" class="btn btn-link" data-toggle="modal"
-                                data-target="#modalVerPuntosEntrega">
-                                <i class="fas fa-search"></i>
-                            </a>
+                        <td class="align-middle">
+                            {{-- {{$cliente->id}} --}}
+                            {{$cliente->dde[0]->lugar_entrega}} <br>
+                            {{$cliente->dde[0]->domicilio}} <br>
+                            {{$cliente->dde[0]->localidad->nombre}}, {{$cliente->dde[0]->provincia->nombre}}
                         </td>
-                        <td class="text-center" class="align-middle">
+                        <td class="align-middle text-center">
                             @if ($cliente->ultima_compra == null)
                                 NUNCA
                             @else

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ArchivoCotizacion;
 use App\Models\Cliente;
+use App\Models\DireccionEntrega;
 use App\Models\ListaPrecio;
 use App\Models\Presentacion;
 use App\Models\Producto;
@@ -131,7 +132,7 @@ class CotizacionController extends Controller
             'identificador' => 'required|unique:cotizacions,identificador|max:50',
             'cliente_id' => 'required'
         ]);
-        // Se valida que no haya una misma validación con el mismo identificador al mismo cliente
+        // Se valida que no haya una misma cotización con el mismo identificador al mismo cliente
         $existente = Cotizacion::where('cliente_id', $request->get('cliente'))
             ->where('identificador', $request->get('identificador'))
             ->where('finalizada', null)->get();
@@ -143,9 +144,13 @@ class CotizacionController extends Controller
 
         $request->request->add(['estado_id' => 1]);
         $cotizacion = new Cotizacion($request->all());
-        //traer el punto de entrega
-        // sumarle uno al campo nuevo
-        // guardarlo
+
+        // traer el punto de entrega sumarle uno al campo nuevo y guardarlo
+        $dirEntrega = DireccionEntrega::findOrFail($request->dde_id);
+        $dirEntrega->increment('mas_entregado');
+
+        // se actualizan las fechas: updated_at
+        $dirEntrega->save();
         $cotizacion->save();
 
         $request->session()->flash('success', 'Cotización registrada con éxito. Agregue líneas a la cotización.');

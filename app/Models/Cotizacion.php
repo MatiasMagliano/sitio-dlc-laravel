@@ -33,12 +33,7 @@ class Cotizacion extends Model
         'rechazada'  => 'datetime:d-m-Y',
     ];
 
-    // relaciones
-    /**
-     * Get the cliente that owns the Cotizacion
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    // RELACIONES
     public function cliente(): BelongsTo
     {
         return $this->belongsTo(Cliente::class);

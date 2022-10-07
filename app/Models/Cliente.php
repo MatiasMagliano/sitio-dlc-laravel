@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Cliente extends Model
 {
@@ -22,14 +23,13 @@ class Cliente extends Model
     ];
 
     // RELACIONES
-    public function direcciones(): HasMany
+    public function cotizaciones()
     {
-        return $this->hasMany(DireccionEntrega::class);
+        return $this->belongsToMany(Cotizacion::class);
     }
 
-    /* FUNCIONES ESPECIALES */
-    public function ptoEntrega($punto)
+    public function dde(): HasMany
     {
-        return DireccionEntrega::findOrFail($punto);
+        return $this->hasMany(DireccionEntrega::class);
     }
 }
