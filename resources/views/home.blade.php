@@ -125,7 +125,7 @@
                         </div>
                     </div>
                     <canvas id="cantidad-aprobRechaz" height="400"
-                        style="height: 400px; display: block; width: 25rem; margin: auto;" width="901"
+                        style="height: 400px; display: block; width:100%; margin: auto;" width="901"
                         class="chartjs-render-monitor"></canvas>
                 </div>
             </div>
