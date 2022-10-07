@@ -152,8 +152,9 @@
             <div class="card-footer">
                 @if ($cotizacion->archivos()->exists())
                     <p>El rechazo contiene un archivo comparativo, puede descargarlo en este
-                        <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'rechazo']) }}"target="_blank">
-                            link
+                        <a class="text-reset"
+                            href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'rechazo']) }}"target="_blank">
+                            <strong><u>link</u></strong>
                         </a>
                     </p>
                 @endif

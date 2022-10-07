@@ -29,13 +29,17 @@
                 data-toggle="tooltip" data-placement="bottom" title="Ver cotización">
                 <i class="fas fa-search "></i>
             </a>
+            <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
+                class="btn btn-link" target="_blank" data-toggle="tooltip" data-placement="bottom" title="Descargar cotización">
+                <i class="fas fa-file-download"></i>
+            </a>
             @if ($cotizacion->archivos()->exists())
                 <a href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'rechazo']) }}"
                     class="btn btn-link" target="_blank">
-                    <i class="fas fa-file-download"></i>
+                    <i class="fas fa-arrow-down"></i>
                 </a>
             @else
-                <div class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="No se adjuntó comparativo">
+                <div class="btn btn-link text-reset" data-toggle="tooltip" data-placement="bottom" title="No se adjuntó comparativo">
                     <i class="fas fa-times"></i>
                 </div>
             @endif
