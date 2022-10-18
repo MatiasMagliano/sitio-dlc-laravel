@@ -29,7 +29,6 @@
                 <th>Presentación</th>
                 <th>HOSP/TRAZ</th>
                 <th>Lotes Nº</th>
-                <th>Proveedores</th>
                 <th>STOCK - CASA CENTRAL<br><span class="small text-nowrap">existencia | cotizización | disponible</span></th>
                 <th></th>
             </thead>
