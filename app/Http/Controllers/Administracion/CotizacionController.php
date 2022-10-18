@@ -25,16 +25,91 @@ class CotizacionController extends Controller
      */
     public function index()
     {
-        $cotizaciones = Cotizacion::with('user', 'cliente', 'estado')
-            ->whereIn('estado_id', [1, 2, 3])
-            ->limit(100)
-            ->get();
+        // $cotizaciones = Cotizacion::with('user', 'cliente', 'estado')
+        //     ->whereIn('estado_id', [1, 2, 3])
+        //     ->limit(100)
+        //     ->get();
         $config = [
             'format' => 'DD/MM/YYYY',
             'dayViewHeaderFormat' => 'MMM YYYY',
         ];
 
-        return view('administracion.cotizaciones.index', compact('cotizaciones', 'config'));
+        return view('administracion.cotizaciones.index-dt', compact('config'));
+    }
+
+    public function ajaxdt(Request $request)
+    {
+        // RESPONDE UN JSON PARA POPULAR EL SERVERSIDE-DATATABLE
+        $search = $request->query('search', array('value' => '', 'regex' => false));
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'desc'));
+
+        $filter = $search['value'];
+
+        $sortColumns = array(
+            0 => 'cotizacions.updated_at',
+            1 => 'cotizacions.modificacion',
+            2 => 'clientes.razon_social',
+            3 => 'users.name',
+            4 => 'estados.estado'
+        );
+
+        // QUERY COMPLETA DE COTIZACIONES
+        $query = Cotizacion::select('*')
+            ->with(
+                array(
+                    'cliente' => function($query)
+                    {
+                        $query->select('*');
+                    },
+                    'user' => function($query)
+                    {
+                        $query->select('*');
+                    },
+                    'estado' => function($query)
+                    {
+                        $query->select('*');
+                    }
+                )
+            )
+            ->whereIn('cotizacions.estado_id', [1, 2, 3]);
+
+        if (!empty($filter)) {
+            $query->where('cotizacions.identificador', 'like', '%' . $filter . '%');
+        }
+
+        $recordsTotal = $query->count();
+
+        $sortColumnName = $sortColumns[$order[0]['column']];
+
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $json = array(
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        );
+
+        $cotizaciones = $query->get();
+
+        foreach ($cotizaciones as $cotizacion) {
+
+            $json['data'][] = [
+                $cotizacion->updated_at,
+                $cotizacion->identificador,
+                view('administracion.cotizaciones.partials.cliente', ['cotizacion' => $cotizacion])->render(),
+                view('administracion.cotizaciones.partials.usuario', ['cotizacion' => $cotizacion])->render(),
+                view('administracion.cotizaciones.partials.estados', ['cotizacion' => $cotizacion])->render(),
+                view('administracion.cotizaciones.partials.acciones', ['cotizacion' => $cotizacion])->render(),
+            ];
+        }
+
+        return $json;
     }
 
     public function historico()

@@ -3,31 +3,12 @@
 @section('title', 'Administrar Cotizaciones')
 
 @section('css')
-    <style>
-        .mobile {
-            display: none
-        }
-
-        .desktop {
-            display: inline
-        }
-
-        @media (max-width: 600px) {
-            .desktop {
-                display: none
-            }
-
-            .mobile {
-                display: inline
-            }
-        }
-    </style>
 @endsection
 
 @section('content_header')
     <div class="row">
         <div class="col-xl-8">
-            <h1>Administración de cotizaciones - OPTIMIZADA</h1>
+            <h1>Últimas cotizaciones</h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
             <a href="{{ route('administracion.cotizaciones.create') }}" role="button" class="btn btn-md btn-success">Crear
@@ -36,53 +17,52 @@
             <a href="{{ route('home') }}" role="button" class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
-@stop
+@endsection
 
 {{-- aquí va contenido --}}
 @section('content')
-    <x-adminlte-card class="wrapper">
-        <div class="desktop">
-            @include('administracion.cotizaciones.partials.tabla-desktop')
-            <br>
-            <div class="d-flex justify-content-end">
-                <div class="pagination"> {{-- AGREGA LINKS DE PAGINACIÓN para desktop --}}
-                    {{ $cotizaciones->links() }}
-                </div>
-            </div>
-        </div>
+@section('plugins.Datatables', true)
+@section('plugins.DatatablesPlugins', true)
+@section('plugins.TempusDominusBs4', true)
+<div class="card">
+    <div class="card-body">
+        <table id="tabla-cotizaciones" class="table table-bordered table-responsive-md" width="100%">
+            <thead>
+                <tr class="bg-gray">
+                    <th>F. modificación</th>
+                    <th>Identificador</th>
+                    <th>Cliente</th>
+                    <th>Usuario/F. creación</th>
+                    <th>ESTADO</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-        <div class="mobile">
-            @include('administracion.cotizaciones.partials.tabla-mobile')
-            <br>
-            <div class="d-flex justify-content-end">
-                <div class="pagination-sm">{{-- AGREGA LINKS DE PAGINACIÓN para mobile --}}
-                    {{ $cotizaciones->onEachSide(1)->links() }}
-                </div>
+{{-- MODAL APROBACIÓN LICITACIÓN --}}
+<div class="modal fade" id="modalAprobarCotizacion" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-blue">
+                <h5 class="modal-title">Aprobar licitación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-        </div>
-    </x-adminlte-card>
-
-    {{-- MODAL APROBACIÓN LICITACIÓN --}}
-    <div class="modal fade" id="modalAprobarCotizacion" tabindex="-1" aria-labelledby="" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-gradient-blue">
-                    <h5 class="modal-title">Aprobar licitación</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="" method="POST" id="formAprobada" enctype="multipart/form-data">
-                    @csrf
-                    {{-- CAUSAS: aprobada/rechazada --}}
-                    <input type="hidden" name="causa_subida" value="aprobada">
-                    <div class="modal-body">
-                        <p>Deberá consignar la fecha de aprobación. Opcionalmente podrá adjuntar la Orden de Compra provista
-                            por el cliente. Esto comformará información respaldatoria a la cotización.</p>
-                        <hr>
-                        <div class="row">
-                            <div class="col form-group">
-                            @section('plugins.TempusDominusBs4', true)
+            <form action="" method="POST" id="formAprobada" enctype="multipart/form-data">
+                @csrf
+                {{-- CAUSAS: aprobada/rechazada --}}
+                <input type="hidden" name="causa_subida" value="aprobada">
+                <div class="modal-body">
+                    <p>Deberá consignar la fecha de aprobación. Opcionalmente podrá adjuntar la Orden de Compra provista
+                        por el cliente. Esto comformará información respaldatoria a la cotización.</p>
+                    <hr>
+                    <div class="row">
+                        <div class="col form-group">
                             <x-adminlte-input-date name="confirmada" id="confirmada" igroup-size="md" :config="$config"
                                 placeholder="{{ __('formularios.date_placeholder') }}" autocomplete="off" required>
                                 <x-slot name="appendSlot">
@@ -123,9 +103,12 @@
                 {{-- CAUSAS: aprobada/rechazada --}}
                 <input type="hidden" name="causa_subida" value="rechazada">
                 <div class="modal-body">
-                    <p>Deberá consignar la fecha de rechazo y un motivo. Opcionalmente, podrá adjuntar el <strong>pliego
-                            procesado</strong> con comparativo de precios, provisto por el cliente. Se adjuntará como
-                        información respaldatoria a la cotización rechazada.</p>
+                    <p>Deberá consignar la fecha de rechazo y un motivo. Opcionalmente, podrá adjuntar el
+                        <strong>pliego
+                            procesado</strong> con comparativo de precios, provisto por el cliente. Se adjuntará
+                        como
+                        información respaldatoria a la cotización rechazada.
+                    </p>
                     <div class="form-group">
                         <label for="input-motivo_rechazo">Motivo del rechazo</label>
                         <textarea name="motivo_rechazo" class="form-control @error('motivo_rechazo') is-invalid @enderror"
@@ -138,7 +121,6 @@
                     </div>
                     <div class="row">
                         <div class="col form-group">
-                            @section('plugins.TempusDominusBs4', true)
                             <x-adminlte-input-date name="rechazada" id="rechazada" igroup-size="md" :config="$config"
                                 placeholder="{{ __('formularios.date_placeholder') }}" autocomplete="off" required>
                                 <x-slot name="appendSlot">
@@ -167,6 +149,7 @@
 
 @section('js')
 @include('partials.alerts')
+<script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
 <script>
     // Reload manual de la página
     function recargar() {
@@ -182,7 +165,7 @@
                     return false;
                 }
             })
-        }, 2000)
+        }, 10000)
     };
 
     var popupBlockerChecker = {
@@ -234,6 +217,52 @@
     };
 
     $(document).ready(function() {
+        moment.locale('es');
+        $('#tabla-cotizaciones').dataTable({
+            "responsive": true,
+            "order": [0, 'desc'],
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url: "{{ route('administracion.cotizaciones.ajax') }}",
+                method: "GET"
+            },
+            "columnDefs": [{
+                    className: "align-middle text-center",
+                    targets: [0],
+                    'render': function(data) {
+                        return moment(new Date(data)).format("DD/MM/YYYY");
+                    }
+                },
+                {
+                    className: "align-middle text-center font-weight-bold",
+                    orderable: false,
+                    targets: [1]
+                },
+                {
+                    className: "align-middle",
+                    orderable: false,
+                    targets: [2]
+                },
+                {
+                    className: "align-middle",
+                    orderable: false,
+                    targets: [3]
+                },
+                {
+                    className: "align-middle text-center",
+                    orderable: false,
+                    targets: [4],
+                    width: 100
+                },
+                {
+                    className: "align-middle text-center",
+                    orderable: false,
+                    targets: [5],
+                },
+            ]
+        });
+
         // función para que aparezca el nombre de archivo en el input
         $(".custom-file-input").on("change", function() {
             var fileName = $(this).val().split("\\").pop();

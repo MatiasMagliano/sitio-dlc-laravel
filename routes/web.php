@@ -113,6 +113,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
         ->name('cotizaciones.historico');
     Route::get('/cotizaciones/ajaxhistorico', [CotizacionController::class, 'historicoCotizaciones'])
         ->name('cotizaciones.ajax.historico');
+    //ajax para index con serverside datatable
+    Route::get('/cotizaciones/ajaxdt', [CotizacionController::class, 'ajaxdt'])->name('cotizaciones.ajax');
 
     Route::post('/cotizaciones/{cotizacion}/producto', [CotizacionController::class, 'guardarProductoCotizado'])
         ->name('cotizaciones.guardar.producto');
