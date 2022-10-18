@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="card-body">
-            <table class="table" width="100%">
+            <table class="table table-responsive-md" width="100%">
                 <thead>
                     <tr>
                         <th class="align-middle">Fecha/<br>Identificador</th>
@@ -181,7 +181,7 @@
             </div>
         </div>
         <div class="card-body">
-            <table id="tablaProductos" class="table table-bordered table-condensed" width="100%">
+            <table id="tablaProductos" class="table table-bordered table-condensed table-responsive-md" width="100%">
                 <thead>
                     <th>Línea</th>
                     <th>Producto</th>
@@ -237,7 +237,6 @@
     <script>
         $(document).ready(function() {
             $('#tablaProductos').DataTable( {
-                "responsive": true,
                 "dom": 'Pfrtip',
                 "scrollY": "35vh",
                 "scrollCollapse": true,

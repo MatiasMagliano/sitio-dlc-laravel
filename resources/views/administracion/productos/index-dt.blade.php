@@ -46,6 +46,7 @@
 <script>
     $(document).ready(function() {
         $('#tabla-productos').DataTable({
+                "responsive": true,
             "processing": true,
             "serverSide": true,
             "dom": "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +

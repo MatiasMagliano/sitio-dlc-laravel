@@ -42,7 +42,7 @@
     <div class="wrapper">
         <div class="card">
             <div class="card-body">
-                <table id="tabla-cotizaciones" class="table table-bordered display" style="width:100%">
+                <table id="tabla-cotizaciones" class="table table-bordered table-responsive-md display" style="width:100%">
                     <thead>
                         <tr class="bg-gray">
                             <th>Fecha creación</th>
