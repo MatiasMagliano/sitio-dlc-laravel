@@ -44,33 +44,33 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-@section('plugins.inputmask', true)
-<form action="{{ route('administracion.clientes.store') }}" method="post" class="needs-validation" autocomplete="off"
-    novalidate>
-    @csrf
+    @section('plugins.inputmask', true)
+    <form action="{{ route('administracion.clientes.store') }}" method="post" class="needs-validation" autocomplete="off"
+        novalidate>
+        @csrf
 
-    <div class="card">
-        <div class="card-header">
-            <div class="row d-flex">
-                <div class="col-10 texto-header">
-                    <h5>Nuevo cliente</h5>
-                    <p>A cada nuevo cliente le corresponde un nuevo punto de entrega. Ingrese los valores
-                        correspondientes a un nuevo cliente. Si desea agregar un nuevo
-                        punto de entrega, vaya a la sección <a
-                            href="{{ route('administracion.clientes.agregarPuntoEntrega') }}">Cliente/Agregar puntos de
-                            entrega</a>.</p>
-                </div>
-                <div class="col-2 text-right">
-                    <button type="submit" class="btn btn-sidebar btn-success"><i
-                            class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span></button>
+        <div class="card">
+            <div class="card-header">
+                <div class="row d-flex">
+                    <div class="col-10 texto-header">
+                        <h5>Nuevo cliente</h5>
+                        <p>A cada nuevo cliente le corresponde un nuevo punto de entrega. Ingrese los valores
+                            correspondientes a un nuevo cliente. Si desea agregar un nuevo
+                            punto de entrega, vaya a la sección <a
+                                href="{{ route('administracion.dde.create') }}">Cliente/Agregar puntos de
+                                entrega</a>.</p>
+                    </div>
+                    <div class="col-2 text-right">
+                        <button type="submit" class="btn btn-sidebar btn-success"><i
+                                class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span></button>
+                    </div>
                 </div>
             </div>
+            <div class="card-body">
+                @include('administracion.clientes.partials.formulario')
+            </div>
         </div>
-        <div class="card-body">
-            @include('administracion.clientes.partials.formulario')
-        </div>
-    </div>
-</form>
+    </form>
 @endsection
 @section('js')
 @include('partials.alerts')

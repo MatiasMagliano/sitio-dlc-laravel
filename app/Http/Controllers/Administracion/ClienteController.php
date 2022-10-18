@@ -12,11 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class ClienteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //
@@ -29,11 +24,6 @@ class ClienteController extends Controller
         return view('administracion.clientes.index', compact('clientes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
@@ -42,12 +32,6 @@ class ClienteController extends Controller
         return view('administracion.clientes.create', compact('provincias', 'localidades'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         // validación de los datos del cliente
@@ -73,6 +57,7 @@ class ClienteController extends Controller
         $nuevaEntrega->domicilio = $request->domicilio;
         $nuevaEntrega->provincia_id = $request->provincia_id;
         $nuevaEntrega->localidad_id = $request->localidad_id;
+        $nuevaEntrega->mas_entregado = 0;
         $nuevaEntrega->condiciones = $request->condiciones;
         $nuevaEntrega->observaciones = $request->observaciones;
         $nuevaEntrega->save();
@@ -90,12 +75,6 @@ class ClienteController extends Controller
         return redirect(route('administracion.clientes.index'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Cliente  $cliente
-     * @return \Illuminate\Http\Response
-     */
     public function show(Cliente $cliente)
     {
         //
@@ -112,24 +91,11 @@ class ClienteController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Cliente  $cliente
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Cliente $cliente)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Cliente  $cliente
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Cliente $cliente)
     {
         //
@@ -146,34 +112,15 @@ class ClienteController extends Controller
         }
     }
 
+    // envía AJAX en un slimselect
     public function obtenerDde(Request $request){
         if($request->ajax()){
-            $localidades = DB::table('direcciones_entrega')
+            $ddes = DB::table('direcciones_entrega')
                 ->select('direcciones_entrega.id AS value', 'direcciones_entrega.lugar_entrega AS text')
                 ->where('cliente_id', '=', $request->cliente_id)
                 ->orderBy('text', 'ASC')
                 ->get();
-            return Response()->json($localidades);
-        }
-    }
-
-    public function obtenerPuntosEntrega(Request $request){
-        if($request->ajax()){
-            $ptsEntrega = DB::table('direcciones_entrega')
-                ->select(
-                    'direcciones_entrega.lugar_entrega',
-                    'direcciones_entrega.domicilio',
-                    'provincias.nombre AS provincia',
-                    'localidades.nombre AS localidad',
-                    'direcciones_entrega.condiciones',
-                    'direcciones_entrega.observaciones'
-                    )
-                ->join('provincias', 'provincias.id', '=', 'direcciones_entrega.provincia_id')
-                ->join('localidades', 'localidades.id', '=', 'direcciones_entrega.localidad_id')
-                ->where('cliente_id', '=', $request->cliente_id)
-                ->orderBy('lugar_entrega', 'ASC')
-                ->get();
-            return Response()->json($ptsEntrega);
+            return Response()->json($ddes);
         }
     }
 }

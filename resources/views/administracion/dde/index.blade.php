@@ -1,10 +1,10 @@
 @extends('adminlte::page')
 
+@section('title', 'Listado direcciones de entrega')
+
 @section('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.css" />
 @endsection
-
-@section('title', 'Listado direcciones de entrega')
 
 @section('content_header')
     <div class="row">
@@ -34,7 +34,7 @@
 @section('plugins.DatatablesPlugins', true)
 <div class="card">
     <div class="card-body">
-        <table id="tabla-dde" class="table table-sm table-bordered" style="width: 100%;">
+        <table id="tabla-dde" class="table table-sm table-bordered table-responsive-md" style="width: 100%;">
             <thead>
                 <th>Lugar de entrega</th>
                 <th>Cantidad de envíos</th>
@@ -51,74 +51,74 @@
 @endsection
 
 @section('js')
-@include('partials.alerts')
-<script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
+    @include('partials.alerts')
+    <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
 
-<script>
-    $(document).ready(function() {
-        var tabla_dde = $('#tabla-dde').DataTable({
-            "dom": "t",
-            "processing": true,
-            "retrieve": true,
-            "columns": [
-                {
-                    "data": "lugar_entrega",
-                    "class": "align-middle",
-                    "width": 170
-                },
-                {
-                    "data": "cantidad_enviado",
-                    "class": "align-middle text-center",
-                    "width": 150
-                },
-                {
-                    "data": "domicilio",
-                    "class": "align-middle"
-                },
-                {
-                    "data": "localidad",
-                    "class": "align-middle"
-                },
-                {
-                    "data": "provincia",
-                    "class": "align-middle"
-                },
-                {
-                    "data": "condiciones",
-                    "class": "align-middle"
-                },
-                {
-                    "data": "observaciones",
-                    "class": "align-middle"
-                }
-            ],
-        });
-
-        function getDirecciones(dde) {
-            let datos = {
-                cliente_id: dde.value,
-            };
-
-            $.ajax({
-                url: "{{ route('administracion.dde.ajax.obtenerDde') }}",
-                type: "GET",
-                data: datos,
-            }).done(function(resultado) {
-                tabla_dde.clear().draw();
-                tabla_dde.rows.add(resultado).draw();
+    <script>
+        $(document).ready(function() {
+            var tabla_dde = $('#tabla-dde').DataTable({
+                "dom": "t",
+                "processing": true,
+                "retrieve": true,
+                "columns": [
+                    {
+                        "data": "lugar_entrega",
+                        "class": "align-middle",
+                        "width": 170
+                    },
+                    {
+                        "data": "cantidad_enviado",
+                        "class": "align-middle text-center",
+                        "width": 150
+                    },
+                    {
+                        "data": "domicilio",
+                        "class": "align-middle"
+                    },
+                    {
+                        "data": "localidad",
+                        "class": "align-middle"
+                    },
+                    {
+                        "data": "provincia",
+                        "class": "align-middle"
+                    },
+                    {
+                        "data": "condiciones",
+                        "class": "align-middle"
+                    },
+                    {
+                        "data": "observaciones",
+                        "class": "align-middle"
+                    }
+                ],
             });
-        }
 
-        const cliente = new SlimSelect({
-            select: '.selecion-cliente',
-            placeholder: 'Seleccione el nombre corto o largo del cliente',
-            onChange: (dde) => {
-                getDirecciones(dde);
+            function getDirecciones(dde) {
+                let datos = {
+                    cliente_id: dde.value,
+                };
+
+                $.ajax({
+                    url: "{{ route('administracion.dde.ajax.obtenerDde') }}",
+                    type: "GET",
+                    data: datos,
+                }).done(function(resultado) {
+                    tabla_dde.clear().draw();
+                    tabla_dde.rows.add(resultado).draw();
+                });
             }
+
+            const cliente = new SlimSelect({
+                select: '.selecion-cliente',
+                placeholder: 'Seleccione el nombre corto o largo del cliente',
+                onChange: (dde) => {
+                    getDirecciones(dde);
+                }
+            });
         });
-    });
-</script>
+    </script>
 @endsection
 
 @section('footer')

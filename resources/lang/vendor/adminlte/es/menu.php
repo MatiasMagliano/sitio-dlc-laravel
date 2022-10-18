@@ -7,6 +7,7 @@ return [
     'administration'                => 'ADMINISTRACIÓN',
     'add_products_batches'          => 'Administrar lotes (SPA)',
     'add_products'                  => 'Crear producto',
+    'add_dde'                       => 'Crear dir. de entrega',
     'admin_tools'                   => 'Sist-admin',
     'add_quotation'                 => 'Crear cotización',
     'clients'                       => 'Clientes',

@@ -13,7 +13,7 @@ class DireccionEntrega extends Model
     protected $table = 'direcciones_entrega';
 
     protected $fillable = [
-        'lugar_entrega', 'domicilio', 'condiciones', 'observaciones', 'mas_entregado'
+        'cliente_id', 'lugar_entrega', 'domicilio', 'condiciones', 'provincia_id', 'localidad_id', 'observaciones', 'mas_entregado'
     ];
 
     // RELACIONES

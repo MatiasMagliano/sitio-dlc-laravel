@@ -252,6 +252,11 @@ return [
                     'route' => 'administracion.clientes.create',
                     'icon'  => 'fas fa-user-plus',
                 ],
+                [
+                    'text'  => 'add_dde',
+                    'route' => 'administracion.dde.create',
+                    'icon'  => 'fas fa-truck-loading',
+                ],
             ],
         ],
         [

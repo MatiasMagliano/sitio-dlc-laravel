@@ -33,7 +33,7 @@
             <a href="{{ url()->previous() }}" role="button" class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
-@stop
+@endsection
 
 @section('content')
     @section('plugins.Datatables', true)
