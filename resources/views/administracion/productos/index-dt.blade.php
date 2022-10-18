@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Administrar Cotizaciones')
+@section('title', 'Administrar Productos')
 
 @section('content_header')
     <div class="row">
