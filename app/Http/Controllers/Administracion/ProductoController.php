@@ -45,7 +45,7 @@ class ProductoController extends Controller
             8 => 'acciones'
         );
 
-        // QUERY COMPLETA DE COTIZACIONES
+        // QUERY COMPLETA DE PRODUCTOS
         $query = Producto::select('productos.id', 'productos.droga')
             ->with(
                 array(

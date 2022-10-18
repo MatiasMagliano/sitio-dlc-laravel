@@ -45,7 +45,7 @@
 <script>
     $(document).ready(function() {
         $('#tabla-productos').DataTable({
-                "responsive": true,
+            "responsive": true,
             "processing": true,
             "serverSide": true,
             "dom": "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
@@ -109,14 +109,9 @@
                     width: 100
                 },
                 {
-                    className: "align-middle text-center",
-                    orderable: false,
-                    targets: [5],
-                },
-                {
                     className: "align-middle",
                     orderable: false,
-                    targets: [6],
+                    targets: [5],
                 },
             ]
         });
