@@ -172,27 +172,27 @@
                 <div class="form-group col-lg-2 col-md-6 m-3 ">
                     <label for="input-esquema">Descuento 1</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="0" min="1">
+                        name="esquema[]" id="input-esquema" value="0" min="0">
                 </div>
                 <div class="form-group col-lg-2 col-md-6 m-3">
                     <label for="input-esquema">Descuento 2</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="0" min="1">
+                        name="esquema[]" id="input-esquema" value="0" min="0">
                 </div>
                 <div class="form-group col-lg-2 col-md-6 m-3">
                     <label for="input-esquema">Descuento 3</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="0" min="1">
+                        name="esquema[]" id="input-esquema" value="0" min="">
                 </div>
                 <div class="form-group col-lg-2 col-md-6 m-3">
                     <label for="input-esquema">Descuento 4</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="0" min="1">
+                        name="esquema[]" id="input-esquema" value="0" min="0">
                 </div>
                 <div class="form-group col-lg-2 col-md-6 m-3">
                     <label for="input-esquema">Descuento 5</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="0" min="1">
+                        name="esquema[]" id="input-esquema" value="0" min="0">
                 </div>
             </div>
         </div>
