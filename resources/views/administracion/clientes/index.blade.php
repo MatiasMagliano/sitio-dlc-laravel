@@ -108,7 +108,7 @@
             // el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
             var tabla_clientes = $('#tabla_clientes').DataTable({
                 "processing": true,
-                "dom": 'Bfrtip',
+                "dom": 'QBfrtip',
                 "order": [0, 'asc'],
                 "buttons": [{
                         extend: 'copyHtml5',
