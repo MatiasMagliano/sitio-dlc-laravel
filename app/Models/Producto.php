@@ -29,7 +29,26 @@ class Producto extends Model
     //Se definen las relaciones
     public function presentacion()
     {
-        return $this->belongsToMany(Presentacion::class, 'lote_presentacion_producto')->distinct();
+        return $this->belongsToMany(
+            Presentacion::class,
+            LotePresentacionProducto::class,
+        )->distinct();
+    }
+    public function lote()
+    {
+        return $this->belongsToMany(
+            Lote::class,
+            LotePresentacionProducto::class
+        )->distinct();
+    }
+    public function dcc()
+    {
+        return $this->belongsToMany(
+            DepositoCasaCentral::class,
+            LotePresentacionProducto::class,
+            '',
+            'dcc_id'
+        )->distinct();
     }
 
     //RELACIONES ESPECIALES
@@ -77,11 +96,11 @@ class Producto extends Model
     public static function boot() {
         parent::boot();
 
-        static::deleting(function($producto) {
-            // BORRA todos los lotes relacionados (antes de borrar el pivot)
-            $producto->lotesDeProducto->each->delete;
-            // BORRA todas las entradas de lote_presentacion_producto (pivots)
-            LotePresentacionProducto::where('producto_id', $producto->id)->delete();
-        });
+        // static::deleting(function($producto) {
+        //     // BORRA todos los lotes relacionados (antes de borrar el pivot)
+        //     $producto->lotesDeProducto->each->delete;
+        //     // BORRA todas las entradas de lote_presentacion_producto (pivots)
+        //     LotePresentacionProducto::where('producto_id', $producto->id)->delete();
+        // });
     }
 }

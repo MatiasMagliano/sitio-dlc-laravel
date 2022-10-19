@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductoRequest;
+use App\Models\DepositoCasaCentral;
 use App\Models\ListaPrecio;
 use App\Models\Lote;
+use App\Models\LotePresentacionProducto;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\Proveedor;
@@ -46,23 +48,19 @@ class ProductoController extends Controller
         );
 
         // QUERY COMPLETA DE PRODUCTOS
-        $query = Producto::select('productos.id', 'productos.droga')
+        $query = Producto::select('*')
             ->with(
                 array(
                     'presentacion' => function($query)
                     {
-                        $query->select('presentacions.id', 'forma', 'presentacion', 'hospitalario', 'trazabilidad')
-                            ->with(
-                                array(
-                                    'lote' => function($query)
-                                    {
-                                        $query->select('identificador', 'fecha_vencimiento');
-                                    },
-                                    'dcc' => function($query){
-                                        $query->select('existencia', 'cotizacion', 'disponible');
-                                    }
-                                )
-                            );
+                        $query->select('*');
+                    },
+                    'lote' => function($query)
+                    {
+                        $query->select('*');
+                    },
+                    'dcc' => function($query){
+                        $query->select('*');
                     }
                 )
             );
@@ -98,17 +96,13 @@ class ProductoController extends Controller
 
         foreach ($productos as $producto)
         {
-            foreach ($producto->presentacion as $presentacion)
-            {
-                $json['data'][] = [
-                    $producto->droga,
-                    $presentacion->forma. ", " .$presentacion->presentacion,
-                    view('administracion.productos.partials.hosp-traz', ['presentacion' => $presentacion])->render(),
-                    view('administracion.productos.partials.lotes', ['presentacion' => $presentacion])->render(),
-                    view('administracion.productos.partials.stock', ['presentacion' => $presentacion])->render(),
-                    view('administracion.productos.partials.acciones', ['producto' => $producto])->render(),
-                ];
-            }
+            $json['data'][] = [
+                $producto->droga,
+                view('administracion.productos.partials.presentaciones', ['producto' => $producto])->render(),
+                view('administracion.productos.partials.lotes', ['producto' => $producto])->render(),
+                view('administracion.productos.partials.stock', ['producto' => $producto])->render(),
+                view('administracion.productos.partials.acciones', ['producto' => $producto])->render(),
+            ];
         }
 
         return $json;
@@ -151,12 +145,13 @@ class ProductoController extends Controller
 
         if (!$request->sin_lote) {
             $hoy = Carbon::now()->format('d/m/Y');
+            $mañana = Carbon::now()->addDay()->format('d/m/Y');
             $request->validate([
                 'identificador' => 'required|unique:lotes|max:20',
                 'precio_compra' => 'required|numeric|max:5000',
                 'cantidad' => 'required|numeric|min:1|max:50000',
                 'fecha_elaboracion' => 'required|date_format:d/m/Y|before:' . $hoy,
-                'fecha_compra' => 'required|date_format:d/m/Y|before:' . $hoy,
+                'fecha_compra' => 'required|date_format:d/m/Y|before:' . $mañana,
                 'fecha_vencimiento' => 'required|date_format:d/m/Y|after:' . $hoy,
             ]);
 
@@ -170,14 +165,26 @@ class ProductoController extends Controller
             $lote->fecha_vencimiento = Carbon::createFromFormat('d/m/Y', $request->fecha_vencimiento);
             $lote->save();
 
+            // se crea un nuevo depósito dcc
+            $deposito = DepositoCasaCentral::create([
+                'existencia' => $lote->cantidad,
+                'cotizacion' => 0,
+                'disponible' => $lote->cantidad
+            ]);
+            $deposito->save();
 
-            // se crea una nueva relación con TODOS LOS DATOS y guarda el modelo producto
+            // se crea una nueva relación con TODOS LOS DATOS en LotePresentacionProducto (el pivot)
             $producto->save();
-            // ACÁ MATI AGREGAR LA LÓGICA DE PROVEEDOR/LISTA
-            $idProducto = Producto::select('id')->where('droga', '=', $request->droga)->first();
+            $lpp = LotePresentacionProducto::create([
+                'producto_id'     => $producto->id,
+                'presentacion_id' => $request->presentacion,
+                'lote_id'         => $lote->id,
+                'dcc_id'          => $deposito->id
+            ]);
+            $lpp->save();
 
             $listaDePrecios = new ListaPrecio;
-            $listaDePrecios->producto_id = $idProducto->id;
+            $listaDePrecios->producto_id = $producto->id;
             $listaDePrecios->presentacion_id = $request->presentacion;
             $listaDePrecios->proveedor_id = $request->proveedor;
             $listaDePrecios->codigoProv = $request->codigoProv;
@@ -188,16 +195,30 @@ class ProductoController extends Controller
             $request->session()->flash('success', 'El producto y su lote, se han creado con éxito');
             return redirect(route('administracion.productos.index'));
         }
+        else
+        {
+            // se fuerza la relación pero SIN LOS DATOS DE LOTE y se guarda el modelo producto
+            // se crea un nuevo depósito dcc
+            $deposito = DepositoCasaCentral::create([
+                'existencia' => 0,
+                'cotizacion' => 0,
+                'disponible' => 0
+            ]);
+            $deposito->save();
 
-        // se fuerza la relación pero SIN LOS DATOS DE LOTE y se guarda el modelo producto
-        $producto->save();
-        // $producto->presentaciones()->attach($request->presentacion, [
-        //     'proveedor_id' => $request->proveedor,
-        //     'lote_id' => '-1'
-        // ]);
+            // se crea una nueva relación con TODOS LOS DATOS en LotePresentacionProducto (el pivot)
+            $producto->save();
+            $lpp = LotePresentacionProducto::create([
+                'producto_id'     => $producto->id,
+                'presentacion_id' => $request->presentacion,
+                'lote_id'         => -1,
+                'dcc_id'          => $deposito->id
+            ]);
+            $lpp->save();
 
-        $request->session()->flash('success', 'El producto SIN LOTE, se ha creado con éxito');
-        return redirect(route('administracion.productos.index'));
+            $request->session()->flash('success', 'El producto SIN LOTE, se ha creado con éxito');
+            return redirect(route('administracion.productos.index'));
+        }
     }
 
     /**

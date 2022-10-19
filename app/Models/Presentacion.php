@@ -2,7 +2,7 @@
 //Agregado líena 8 y de 83-92
 namespace App\Models;
 
-use App\Models\LotePresentacionProducto as ModelsLotePresentacionProducto;
+use App\Models\LotePresentacionProducto;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,29 +17,34 @@ class Presentacion extends Model
     protected $table = 'presentacions';
 
     protected $fillable = [
-        'forma', 'presentacion', 'existencia', 'cotizacion', 'disponible', 'hospitalario', 'trazabilidad'
+        'forma', 'presentacion', 'hospitalario', 'trazabilidad'
     ];
 
     // Se definen las relaciones
     public function producto()
     {
-        return $this->belongsToMany(Producto::class, 'lote_presentacion_producto');
+        return $this->belongsToMany(
+            Producto::class,
+            LotePresentacionProducto::class
+        )->distinct();
     }
 
     public function lote()
     {
-        return $this->belongsToMany(Lote::class, 'lote_presentacion_producto')->distinct();
+        return $this->belongsToMany(
+            Lote::class,
+            LotePresentacionProducto::class
+        )->distinct();
     }
 
     public function dcc()
     {
         return $this->belongsToMany(
-                DepositoCasaCentral::class,
-                'lote_presentacion_producto',
-                '',
-                'dcc_id'
-            )
-            ->distinct();
+            DepositoCasaCentral::class,
+            LotePresentacionProducto::class,
+            '',
+            'dcc_id'
+        )->distinct();
     }
 
     public function productosCotizados(): HasMany
@@ -84,7 +89,7 @@ class Presentacion extends Model
     //devuelve el depósito para la presentación y producto solicitado
     public function deposito($producto, $presentacion){
         $deposito = DepositoCasaCentral::find(
-            ModelsLotePresentacionProducto::getIdDeposito($producto, $presentacion)
+            LotePresentacionProducto::getIdDeposito($producto, $presentacion)
         );
         return $deposito;
     }

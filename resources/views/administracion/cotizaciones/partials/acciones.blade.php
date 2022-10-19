@@ -26,10 +26,10 @@
 
     @case(3)
         <div class="btn-group-vertical">
-            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
-                data-target="#modalAprobarCotizacion" id="{{ $cotizacion->id }}">Aprobar</button>
-            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-                data-target="#modalRechazarCotizacion" id="{{ $cotizacion->id }}">Rechazar</button>
+            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalAprobarCotizacion"
+                id="{{ $cotizacion->id }}">Aprobar</button>
+            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modalRechazarCotizacion"
+                id="{{ $cotizacion->id }}">Rechazar</button>
         </div>
     @break
 
@@ -50,7 +50,8 @@
                     <i class="fas fa-arrow-down"></i>
                 </a>
             @else
-                <div class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="No se adjuntó provisión">
+                <div class="btn btn-link text-reset" data-toggle="tooltip" data-placement="bottom"
+                    title="No se adjuntó provisión" style="cursor:default;">
                     <i class="fas fa-times"></i>
                 </div>
             @endif
@@ -74,7 +75,7 @@
                 </a>
             @else
                 <div class="btn btn-link text-reset" data-toggle="tooltip" data-placement="bottom"
-                    title="No se adjuntó comparativo">
+                    title="No se adjuntó comparativo" style="cursor:default;">
                     <i class="fas fa-times"></i>
                 </div>
             @endif

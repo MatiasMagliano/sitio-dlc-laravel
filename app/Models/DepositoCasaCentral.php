@@ -16,14 +16,28 @@ class DepositoCasaCentral extends Model
     ];
 
     //SE DEFINEN RELACIONES
+    public function producto()
+    {
+        return $this->belongsToMany(
+            Producto::class,
+            LotePresentacionProducto::class
+        )->distinct();
+    }
+
     public function presentacion()
     {
         return $this->belongsToMany(
             Presentacion::class,
-            'lote_presentacion_producto',
-            '',
-            'dcc_id'
-        );
+            LotePresentacionProducto::class
+        )->distinct();
+    }
+
+    public function lote()
+    {
+        return $this->belongsToMany(
+            Lote::class,
+            LotePresentacionProducto::class
+        )->distinct();
     }
 
     public function scopeGetDepCasaCentral($query, $id){
