@@ -18,7 +18,7 @@
 @endsection
 
 @section('content')
-    <x-adminlte-card title="Cliente *" theme="lightblue" theme-mode="outline" body-class=" bg-gradient-lightblue">
+    <x-adminlte-card title="Seleccione un cliente *" theme="lightblue" theme-mode="outline" body-class=" bg-gradient-lightblue">
         <div class="form-group">
             <select name="cliente_id" id="input-cliente" class="selecion-cliente form-control-alternative">
                 <option data-placeholder="true"></option>

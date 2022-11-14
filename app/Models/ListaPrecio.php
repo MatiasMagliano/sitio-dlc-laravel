@@ -17,13 +17,17 @@ class ListaPrecio extends Model
      * @var array
      */
     protected $fillable = [
+        'codigoProv',
+        'producto_id',
+        'presentacion_id',
+        'proveedor_id',
         'costo',
     ];
 
     //Index
     public static function getAllListasDePrecios(){
         $allListasDePrecios = ListaPrecio::select('lista_precios.proveedor_id','proveedors.razon_social AS razon_social','proveedors.cuit AS cuit',
-        ListaPrecio::raw('count(lista_precios.id) AS prods') , ListaPrecio::raw('min(lista_precios.created_at) AS creado'), 
+        ListaPrecio::raw('count(lista_precios.id) AS prods') , ListaPrecio::raw('min(lista_precios.created_at) AS creado'),
         ListaPrecio::raw('max(lista_precios.updated_at) AS modificado'))
             ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
             ->groupBy('proveedors.cuit','proveedors.razon_social','lista_precios.proveedor_id')
@@ -51,7 +55,7 @@ class ListaPrecio extends Model
             ->get();
         return $listado;
     }
- 
+
     public static function deleteListaByProveedorId($proveedor_id)
     {
         $deleted = DB::table('lista_precios')->where('proveedor_id','=', $proveedor_id)->delete();
@@ -68,7 +72,7 @@ class ListaPrecio extends Model
     }
 
 
-    
+
 
     public static function deletelistaDeProveedor($cuit)
     {

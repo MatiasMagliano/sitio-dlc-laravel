@@ -1,4 +1,4 @@
-@foreach ($producto->dcc as $dcc)
+@foreach ($presentacion->dcc as $dcc)
     <div class="row">
         <div class="col text-center">{{$dcc->existencia}}</div>
         <div class="col text-center">{{$dcc->cotizacion}}</div>

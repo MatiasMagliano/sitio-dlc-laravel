@@ -18,17 +18,8 @@ use Illuminate\Support\Facades\Storage;
 
 class CotizacionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        // $cotizaciones = Cotizacion::with('user', 'cliente', 'estado')
-        //     ->whereIn('estado_id', [1, 2, 3])
-        //     ->limit(100)
-        //     ->get();
         $config = [
             'format' => 'DD/MM/YYYY',
             'dayViewHeaderFormat' => 'MMM YYYY',
@@ -183,23 +174,12 @@ class CotizacionController extends Controller
         return $json;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $clientes = Cliente::all();
         return view('administracion.cotizaciones.create', compact('clientes'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         // se valida que los campos estén presentes
@@ -228,56 +208,44 @@ class CotizacionController extends Controller
         $dirEntrega->save();
         $cotizacion->save();
 
-        $request->session()->flash('success', 'Cotización registrada con éxito. Agregue líneas a la cotización.');
+        $request->session()->flash('success', 'Cotización registrada con éxito. Ahora puede agregar líneas a la cotización.');
         return redirect()->route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion->id]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Cotizacion  $cotizacion
-     * @return \Illuminate\Http\Response
-     */
     public function show(Cotizacion $cotizacione)
     {
         $cotizacion = $cotizacione;
         return view('administracion.cotizaciones.show', compact('cotizacion'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Cotizacion  $cotizacion
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Cotizacion $cotizacion)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Cotizacion  $cotizacion
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Cotizacion $cotizacion)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Cotizacion  $cotizacion
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Cotizacion $cotizacion)
     {
         //
     }
 
+    public function agregarProducto(Cotizacion $cotizacion)
+    {
+        //AGREGAR PRESENTACION A COTIZACION
+        $productos = Producto::orderby('droga', 'ASC')->get();
+        $porcentajes = Cotizacion::select('clientes.razon_social', 'porcentaje_1', 'porcentaje_2', 'porcentaje_3', 'porcentaje_4', 'porcentaje_5')
+            ->join('clientes', 'cotizacions.cliente_id', '=', 'clientes.id')
+            ->join('esquema_precios', 'clientes.id', '=', 'esquema_precios.cliente_id')
+            ->where('cotizacions.id', '=', $cotizacion->id)
+            ->get();
+
+
+        return view('administracion.cotizaciones.agregarProducto', compact('cotizacion', 'productos', 'porcentajes'));
+    }
 
     // MÉTODOS ESPECIALES
     public function finalizar(Cotizacion $cotizacion, Request $request)
@@ -345,20 +313,6 @@ class CotizacionController extends Controller
         return redirect(route('administracion.cotizaciones.index'));
     }
 
-    public function agregarProducto(Cotizacion $cotizacion)
-    {
-        //AGREGAR PRESENTACION A COTIZACION
-        $productos = Producto::orderby('droga', 'ASC')->get();
-        $porcentajes = Cotizacion::select('clientes.razon_social', 'porcentaje_1', 'porcentaje_2', 'porcentaje_3', 'porcentaje_4', 'porcentaje_5')
-            ->join('clientes', 'cotizacions.cliente_id', '=', 'clientes.id')
-            ->join('esquema_precios', 'clientes.id', '=', 'esquema_precios.cliente_id')
-            ->where('cotizacions.id', '=', $cotizacion->id)
-            ->get();
-
-
-        return view('administracion.cotizaciones.agregarProducto', compact('cotizacion', 'productos', 'porcentajes'));
-    }
-
     // AJAX QUE OBTIENE LOS PRECIOS SUGERIDOS
     public function preciosSugeridos(Request $request)
     {
@@ -385,8 +339,8 @@ class CotizacionController extends Controller
         //GUARDADO DEL PRODUCTO COTIZADO
         $request->validate([
             'producto' => 'required',
-            'precio' => 'required',
-            'cantidad' => 'required'
+            'precio' => 'required|numeric|min:0',
+            'cantidad' => 'required|integer|min:0'
         ]);
 
         // el request->producto se desdobla en dos:

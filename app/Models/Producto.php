@@ -13,18 +13,7 @@ class Producto extends Model
     use HasFactory, SoftDeletes, Sortable;
 
     protected $table = 'productos';
-
-    //Se setean los campos "llenables" en masa
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'droga'
-    ];
-
-    public $sortable = [
-        'droga'
-    ];
+    protected $fillable = ['droga'];
 
     //Se definen las relaciones
     public function presentacion()
@@ -32,14 +21,25 @@ class Producto extends Model
         return $this->belongsToMany(
             Presentacion::class,
             LotePresentacionProducto::class,
-        )->distinct();
+        )->groupBy([
+                'lote_presentacion_producto.producto_id',
+                'lote_presentacion_producto.presentacion_id',
+                'presentacions.id',
+                'presentacions.forma',
+                'presentacions.presentacion',
+                'presentacions.hospitalario',
+                'presentacions.trazabilidad',
+                'presentacions.created_at',
+                'presentacions.updated_at',
+                'presentacions.deleted_at'
+        ]);
     }
     public function lote()
     {
         return $this->belongsToMany(
             Lote::class,
             LotePresentacionProducto::class
-        )->distinct();
+        );
     }
     public function dcc()
     {
@@ -48,10 +48,14 @@ class Producto extends Model
             LotePresentacionProducto::class,
             '',
             'dcc_id'
-        )->distinct();
+        )->groupBy([
+            'lote_presentacion_producto.producto_id',
+            'lote_presentacion_producto.presentacion_id',
+            'lote_presentacion_producto.dcc_id',
+        ]);
     }
 
-    //RELACIONES ESPECIALES
+    //RELACIONES ESPECIALES (NO MODELOS) --> DEVUELVEN COLECCIONES DE DATOS
     public static function presentaciones($producto)
     {
         return DB::table('presentacions')

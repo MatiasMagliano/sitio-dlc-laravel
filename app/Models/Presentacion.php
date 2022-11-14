@@ -1,11 +1,9 @@
 <?php
-//Agregado líena 8 y de 83-92
 namespace App\Models;
 
 use App\Models\LotePresentacionProducto;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,15 +24,17 @@ class Presentacion extends Model
         return $this->belongsToMany(
             Producto::class,
             LotePresentacionProducto::class
-        )->distinct();
+        );
     }
 
     public function lote()
     {
         return $this->belongsToMany(
             Lote::class,
-            LotePresentacionProducto::class
-        )->distinct();
+            LotePresentacionProducto::class,
+            'presentacion_id',
+            'lote_id'
+        );
     }
 
     public function dcc()
@@ -42,9 +42,9 @@ class Presentacion extends Model
         return $this->belongsToMany(
             DepositoCasaCentral::class,
             LotePresentacionProducto::class,
-            '',
+            'presentacion_id',
             'dcc_id'
-        )->distinct();
+        );
     }
 
     public function productosCotizados(): HasMany

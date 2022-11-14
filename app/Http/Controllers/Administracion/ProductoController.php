@@ -12,7 +12,9 @@ use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProductoController extends Controller
 {
@@ -53,14 +55,48 @@ class ProductoController extends Controller
                 array(
                     'presentacion' => function($query)
                     {
-                        $query->select('*');
-                    },
-                    'lote' => function($query)
-                    {
-                        $query->select('*');
-                    },
-                    'dcc' => function($query){
-                        $query->select('*');
+                        $query->select(
+                            'presentacions.id',
+                            'presentacions.forma',
+                            'presentacions.presentacion',
+                            'presentacions.hospitalario',
+                            'presentacions.trazabilidad'
+                            )
+                            ->groupBy([
+                            'presentacions.id',
+                            'presentacions.forma',
+                            'presentacions.presentacion',
+                            'presentacions.hospitalario',
+                            'presentacions.trazabilidad'
+                            ])->with(
+                                array(
+                                    'lote' => function($query)
+                                    {
+                                        $query->select('*')
+                                        ->wherePivot('producto_id', '=', /* COLOCAR ALGO */);
+                                    },
+                                    'dcc' => function($query){
+                                        $query->select(
+                                            'existencia',
+                                            'cotizacion',
+                                            'disponible'
+                                        )->groupBy([
+                                            'existencia',
+                                            'cotizacion',
+                                            'disponible',
+                                            'deposito_casa_centrals.id',
+                                            'deposito_casa_centrals.existencia',
+                                            'deposito_casa_centrals.cotizacion',
+                                            'deposito_casa_centrals.disponible',
+                                            'deposito_casa_centrals.created_at',
+                                            'deposito_casa_centrals.updated_at',
+                                            'lote_presentacion_producto.producto_id',
+                                            'lote_presentacion_producto.presentacion_id',
+                                            'lote_presentacion_producto.dcc_id',
+                                        ]);
+                                    }
+                                )
+                            );
                     }
                 )
             );
@@ -96,13 +132,16 @@ class ProductoController extends Controller
 
         foreach ($productos as $producto)
         {
-            $json['data'][] = [
-                $producto->droga,
-                view('administracion.productos.partials.presentaciones', ['producto' => $producto])->render(),
-                view('administracion.productos.partials.lotes', ['producto' => $producto])->render(),
-                view('administracion.productos.partials.stock', ['producto' => $producto])->render(),
-                view('administracion.productos.partials.acciones', ['producto' => $producto])->render(),
-            ];
+            foreach ($producto->presentacion as $presentacion)
+            {
+                $json['data'][] = [
+                    $producto->droga,
+                    view('administracion.productos.partials.presentaciones', ['presentacion' => $presentacion])->render(),
+                    view('administracion.productos.partials.lotes', ['presentacion' => $presentacion])->render(),
+                    view('administracion.productos.partials.stock', ['presentacion' => $presentacion])->render(),
+                    view('administracion.productos.partials.acciones', ['producto' => $producto, 'presentacion' => $presentacion])->render(),
+                ];
+            }
         }
 
         return $json;
@@ -119,12 +158,6 @@ class ProductoController extends Controller
         return view('administracion.productos.crear', compact('presentaciones', 'proveedores'))->with('config', $config);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreProductosRequest  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         // EL ATTACH NO SE PUEDE HACER DE A UNO... HAY QUE COLOCAR TODOS LOS VALORES en una sola transacción
@@ -136,6 +169,7 @@ class ProductoController extends Controller
 
         $request->validate([
             'proveedor' => 'required',
+            'codigoProv' => 'required',
             'presentacion' => 'required'
         ]);
 
@@ -221,12 +255,6 @@ class ProductoController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Productos  $productos
-     * @return \Illuminate\Http\Response
-     */
     public function show($producto_id, $presentacion_id)
     {
         //
@@ -234,34 +262,19 @@ class ProductoController extends Controller
         return view('administracion.productos.show', compact('producto', 'presentacion_id'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Productos  $productos
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Producto $productos)
+    public function edit(Producto $producto, Presentacion $presentacion)
     {
-        //
+        $presentaciones = Presentacion::all();
+        $proveedor = Producto::proveedores($producto->id, $presentacion->id);
+        $proveedores = Proveedor::all();
+        return view('administracion.productos.edit', compact('producto', 'presentacion', 'presentaciones', 'proveedor', 'proveedores'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateProductosRequest  $request
-     * @param  \App\Models\Productos  $productos
-     * @return \Illuminate\Http\Response
-     */
     public function update(UpdateProductoRequest $request, Producto $productos)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Productos  $productos
-     */
     public function destroy($id, Request $request)
     {
         // hace un softdelete sobre producto
@@ -276,34 +289,33 @@ class ProductoController extends Controller
         return redirect()->route('administracion.productos.index');
     }
 
-    /**
-     * Función que responde al ajax del modal de búsqueda
-     */
-    public function buscar(Request $request)
-    {
-        if ($request->has('droga')) {
-            $rta = Producto::where('droga', 'like', '%' . $request->input('droga') . '%')->get();
-            return response()->json($rta);
+    // Ajax responde dt de proveedores en vistas de edición de producto
+    public function ajaxProveedores(Request $request){
+        if($request->ajax()){
+            $proveedor = Producto::proveedores($request->producto, $request->presentacion);
+            return response()->json($proveedor);
         }
-
-        return response()->json(['droga' => 'No hay resultados']);
     }
 
-    public function busqueda(Request $request)
-    {
-        $termino = $request->input('termino');
-        if ($termino != "") {
-            $productos = Producto::where('droga', 'like', '%' . $request->termino . '%')->paginate(10);
+    // Ajax que guarda un nuevo proveedor a un producto
+    public function ajaxNuevoPorveedor(Request $request){
+        if($request->ajax()){
 
-            // ESTA LÍNEA ES LA SALVADORA!!! Se utiliza para que los links de paginación no vuelvan al listado original
-            $productos->appends(['termino' => $termino]);
+            // validación pura de Laravel
+            $request->validate([
+                'codigo_proveedor' => 'required|max:50',
+            ]);
 
-            if (count($productos)) {
-                return view('administracion.productos.index', compact('productos'));
-            } else {
-                $request->session()->flash('error', 'La búsqueda no dio resultado.');
-                return redirect(route('administracion.productos.index'));
-            }
+            ListaPrecio::create([
+                'codigoProv' => $request->codigo_proveedor,
+                'producto_id' => $request->producto,
+                'presentacion_id' => $request->presentacion,
+                'proveedor_id' => $request->proveedor,
+                'costo' => 0,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]);
+            return response()->json(['success' => 'Se agregó nuevo proveedor']);
         }
     }
 }
