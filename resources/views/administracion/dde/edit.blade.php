@@ -1,64 +1,37 @@
 @extends('adminlte::page')
 
-@section('title', 'Administrar Clientes')
+@section('title', 'Editar dirección de entrega')
 
 @section('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.css" />
-    <style>
-        .texto-header {
-            padding: 0 20px;
-            height: 60px;
-            overflow-y: auto;
-            /*font-size: 14px;*/
-            font-weight: 500;
-            color: #000000;
-        }
-
-        .texto-header::-webkit-scrollbar {
-            width: 5px;
-            background-color: #282828;
-        }
-
-        .texto-header::-webkit-scrollbar-thumb {
-            background-color: #3bd136;
-        }
-
-        @media (max-width: 600px) {
-            .hide {
-                display: none;
-            }
-        }
-    </style>
 @endsection
 
 @section('content_header')
     <div class="row">
-        <div class="col-md-8">
-            <h1>Administración de clientes</h1>
+        <div class="col-xl-8">
+            <h1>Editar dirección de entrega</h1>
         </div>
-        <div class="col-md-4 d-flex justify-content-md-end">
-            <a href="{{ route('administracion.clientes.index') }}" role="button" class="btn btn-md btn-secondary">Volver</a>
+        <div class="col-xl-4 d-flex justify-content-xl-end">
+            <a href="{{ route('administracion.dde.index') }}" role="button" class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
-@stop
+@endsection
 
-{{-- aquí va contenido --}}
 @section('content')
-    @section('plugins.inputmask', true)
-    <form action="{{ route('administracion.clientes.store') }}" method="post" class="needs-validation" autocomplete="off"
-        novalidate>
+    <form action="{{ route('administracion.dde.update', ['dde' => $dde]) }}" method="post"
+        class="needs-validation" autocomplete="off" novalidate>
+        @method('PATCH')
         @csrf
 
         <div class="card">
             <div class="card-header">
                 <div class="row d-flex">
                     <div class="col-10 texto-header">
-                        <h5>Nuevo cliente</h5>
-                        <p>A cada nuevo cliente le corresponde un nuevo punto de entrega. Ingrese los valores
-                            correspondientes a un nuevo cliente. Si desea agregar un nuevo
-                            punto de entrega, vaya a la sección <a
-                                href="{{ route('administracion.dde.create') }}">Cliente/Agregar puntos de
-                                entrega</a>.</p>
+                        <h5>Editar direcciones de entrega para: <strong>{{$dde->cliente->razon_social}}</strong></h5>
+                        <p>Ingrese los nuevos valores correspondientes al punto de entrega. Si desea agregar un nuevo punto de
+                            entrega, vaya a la sección <a href="{{ route('administracion.dde.create') }}">Cliente/Agregar
+                                puntos de entrega</a>.
+                        </p>
                     </div>
                     <div class="col-2 text-right">
                         <button type="submit" class="btn btn-sidebar btn-success"><i
@@ -67,7 +40,7 @@
                 </div>
             </div>
             <div class="card-body">
-                @include('administracion.clientes.partials.formulario')
+                @include('administracion.dde.partials.form-edit')
             </div>
         </div>
     </form>
@@ -77,17 +50,6 @@
     @include('partials.alerts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#input-afip').inputmask("9{2}-9{8}-9{1}");
-            $('#input-telefono').inputmask({
-                "mask": "09{3}-9{7}"
-            });
-
-            $("#sin_esquema").change(function() {
-                    $('#cuerpo_esquema').toggleClass('overlay');
-                });
-        });
-
         var provincia = new SlimSelect({
             select: '.selector-provincia',
             placeholder: 'Seleccione una provincia',

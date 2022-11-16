@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
 
 class Cliente extends Model
 {
@@ -25,11 +24,37 @@ class Cliente extends Model
     // RELACIONES
     public function cotizaciones()
     {
-        return $this->belongsToMany(Cotizacion::class);
+        return $this->hasMany(Cotizacion::class,);
+    }
+
+    public function esquemaPrecio()
+    {
+        return $this->hasOne(EsquemaPrecio::class);
     }
 
     public function dde(): HasMany
     {
         return $this->hasMany(DireccionEntrega::class);
+    }
+
+    // event handlers para hacer el softdelete de las relaciones
+    public static function boot() {
+        parent::boot();
+
+        self::deleting(function($cliente) {
+            // cotizaciones en estado pendiente
+            $cliente->cotizaciones()->each(function($cotizacion) {
+                if($cotizacion->estado_id == 1)
+                {
+                    $cotizacion->delete();
+                }
+            });
+
+            // direcciones de entrega relacionados
+            $cliente->dde->each->delete();
+
+            // esquemas de precios relacionados
+            $cliente->esquemaPrecio->delete();
+        });
     }
 }

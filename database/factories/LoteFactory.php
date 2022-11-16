@@ -19,7 +19,7 @@ class LoteFactory extends Factory
             'fecha_elaboracion' => $this->faker->dateTimeBetween('-3 years', '-1 years'),
             'fecha_compra' => $this->faker->dateTimeBetween('-11 months','-1 months'),
             'fecha_vencimiento' => $this->faker->dateTimeBetween('+1 months', '+3 years'),
-            'cantidad' => $this->faker->randomNumber(3)
+            'cantidad' => $this->faker->randomNumber(4)
         ];
     }
 }

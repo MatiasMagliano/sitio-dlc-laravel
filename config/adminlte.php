@@ -253,9 +253,9 @@ return [
                     'icon'  => 'fas fa-user-plus',
                 ],
                 [
-                    'text'  => 'add_dde',
-                    'route' => 'administracion.dde.create',
-                    'icon'  => 'fas fa-truck-loading',
+                    'text'  => 'dde',
+                    'route' => 'administracion.dde.index',
+                    'icon'  => 'fas fa-truck-loading'
                 ],
             ],
         ],
@@ -295,11 +295,6 @@ return [
                     'text'  => 'suppliers',
                     'route' => 'administracion.proveedores.index',
                     'icon'  => 'fas fa-truck'
-                ],
-                [
-                    'text'  => 'dde',
-                    'route' => 'administracion.dde.index',
-                    'icon'  => 'fas fa-truck-loading'
                 ],
             ],
         ],

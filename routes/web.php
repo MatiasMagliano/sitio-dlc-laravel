@@ -102,32 +102,38 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     // rutas de COTIZACIONES
     Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])
         ->name('cotizaciones.finalizar');
-    Route::get('/cotizaciones/{cotizacion}/generarpdf', [CotizacionController::class, 'generarpdf'])
-        ->name('cotizaciones.generarpdf');
-    Route::get('/cotizaciones/{cotizacion}/agregar/producto', [CotizacionController::class, 'agregarProducto'])
-        ->name('cotizaciones.agregar.producto');
-    Route::get('/cotizaciones/{cotizacion}/producto/{productoCotizado}/edit', [CotizacionController::class, 'editarProductoCotizado'])
-        ->name('cotizaciones.editar.producto');
-    Route::get('/cotizaciones/{cotizacion}/descargarpdf/{doc}', [CotizacionController::class, 'descargapdf'])
-        ->name('cotizaciones.descargapdf');
-    //historico cotizaciones
-    Route::get('/cotizaciones/historico', [CotizacionController::class, 'historico'])
-        ->name('cotizaciones.historico');
-    Route::get('/cotizaciones/ajaxhistorico', [CotizacionController::class, 'historicoCotizaciones'])
-        ->name('cotizaciones.ajax.historico');
-    //ajax para index con serverside datatable
-    Route::get('/cotizaciones/ajaxdt', [CotizacionController::class, 'ajaxdt'])->name('cotizaciones.ajax');
-
-    Route::post('/cotizaciones/{cotizacion}/producto', [CotizacionController::class, 'guardarProductoCotizado'])
-        ->name('cotizaciones.guardar.producto');
     Route::post('/cotizaciones/{cotizacion}/aprobarCotizacion', [CotizacionController::class, 'aprobarCotizacion'])
         ->name('cotizaciones.aprobarCotizacion');
     Route::post('/cotizaciones/{cotizacion}/rechazarCotizacion', [CotizacionController::class, 'rechazarCotizacion'])
         ->name('cotizaciones.rechazarCotizacion');
+
+            //manejo de PDF
+    Route::get('/cotizaciones/{cotizacion}/generarpdf', [CotizacionController::class, 'generarpdf'])
+        ->name('cotizaciones.generarpdf');
+    Route::get('/cotizaciones/{cotizacion}/descargarpdf/{doc}', [CotizacionController::class, 'descargapdf'])
+        ->name('cotizaciones.descargapdf');
+
+            //edición del producto dentro de una cotización
+    Route::get('/cotizaciones/{cotizacion}/agregar/producto', [CotizacionController::class, 'agregarProducto'])
+        ->name('cotizaciones.agregar.producto');
+    Route::get('/cotizaciones/ajaxProductos', [CotizacionController::class, 'ajaxSlimProducto'])
+        ->name('cotizaciones.agregar.ajaxProductos');
+    Route::post('/cotizaciones/{cotizacion}/producto', [CotizacionController::class, 'guardarProductoCotizado'])
+        ->name('cotizaciones.guardar.producto');
+    Route::get('/cotizaciones/{cotizacion}/producto/{productoCotizado}/edit', [CotizacionController::class, 'editarProductoCotizado'])
+        ->name('cotizaciones.editar.producto');
     Route::match(['put', 'patch'], '/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class], 'actualizarProductoCotizado')
         ->name('cotizaciones.actualizar.producto');
     Route::delete('/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class, 'borrarProductoCotizado'])
         ->name('cotizaciones.borrar.producto');
+
+            //ajax para index con serverside datatable
+    Route::get('/cotizaciones/ajaxdt', [CotizacionController::class, 'ajaxdt'])->name('cotizaciones.ajax');
+    Route::get('/cotizaciones/historico', [CotizacionController::class, 'historico'])
+        ->name('cotizaciones.historico');
+    Route::get('/cotizaciones/ajaxhistorico', [CotizacionController::class, 'historicoCotizaciones'])
+        ->name('cotizaciones.ajax.historico');
+
     Route::resource('/cotizaciones', CotizacionController::class)->except('edit', 'update');
 
     // rutas de CALENDARIO DE VENCIMIENTOS

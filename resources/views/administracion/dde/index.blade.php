@@ -43,6 +43,7 @@
                 <th>Provincia</th>
                 <th>Condiciones</th>
                 <th>Observaciones</th>
+                <th></th>
             </thead>
             <tbody id="wbodychange"></tbody>
         </table>
@@ -56,11 +57,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
 
     <script>
+
         $(document).ready(function() {
             var tabla_dde = $('#tabla-dde').DataTable({
                 "dom": "t",
                 "processing": true,
-                "retrieve": true,
                 "columns": [
                     {
                         "data": "lugar_entrega",
@@ -91,6 +92,11 @@
                     {
                         "data": "observaciones",
                         "class": "align-middle"
+                    },
+                    {
+                        "data": "acciones",
+                        "class": "align-middle text-center",
+                        "width": 100
                     }
                 ],
             });

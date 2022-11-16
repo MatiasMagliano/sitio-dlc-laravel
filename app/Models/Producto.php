@@ -29,6 +29,7 @@ class Producto extends Model
                 'presentacions.presentacion',
                 'presentacions.hospitalario',
                 'presentacions.trazabilidad',
+                'presentacions.divisible',
                 'presentacions.created_at',
                 'presentacions.updated_at',
                 'presentacions.deleted_at'
@@ -94,17 +95,5 @@ class Producto extends Model
             ->where('lista_precios.presentacion_id', '=', $presentacion)
             ->select('proveedors.*')
             ->get();
-    }
-
-    // event handlers para hacer el softdelete de las relaciones
-    public static function boot() {
-        parent::boot();
-
-        // static::deleting(function($producto) {
-        //     // BORRA todos los lotes relacionados (antes de borrar el pivot)
-        //     $producto->lotesDeProducto->each->delete;
-        //     // BORRA todas las entradas de lote_presentacion_producto (pivots)
-        //     LotePresentacionProducto::where('producto_id', $producto->id)->delete();
-        // });
     }
 }

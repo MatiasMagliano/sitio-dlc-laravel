@@ -22,9 +22,9 @@ class DireccionEntrega extends Model
         $this->belongsToMany(Cotizacion::class);
     }
 
-    public function clientes()
+    public function cliente()
     {
-        return $this->belongsToMany(Cliente::class);
+        return $this->belongsTo(Cliente::class);
     }
 
     public function provincia()

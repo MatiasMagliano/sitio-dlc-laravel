@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Administrar Productos')
+@section('title', 'Administración de cotizaciones')
 
 @section('css')
     <style>
@@ -15,16 +15,15 @@
 @section('content_header')
     <div class="row">
         <div class="col-xl-8">
-            <h1>Administración de cotizaciones</h1>
+            <h1>Ver/Editar cotización</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-xl-end">
             <a href="{{ route('administracion.cotizaciones.index') }}" role="button"
                 class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
-@stop
+@endsection
 
-{{-- aquí va contenido --}}
 @section('content')
     <div class="card">
         <div class="card-header">
@@ -43,15 +42,10 @@
                                 </button>
                             </form>
                         @else
-                        <button type="button" class="btn btn-sm btn-secondary"
-                        onclick="confirmarCotizacion()">
-                        <i class="far fa-trash-alt"></i>&nbsp;<span class="hide">Cancelar cotización</span>
-                    </button>
-                    &nbsp;
-                    <button type="button" class="btn btn-sm btn-success"
-                        onclick="confirmarCotizacion()">
-                        <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Finalizar cotización</span>
-                    </button>
+                            <button type="button" class="btn btn-sm btn-success"
+                                onclick="confirmarCotizacion()">
+                                <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Finalizar cotización</span>
+                            </button>
                         @endif
                     </div>
                 @endif
@@ -141,6 +135,7 @@
         </div>
     @endif
 
+    {{-- EN CASO DE SER RECHAZADA, SE AGREGA UNA LEYENDA --}}
     @if ($cotizacion->rechazada)
         <div class="card bg-gradient-danger">
             <div class="card-header">
@@ -209,16 +204,7 @@
                         </td>
                         <td class="align-middle text-center">
                             @if (!$cotizacion->finalizada)
-                                <a href="{{ route('administracion.cotizaciones.editar.producto', ['cotizacion' => $cotizacion, 'productoCotizado' => $cotizado]) }}"
-                                    class="btn btn-link" data-toggle="tooltip" data-placement="middle"
-                                    title="Editar producto cotizado">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </a>
-                                <button type="button" class="btn btn-link text-danger"
-                                    data-id="{{ $cotizado->id }}" data-action="{{ route('administracion.cotizaciones.borrar.producto', ['cotizacion' => $cotizacion, 'productoCotizado' => $cotizado]) }}"
-                                    onclick="confirmarBorrado({{$cotizacion->id}}, {{$cotizado->id}})">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                                @include('administracion.cotizaciones.partials.acciones-show')
                             @else
                                 <span>-</span>
                             @endif
@@ -229,6 +215,7 @@
             </table>
         </div>
     </div>
+
 @endsection
 
 @section('js')

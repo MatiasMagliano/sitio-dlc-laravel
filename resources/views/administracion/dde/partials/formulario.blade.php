@@ -2,7 +2,7 @@
 <hr>
 <div class="row d-flex m-3">
     <div class="form-group col">
-        <label for="input-lugar_entrega">Lugar de entrega *</label>
+        <label for="input-lugar_entrega">Nombre del lugar de entrega *</label>
         <input type="lugar_entrega" name="lugar_entrega" id="input-lugar_entrega"
             class="form-control form-control-sm @error('lugar_entrega') is-invalid @enderror"
             value="{{ old('lugar_entrega') }}">

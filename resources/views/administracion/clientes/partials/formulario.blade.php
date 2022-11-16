@@ -163,9 +163,9 @@
     </div>
 
 
-    <div class="card">
+    <div class="card mt-5">
         <div class="card-header">
-            <h6 class="heading-small text-muted">Esquema de precios - Descuento en %</h6>
+            <h6 class="heading-small text-muted">Esquema de precios - Descuento en % de hasta dos decimales</h6>
         </div>
         <div class="card-body">
             <div class="row d-flex justify-content-center">

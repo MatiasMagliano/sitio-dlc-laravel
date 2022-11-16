@@ -7,11 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Kyslik\ColumnSortable\Sortable;
 
 class Cotizacion extends Model
 {
-    use HasFactory, Sortable;
+    use HasFactory;
 
     protected $table = 'cotizacions';
 
@@ -74,5 +73,19 @@ class Cotizacion extends Model
             ->where('direcciones_entrega.id', '=', $punto)
             ->where('cotizacions.id', $this->id)
             ->get();
+    }
+
+
+
+
+
+    // event handlers para hacer el softdelete de las relaciones
+    public static function boot() {
+        parent::boot();
+
+        static::deleting(function($cotizacion) {
+            // BORRA todos los productos relacionados
+            $cotizacion->productos->each->delete();
+        });
     }
 }

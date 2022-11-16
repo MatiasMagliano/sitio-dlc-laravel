@@ -25,6 +25,7 @@ class CreateDireccionesEntregaTable extends Migration
             $table->string('condiciones')->nullable();
             $table->string('observaciones')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

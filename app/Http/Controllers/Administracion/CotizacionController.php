@@ -14,6 +14,7 @@ use App\Models\Producto;
 use App\Models\ProductoCotizado;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class CotizacionController extends Controller
@@ -233,6 +234,8 @@ class CotizacionController extends Controller
         //
     }
 
+
+    // MÉTODOS ESPECIALES
     public function agregarProducto(Cotizacion $cotizacion)
     {
         //AGREGAR PRESENTACION A COTIZACION
@@ -247,7 +250,57 @@ class CotizacionController extends Controller
         return view('administracion.cotizaciones.agregarProducto', compact('cotizacion', 'productos', 'porcentajes'));
     }
 
-    // MÉTODOS ESPECIALES
+    public function guardarProductoCotizado(Request $request, Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
+    {
+        //GUARDADO DEL PRODUCTO COTIZADO
+        $request->validate([
+            'producto' => 'required',
+            'precio' => 'required|numeric|min:0',
+            'cantidad' => 'required|integer|min:0'
+        ]);
+
+        // el request->producto se desdobla en dos:
+        // $producto_ids[0]: producto_id
+        // $producto_ids[1]: presentacion_id
+        $producto = $request->get('producto');
+        $producto_ids = explode('|', $producto); //esta función separa y guarda en un array
+
+        //se prepara el request para guardarlo completo en la bbdd
+        $request->request->add([
+            'producto_id' => $producto_ids[0],
+            'presentacion_id' => $producto_ids[1]
+        ]);
+        $request->merge([
+            'total' => $request->get('precio') * $request->get('cantidad')
+        ]);
+
+        //dd($request);
+        $productoCotizado->create($request->all());
+
+        $request->session()->flash('success', 'Producto agregado con éxito.');
+        return redirect()
+            ->route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]);
+    }
+
+    public function editarProductoCotizado(Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
+    {
+        //EDICION DE LA PRESENTACION COTIZADA
+    }
+
+    public function actualizarProductoCotizado(Request $request, Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
+    {
+        //ACTUALILZACION DEL PRODUCTO COTIZADO
+    }
+
+    public function borrarProductoCotizado(Request $request, Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
+    {
+        //BORRADO DEL PRODUCTO COTIZADO
+        $productoCotizado->delete();
+
+        $request->session()->flash('success', 'Producto eliminado con éxito.');
+        return redirect(route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]));
+    }
+
     public function finalizar(Cotizacion $cotizacion, Request $request)
     {
         //FINALIZAR COTIZACION
@@ -316,7 +369,6 @@ class CotizacionController extends Controller
     // AJAX QUE OBTIENE LOS PRECIOS SUGERIDOS
     public function preciosSugeridos(Request $request)
     {
-
         if ($request->ajax()) {
             // la lógica de la función sería obtener todos los precios para esa presentación
             // por ahora, se envía la misma lista para todos los productos
@@ -327,57 +379,6 @@ class CotizacionController extends Controller
 
             return response()->json($sugerencias);
         }
-    }
-
-    public function editarProductoCotizado(Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
-    {
-        //EDICION DE LA PRESENTACION COTIZADA
-    }
-
-    public function guardarProductoCotizado(Request $request, Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
-    {
-        //GUARDADO DEL PRODUCTO COTIZADO
-        $request->validate([
-            'producto' => 'required',
-            'precio' => 'required|numeric|min:0',
-            'cantidad' => 'required|integer|min:0'
-        ]);
-
-        // el request->producto se desdobla en dos:
-        // $producto_ids[0]: producto_id
-        // $producto_ids[1]: presentacion_id
-        $producto = $request->get('producto');
-        $producto_ids = explode('|', $producto); //esta función separa y guarda en un array
-
-        //se prepara el request para guardarlo completo en la bbdd
-        $request->request->add([
-            'producto_id' => $producto_ids[0],
-            'presentacion_id' => $producto_ids[1]
-        ]);
-        $request->merge([
-            'total' => $request->get('precio') * $request->get('cantidad')
-        ]);
-
-        //dd($request);
-        $productoCotizado->create($request->all());
-
-        $request->session()->flash('success', 'Producto agregado con éxito.');
-        return redirect()
-            ->route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]);
-    }
-
-    public function actualizarProductoCotizado(Request $request, Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
-    {
-        //ACTUALIZADO DEL PRODUCTO COTIZADO
-    }
-
-    public function borrarProductoCotizado(Request $request, Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
-    {
-        //BORRADO DEL PRODUCTO COTIZADO
-        $productoCotizado->delete();
-
-        $request->session()->flash('success', 'Cotización eliminada con éxito.');
-        return response()->json();
     }
 
     public function generarpdf(Cotizacion $cotizacion, Request $request)

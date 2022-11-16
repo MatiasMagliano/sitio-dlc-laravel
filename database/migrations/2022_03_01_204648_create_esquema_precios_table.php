@@ -23,6 +23,7 @@ class CreateEsquemaPreciosTable extends Migration
             $table->float('porcentaje_4')->nullable()->default(0);
             $table->float('porcentaje_5')->nullable()->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

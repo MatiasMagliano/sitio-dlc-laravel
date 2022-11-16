@@ -19,6 +19,7 @@ class CreatePresentacionsTable extends Migration
             $table->string('presentacion');
             $table->boolean('hospitalario');
             $table->boolean('trazabilidad');
+            $table->boolean('divisible');
             $table->timestamps();
             $table->softDeletes();
         });

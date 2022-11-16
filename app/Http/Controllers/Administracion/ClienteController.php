@@ -80,25 +80,48 @@ class ClienteController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Cliente  $cliente
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Cliente $cliente)
     {
-        //
+        return view('administracion.clientes.edit', compact('cliente'));
     }
 
     public function update(Request $request, Cliente $cliente)
     {
-        //
+        $datosCliente = $request->validate([
+            'nombre_corto'  => 'required|max:30',
+            'razon_social'  => 'required|max:255',
+            'contacto'      => 'required|max:50',
+            'telefono'      => 'required|string|max:20',
+            'email'         => 'required|email|max:50',
+        ]);
+        $datosEsquema = $request->validate([
+            'esquema[0]'    => 'regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
+            'esquema[1]'    => 'regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
+            'esquema[2]'    => 'regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
+            'esquema[3]'    => 'regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
+            'esquema[4]'    => 'regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/'
+        ]);
+
+        $cliente->update($datosCliente);
+        $cliente->esquemaPrecio->porcentaje_1 = $request->esquema[0];
+        $cliente->esquemaPrecio->porcentaje_2 = $request->esquema[1];
+        $cliente->esquemaPrecio->porcentaje_3 = $request->esquema[2];
+        $cliente->esquemaPrecio->porcentaje_4 = $request->esquema[3];
+        $cliente->esquemaPrecio->porcentaje_5 = $request->esquema[4];
+
+        $cliente->save();
+        $cliente->esquemaPrecio->save();
+
+        $request->session()->flash('success', 'El registro de cliente se ha modificado con éxito.');
+        return redirect(route('administracion.clientes.index'));
     }
 
-    public function destroy(Cliente $cliente)
+    public function destroy(Request $request, Cliente $cliente)
     {
-        //
+        $cliente->delete();
+
+        $request->session()->flash('success', 'El registro de cliente y todas sus cotizaciones pendientes se han borrado con éxito.');
+        return redirect(route('administracion.clientes.index'));
     }
 
     public function obtenerLocalidades(Request $request){
@@ -109,18 +132,6 @@ class ClienteController extends Controller
                 ->orderBy('text', 'ASC')
                 ->get();
             return Response()->json($localidades);
-        }
-    }
-
-    // envía AJAX en un slimselect
-    public function obtenerDde(Request $request){
-        if($request->ajax()){
-            $ddes = DB::table('direcciones_entrega')
-                ->select('direcciones_entrega.id AS value', 'direcciones_entrega.lugar_entrega AS text')
-                ->where('cliente_id', '=', $request->cliente_id)
-                ->orderBy('text', 'ASC')
-                ->get();
-            return Response()->json($ddes);
         }
     }
 }
