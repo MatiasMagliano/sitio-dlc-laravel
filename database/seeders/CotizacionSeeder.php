@@ -37,7 +37,7 @@ class CotizacionSeeder extends Seeder
                 // se incrementa el ranking de puntos de entrega: "más entregado"
                 $dirEntrega->increment('mas_entregado');
 
-                $maxProductos = rand(2, 70);
+                $maxProductos = rand(10, 100);
                 for($j = 1; $j <= $maxProductos; $j++){
                     ProductoCotizado::factory()->create([
                         'cotizacion_id' => $cotizacion->id

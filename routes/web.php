@@ -114,15 +114,17 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
         ->name('cotizaciones.descargapdf');
 
             //edición del producto dentro de una cotización
+    Route::get('/cotizaciones/loadProdCotiz', [CotizacionController::class, 'loadProdCotiz'])
+        ->name('cotizaciones.loadProdCotiz');
     Route::get('/cotizaciones/{cotizacion}/agregar/producto', [CotizacionController::class, 'agregarProducto'])
         ->name('cotizaciones.agregar.producto');
     Route::get('/cotizaciones/ajaxProductos', [CotizacionController::class, 'ajaxSlimProducto'])
         ->name('cotizaciones.agregar.ajaxProductos');
     Route::post('/cotizaciones/{cotizacion}/producto', [CotizacionController::class, 'guardarProductoCotizado'])
         ->name('cotizaciones.guardar.producto');
-    Route::get('/cotizaciones/{cotizacion}/producto/{productoCotizado}/edit', [CotizacionController::class, 'editarProductoCotizado'])
+    Route::get('/cotizaciones/edit', [CotizacionController::class, 'editarProductoCotizado'])
         ->name('cotizaciones.editar.producto');
-    Route::match(['put', 'patch'], '/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class], 'actualizarProductoCotizado')
+    Route::match(['put', 'patch'], '/cotizaciones/actualizar', [CotizacionController::class, 'actualizarProductoCotizado'])
         ->name('cotizaciones.actualizar.producto');
     Route::delete('/cotizaciones/{cotizacion}/producto/{productoCotizado}', [CotizacionController::class, 'borrarProductoCotizado'])
         ->name('cotizaciones.borrar.producto');

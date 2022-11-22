@@ -1,11 +1,11 @@
 {{-- producto=producto+presentacion. Se retienen los dos ID combinados. Luego el controller los separa --}}
-<label for="input-producto">Producto y presentación</label>
+<label for="input-producto">Producto y presentación *</label>
 <div class="form-group row">
     <select name="producto" id="input-producto"
         class="seleccion-producto col @error('producto') is-invalid @enderror">
         <option data-placeholder="true"></option>
-        {{-- se separa el producto y la presentación para que quede seleccionado en el slimselect --}}
         @php
+            //se separa el producto y la presentación para que quede seleccionado en el slimselect
             $prod_pres = explode('|', @old('producto'));
         @endphp
         @foreach ($productos as $producto)
@@ -66,10 +66,10 @@
 <div class="row d-flex">
     <div class="col">
         <div class="form-group">
-            <label for="input-precio">Precio</label>
+            <label for="input-precio">Precio *</label>
             <input type="number" name="precio" id="input-precio" min="0"
                 class="form-control @error('precio') is-invalid @enderror"
-                value="@if(old('precio')){{old('precio')}}@endif"
+                value="@if(old('precio')){{old('precio')}}@else{{0}}@endif"
                 step=".01">
                 @error('precio')<div class="invalid-feedback">{{$message}}</div>@enderror
         </div>
@@ -77,7 +77,7 @@
 
     <div class="col">
         <div class="form-group">
-            <label for="input-cantidad">Cantidad</label>
+            <label for="input-cantidad">Cantidad *</label>
             <input type="number" name="cantidad" id="input-cantidad" min="0"
                 class="form-control @error('cantidad') is-invalid @enderror"
                 value="@if(old('cantidad')){{old('cantidad')}}@else{{0}}@endif">

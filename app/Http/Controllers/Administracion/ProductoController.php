@@ -14,6 +14,7 @@ use App\Models\Proveedor;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ProductoController extends Controller
@@ -56,24 +57,24 @@ class ProductoController extends Controller
                     'presentacion' => function($query)
                     {
                         $query->select(
-                            'presentacions.id',
-                            'presentacions.forma',
-                            'presentacions.presentacion',
-                            'presentacions.hospitalario',
-                            'presentacions.trazabilidad'
+                                'presentacions.id',
+                                'presentacions.forma',
+                                'presentacions.presentacion',
+                                'presentacions.hospitalario',
+                                'presentacions.trazabilidad'
                             )
                             ->groupBy([
-                            'presentacions.id',
-                            'presentacions.forma',
-                            'presentacions.presentacion',
-                            'presentacions.hospitalario',
-                            'presentacions.trazabilidad'
+                                'presentacions.id',
+                                'presentacions.forma',
+                                'presentacions.presentacion',
+                                'presentacions.hospitalario',
+                                'presentacions.trazabilidad'
                             ])->with(
                                 array(
                                     'lote' => function($query)
                                     {
                                         $query->select('*')
-                                        ->wherePivot('producto_id', '=', /* COLOCAR ALGO */);
+                                            /*->wherePivotIn('producto_id', ARRAY DE PRODUCTOS )*/;
                                     },
                                     'dcc' => function($query){
                                         $query->select(

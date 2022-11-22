@@ -183,61 +183,203 @@
                     <th>Cantidad</th>
                     <th>Precio unitario</th>
                     <th>Total</th>
-                    <th></th>
+                    <th>Acciones</th>
                 </thead>
-                <tbody>
-                    @php $i = 0; /*variable contadora del Nº Orden*/@endphp
-                    @foreach ($cotizacion->productos as $cotizado)
-                    <tr>
-                        <td class="align-middle text-center">{{++$i}}</td>
-                        <td>{{--Producto: producto+presentacion--}}
-                            {{$cotizado->producto->droga}}, {{$cotizado->presentacion->forma}} {{$cotizado->presentacion->presentacion}}
-                        </td>
-                        <td class="align-middle text-center">
-                            {{$cotizado->cantidad}}
-                        </td>
-                        <td class="align-middle text-center">
-                            $ {{number_format($cotizado->precio, 2, ',', '.')}}
-                        </td>
-                        <td class="text-right">
-                            $ {{number_format($cotizado->total, 2, ',', '.')}}
-                        </td>
-                        <td class="align-middle text-center">
-                            @if (!$cotizacion->finalizada)
-                                @include('administracion.cotizaciones.partials.acciones-show')
-                            @else
-                                <span>-</span>
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
             </table>
         </div>
     </div>
 
+    {{-- MODAL EDICIÓN DE PRODUCTO --}}
+    <div class="modal fade" id="modalModifProducto" tabindex="-1" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="" method="POST" id="formModifProducto" enctype="multipart/form-data">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="prodCotiz_id" id="input-prodCotiz" value="">
+                    <div class="modal-header bg-gradient-blue">
+                        <h5 class="modal-title">Modificar producto</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="input-droga">Droga</label>
+                            <input type="text" name="droga" id="input-droga" min="0"class="form-control" disabled>
+                        </div>
+
+                        <div class="row d-flex">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="input-precio">Precio *</label>
+                                    <input type="number" name="precio" id="input-precio" min="0"
+                                        class="form-control @error('precio') is-invalid @enderror"
+                                        value="@if(old('precio')){{old('precio')}}@else{{0}}@endif"
+                                        step=".01">
+                                        @error('precio')<div class="invalid-feedback">{{$message}}</div>@enderror
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="input-cantidad">Cantidad *</label>
+                                    <input type="number" name="cantidad" id="input-cantidad" min="0"
+                                        class="form-control @error('cantidad') is-invalid @enderror"
+                                        value="@if(old('cantidad')){{old('cantidad')}}@else{{0}}@endif">
+                                        @error('cantidad')<div class="invalid-feedback">{{$message}}</div>@enderror
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="input-total">Total</label>
+                                    <input type="text" name="total" id="input-total"
+                                        class="form-control @error('total') is-invalid @enderror"
+                                        value="@if(old('total')){{old('total')}}@else{{0}}@endif" disabled>
+                                        @error('total')<div class="invalid-feedback">{{$message}}</div>@enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" id="guardarAprobada" class="btn btn-success">Continuar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
     @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script>
+        var tablaProductos;
+
         $(document).ready(function() {
-            $('#tablaProductos').DataTable( {
-                "dom": 'Pfrtip',
-                "scrollY": "35vh",
-                "scrollCollapse": true,
-                "paging": false,
-                "order": [0, 'asc'],
-                "bInfo": false,
-                "searching": false,
-                "columnDefs": [{
-                        targets: 4,
-                        width: 70,
+            tablaProductos = $('#tablaProductos').DataTable( {
+                dom: "t",
+                processing: true,
+                ajax: {
+                    "url": "{{route('administracion.cotizaciones.loadProdCotiz')}}",
+                    "data": {cotizacion: {{$cotizacion->id}}},
+                },
+                scrollY: "35vh",
+                scrollCollapse: true,
+                paging: false,
+                order: [0, 'asc'],
+                columns: [
+                    {
+                        data: "linea",
+                        class: "align-middle text-center",
+                    },
+                    {
+                        data: "producto",
+                        class: "align-middle",
+                    },
+                    {
+                        data: "cantidad",
+                        class: "align-middle text-center",
+                    },
+                    {
+                        data: "precio",
+                        class: "align-middle text-center",
+                    },
+                    {
+                        data: "total",
+                        class: "align-middle text-center",
+                    },
+                    {
+                        data: "acciones",
+                        class: "align-middle text-center",
                     },
                 ],
             });
         });
+
+        $(document).on('click','.open_modal',function(){
+            $.ajax({
+                type: "GET",
+                url: "{{route('administracion.cotizaciones.editar.producto')}}",
+                data: {producto: $(this).val()},
+                success: function(data){
+                    $('#input-droga').val(
+                        data.producto.droga +
+                        " - " +
+                        data.presentacion.forma +
+                        ", " +
+                        data.presentacion.presentacion
+                    );
+
+                    $('#input-prodCotiz').val(data.producto_cotizado.id);
+                    $('#input-precio').val(data.producto_cotizado.precio);
+                    $('#input-cantidad').val(data.producto_cotizado.cantidad);
+                },
+            });
+        });
+
+        // SCRIPT QUE ACTUALIZA EL TOTAL EN EL CAMPO TOTAL
+        $('#input-cantidad').on('input', function() {
+            if($('#input-precio').val() <= 0 || $('#input-cantidad').val() <= 0){
+                $('#input-total').val('N/A');
+            }
+            else{
+                $('#input-total').val('$' + (parseInt($('#input-cantidad').val()) * parseFloat($('#input-precio').val())).toFixed(2));
+            }
+        });
+        $('#input-precio').on('input', function() {
+            if($('#input-precio').val() <= 0 || $('#input-cantidad').val() <= 0){
+                $('#input-total').val('N/A');
+            }
+            else{
+                $('#input-total').val('$' + (parseInt($('#input-cantidad').val()) * parseFloat($('#input-precio').val())).toFixed(2));
+            }
+        });
+
+        //SUBMIT DEL FORMULARIO DE MODIFICACION DE PRODUCTO
+        $(document).on('submit','#formModifProducto',function(event){
+            event.preventDefault();
+
+            $.ajax({
+                url: '{{route('administracion.cotizaciones.actualizar.producto')}}',
+                method: 'POST',
+                data: new FormData(this),
+                dataType: 'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success:function(response)
+                {
+                    Swal.fire({
+                        title: 'Modificar producto',
+                        icon: 'success',
+                        text: response.success,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                    $('#modalModifProducto').modal('toggle')
+                    tablaProductos.ajax.reload();
+                },
+                error: function(response) {
+                    var errors = response.responseJSON;
+                    errores = '';
+                    $.each( errors, function( key, value ) {
+                        errores += value;
+                    });
+                    Swal.fire({
+                        icon: 'error',
+                        text: errores,
+                        showConfirmButton: true,
+                    });
+                }
+            });
+        });
+
         function confirmarCotizacion(){
             Swal.fire({
                 icon: 'warning',
@@ -249,36 +391,6 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.replace('{{ route('administracion.cotizaciones.finalizar', $cotizacion) }}');
-                }
-            });
-        }
-
-        // BORRAR PRODUCTO DE COTIZACIÓN
-        function confirmarBorrado(id_cotizacion, id_cotizado){
-            Swal.fire({
-                icon: 'warning',
-                title: 'Borrar producto',
-                text: 'Esto quitará el producto de la lista.',
-                confirmButtonText: 'Borrar',
-                showCancelButton: true,
-                cancelButtonText: 'Cancelar',
-            }).then((result) => {
-                if(result.isConfirmed) {
-                    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-
-                    $.ajax({
-                        type: 'DELETE',
-                        url: "{{url('/administracion/cotizaciones')}}/" + id_cotizacion + '/producto/' + id_cotizado,
-                        data: {_token: CSRF_TOKEN},
-                        dataType: 'JSON',
-                        success: function (results) {
-                            // la redirección se da en el AJAX
-                            window.location.replace('{{ route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]) }}');
-                        },
-                        error: function (results) {
-                            Swal.fire(Swal.fire('Error', results.message, 'error'));
-                        }
-                    });
                 }
             });
         }

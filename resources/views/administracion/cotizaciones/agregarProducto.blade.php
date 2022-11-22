@@ -141,12 +141,20 @@
 
         // SCRIPT QUE ACTUALIZA EL TOTAL EN EL CAMPO TOTAL
         $('#input-cantidad').on('input', function() {
-            $('#input-total').val('$' + (parseInt($('#input-cantidad').val()) * parseFloat($('#input-precio').val())).toFixed(2));
+            if($('#input-precio').val() <= 0 || $('#input-cantidad').val() <= 0){
+                $('#input-total').val('N/A');
+            }
+            else{
+                $('#input-total').val('$' + (parseInt($('#input-cantidad').val()) * parseFloat($('#input-precio').val())).toFixed(2));
+            }
         });
-
-        // SCRIPT QUE ACTUALIZA EL TOTAL EN EL CAMPO TOTAL
         $('#input-precio').on('input', function() {
-            $('#input-total').val('$' + (parseInt($('#input-cantidad').val() * parseFloat($('#input-precio').val()))).toFixed(2));
+            if($('#input-precio').val() <= 0 || $('#input-cantidad').val() <= 0){
+                $('#input-total').val('N/A');
+            }
+            else{
+                $('#input-total').val('$' + (parseInt($('#input-cantidad').val()) * parseFloat($('#input-precio').val())).toFixed(2));
+            }
         });
 
         $(document).ready(function(){

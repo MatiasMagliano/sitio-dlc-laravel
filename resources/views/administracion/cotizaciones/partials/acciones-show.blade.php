@@ -1,14 +1,13 @@
 <div class="btn-group" role="group" aria-label="Acciones de direcciones de entrega">
-    <a href="{{ route('administracion.cotizaciones.editar.producto', ['cotizacion' => $cotizacion, 'productoCotizado' => $cotizado]) }}"
-        class="btn btn-link" data-toggle="tooltip" data-placement="middle"
-        title="Editar producto">
+    <button role="button" class="btn btn-link open_modal" data-toggle="modal" data-target="#modalModifProducto" data-toggle="tooltip" data-placement="middle"
+        title="Editar producto" value="{{$cotizacion}}">
         <i class="fas fa-pencil-alt"></i>
-    </a>
-    <form action="{{ route('administracion.cotizaciones.borrar.producto', ['cotizacion' => $cotizacion, 'productoCotizado' => $cotizado]) }}"
-        id="frm-borrar-{{ $cotizacion->id }}" method="post" class="d-inline">
-
+    </button>
+    <form action="{{ route('administracion.cotizaciones.borrar.producto', ['cotizacion' => $cotizacion, 'productoCotizado' => $productoCotizado]) }}"
+        id="frm-borrar-{{ $cotizacion }}" method="post" class="d-inline">
         @csrf
         @method('delete')
+
         <a role="button" class="btn btn-link text-danger" data-toggle="tooltip"
             data-placement="middle" title="Borrar producto"
             onclick="
@@ -16,14 +15,14 @@
 
                     Swal.fire({
                         icon: 'warning',
-                        title: '¿Está seguro de eliminar este punto de entrega?',
-                        html: '<p style=color: red; font-wieght:800; font-size:1.3em;>¡ATENCION!</p>',
+                        title: '¿Está seguro de eliminar este producto?',
+                        html: '<span style=\'color: red; font-weight:800; font-size:1.3em;\'>¡ATENCION!</span>',
                         confirmButtonText: 'Borrar',
                         showCancelButton: true,
                         cancelButtonText: 'Cancelar',
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            $('#frm-borrar-{{ $cotizacion->id }}').submit()
+                            $('#frm-borrar-{{ $cotizacion }}').submit()
                         }
                     });
                 ">

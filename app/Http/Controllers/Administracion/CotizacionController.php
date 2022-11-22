@@ -219,6 +219,47 @@ class CotizacionController extends Controller
         return view('administracion.cotizaciones.show', compact('cotizacion'));
     }
 
+    public function loadProdCotiz(Request $request)
+    {
+        // carga el dt en el show de la cotización
+        if ($request->ajax())
+        {
+            $datos = ProductoCotizado::select(
+                'producto_cotizados.id',
+                'producto_cotizados.cotizacion_id',
+                'productos.droga',
+                DB::raw('CONCAT(presentacions.forma, " ", presentacions.presentacion) AS presentacion'),
+                'producto_cotizados.cantidad',
+                'producto_cotizados.precio',
+                'producto_cotizados.total'
+            )
+                ->join('productos', 'producto_cotizados.producto_id', '=', 'productos.id')
+                ->join('presentacions', 'producto_cotizados.presentacion_id', '=', 'presentacions.id')
+                ->where('producto_cotizados.cotizacion_id', '=', $request->cotizacion)
+                ->get();
+
+            $json = array(
+                'data' => []
+            );
+            $indice = 1;
+
+            foreach($datos as $dato)
+            {
+                $json['data'][] = [
+                    'linea' => $indice,
+                    'producto' => $dato->droga. ', ' .$dato->presentacion,
+                    'cantidad' => $dato->cantidad,
+                    'precio' => '$ '. $dato->precio,
+                    'total' => '$ '. $dato->total,
+                    'acciones' => view('administracion.cotizaciones.partials.acciones-show', ['cotizacion' => $dato->cotizacion_id, 'productoCotizado' => $dato->id])->render(),
+                ];
+                $indice++;
+            }
+
+            return response()->json($json);
+        }
+    }
+
     public function edit(Cotizacion $cotizacion)
     {
         //
@@ -282,14 +323,38 @@ class CotizacionController extends Controller
             ->route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]);
     }
 
-    public function editarProductoCotizado(Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
+    public function editarProductoCotizado(Request $request)
     {
-        //EDICION DE LA PRESENTACION COTIZADA
+        //EDICION DE LA PRESENTACION COTIZADA --> devuelve un ajax para rellenar el modal-formulario
+        if($request->ajax())
+        {
+            $producto_cotizado = ProductoCotizado::find($request->producto);
+            $respuesta = array(
+                'producto_cotizado' => $producto_cotizado,
+                'producto'  => Producto::find($producto_cotizado->producto_id),
+                'presentacion' => Presentacion::find($producto_cotizado->producto_id),
+            );
+
+            return response()->json($respuesta);
+        }
     }
 
-    public function actualizarProductoCotizado(Request $request, Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
+    public function actualizarProductoCotizado(Request $request)
     {
         //ACTUALILZACION DEL PRODUCTO COTIZADO
+        $prodCotiz = ProductoCotizado::find($request->prodCotiz_id);
+        $datos = $request->validate([
+            'cantidad'  => 'required|numeric|min:0',
+            'precio'    => 'required|numeric|regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
+        ]);
+
+        $prodCotiz->update($datos);
+        $prodCotiz->update([
+            'total' => $request->get('precio') * $request->get('cantidad')
+        ]);
+
+        return response()->json(['success' => 'El producto se ha modificado con éxito.']);
+        //return redirect(route('administracion.cotizaciones.show', ['cotizacione' => $prodCotiz->cotizacion_id]));
     }
 
     public function borrarProductoCotizado(Request $request, Cotizacion $cotizacion, ProductoCotizado $productoCotizado)
