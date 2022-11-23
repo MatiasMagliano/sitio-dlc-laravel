@@ -12,11 +12,11 @@
             data-placement="middle" title="Borrar producto"
             onclick="
                     event.preventDefault();
-
+                    let advertencia = 'Esta acción no se puede deshacer';
                     Swal.fire({
                         icon: 'warning',
                         title: '¿Está seguro de eliminar este producto?',
-                        html: '<span style=\'color: red; font-weight:800; font-size:1.3em;\'>¡ATENCION!</span>',
+                        html: '<span style=\'color: red; font-weight:800; font-size:1.3em;\'>¡ATENCION!</span><br>'+advertencia,
                         confirmButtonText: 'Borrar',
                         showCancelButton: true,
                         cancelButtonText: 'Cancelar',

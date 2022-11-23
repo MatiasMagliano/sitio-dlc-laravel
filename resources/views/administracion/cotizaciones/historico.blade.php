@@ -69,6 +69,7 @@
         $(document).ready(function() {
             $('#tabla-cotizaciones').DataTable({
                 "serverSide": true,
+                "processing": true,
                 "ajax": {
                     url: "{{ route('administracion.cotizaciones.ajax.historico') }}",
                     method: "GET"

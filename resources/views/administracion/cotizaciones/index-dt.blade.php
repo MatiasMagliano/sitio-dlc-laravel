@@ -37,6 +37,16 @@
                     <th></th>
                 </tr>
             </thead>
+            <tfoot style="display: table-header-group;">
+                <tr class=" bg-gradient-light">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </tfoot>
             <tbody>
             </tbody>
         </table>
@@ -200,67 +210,92 @@
     };
 
     function borrarCotizacion(id) {
+        let advertencia = 'Se eliminará esta cotización y todos sus productos asociales. Esta acción no se puede deshacer.';
         Swal.fire({
             icon: 'warning',
             title: 'Borrar cotización',
-            text: 'Su cotización no contiene líneas, esto borrará la referencia en el registro.',
+            html: '<span style=\'color: red; font-weight:800; font-size:1.3em;\'>¡ATENCION!</span><br>' +advertencia,
             confirmButtonText: 'Borrar',
             showCancelButton: true,
             cancelButtonText: 'Cancelar',
         }).then((result) => {
             if (result.isConfirmed) {
-                debugger;
                 $('#borrar-' + id).submit();
-                window.location.replace('{{ route('administracion.cotizaciones.index') }}');
             }
         });
     };
 
     $(document).ready(function() {
         moment.locale('es');
+
+        $('#tabla-cotizaciones tfoot th').slice(1, 5).each(function () {
+            $(this).html('<input type="text" class="form-control"/>');
+        });
+
         $('#tabla-cotizaciones').dataTable({
-            "responsive": true,
-            "order": [0, 'desc'],
+            "dom": "rltip",
             "processing": true,
             "serverSide": true,
             "ajax": {
                 url: "{{ route('administracion.cotizaciones.ajax') }}",
                 method: "GET"
             },
-            "columnDefs": [{
-                    className: "align-middle text-center",
+            "order": [0, 'desc'],
+            "columnDefs": [
+                {
                     targets: [0],
+                    name: "fecha-modificacion",
+                    className: "align-middle text-center",
                     'render': function(data) {
                         return moment(new Date(data)).format("DD/MM/YYYY");
-                    }
+                    },
+                    orderable: false,
                 },
                 {
+                    targets: [1],
+                    name: "identificador",
                     className: "align-middle text-center font-weight-bold",
-                    orderable: false,
-                    targets: [1]
+                    orderable: true,
                 },
                 {
+                    targets: [2],
+                    name: "cliente",
                     className: "align-middle",
                     orderable: false,
-                    targets: [2]
                 },
                 {
+                    targets: [3],
+                    name: "usuario",
                     className: "align-middle",
                     orderable: false,
-                    targets: [3]
                 },
                 {
+                    targets: [4],
+                    name: "estado",
                     className: "align-middle text-center",
                     orderable: false,
-                    targets: [4],
                     width: 100
                 },
                 {
+                    targets: [5],
+                    name: "acciones",
                     className: "align-middle text-center",
                     orderable: false,
-                    targets: [5],
                 },
-            ]
+            ],
+            "initComplete": function () {
+                this.api()
+                    .columns([1, 2, 3, 4])
+                    .every(function () {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change clear', function () {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                            }
+                        });
+                    });
+            },
         });
 
         // función para que aparezca el nombre de archivo en el input

@@ -14,6 +14,7 @@ use App\Models\Producto;
 use App\Models\ProductoCotizado;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -38,38 +39,62 @@ class CotizacionController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', array(0, 'desc'));
 
+        // busqueda general
         $filter = $search['value'];
+        // busqueda individual
+        $GLOBALS['b_columna'] = Arr::except($request->query('columns'), array('_token', '_method'));
 
         $sortColumns = array(
             0 => 'cotizacions.updated_at',
-            1 => 'cotizacions.modificacion',
+            1 => 'cotizacions.identificador',
             2 => 'clientes.razon_social',
             3 => 'users.name',
             4 => 'estados.estado'
         );
 
         // QUERY COMPLETA DE COTIZACIONES
-        $query = Cotizacion::select('*')
-            ->with(
-                array(
-                    'cliente' => function($query)
-                    {
-                        $query->select('*');
-                    },
-                    'user' => function($query)
-                    {
-                        $query->select('*');
-                    },
-                    'estado' => function($query)
-                    {
-                        $query->select('*');
-                    }
-                )
-            )
-            ->whereIn('cotizacions.estado_id', [1, 2, 3]);
+        $query = Cotizacion::select('*')->whereIn('cotizacions.estado_id', [1, 2, 3]);
 
+        $query->join('clientes', function($join){
+            $join->on('cotizacions.cliente_id', '=', 'clientes.id')
+                ->where(function($query){
+                    $b_columna = $GLOBALS['b_columna'];
+                    if(isset($b_columna[2]['search']['value'])) {
+                        $query = $query->where('clientes.razon_social', 'like', '%'.$b_columna[2]['search']['value'].'%');
+                    }
+                });
+        });
+
+        $query->join('users', function($join){
+            $join->on('cotizacions.user_id', '=', 'users.id')
+                ->where(function($query){
+                    $b_columna = $GLOBALS['b_columna'];
+                    $query->select('*');
+                    if(isset($b_columna[3]['search']['value'])) {
+                        $query->where('name', 'like', '%'.$b_columna[3]['search']['value'].'%');
+                    }
+                });
+        });
+
+        $query->join('estados', function($join){
+            $join->on('cotizacions.estado_id', '=', 'estados.id')
+                ->where(function($query){
+                    $b_columna = $GLOBALS['b_columna'];
+                    $query->select('*');
+                    if(isset($b_columna[4]['search']['value'])) {
+                        $query->where('estado', 'like', '%'.$b_columna[4]['search']['value'].'%');
+                    }
+                });
+        });
+
+        // filtro general
         if (!empty($filter)) {
-            $query->where('cotizacions.identificador', 'like', '%' . $filter . '%');
+            $query->where('cotizacions.identificador', 'like', '%'.$filter.'%');
+        }
+        //filtro particular
+        $b_columna = $GLOBALS['b_columna'];
+        if(isset($b_columna[1]['search']['value'])) {
+            $query->where('identificador', 'like', '%'.$b_columna[1]['search']['value'].'%');
         }
 
         $recordsTotal = $query->count();
@@ -90,7 +115,6 @@ class CotizacionController extends Controller
         $cotizaciones = $query->get();
 
         foreach ($cotizaciones as $cotizacion) {
-
             $json['data'][] = [
                 $cotizacion->updated_at,
                 $cotizacion->identificador,
@@ -272,7 +296,11 @@ class CotizacionController extends Controller
 
     public function destroy(Cotizacion $cotizacion)
     {
-        //
+        // elimina en cascada (en el método boot del modelo) todos los productos asociados
+        dd($cotizacion->id);
+        $cotizacion->dde()->decrement('mas_entregado');
+        $cotizacion->delete();
+
     }
 
 

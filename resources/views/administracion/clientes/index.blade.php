@@ -114,7 +114,7 @@
                                                 Swal.fire({
                                                     icon: 'warning',
                                                     title: '¿Está seguro de eliminar este cliente?',
-                                                    html: '<p style=color: red; font-wieght:800; font-size:1.3em;>¡ATENCION!</p>' + advertencia,
+                                                    html: '<p style=\'color: red; font-wieght:800; font-size:1.3em;\'>¡ATENCION!</p><br>' + advertencia,
                                                     confirmButtonText: 'Borrar',
                                                     showCancelButton: true,
                                                     cancelButtonText: 'Cancelar',

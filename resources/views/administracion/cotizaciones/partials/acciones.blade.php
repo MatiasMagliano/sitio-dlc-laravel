@@ -5,7 +5,7 @@
             data-toggle="tooltip" data-placement="bottom" title="Editar cotización">
             <i class="fas fa-pencil-alt"></i>
         </a>
-        <form action="{{ route('administracion.cotizaciones.destroy', $cotizacion) }}" id="borrar-{{ $cotizacion->id }}"
+        <form action="{{ route('administracion.cotizaciones.destroy', ['cotizacione' => $cotizacion]) }}" id="borrar-{{ $cotizacion->id }}"
             method="post" class="d-inline">
             @csrf
             @method('delete')

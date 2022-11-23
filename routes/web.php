@@ -13,6 +13,7 @@ use App\Http\Controllers\Administracion\CotizacionController;
 use App\Http\Controllers\Administracion\ListaPrecioController;
 use App\Http\Controllers\Administracion\ClienteController;
 use App\Http\Controllers\Administracion\OrdenTrabajoController;
+use App\Http\Controllers\Administracion\ReportesController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\DireccionEntregaController;
 use App\Http\Controllers\HomeController;
@@ -145,6 +146,9 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::get('/calendarios/obtenerConfirmadas', [CalendarioController::class, 'fechasConfirmadas'])->name('ajax.obtener.confirmadas');
     Route::get('/calendarios/obtenerRechazadas', [CalendarioController::class, 'fechasRechazadas'])->name('ajax.obtener.rechazadas');
     route::get('/calendarios/vencimiento', [CalendarioController::class, 'index'])->name('calendario.vencimientos');
+
+    // rutas de REPORTES
+    Route::get('reportes', [ReportesController::class, 'index'])->name('reportes');
 });
 
 // RUTAS PARA EXPEDICION y, se incluye administración en la configuración del GATE

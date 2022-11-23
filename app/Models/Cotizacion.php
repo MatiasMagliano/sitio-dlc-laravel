@@ -18,11 +18,6 @@ class Cotizacion extends Model
         'identificador', 'user_id', 'cliente_id', 'dde_id', 'estado_id', 'motivo_rechazo'
     ];
 
-    public $sortable = [
-        'updated_at',
-        'cliente_id'
-    ];
-
     protected $casts = [
         'created_at' => 'datetime:d-m-Y',
         'updated_at' => 'datetime:d-m-Y',
