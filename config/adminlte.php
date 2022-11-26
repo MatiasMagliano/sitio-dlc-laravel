@@ -282,23 +282,6 @@ return [
             ],
         ],
         [
-            'text'    => 'lists',
-            'icon'    => 'fas fa-list',
-            'can'     => 'es-administracion',
-            'submenu' => [
-                [
-                    'text'  => 'products_presentation',
-                    'route' => 'administracion.presentaciones.index',
-                    'icon'  => 'fas fa-pills'
-                ],
-                [
-                    'text'  => 'suppliers',
-                    'route' => 'administracion.proveedores.index',
-                    'icon'  => 'fas fa-truck'
-                ],
-            ],
-        ],
-        [
             'text'    => 'price_list',
             'icon'    => 'fas fa-tag',
             'can'     => 'es-administracion',
@@ -335,6 +318,18 @@ return [
                     'text'  => 'add_products_batches',
                     'route' => 'administracion.lotes.index',
                     'icon'  => 'fas fa-boxes'
+                ],
+            ],
+        ],
+        [
+            'text'    => 'reporting',
+            'icon'    => 'fas fa-list',
+            'can'     => 'es-administracion',
+            'submenu' => [
+                [
+                    'text'  => 'reporting_generator',
+                    'route' => 'administracion.reportes',
+                    'icon_color' => 'orange',
                 ],
             ],
         ],

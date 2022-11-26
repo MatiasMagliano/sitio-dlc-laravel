@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ArchivoCotizacion extends Model
 {
-    use SoftDeletes;
     protected $table = 'archivo_cotizacions';
 
     protected $fillable = [

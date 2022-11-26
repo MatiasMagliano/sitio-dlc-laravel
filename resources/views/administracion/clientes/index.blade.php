@@ -3,25 +3,6 @@
 @section('title', 'Administrar Clientes')
 
 @section('css')
-    <style>
-        .texto-header {
-            padding: 0 20px;
-            height: 60px;
-            overflow-y: auto;
-            /*font-size: 14px;*/
-            font-weight: 500;
-            color: #000000;
-        }
-
-        .texto-header::-webkit-scrollbar {
-            width: 5px;
-            background-color: #282828;
-        }
-
-        .texto-header::-webkit-scrollbar-thumb {
-            background-color: #ffc107;
-        }
-    </style>
 @endsection
 
 @section('content_header')
@@ -44,11 +25,6 @@
 @section('plugins.Datatables', true)
 @section('plugins.DatatablesPlugins', true)
 <div class="card">
-    <div class="card-header texto-header">
-        <h5>Instrucciones para generar reportes de esta sección</h5>
-        <p>Para exportar los datos de la siguiente tabla es necesario seleccionar primero las columnas visibles en el
-            set de herramientas disponible y luego genere la extensión que necesite.</p>
-    </div>
     <div class="card-body">
         <table id="tabla_clientes" class="table table-bordered" width="100%">
             <thead class="bg-gray">
@@ -145,77 +121,8 @@
         // el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
         var tabla_clientes = $('#tabla_clientes').DataTable({
             "processing": true,
-            "dom": 'QBfrtip',
+            "dom": 'fltip',
             "order": [0, 'asc'],
-            "buttons": [{
-                    extend: 'copyHtml5',
-                    text: 'Copiar al portapapeles',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    filename: 'clientes',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                },
-                {
-                    extend: 'print',
-                    text: 'Imprimir',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    filename: 'clientes',
-                    exportOptions: {
-                        columns: '0, 1, 2, 4'
-                    },
-                    customize: function(doc) {
-                        var ahora = new Date();
-                        var fecha = ahora.getDate() + '/' + (ahora.getMonth() + 1) + '/' +
-                            ahora.getFullYear();
-                        // Set page margins [left,top,right,bottom] or [horizontal,vertical]
-                        doc.pageMargins = [10, 60, 10, 20];
-                        doc.content.splice(0, 1);
-                        doc.defaultStyle.fontSize = 6;
-                        doc.styles.tableHeader.fontSize = 7;
-                        doc['header'] = (function() {
-                            return {
-                                columns: [{
-                                    alignment: 'center',
-                                    fontSize: 11,
-                                    text: 'Listado de clientes al ' + fecha
-                                        .toString()
-                                }],
-                                margin: 20
-                            }
-                        });
-                        doc['footer'] = (function(page, pages) {
-                            return {
-                                columns: [,
-                                    {
-                                        alignment: 'right',
-                                        text: ['página ', {
-                                            text: page.toString()
-                                        }, ' de ', {
-                                            text: pages.toString()
-                                        }]
-                                    }
-                                ],
-                                margin: 20
-                            }
-                        });
-                    }
-                },
-                {
-                    extend: 'colvis',
-                    text: 'Seleccionar columnas'
-                }
-            ],
             "responsive": [{
                 "details": {
                     renderer: function(api, rowIdx, columns) {

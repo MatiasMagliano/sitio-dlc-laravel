@@ -249,31 +249,26 @@
                     'render': function(data) {
                         return moment(new Date(data)).format("DD/MM/YYYY");
                     },
-                    orderable: false,
                 },
                 {
                     targets: [1],
                     name: "identificador",
                     className: "align-middle text-center font-weight-bold",
-                    orderable: true,
                 },
                 {
                     targets: [2],
                     name: "cliente",
                     className: "align-middle",
-                    orderable: false,
                 },
                 {
                     targets: [3],
                     name: "usuario",
                     className: "align-middle",
-                    orderable: false,
                 },
                 {
                     targets: [4],
                     name: "estado",
                     className: "align-middle text-center",
-                    orderable: false,
                     width: 100
                 },
                 {

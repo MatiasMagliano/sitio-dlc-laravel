@@ -17,6 +17,7 @@ use App\Http\Controllers\Administracion\ReportesController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\DireccionEntregaController;
 use App\Http\Controllers\HomeController;
+use App\Models\Cotizacion;
 use App\Models\DireccionEntrega;
 use Illuminate\Support\Facades\Route;
 
@@ -149,6 +150,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     // rutas de REPORTES
     Route::get('reportes', [ReportesController::class, 'index'])->name('reportes');
+    Route::get('reportes/lst_clientes', [ReportesController::class, 'lst_clientes'])->name('reportes.lst_clientes');
+    Route::get('reportes/lst_ventas', [ReportesController::class, 'lst_ventas'])->name('reportes.lst_ventas');
 });
 
 // RUTAS PARA EXPEDICION y, se incluye administración en la configuración del GATE

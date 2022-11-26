@@ -18,7 +18,7 @@
 
     @case(2)
         <a id="botonPresentar" class="btn btn-sm btn-info"
-            href="{{ route('administracion.cotizaciones.descargapdf', ['cotizacion' => $cotizacion, 'doc' => 'cotizacion']) }}"
+            href="{{ route('administracion.cotizaciones.generarpdf', ['cotizacion' => $cotizacion]) }}"
             onclick="recargar()">
             Presentar
         </a>
