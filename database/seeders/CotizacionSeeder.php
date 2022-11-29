@@ -2,15 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Http\Controllers\Administracion\CotizacionController;
+use Illuminate\Http\Request;
 use App\Models\Cliente;
 use App\Models\Cotizacion;
-use App\Models\DepositoCasaCentral;
 use App\Models\DireccionEntrega;
-use App\Models\LotePresentacionProducto;
-use App\Models\Producto;
 use App\Models\ProductoCotizado;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class CotizacionSeeder extends Seeder
 {
@@ -21,7 +19,9 @@ class CotizacionSeeder extends Seeder
      */
     public function run()
     {
-        //
+        //se llama al controlador CotizacionController para hacer el proceso de aprobación o rechazo
+        $controlador = new CotizacionController();
+
         foreach(Cliente::all() as $cliente){
 
             $maxCotizaciones = rand(1, 3);
@@ -44,6 +44,24 @@ class CotizacionSeeder extends Seeder
                     ]);
                 }
             }
+
+            /* SE INTENTA HACER UN SEEDER QUE APRUEBE O RECHACE ALGUNAS COTIZACIONES
+            $request = new Request();
+            $request->session->flash('success');
+
+            foreach(Cotizacion::all() as $cotizacion)
+            {
+                $controlador->finalizar($cotizacion, $request);
+
+                if(rand(0, 1) == 0)
+                {
+                    $controlador->aprobarCotizacion($cotizacion, $request);
+                }
+                else
+                {
+                    $controlador->rechazarCotizacion($cotizacion, $request);
+                }
+            }*/
         }
 
         //actualiza el stock en el factory de ProductoCotizado...

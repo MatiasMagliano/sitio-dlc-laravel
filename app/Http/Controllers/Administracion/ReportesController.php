@@ -56,7 +56,7 @@ class ReportesController extends Controller
             if($request->tipo_reporte == 'ventas_concretadas')
             {
                 $query = Cotizacion::select('*')->where('cotizacions.estado_id', 4)
-                    ->join('clientes', 'cotizacions.id', '=', 'clientes.id')
+                    ->join('clientes', 'cotizacions.cliente_id', '=', 'clientes.id')
                     ->orderBy($request->orden_listado);
 
                 $vtas_concretadas = $query->get();
@@ -80,7 +80,7 @@ class ReportesController extends Controller
             {
 
                 $query = Cotizacion::select('*')->where('cotizacions.estado_id', 5)
-                    ->join('clientes', 'cotizacions.id', '=', 'clientes.id')
+                    ->join('clientes', 'cotizacions.cliente_id', '=', 'clientes.id')
                     ->orderBy($request->orden_listado);
 
                 $vtas_rechazadas = $query->get();
@@ -90,11 +90,11 @@ class ReportesController extends Controller
                 foreach($vtas_rechazadas as $venta)
                 {
                     $json[] = [
-                        'fecha_aprobacion' => $venta->confirmada,
+                        'fecha_aprobacion' => $venta->rechazada,
                         'identificador'    => $venta->identificador,
                         'cliente'          => view('administracion.reportes.partes.lst-clientes.cliente', ['venta' => $venta])->render(),
                         'monto_total'      => '$'. number_format($venta->monto_total, 2, ',', '.'),
-                        'punto_entrega'    => view('administracion.reportes.partes.lst-clientes.pto-entrega', ['venta' => $venta])->render(),
+                        'punto_entrega'    => $venta->motivo_rechazo,
                     ];
                 }
                 return response()->json($json);

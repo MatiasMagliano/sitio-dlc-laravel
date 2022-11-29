@@ -274,10 +274,12 @@ class CotizacionController extends Controller
                 DB::raw('CONCAT(presentacions.forma, " ", presentacions.presentacion) AS presentacion'),
                 'producto_cotizados.cantidad',
                 'producto_cotizados.precio',
-                'producto_cotizados.total'
+                'producto_cotizados.total',
+                'cotizacions.estado_id'
             )
                 ->join('productos', 'producto_cotizados.producto_id', '=', 'productos.id')
                 ->join('presentacions', 'producto_cotizados.presentacion_id', '=', 'presentacions.id')
+                ->join('cotizacions', 'producto_cotizados.cotizacion_id', '=', 'cotizacions.id')
                 ->where('producto_cotizados.cotizacion_id', '=', $request->cotizacion)
                 ->get();
 
@@ -294,7 +296,7 @@ class CotizacionController extends Controller
                     'cantidad' => $dato->cantidad,
                     'precio' => '$ '. $dato->precio,
                     'total' => '$ '. $dato->total,
-                    'acciones' => view('administracion.cotizaciones.partials.acciones-show', ['cotizacion' => $dato->cotizacion_id, 'productoCotizado' => $dato->id])->render(),
+                    'acciones' => view('administracion.cotizaciones.partials.acciones-show', ['cotizacion' => $dato->cotizacion_id, 'productoCotizado' => $dato->id, 'estado' => $dato->estado_id])->render(),
                 ];
                 $indice++;
             }

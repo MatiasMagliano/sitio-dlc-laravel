@@ -71,7 +71,7 @@
                                         <h5 class=" mb-3">Seleccione el orden del listado y luego Generar o Descargar</h5 class=" mb-3">
                                         <div class="row">
                                             <div class="col-3">
-                                                <form action="" id="frm-list-clientes">
+                                                <form action="" id="frm-list-clientes" autocomplete="off">
                                                     @include('administracion.reportes.partes.lst-clientes.frm-lst-clientes')
                                                 </form>
                                             </div>
@@ -95,7 +95,7 @@
                                         <h5 class=" mb-3">Seleccione el tipo de reporte, el rango de fechas y luego Generar o Descargar</h5 class=" mb-3">
                                         <div class="row">
                                             <div class="col-3">
-                                                <form action="" id="frm-list-ventas">
+                                                <form action="" id="frm-list-ventas" autocomplete="off">
                                                     @include('administracion.reportes.partes.lst-clientes.frm-lst-ventas')
                                                 </form>
                                             </div>
@@ -103,11 +103,11 @@
                                                 <table class="table" id="tbl-ventas">
                                                     <thead>
                                                         <tr>
-                                                            <th>F. Aprobación</th>
+                                                            <th>F. Aprobación/Rechazo</th>
                                                             <th>Identificador</th>
                                                             <th>Cliente</th>
                                                             <th>Monto</th>
-                                                            <th>Pto. Entrega</th>
+                                                            <th>Pto. Entrega/Motivo rechazo</th>
                                                         </tr>
                                                     </thead>
                                                 </table>
@@ -185,8 +185,38 @@
     @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
 
-    <script>
+    <script type="text/javascript">
+    var concretadas = [
+        {"valor": "cotizacions.confirmada", "texto": "Fecha de aprobación"},
+        {"valor": "cotizacions.identificador", "texto": "Identificador"},
+        {"valor": "clientes.razon_social", "texto": "Cliente"},
+        {"valor": "cotizacions.monto_total", "texto": "Monto total facturado"},
+    ];
+    var rechazadas = [
+        {"valor": "cotizacions.rechazada", "texto": "Fecha de rechazo"},
+        {"valor": "cotizacions.identificador", "texto": "Identificador"},
+        {"valor": "cliente.razon_social", "texto": "Cliente"},
+        {"valor": "cotizacions.motivo_rechazo", "texto": "Motivo de rechazo"},
+    ];
+
         $(document).ready(function() {
+            var i;
+
+            // rellenado del primer select: "tipo_reporte"
+            $('#input-reporte').on('change', function(){
+                if($('#input-reporte').val() == 'ventas_concretadas'){
+                    $('select[name=orden_listado]').html("");
+                    for(i = 0; i < concretadas.length; i++){
+                        $('select[name=orden_listado]').append('<option value="' + concretadas[i]['valor'] + '">' + concretadas[i]['texto'] + '</option>');
+                    }
+                }else{
+                    $('select[name=orden_listado]').html("");
+                    for(i = 0; i < rechazadas.length; i++){
+                        $('select[name=orden_listado]').append('<option value="' + rechazadas[i]['valor'] + '">' + rechazadas[i]['texto'] + '</option>');
+                    }
+                }
+            });
+
             var tbl_clientes = $('#tbl-clientes').DataTable({
                 "dom": "t",
                 "ordering": false,

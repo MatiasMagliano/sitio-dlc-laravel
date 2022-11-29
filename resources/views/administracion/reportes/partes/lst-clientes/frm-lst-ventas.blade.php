@@ -1,8 +1,8 @@
 <div class="card">
     <div class="card-body">
         <div class="form-group">
-            <label for="input-orden">Ventas por: *</label>
-            <select class="form-control" name="tipo_reporte" id="input-orden">
+            <label for="input-reporte">Ventas por: *</label>
+            <select class="form-control" name="tipo_reporte" id="input-reporte">
                 <option value="ventas_concretadas" selected>Ventas concretadas</option>
                 <option value="ventas_rechazadas" selected>Ventas rechazadas</option>
             </select>
@@ -14,11 +14,12 @@
                 <option value="cotizacions.confirmada" selected>Fecha de aprobación</option>
                 <option value="cotizacions.identificador">Identificador</option>
                 <option value="clientes.razon_social">Cliente</option>
-                <option value="tipo_afip">Tipo de inscripción</option>
+                <option value="cotizacions.monto_total">Monto total facturado</option>
             </select>
         </div>
 
         {{-- RANGO DE FECHAS --}}
+        <h6 class="text-bold">Rango absoluto de fechas</h6>
         <div class="row">
             <div class="col">
                 <div class="form-group">

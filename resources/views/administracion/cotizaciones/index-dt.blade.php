@@ -175,7 +175,7 @@
                     return false;
                 }
             })
-        }, 10000)
+        }, 1000)
     };
 
     var popupBlockerChecker = {
@@ -229,7 +229,7 @@
         moment.locale('es');
 
         $('#tabla-cotizaciones tfoot th').slice(1, 5).each(function () {
-            $(this).html('<input type="text" class="form-control"/>');
+            $(this).html('<input type="text" class="form-control" placeholder="Búsqueda..." />');
         });
 
         $('#tabla-cotizaciones').dataTable({
