@@ -118,6 +118,11 @@
 <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
 <script>
     $(document).ready(function() {
+        // se agrega el campo de búsqueda por columna
+        $('#tabla-cotizaciones tfoot th').slice(1, 5).each(function() {
+            $(this).html('<input type="text" class="form-control" placeholder="Buscar" />');
+        });
+
         // el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
         var tabla_clientes = $('#tabla_clientes').DataTable({
             "processing": true,
@@ -143,6 +148,20 @@
                     }
                 }
             }],
+            initComplete: function() {
+                // Apply the search
+                this.api()
+                    .columns()
+                    .every(function() {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change clear', function() {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                            }
+                        });
+                    });
+            },
         });
     });
 </script>
