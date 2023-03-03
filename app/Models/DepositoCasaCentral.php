@@ -18,7 +18,7 @@ class DepositoCasaCentral extends Model
     //SE DEFINEN RELACIONES
     public function producto()
     {
-        return $this->belongsToMany(
+        return $this->belongsTo(
             Producto::class,
             LotePresentacionProducto::class
         )->distinct();

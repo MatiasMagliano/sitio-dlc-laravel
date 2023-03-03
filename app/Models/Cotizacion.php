@@ -69,18 +69,4 @@ class Cotizacion extends Model
             ->where('cotizacions.id', $this->id)
             ->get();
     }
-
-
-
-
-
-    // event handlers para hacer el softdelete de las relaciones
-    public static function boot() {
-        parent::boot();
-
-        static::deleting(function($cotizacion) {
-            // BORRA todos los productos relacionados
-            $cotizacion->productos->each->delete();
-        });
-    }
 }

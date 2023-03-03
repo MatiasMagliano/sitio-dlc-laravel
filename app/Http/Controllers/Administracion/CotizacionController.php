@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Storage;
 
 class CotizacionController extends Controller
 {
-    public function index()
+    public function index() // EN DESUSO
     {
         $config = [
             'format' => 'DD/MM/YYYY',
@@ -110,6 +110,7 @@ class CotizacionController extends Controller
         if (!empty($filter)) {
             $query->where('cotizacions.identificador', 'like', '%'.$filter.'%');
         }
+
         //filtro particular
         $b_columna = $GLOBALS['b_columna'];
         if(isset($b_columna[1]['search']['value'])) {
@@ -315,13 +316,22 @@ class CotizacionController extends Controller
         //
     }
 
-    public function destroy(Cotizacion $cotizacion)
+    public function destroy(Cotizacion $cotizacione, Request $request)
     {
-        // elimina en cascada (en el método boot del modelo) todos los productos asociados
-        dd($cotizacion->id);
-        $cotizacion->dde()->decrement('mas_entregado');
-        $cotizacion->delete();
+        // elimina en cascada (en el método boot del modelo Cotizacion) todos los productos asociados
+        $cotizacione->dde()->decrement('mas_entregado');
 
+        // BORRA todos los productos relacionados
+        foreach ($cotizacione->productos as $producto)
+        {
+            //dd($producto->producto->deposito($producto->presentacion_id));
+            $producto->delete;
+        }
+
+        $cotizacione->delete;
+
+        $request->session()->flash('success', 'La cotización fue borrada con éxito');
+        return redirect()->route('administracion.cotizaciones.index');
     }
 
 

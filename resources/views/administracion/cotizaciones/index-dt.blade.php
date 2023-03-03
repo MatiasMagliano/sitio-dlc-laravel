@@ -3,6 +3,31 @@
 @section('title', 'Administrar Cotizaciones')
 
 @section('css')
+    <style>
+        .texto-header {
+            padding: 20px;
+            height: 60px;
+            overflow-y: auto;
+            /*font-size: 14px;*/
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .texto-header::-webkit-scrollbar {
+            width: 5px;
+            background-color: #282828;
+        }
+
+        .texto-header::-webkit-scrollbar-thumb {
+            background-color: #3bd136;
+        }
+
+        @media (max-width: 600px) {
+            .hide {
+                display: none;
+            }
+        }
+    </style>
 @endsection
 
 @section('content_header')
@@ -25,6 +50,17 @@
 @section('plugins.DatatablesPlugins', true)
 @section('plugins.TempusDominusBs4', true)
 <div class="card">
+    <div class="card-header">
+        <div class="texto-header">
+            <h5>Dinámica de cotizaciones</h5>
+            <p>
+                Los términos de búsqueda se realizan en los campos debajo de cada columna habilitada.
+            </p>
+            <p>
+                El orden de promoción es el siguiente: CREACIÓN -> EDICIÓN -> FINALIZACIÓN -> PRESENTACIÓN -> APROBACIÓN o RECHAZO.
+            </p>
+        </div>
+    </div>
     <div class="card-body">
         <table id="tabla-cotizaciones" class="table table-bordered table-responsive-md" width="100%">
             <thead>
@@ -114,10 +150,8 @@
                 <input type="hidden" name="causa_subida" value="rechazada">
                 <div class="modal-body">
                     <p>Deberá consignar la fecha de rechazo y un motivo. Opcionalmente, podrá adjuntar el
-                        <strong>pliego
-                            procesado</strong> con comparativo de precios, provisto por el cliente. Se adjuntará
-                        como
-                        información respaldatoria a la cotización rechazada.
+                        <strong>pliego procesado</strong> con comparativo de precios, provisto por el cliente. Se adjuntará
+                        como información respaldatoria a la cotización rechazada.
                     </p>
                     <div class="form-group">
                         <label for="input-motivo_rechazo">Motivo del rechazo</label>
@@ -210,11 +244,13 @@
     };
 
     function borrarCotizacion(id) {
-        let advertencia = 'Se eliminará esta cotización y todos sus productos asociales. Esta acción no se puede deshacer.';
+        let advertencia =
+            'Se eliminará esta cotización y todos sus productos asociales. Esta acción no se puede deshacer.';
         Swal.fire({
             icon: 'warning',
             title: 'Borrar cotización',
-            html: '<span style=\'color: red; font-weight:800; font-size:1.3em;\'>¡ATENCION!</span><br>' +advertencia,
+            html: '<span style=\'color: red; font-weight:800; font-size:1.3em;\'>¡ATENCION!</span><br>' +
+                advertencia,
             confirmButtonText: 'Borrar',
             showCancelButton: true,
             cancelButtonText: 'Cancelar',
@@ -228,8 +264,8 @@
     $(document).ready(function() {
         moment.locale('es');
 
-        $('#tabla-cotizaciones tfoot th').slice(1, 5).each(function () {
-            $(this).html('<input type="text" class="form-control" placeholder="Búsqueda..." />');
+        $('#tabla-cotizaciones tfoot th').slice(1, 5).each(function() {
+            $(this).html('<input type="text" class="form-control" placeholder="Buscar" />');
         });
 
         $('#tabla-cotizaciones').dataTable({
@@ -241,8 +277,7 @@
                 method: "GET"
             },
             "order": [0, 'desc'],
-            "columnDefs": [
-                {
+            "columnDefs": [{
                     targets: [0],
                     name: "fecha-modificacion",
                     className: "align-middle text-center",
@@ -278,13 +313,13 @@
                     orderable: false,
                 },
             ],
-            "initComplete": function () {
+            "initComplete": function() {
                 this.api()
                     .columns([1, 2, 3, 4])
-                    .every(function () {
+                    .every(function() {
                         var that = this;
 
-                        $('input', this.footer()).on('keyup change clear', function () {
+                        $('input', this.footer()).on('keyup change clear', function() {
                             if (that.search() !== this.value) {
                                 that.search(this.value).draw();
                             }

@@ -50,7 +50,7 @@
                             {{ $cliente->afip }}
                         </td>
                         <td class="align-middle">
-                            <u>Sr/a: {{ $cliente->contacto }}</u>
+                            {{ $cliente->contacto }}
                             <br>
                             Tel: {{ $cliente->telefono }}
                             <br>

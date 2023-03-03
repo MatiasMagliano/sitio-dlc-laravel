@@ -42,6 +42,8 @@ class Producto extends Model
             LotePresentacionProducto::class
         );
     }
+
+    // DEVUELVE TODOS LOS DEPÓSITOS DEL PRODUCTO
     public function dcc()
     {
         return $this->belongsToMany(
@@ -49,11 +51,18 @@ class Producto extends Model
             LotePresentacionProducto::class,
             '',
             'dcc_id'
-        )->groupBy([
-            'lote_presentacion_producto.producto_id',
-            'lote_presentacion_producto.presentacion_id',
-            'lote_presentacion_producto.dcc_id',
-        ]);
+        );
+    }
+
+    // DEVUELVE UN DEPÓSITO
+    public function deposito($presentacion)
+    {
+        return $this->belongsToMany(
+            DepositoCasaCentral::class,
+            LotePresentacionProducto::class,
+            '',
+            'dcc_id'
+        )->wherePivot('presentacion_id', '=', $presentacion);
     }
 
     //RELACIONES ESPECIALES (NO MODELOS) --> DEVUELVEN COLECCIONES DE DATOS
@@ -74,17 +83,6 @@ class Producto extends Model
             ->where('lote_presentacion_producto.producto_id', $producto)
             ->where('lote_presentacion_producto.presentacion_id', $presentacion)
             ->select('lotes.*')
-            ->get();
-    }
-
-    public static function deposito($producto, $presentacion)
-    {
-        return DB::table('deposito_casa_centrals')
-            ->leftJoin('lote_presentacion_producto', 'lote_presentacion_producto.dcc_id', '=', 'deposito_casa_centrals.id')
-            ->where('lote_presentacion_producto.producto_id', $producto)
-            ->where('lote_presentacion_producto.presentacion_id', $presentacion)
-            ->select('deposito_casa_centrals.*')
-            ->distinct()
             ->get();
     }
 

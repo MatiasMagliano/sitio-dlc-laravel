@@ -44,25 +44,10 @@ class CotizacionSeeder extends Seeder
                     ]);
                 }
             }
-
-            /* SE INTENTA HACER UN SEEDER QUE APRUEBE O RECHACE ALGUNAS COTIZACIONES
-            $request = new Request();
-            $request->session->flash('success');
-
-            foreach(Cotizacion::all() as $cotizacion)
-            {
-                $controlador->finalizar($cotizacion, $request);
-
-                if(rand(0, 1) == 0)
-                {
-                    $controlador->aprobarCotizacion($cotizacion, $request);
-                }
-                else
-                {
-                    $controlador->rechazarCotizacion($cotizacion, $request);
-                }
-            }*/
         }
+
+        // PROCEDIMIENTO QUE APRUEBA O RECHAZA ALGUNAS COTIZACIONES
+
 
         //actualiza el stock en el factory de ProductoCotizado...
     }

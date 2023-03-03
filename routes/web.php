@@ -17,8 +17,6 @@ use App\Http\Controllers\Administracion\ReportesController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\DireccionEntregaController;
 use App\Http\Controllers\HomeController;
-use App\Models\Cotizacion;
-use App\Models\DireccionEntrega;
 use Illuminate\Support\Facades\Route;
 
 /*
