@@ -212,37 +212,6 @@
         }, 1000)
     };
 
-    var popupBlockerChecker = {
-        check: function(popup_window) {
-            var scope = this;
-            if (popup_window) {
-                if (/chrome/.test(navigator.userAgent.toLowerCase())) {
-                    setTimeout(function() {
-                        scope.is_popup_blocked(scope, popup_window);
-                    }, 200);
-                } else {
-                    popup_window.onload = function() {
-                        scope.is_popup_blocked(scope, popup_window);
-                    };
-                }
-            } else {
-                scope.displayError();
-            }
-        },
-        is_popup_blocked: function(scope, popup_window) {
-            if ((popup_window.innerHeight > 0) == false) {
-                scope.displayError();
-            }
-        },
-        displayError: function() {
-            Swal.fire(
-                'Información',
-                'El navegador no permite la apertura de nuevas ventanas. Habilite los popups para continuar.',
-                'info'
-            )
-        }
-    };
-
     function borrarCotizacion(id) {
         let advertencia =
             'Se eliminará esta cotización y todos sus productos asociales. Esta acción no se puede deshacer.';

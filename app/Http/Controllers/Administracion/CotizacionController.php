@@ -505,6 +505,12 @@ class CotizacionController extends Controller
         }
     }
 
+    // SEPARAR LAS ACCIONES DE GENERACIÓN DE PDF Y PRESENTACIÓN DE COTIZACIÓN
+    public function presentarCotizacion(Cotizacion $cotizacion)
+    {
+
+    }
+
     public function generarpdf(Cotizacion $cotizacion, Request $request)
     {
         if ($cotizacion->finalizada) {

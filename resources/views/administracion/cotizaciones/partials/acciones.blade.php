@@ -17,11 +17,13 @@
     @break
 
     @case(2)
-        <a id="botonPresentar" class="btn btn-sm btn-info"
-            href="{{ route('administracion.cotizaciones.generarpdf', ['cotizacion' => $cotizacion]) }}"
-            onclick="recargar()">
-            Presentar
-        </a>
+        <div class=" btn-group" role="group" aria-label="Descarga/presentación de cotización">
+            <a id="botonPresentar" class="btn btn-sm btn-info"
+                href="{{ route('administracion.cotizaciones.generarpdf', ['cotizacion' => $cotizacion]) }}"
+                onclick="recargar()">
+                Presentar
+            </a>
+        </div>
     @break
 
     @case(3)
