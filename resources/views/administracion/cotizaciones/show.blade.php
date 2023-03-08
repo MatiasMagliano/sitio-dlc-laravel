@@ -18,7 +18,7 @@
             <h1>Ver/Editar cotización</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-xl-end">
-            <a href="{{ url()->previous() }}" role="button"
+            <a href="{{ route('administracion.cotizaciones.index') }}" role="button"
                 class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
@@ -301,7 +301,7 @@
             });
         });
 
-        $(document).on('click','.open_modal',function(){
+        $(document).on('click', '.open_modal', function(){
             $.ajax({
                 type: "GET",
                 url: "{{route('administracion.cotizaciones.editar.producto')}}",

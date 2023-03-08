@@ -34,4 +34,7 @@ class ProductoCotizado extends Model
     {
         return $this->belongsTo(Cotizacion::class);
     }
+
+    // RELACIÓN CONTRA DDE
+
 }

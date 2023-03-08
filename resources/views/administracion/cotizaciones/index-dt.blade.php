@@ -6,7 +6,7 @@
     <style>
         .texto-header {
             padding: 20px;
-            height: 60px;
+            height: 90px;
             overflow-y: auto;
             /*font-size: 14px;*/
             font-weight: 500;
@@ -50,7 +50,7 @@
 @section('plugins.DatatablesPlugins', true)
 @section('plugins.TempusDominusBs4', true)
 <div class="card">
-    <div class="card-header">
+    <div class="card-header bg-gray-light">
         <div class="texto-header">
             <h5>Dinámica de cotizaciones</h5>
             <p>
@@ -214,7 +214,7 @@
 
     function borrarCotizacion(id) {
         let advertencia =
-            'Se eliminará esta cotización y todos sus productos asociales. Esta acción no se puede deshacer.';
+            'Se eliminará esta cotización y todos sus productos asociados. Esta acción no se puede deshacer.';
         Swal.fire({
             icon: 'warning',
             title: 'Borrar cotización',

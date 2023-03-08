@@ -102,6 +102,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     // rutas de COTIZACIONES
     Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])
         ->name('cotizaciones.finalizar');
+    Route::get('/cotizaciones/{cotizacion}/presentar', [CotizacionController::class, 'presentarCotizacion'])
+        ->name('cotizaciones.presentar');
     Route::post('/cotizaciones/{cotizacion}/aprobarCotizacion', [CotizacionController::class, 'aprobarCotizacion'])
         ->name('cotizaciones.aprobarCotizacion');
     Route::post('/cotizaciones/{cotizacion}/rechazarCotizacion', [CotizacionController::class, 'rechazarCotizacion'])
