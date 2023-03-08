@@ -51,22 +51,22 @@
                             {{ $ordentrabajo->cotizacion->cliente->razon_social }}
                         </td>
                         <td style="vertical-align: middle;">
-                            <u><strong>{{ $ordentrabajo->cotizacion->cliente->dde->lugar_entrega }}:</strong></u>
+                            <u><strong>{{ $ordentrabajo->cotizacion->dde->lugar_entrega }}:</strong></u>
                             <br>
                             <div class="ml-3">
                                 <strong>Dirección:</strong>
-                                {{ $ordentrabajo->cotizacion->cliente->dde->domicilio }}
+                                {{ $ordentrabajo->cotizacion->dde->domicilio }}
                                 <br>
                                 <strong>Condiciones: </strong>
-                                {{ $ordentrabajo->cotizacion->cliente->dde->condiciones }}
+                                {{ $ordentrabajo->cotizacion->dde->condiciones }}
                                 <br>
                                 <strong>Observaciones: </strong>
-                                {{ $ordentrabajo->cotizacion->cliente->dde->observaciones }}
+                                {{ $ordentrabajo->cotizacion->dde->observaciones }}
                             </div>
                         </td>
                         <td style="vertical-align: middle;">
                             <strong>Cotizazión creada por: </strong>{{ $ordentrabajo->cotizacion->user->name }}
-                            <strong>y aprobada el:
+                            <strong>, aprobada el:
                             </strong>{{ $ordentrabajo->cotizacion->confirmada->format('d/m/Y') }} <br>
                             <strong>En producción desde el:
                             </strong>{{ $ordentrabajo->en_produccion->format('d/m/Y') }} <br>

@@ -36,6 +36,17 @@
                 <th>Última compra</th>
                 <th></th>
             </thead>
+            <tfoot style="display: table-header-group;">
+                <tr class=" bg-gradient-light">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </tfoot>
             <tbody>
                 @foreach ($clientes as $cliente)
                     <tr>
@@ -119,14 +130,14 @@
 <script>
     $(document).ready(function() {
         // se agrega el campo de búsqueda por columna
-        $('#tabla-cotizaciones tfoot th').slice(1, 5).each(function() {
+        $('#tabla_clientes tfoot th').slice(0, 4).each(function() {
             $(this).html('<input type="text" class="form-control" placeholder="Buscar" />');
         });
 
         // el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
         var tabla_clientes = $('#tabla_clientes').DataTable({
             "processing": true,
-            "dom": 'fltip',
+            "dom": 'ltip',
             "order": [0, 'asc'],
             "responsive": [{
                 "details": {
@@ -151,7 +162,7 @@
             initComplete: function() {
                 // Apply the search
                 this.api()
-                    .columns()
+                    .columns([0, 1, 2, 3])
                     .every(function() {
                         var that = this;
 
