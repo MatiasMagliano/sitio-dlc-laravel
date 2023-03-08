@@ -6,7 +6,7 @@
     <style>
         .texto-header {
             padding: 20px;
-            height: 60px;
+            height: 90px;
             overflow-y: auto;
             /*font-size: 14px;*/
             font-weight: 500;
@@ -50,7 +50,7 @@
 @section('plugins.DatatablesPlugins', true)
 @section('plugins.TempusDominusBs4', true)
 <div class="card">
-    <div class="card-header">
+    <div class="card-header bg-gray-light">
         <div class="texto-header">
             <h5>Dinámica de cotizaciones</h5>
             <p>
@@ -212,40 +212,9 @@
         }, 1000)
     };
 
-    var popupBlockerChecker = {
-        check: function(popup_window) {
-            var scope = this;
-            if (popup_window) {
-                if (/chrome/.test(navigator.userAgent.toLowerCase())) {
-                    setTimeout(function() {
-                        scope.is_popup_blocked(scope, popup_window);
-                    }, 200);
-                } else {
-                    popup_window.onload = function() {
-                        scope.is_popup_blocked(scope, popup_window);
-                    };
-                }
-            } else {
-                scope.displayError();
-            }
-        },
-        is_popup_blocked: function(scope, popup_window) {
-            if ((popup_window.innerHeight > 0) == false) {
-                scope.displayError();
-            }
-        },
-        displayError: function() {
-            Swal.fire(
-                'Información',
-                'El navegador no permite la apertura de nuevas ventanas. Habilite los popups para continuar.',
-                'info'
-            )
-        }
-    };
-
     function borrarCotizacion(id) {
         let advertencia =
-            'Se eliminará esta cotización y todos sus productos asociales. Esta acción no se puede deshacer.';
+            'Se eliminará esta cotización y todos sus productos asociados. Esta acción no se puede deshacer.';
         Swal.fire({
             icon: 'warning',
             title: 'Borrar cotización',

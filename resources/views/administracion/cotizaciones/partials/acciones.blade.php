@@ -17,11 +17,18 @@
     @break
 
     @case(2)
-        <a id="botonPresentar" class="btn btn-sm btn-info"
-            href="{{ route('administracion.cotizaciones.generarpdf', ['cotizacion' => $cotizacion]) }}"
-            onclick="recargar()">
-            Presentar
-        </a>
+        <div class=" btn-group" role="group" aria-label="Descarga/presentación de cotización">
+            <a id="botonDescargar" class="btn btn-sm btn-success"
+                href="{{ route('administracion.cotizaciones.generarpdf', ['cotizacion' => $cotizacion]) }}"
+                data-toggle="tooltip" data-placement="bottom" title="Descargar licitación">
+                Descargar
+            </a>
+            <a id="botonPresentar" class="btn btn-sm btn-info"
+                href="{{ route('administracion.cotizaciones.presentar', ['cotizacion' => $cotizacion]) }}"
+                data-toggle="tooltip" data-placement="bottom" title="Presentar licitación">
+                Presentar
+            </a>
+        </div>
     @break
 
     @case(3)

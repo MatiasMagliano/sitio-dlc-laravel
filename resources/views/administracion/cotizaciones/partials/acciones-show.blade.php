@@ -1,7 +1,7 @@
 @if ($estado == 1)
     <div class="btn-group" role="group" aria-label="Acciones de direcciones de entrega">
         <button role="button" class="btn btn-link open_modal" data-toggle="modal" data-target="#modalModifProducto" data-toggle="tooltip" data-placement="middle"
-            title="Editar producto" value="{{$cotizacion}}">
+            title="Editar producto" value="{{$productoCotizado}}">
             <i class="fas fa-pencil-alt"></i>
         </button>
         <form action="{{ route('administracion.cotizaciones.borrar.producto', ['cotizacion' => $cotizacion, 'productoCotizado' => $productoCotizado]) }}"

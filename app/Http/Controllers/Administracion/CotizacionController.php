@@ -324,11 +324,11 @@ class CotizacionController extends Controller
         // BORRA todos los productos relacionados
         foreach ($cotizacione->productos as $producto)
         {
-            //dd($producto->producto->deposito($producto->presentacion_id));
-            $producto->delete;
+            $producto->producto->deposito($producto->presentacion_id)->decrement('cotizacion');
+            $producto->delete();
         }
 
-        $cotizacione->delete;
+        $cotizacione->delete();
 
         $request->session()->flash('success', 'La cotización fue borrada con éxito');
         return redirect()->route('administracion.cotizaciones.index');
@@ -391,7 +391,7 @@ class CotizacionController extends Controller
             $respuesta = array(
                 'producto_cotizado' => $producto_cotizado,
                 'producto'  => Producto::find($producto_cotizado->producto_id),
-                'presentacion' => Presentacion::find($producto_cotizado->producto_id),
+                'presentacion' => Presentacion::find($producto_cotizado->presentacion_id),
             );
 
             return response()->json($respuesta);
@@ -441,6 +441,20 @@ class CotizacionController extends Controller
         $cotizacion->save();
         $request->session()->flash('success', 'La cotización se finalizó con éxito.\nSe habilita la descarga de la cotización para presentar al cliente.');
         return redirect(route('administracion.cotizaciones.index'));
+    }
+
+    // SEPARAR LAS ACCIONES DE GENERACIÓN DE PDF generarpdf() --> sólo genera el pdf. Y PRESENTACIÓN DE COTIZACIÓN presentarCotizacion() --> pasa de estado
+    public function presentarCotizacion(Cotizacion $cotizacion, Request $request)
+    {
+        if (!$cotizacion->presentada) {
+            // estado-3 --> "Presentada el:"
+            $cotizacion->estado_id = 3;
+            $cotizacion->presentada = Carbon::now();
+            $cotizacion->save();
+
+            $request->session()->flash('success', 'La licitación se promovió con éxito. Quedará en espera de aprobación o rechazo.');
+            return redirect(route('administracion.cotizaciones.index'));
+        }
     }
 
     public function aprobarCotizacion(Cotizacion $cotizacion, Request $request)
@@ -510,27 +524,22 @@ class CotizacionController extends Controller
         if ($cotizacion->finalizada) {
 
             $presentaciones = Presentacion::all();
-            $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout', compact('cotizacion', 'presentaciones'));
+            $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout', ['cotizacion' => $cotizacion, 'presentaciones' => $presentaciones]);
 
             $dom_pdf = $pdf->getDomPDF();
             $canvas = $dom_pdf->get_canvas();
             $canvas->page_text(270, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 8, array(0, 0, 0));
-            if (!$cotizacion->presentada) {
-                // estado-3 --> "Presentada el:"
-                $cotizacion->estado_id = 3;
-                $cotizacion->presentada = Carbon::now();
-                $cotizacion->save();
-            }
 
             return $pdf->download('cotizacion_' . $cotizacion->identificador . '.pdf');
-
-        } else {
+        }
+        else
+        {
             $request->session()->flash('error', 'La cotización aún no ha terminado de agregar líneas. Por favor finalice la cotización para descargar el PDF.');
-
             return redirect(route('administracion.cotizaciones.index'));
         }
     }
 
+    // DESCARGA DE ARCHIVOS GUARDADOS EN ../storage
     public function descargapdf(Cotizacion $cotizacion, $doc, Request $request)
     {
         switch ($doc) {

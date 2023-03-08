@@ -12,10 +12,7 @@ use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 
 class ProductoController extends Controller
 {
