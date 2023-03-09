@@ -1,9 +1,17 @@
 <div class="btn-group" role="group" aria-label="Acciones de direcciones de entrega">
-    <a href="{{ route('administracion.dde.edit', ['dde' => $dde]) }}"
-        class="btn btn-link" data-toggle="tooltip" data-placement="middle"
-        title="Editar dirección de entrega">
-        <i class="fas fa-pencil-alt"></i>
-    </a>
+    @if (!$borrada)
+        <a href="{{ route('administracion.dde.edit', ['dde' => $dde]) }}"
+            class="btn btn-link" data-toggle="tooltip" data-placement="middle"
+            title="Editar dirección de entrega">
+            <i class="fas fa-pencil-alt"></i>
+        </a>
+    @else
+        <a style="color:gray" aria-disabled="true" role="link"
+            class="btn btn-link" data-toggle="tooltip" data-placement="middle"
+            title="Dirección borrada">
+            <i class="fas fa-pencil-alt"></i>
+        </a>
+    @endif
     <form action="{{ route('administracion.dde.destroy', $dde) }}"
         id="frm-borrar-{{ $dde }}" method="post" class="d-inline">
 

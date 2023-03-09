@@ -31,7 +31,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="perfil-tab" data-toggle="tab" href="#perfil" role="tab"
-                    aria-controls="perfil" aria-selected="false">Perfil</a>
+                    aria-controls="perfil" aria-selected="false">Reportes</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="contacto-tab" data-toggle="tab" href="#contacto" role="tab"

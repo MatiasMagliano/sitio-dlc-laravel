@@ -54,7 +54,7 @@ class Cotizacion extends Model
 
     public function dde()
     {
-        return $this->belongsTo(DireccionEntrega::class);
+        return $this->belongsTo(DireccionEntrega::class)->withTrashed();
     }
 
     /* --- RELACIONES ESPECIALES ---*/

@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DireccionEntrega extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'direcciones_entrega';
+    protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'cliente_id', 'lugar_entrega', 'domicilio', 'condiciones', 'provincia_id', 'localidad_id', 'observaciones', 'mas_entregado'

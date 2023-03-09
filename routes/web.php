@@ -85,6 +85,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     // rutas de DIRECCIONES DE ENTREGA
     Route::get('/dde/ajaxObtenerDde', [DireccionEntregaController::class, 'dtAjaxDde'])->name('dde.ajax.obtenerDde');
+    Route::post('/dde/{dde}/restaurar', [DireccionEntregaController::class, 'restaurar'])->name('dde.restaurar');
     Route::resource('/dde', DireccionEntregaController::class);
 
     // rutas de TRAZABILIDAD

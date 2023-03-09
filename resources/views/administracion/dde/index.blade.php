@@ -37,12 +37,12 @@
         <table id="tabla-dde" class="table table-sm table-bordered table-responsive-md" style="width: 100%;">
             <thead>
                 <th>Lugar de entrega</th>
-                <th>Cantidad de envíos</th>
                 <th>Domicilio</th>
                 <th>Localidad</th>
                 <th>Provincia</th>
                 <th>Condiciones</th>
                 <th>Observaciones</th>
+                <th>BORRADO</th>
                 <th></th>
             </thead>
             <tbody id="wbodychange"></tbody>
@@ -69,11 +69,6 @@
                         "width": 170
                     },
                     {
-                        "data": "cantidad_enviado",
-                        "class": "align-middle text-center",
-                        "width": 150
-                    },
-                    {
                         "data": "domicilio",
                         "class": "align-middle"
                     },
@@ -92,6 +87,11 @@
                     {
                         "data": "observaciones",
                         "class": "align-middle"
+                    },
+                    {
+                        "data": "borrado",
+                        "class": "align-middle text-center",
+                        "width": 100
                     },
                     {
                         "data": "acciones",

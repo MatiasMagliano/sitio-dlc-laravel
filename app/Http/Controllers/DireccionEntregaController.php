@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Administracion\CotizacionController;
 use App\Models\Cliente;
+use App\Models\Cotizacion;
 use App\Models\DireccionEntrega;
 use App\Models\Localidad;
 use App\Models\Provincia;
@@ -41,8 +43,6 @@ class DireccionEntregaController extends Controller
             'observaciones' => $request->observaciones
         ));
 
-        //dd($datosEntrega);
-
         $dde = DireccionEntrega::create($datosEntrega);
         $dde->save();
 
@@ -79,9 +79,31 @@ class DireccionEntregaController extends Controller
         return redirect(route('administracion.dde.index'));
     }
 
-    public function destroy(DireccionEntrega $dde)
+    public function destroy(DireccionEntrega $dde, Request $request)
     {
+        // se debe tener en cuenta borrar las cotizaciones PENDIENTES, que estén asociadas a esta dde
+        $cotizaciones = Cotizacion::where('id', $dde->id)->get();
+        foreach($cotizaciones as $cotizacione)
+        {
+            if($cotizacione->estado_id == 1)
+            {
+                // TENER EN CUENTA QUE REDIRECCIONA --> REVISARRRRRRR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                (new CotizacionController)->destroy($cotizacione, $request);
+            }
+        }
 
+        $dde->delete();
+
+        $request->session()->flash('success', 'La dirección de entrega se ha actualizado con éxito.');
+        return redirect(route('administracion.dde.index'));
+    }
+
+    public function restaurar($dde, Request $request)
+    {
+        DireccionEntrega::where('id', $dde)->withTrashed()->restore();
+
+        $request->session()->flash('success', 'La dirección de entrega se ha recuperado con éxito.');
+        return redirect(route('administracion.dde.index'));
     }
 
     // envía un AJAX para popular un dt luego de seleccionar un cliente
@@ -94,12 +116,13 @@ class DireccionEntregaController extends Controller
                     'localidades.nombre AS localidad',
                     'provincias.nombre AS provincia',
                     'direcciones_entrega.condiciones', 'observaciones',
-                    'direcciones_entrega.mas_entregado AS cantidad_enviado'
+                    'direcciones_entrega.deleted_at',
                     )
                 ->where('cliente_id', '=', $request->cliente_id)
                 ->join('provincias', 'direcciones_entrega.provincia_id', '=', 'provincias.id')
                 ->join('localidades', 'direcciones_entrega.localidad_id', '=', 'localidades.id')
                 ->orderBy('direcciones_entrega.lugar_entrega')
+                ->withTrashed()
                 ->get();
 
             $json = array();
@@ -107,6 +130,7 @@ class DireccionEntregaController extends Controller
             foreach($rta as $direcciones)
             {
                 $json[] = [
+                    'borrado'           => view('administracion.dde.partials.borrada', ['dde' => $direcciones->id, 'borrada' => $direcciones->deleted_at])->render(),
                     'lugar_entrega'     => $direcciones->lugar_entrega,
                     'cantidad_enviado'  => $direcciones->cantidad_enviado,
                     'domicilio'         => $direcciones->domicilio,
@@ -114,7 +138,7 @@ class DireccionEntregaController extends Controller
                     'provincia'         => $direcciones->provincia,
                     'condiciones'       => $direcciones->condiciones,
                     'observaciones'     => $direcciones->observaciones,
-                    'acciones' => view('administracion.dde.partials.acciones', ['dde' => $direcciones->id])->render(),
+                    'acciones'          => view('administracion.dde.partials.acciones', ['dde' => $direcciones->id, 'borrada' => $direcciones->deleted_at])->render(),
                 ];
             }
             return response()->json($json);
