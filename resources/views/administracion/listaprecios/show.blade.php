@@ -75,7 +75,6 @@
     <div class="card-body">
         <table id="tablaProductos" class="table table-responsive-md table-bordered table-condensed" width="100%">
             <thead>
-                <th>Id</th>
                 <th>Código</th>
                 <th>Droga</th>
                 <th>Forma y Presentación</th>
@@ -86,7 +85,6 @@
             <tbody>
                 @foreach ($listaPrecios as $listaPrecio)
                     <tr>
-                        <td style="vertical-align: middle;">{{ $listaPrecio->producto_id }} - {{ $listaPrecio->presentacion_id }}</td>
                         <td style="vertical-align: middle;">{{ $listaPrecio->codigoProv }}</td>
                         <td style="vertical-align: middle;">{{ $listaPrecio->droga }}</td>
                         <td style="vertical-align: middle;">{{ $listaPrecio->forma }} | {{ $listaPrecio->presentacion }}</td>

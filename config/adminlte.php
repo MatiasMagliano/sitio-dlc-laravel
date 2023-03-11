@@ -282,22 +282,10 @@ return [
             ],
         ],
         [
-            'text'    => 'price_list',
-            'icon'    => 'fas fa-tag',
-            'can'     => 'es-administracion',
-            'submenu' => [
-                [
-                    'text'  => 'Administrar precios',
-                    'icon'  => 'fas fa-hand-holding-usd',
-                    'route' => 'administracion.listaprecios.index',
-                ],
-                [
-                    'text'  => 'Crear lista de precios',
-                    'icon'  => 'fas fa-money-check',
-                    'route' => 'administracion.listaprecios.create',
-                ],
-
-            ],
+            'text'   => 'price_list',
+            'icon'   => 'fas fa-money-check',
+            'route'  => 'administracion.listaprecios.index',
+            'can'    => ['es-administracion'],
         ],
         [
             'text'    => 'products_maintenance',

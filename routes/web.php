@@ -98,7 +98,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     Route::post('/listaprecios/create', [ListaPrecioController::class, 'addListadoProveedor'])->name('listaprecios.create');
     Route::resource('/listaprecios', ListaPrecioController::class)->except('edit', 'update');
-    Route::delete('/listaprecios', [ListaPrecioController::class, 'deleteList'])->name('listaprecios.deleteList');
+    Route::delete('/listaprecios/{proveedor_id}', [ListaPrecioController::class, 'destroy'])->name('listaprecios.destroy');
 
     // rutas de COTIZACIONES
     Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])

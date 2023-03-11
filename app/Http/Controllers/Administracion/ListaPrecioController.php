@@ -92,11 +92,14 @@ class ListaPrecioController extends Controller
     // }
 
     
-    public function destroy(string $cuit)
+    public function destroy(string $proveedor_id, Request $request)
     {
-        //
-    }
 
+        $data = ListaPrecio::deleteListaByProveedorId($proveedor_id);
+
+        $request->session()->flash('success', 'Los productos del proveedor fueron borrados con éxito');
+        return redirect()->route('administracion.listaprecios.index');
+    }
     // /**
     // * @return \Illuminate\Support\Collection
     // */
