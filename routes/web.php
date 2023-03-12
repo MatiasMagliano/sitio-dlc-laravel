@@ -92,13 +92,14 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::resource('/trazabilidad', TrazabilidadController::class);
 
     // rutas especiales para LISTA DE PRECIOS
-    Route::get('/listaprecios/show/{razon_social}', [ProductoController::class, 'show'])->name('listaprecios.show');
+    Route::get('/listaprecios/show/{razon_social}/editar', [ProductoController::class, 'show'])->name('listaprecios.show');
     Route::get('/listaprecios/mostrarLista', [ListaPrecioController::class, 'mostrarLista'])->name('listaprecios.mostrarLista');
     Route::get('/listaprecios/exportlist', [ListaPrecioController::class, 'exportlist'])->name('listaprecios.exportlist');
 
     Route::post('/listaprecios/create', [ListaPrecioController::class, 'addListadoProveedor'])->name('listaprecios.create');
     Route::resource('/listaprecios', ListaPrecioController::class)->except('edit', 'update');
     Route::delete('/listaprecios/{proveedor_id}', [ListaPrecioController::class, 'destroy'])->name('listaprecios.destroy');
+    Route::delete('/listaprecios/show/{razon_social}/editar/{listaId}', [ListaPrecioController::class, 'itemDestroy'])->name('listaprecios.show.itemDestroy');
 
     // rutas de COTIZACIONES
     Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])

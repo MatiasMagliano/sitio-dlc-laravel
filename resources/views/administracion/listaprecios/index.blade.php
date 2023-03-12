@@ -94,39 +94,7 @@
                 debugger;
                 $('#borrar-' + id).submit();
                 window.location.replace('{{ route('administracion.listaprecios.index') }}');
-            }
-        });
-    };
-
-    function borrarListadoProveedor(listado) {
-        var proveedor = listado.split("|");
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-                confirmButton: 'btn btn-success',
-                cancelButton: 'btn btn-danger'
-            },
-            buttonsStyling: false
-        })
-
-        swalWithBootstrapButtons.fire({
-            title: 'Borrar Listado de ' + proveedor[1],
-            text: "Esta accción quitará los productos de la lista del proveedor en futuras cotizaciones.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Borrar',
-            cancelButtonText: 'Cancelar',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                var datos = {
-                    lisadoProveedor: 15
-                };
-                $.ajax({
-                    url: "{{ route('administracion.listaprecios.deleteList') }}",
-                    type: "DELETE",
-                    data: datos,
-                });
-            } else if (
+            }else if (
                 result.dismiss === Swal.DismissReason.cancel
             ) {
                 swalWithBootstrapButtons.fire(
@@ -135,9 +103,8 @@
                     'error'
                 )
             }
-        })
-    }
-
+        });
+    };
 
     $(document).ready(function() {
         // VARIABLES LOCALES

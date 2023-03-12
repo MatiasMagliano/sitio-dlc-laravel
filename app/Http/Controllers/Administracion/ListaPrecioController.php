@@ -69,14 +69,6 @@ class ListaPrecioController extends Controller
         $save->save(); 
     }
 
-    public function deleteList($proveedor_id){
-
-        ListaPrecio::deleteListaByProveedorId($proveedor_id);
-
-        return redirect()->route('listaprecios.index'); 
-    }
-
-
     public function editItemList(string $listaId)
     {
         $itemListaPrecio = ListaPrecio::getItemLista($listaId);
@@ -99,6 +91,14 @@ class ListaPrecioController extends Controller
 
         $request->session()->flash('success', 'Los productos del proveedor fueron borrados con éxito');
         return redirect()->route('administracion.listaprecios.index');
+    }
+
+    public function itemDestroy(string $razon_social, string $listaId, Request $request)
+    {
+        $data = ListaPrecio::deleteItemListaByListaId($listaId);
+
+        $request->session()->flash('success', 'Los productos del proveedor fueron borrados con éxito');
+        return redirect()->route('administracion.listaprecios.show', $razon_social);
     }
     // /**
     // * @return \Illuminate\Support\Collection
