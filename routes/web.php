@@ -93,8 +93,12 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     // rutas especiales para LISTA DE PRECIOS
     Route::get('/listaprecios/show/{razon_social}/editar', [ProductoController::class, 'show'])->name('listaprecios.show');
+    
     Route::get('/listaprecios/mostrarLista', [ListaPrecioController::class, 'mostrarLista'])->name('listaprecios.mostrarLista');
+    Route::get('/listaprecios/loadDetalleListado', [ListaPrecioController::class, 'loadDetalleListado'])->name('cotizaciones.loadDetalleListado');
     Route::get('/listaprecios/exportlist', [ListaPrecioController::class, 'exportlist'])->name('listaprecios.exportlist');
+    Route::get('/listaprecios/edit', [ListaPrecioController::class, 'editarProductoLista'])->name('listaprecios.editar.producto');
+    Route::match(['put', 'patch'], '/listaprecios/actualizar', [ListaPrecioController::class, 'actualizarProductoLista'])->name('listaprecios.actualizar.producto');
 
     Route::post('/listaprecios/create', [ListaPrecioController::class, 'addListadoProveedor'])->name('listaprecios.create');
     Route::resource('/listaprecios', ListaPrecioController::class)->except('edit', 'update');

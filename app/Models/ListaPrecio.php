@@ -47,7 +47,9 @@ class ListaPrecio extends Model
     //Show
     public static function getListaDeProveedor($razon_social)
     {
-        $listado = ListaPrecio::select('lista_precios.id as listaId','proveedors.id as proveedorId','proveedors.razon_social','producto_id','presentacion_id','codigoProv','droga','presentacion','forma','costo','lista_precios.updated_at')
+        $listado = ListaPrecio::select(
+            'lista_precios.id as listaId','proveedors.id as proveedorId','proveedors.razon_social','producto_id','presentacion_id',
+            'codigoProv','droga', DB::raw('CONCAT(forma, ", ", presentacion) AS detalle'),'costo','lista_precios.updated_at')
             ->join('productos','lista_precios.producto_id','=','productos.id')
             ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
             ->join('presentacions','lista_precios.presentacion_id','=','presentacions.id')

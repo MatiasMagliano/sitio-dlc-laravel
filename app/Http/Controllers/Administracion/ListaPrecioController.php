@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Administracion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ListaPrecio;
-use App\Exports\ListaPrecioExport;
 use App\Models\Producto;
 use App\Models\Presentacion;
 use App\Models\Proveedor;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
+//use App\Exports\ListaPrecioExport;
+//use Maatwebsite\Excel\Facades\Excel;
 
 
 class ListaPrecioController extends Controller
@@ -56,6 +56,23 @@ class ListaPrecioController extends Controller
         return view('administracion.listaprecios.show', compact('listaPrecios', 'proveedor'));
     }
 
+    /*public function show(string $listaPrecio)
+    {
+        $proveedor = Proveedor::getDatosProveedor($listaPrecio);
+        return view('administracion.listaprecios.show', compact('listaPrecio','proveedor'));
+    }
+
+    public function loadDetalleListado(Request $request)
+    {
+        if ($request->ajax())
+        {
+            $listaPrecios = ListaPrecio::getListaDeProveedor("Hyatt and Sons");
+
+            return response()->json(['success' => $listaPrecios]);
+            //return response()->json($listaPrecios);
+        }
+    }*/
+    
     public function addListadoProveedor(Request $request){
         $myarray = explode("|", $request->cadena);
         $save = new ListaPrecio;
@@ -74,15 +91,6 @@ class ListaPrecioController extends Controller
         $itemListaPrecio = ListaPrecio::getItemLista($listaId);
         return view('administracion.listaprecios.edit', compact('itemListaPrecio'));
     }
-
-    // public function destroy(Request $request){
-    //     if($request->ajax()){
-    //         $ListaPrecios = ListaPrecio::destroy($request->id);
-    //         return response()->json($ListaPrecios);
-    //     }
-    //     return response()->json(['mensaje' => 'No se encuentra la Lista de Precios del Proveedor'+$request->razon_social]);
-    // }
-
     
     public function destroy(string $proveedor_id, Request $request)
     {
@@ -100,20 +108,38 @@ class ListaPrecioController extends Controller
         $request->session()->flash('success', 'Los productos del proveedor fueron borrados con éxito');
         return redirect()->route('administracion.listaprecios.show', $razon_social);
     }
-    // /**
-    // * @return \Illuminate\Support\Collection
-    // */
-    // public function export(Request $prov_id){
-    //     return Excel::download(new ListaPrecioExport($prov_id), 'lista_precios.xlsx');
-    // }
-    // public function exportlist(ListaPrecio $proveedor_id){
-    //     return Excel::download(new ListaPrecioExport($proveedor_id), 'lista_precios.xlsx');
-    // }
+    
+    public function editarProductoLista(Request $request)
+    {
+        if($request->ajax())
+        {
+            $producto_listaPrecio = ListaPrecio::find($request->producto);
+            $respuesta = array(
+                'producto_listaPrecio' => $producto_listaPrecio,
+                'producto'  => Producto::find($producto_listaPrecio->producto_id),
+                'presentacion' => Presentacion::find($producto_listaPrecio->presentacion_id),
+            );
 
+            return response()->json($respuesta);
+        }
+    }
 
-    public function exportlist(Request $request){
+    public function actualizarProductoLista(Request $request)
+    {
+        $producto_listaPrecio = ListaPrecio::find($request->listaId);
+        $datos = $request->validate([
+            'costo'  => 'required|numeric|min:0',
+            'codigoProv'    => 'required|numeric|regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
+        ]);
+
+        $producto_listaPrecio->update($datos);
+
+        return response()->json(['success' => 'El producto se ha modificado con éxito.']);
+    }
+
+    /*public function exportlist(Request $request){
         $RS = $request->collect('search-rs');
         return Excel::download(new ListaPrecioExport($RS), 'ListadoPrecios.xlsx');
-    }  
+    }*/ 
 
 }
