@@ -49,6 +49,15 @@ class ListaPrecioController extends Controller
         return view('administracion.listaprecios.create', compact('productos','presentaciones', 'proveedores'))->with('config', $config);
     }
 
+    public function destroy(string $proveedor_id, Request $request)
+    {
+
+        $data = ListaPrecio::deleteListaByProveedorId($proveedor_id);
+
+        $request->session()->flash('success', 'Los productos del proveedor fueron borrados con éxito');
+        return redirect()->route('administracion.listaprecios.index');
+    }
+
     public function show(string $razon_social)
     {
         $listaPrecios = ListaPrecio::getListaDeProveedor($razon_social);
@@ -86,31 +95,66 @@ class ListaPrecioController extends Controller
         $save->save(); 
     }
 
-    public function editItemList(string $listaId)
-    {
-        $itemListaPrecio = ListaPrecio::getItemLista($listaId);
-        return view('administracion.listaprecios.edit', compact('itemListaPrecio'));
+    //DETALLE DE LISTA DE PROVEEDOR
+    //- alta
+    public function agregarProductoLista() {   
+        $jsonProductos = array('dataProductos' => []);
+        $productos = DB::table('productos')->get();
+        foreach($productos as $producto) {
+            $jsonProductos['dataProductos'][] = [
+                'productoId' => $producto->id,
+                'droga' => $producto->droga
+            ];
+        }
+
+        $jsonPresentaciones = array('dataPresentaciones' => []);
+        $presentacions = DB::table('presentacions')->get();
+        foreach($presentacions as $presentacion) {
+            $jsonPresentaciones['dataPresentaciones'][] = [
+                'presentacionId' => $presentacion->id,
+                'presentacion' => $presentacion->forma. ', ' .$presentacion->presentacion
+            ];
+        }
+
+        $jsonResponse = array('dataResponse' => []);
+        $jsonResponse['dataResponse'][] = [
+            'nombre' => $jsonProductos,
+            'detalle' => $jsonPresentaciones
+        ];
+
+        return response()->json($jsonResponse);
     }
+    public function ingresarProductoLista(Request $request)
+    {
+        $newProdLista = new ListaPrecio;
+        $find_producto_listaPrecio = ListaPrecio::findByProducto($request->proveedor_id , $request->producto_id, $request->presentacion_id);
+
+        if(!$find_producto_listaPrecio){
+            $datos = $request->validate([
+                'producto_id' => 'required',
+                'presentacion_id' => 'required',
+                'costo'  => 'required|numeric|min:0',
+                'codigoProv'    => 'required|numeric|regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
+            ]);
     
-    public function destroy(string $proveedor_id, Request $request)
-    {
+            $newProdLista = new ListaPrecio($request->all());
+            $newProdLista->save();
 
-        $data = ListaPrecio::deleteListaByProveedorId($proveedor_id);
-
-        $request->session()->flash('success', 'Los productos del proveedor fueron borrados con éxito');
-        return redirect()->route('administracion.listaprecios.index');
+            return response()->json(['alert' => 'success','message' => 'El producto se ha modificado con éxito.']);
+            
+        }else{
+            return response()->json(['alert' => 'warning','message' => 'El producto ya se encuentra en el listado del proveedor.']);
+        }
     }
-
-    public function itemDestroy(string $razon_social, string $listaId, Request $request)
-    {
+    // - baja
+    public function itemDestroy(string $razon_social, string $listaId, Request $request) {
         $data = ListaPrecio::deleteItemListaByListaId($listaId);
 
-        $request->session()->flash('success', 'Los productos del proveedor fueron borrados con éxito');
+        $request->session()->flash('success', 'El producto del proveedor fue quitado de la lísta con éxito');
         return redirect()->route('administracion.listaprecios.show', $razon_social);
     }
-    
-    public function editarProductoLista(Request $request)
-    {
+    // - modificación
+    public function editarProductoLista(Request $request) {
         if($request->ajax())
         {
             $producto_listaPrecio = ListaPrecio::find($request->producto);
@@ -123,9 +167,7 @@ class ListaPrecioController extends Controller
             return response()->json($respuesta);
         }
     }
-
-    public function actualizarProductoLista(Request $request)
-    {
+    public function actualizarProductoLista(Request $request) {
         $producto_listaPrecio = ListaPrecio::find($request->listaId);
         $datos = $request->validate([
             'costo'  => 'required|numeric|min:0',
@@ -137,6 +179,13 @@ class ListaPrecioController extends Controller
         return response()->json(['success' => 'El producto se ha modificado con éxito.']);
     }
 
+    
+    /*public function editItemList(string $listaId)
+    {
+        $itemListaPrecio = ListaPrecio::getItemLista($listaId);
+        return view('administracion.listaprecios.edit', compact('itemListaPrecio'));
+    }*/
+    
     /*public function exportlist(Request $request){
         $RS = $request->collect('search-rs');
         return Excel::download(new ListaPrecioExport($RS), 'ListadoPrecios.xlsx');

@@ -58,6 +58,12 @@ class ListaPrecio extends Model
         return $listado;
     }
 
+    public static function findByProducto($proveedorId , $producto_id, $presentacion_id){
+        $prodcuto_lista =  ListaPrecio::where([['proveedor_id','=', $proveedorId],['producto_id','=', $producto_id],['presentacion_id','=', $presentacion_id]])->count();
+
+        return $prodcuto_lista;
+    }
+
     public static function deleteListaByProveedorId($proveedor_id)
     {
         $deleted = DB::table('lista_precios')->where('proveedor_id','=', $proveedor_id)->delete();
@@ -77,9 +83,6 @@ class ListaPrecio extends Model
             ->where('presentacion_id', $presentacion)
             ->pluck('id');
     }
-
-
-
 
     public static function deletelistaDeProveedor($cuit)
     {
@@ -103,8 +106,7 @@ class ListaPrecio extends Model
     }
 
 
-    public static function listarDescuentos($producto, $presentacion, $cotizacion)
-    {
+    public static function listarDescuentos($producto, $presentacion, $cotizacion) {
 
         $mercaderia = ListaPrecio::select('proveedors.razon_social','costo AS costo_1','costo AS costo_2','costo AS costo_3','costo AS costo_4','costo AS costo_5')
             ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')

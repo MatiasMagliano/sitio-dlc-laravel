@@ -3,6 +3,7 @@
 @section('title', 'Administrar Productos')
 
 @section('css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.css" />
     <style>
         @media (max-width: 600px) {
             .hide {
@@ -17,7 +18,7 @@
         <div class="col-xl-8">
             @foreach ($proveedor as $proveedorItem)
                 <h1>Lista de Precios de: {{ $proveedorItem->razon_social }}</h1>
-                @endforeach
+            @endforeach
             
             </div>
             <div class="col-md-4 d-flex justify-content-xl-end">
@@ -48,8 +49,14 @@
         <div class="card">
             <div class="card-header">
                 <div class="row d-flex">
-                    <div class="col-8">
+                    <div class="col-11">
                         <h5 class="heading-small text-muted mb-1">Productos</h5>
+                    </div>
+                    <div class="col-1">
+                        <button role="button" class="btn btn-success open_first_modal" data-toggle="modal" data-target="#modalAgregProducto" data-toggle="tooltip" data-placement="middle"
+                            title="Agregtar producto" value="{{ $proveedor }}">
+                        <i class="fas fa-plus"></i>
+                    </button>
                     </div>
                 </div>
             </div>
@@ -69,6 +76,7 @@
 @section('js')
     @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
     
     <script>
         /*$(document).ready(function() {
@@ -122,9 +130,76 @@
                             }
                         ],
                     });
-                });*/
-    
-    
+        });*/
+
+        //AGREGAR PRODUCTO - MODAL
+        $(document).on('click', '.open_first_modal', function(){
+            $.ajax({
+                type: "GET",
+                url: "{{route('administracion.listaprecios.agregar.producto')}}",
+                success: function(data){
+                    console.log(data);
+                    var rProducto = data.dataResponse[0];
+                        
+                    for(var i = 0; i < rProducto.nombre.dataProductos.length; i++){
+                        $(".seleccion-producto").prepend("<option value='"+ rProducto.nombre.dataProductos[i].productoId +"' selected='selected'>"+ rProducto.nombre.dataProductos[i].droga +"</option>");
+                    }
+                    var selProducto = new SlimSelect({
+                        select: '.seleccion-producto',
+                        placeholder: 'Seleccione el nombre de la droga...',
+                    });
+        
+                    for(var i = 0; i < rProducto.detalle.dataPresentaciones.length; i++){
+                        $(".seleccion-presentacion").prepend("<option value='"+ rProducto.detalle.dataPresentaciones[i].presentacionId +"' selected='selected'>"+ rProducto.detalle.dataPresentaciones[i].presentacion +"</option>");
+                    }
+                    var selPresentacion = new SlimSelect({
+                        select: '.seleccion-presentacion',
+                        placeholder: 'Seleccione la presentación de la droga...',
+                    });
+                },
+            });
+        });
+        //AGREGAR PRODUCTO - SUBMIT DEL FORMULARIO
+        $(document).on('submit','#formAgregProducto',function(event){
+            event.preventDefault();
+            console.log("Hola");
+            $.ajax({
+                url: '{{route('administracion.listaprecios.ingresar.producto')}}',
+                method: 'POST',
+                data: new FormData(this),
+                dataType: 'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success:function(response)
+                {
+                    console.log(response); 
+                    Swal.fire({
+                        title: 'Agregar producto',
+                        icon: response.alert,
+                        text: response.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    debugger;
+                    location.reload();
+                },
+                error: function(response) {
+                    var errors = response.responseJSON;
+                    errores = '';
+                    $.each( errors, function( key, value ) {
+                        errores += value;
+                    });
+                    Swal.fire({
+                        icon: 'error',
+                        text: errores,
+                        showConfirmButton: true,
+                    });
+                }
+            });
+        });
+
+        //BORRAR PRODUCTO
         function borrarItemListado(item) {
             var rs = document.getElementById('borrar-' + item).name;
 
@@ -142,16 +217,17 @@
                     window.location.replace('{{ route('administracion.listaprecios.show','rs') }}');
                 }else if (
                     result.dismiss === Swal.DismissReason.cancel
-                ) {
-                    swalWithBootstrapButtons.fire(
-                        'Cancelado',
+                    ) {
+                        swalWithBootstrapButtons.fire(
+                            'Cancelado',
                         'Operación cancelada por usuario, no se quita el producto listado de proveedor',
                         'error'
                     )
                 }
             });
         };
-
+        
+        //MODIFICAR PRODUCTO - MODAL
         $(document).on('click', '.open_modal', function(){
             $.ajax({
                 type: "GET",
@@ -171,14 +247,12 @@
                     },
                 });
             });
-
-
-            //SUBMIT DEL FORMULARIO DE MODIFICACION DE PRODUCTO
-            $(document).on('submit','#formModifProducto',function(event){
-                
-                event.preventDefault();
-                $.ajax({
-                    url: '{{route('administracion.listaprecios.actualizar.producto')}}',
+        //MODIFICAR PRODUCTO - SUBMIT DEL FORMULARIO
+        $(document).on('submit','#formModifProducto',function(event){
+            
+            event.preventDefault();
+            $.ajax({
+                url: '{{route('administracion.listaprecios.actualizar.producto')}}',
                 method: 'POST',
                 data: new FormData(this),
                 dataType: 'JSON',
@@ -196,8 +270,6 @@
                     });
                     debugger;
                     location.reload();
-                    //$('#modalModifProducto').modal('toggle')
-                    //tablaProductos.reload();
                 },
                 error: function(response) {
                     var errors = response.responseJSON;
@@ -213,45 +285,7 @@
                 }
             });
         });
-    //SUBMIT DEL FORMULARIO DE MODIFICACION DE PRODUCTO
-        /*$(document).on('submit','#formModifProducto',function(event){
-            event.preventDefault();
 
-            $.ajax({
-                url: '{{route('administracion.cotizaciones.actualizar.producto')}}',
-                method: 'POST',
-                data: new FormData(this),
-                dataType: 'JSON',
-                contentType: false,
-                cache: false,
-                processData: false,
-                success:function(response)
-                {
-                    Swal.fire({
-                        title: 'Modificar producto',
-                        icon: 'success',
-                        text: response.success,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-
-                    $('#modalModifProducto').modal('toggle')
-                    tablaProductos.ajax.reload();
-                },
-                error: function(response) {
-                    var errors = response.responseJSON;
-                    errores = '';
-                    $.each( errors, function( key, value ) {
-                        errores += value;
-                    });
-                    Swal.fire({
-                        icon: 'error',
-                        text: errores,
-                        showConfirmButton: true,
-                    });
-                }
-            });
-        });*/
     </script>
 
 @endsection
