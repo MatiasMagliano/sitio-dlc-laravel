@@ -110,7 +110,7 @@ class ReportesController extends Controller
             'date'                => Carbon::now(),
         ];
 
-        return view('administracion.reportes.index', compact('config_desde', 'config_hasta', 'cantOT', 'maxCotizaciones', 'vencimientos', 'cantCotiz', 'compras', 'cotizAprobRechaz', 'perdidasPorVencimiento'));
+        return view('administracion.reportes.index', compact('config_desde', 'config_hasta', 'maxCotizaciones', 'cotizAprobRechaz', 'perdidasPorVencimiento'));
     }
 
     public function lst_clientes(Request $request)

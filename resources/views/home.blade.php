@@ -11,7 +11,7 @@
             width: auto;
         }
         .px-10 {
-            padding: 10px 500px;
+            padding: 1% 25%;
         }
     </style>
 @endsection
@@ -24,7 +24,7 @@
 @section('content')
     <div class="container-fluid px-10 py-5 overflow-hidden">
         <div class="row justify-content-center px-5 mx-auto">
-            <div class="col-md-6 text-center block py-1">
+            <div class="col-sm-6 text-center block py-1">
                 <div class="small-box bg-gradient-success">
                     <div class="inner">
                         <h3>{{ $cantOT[0]->cantidad }}</h3>
@@ -38,7 +38,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6 text-center block py-1">
+            <div class="col-sm-6 text-center block py-1">
                 <div class="small-box bg-gradient-info">
                     <div class="inner">
                         <h3>{{ $compras[0]->comprar }}</h3>
@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="row justify-content-center px-5 mx-auto">
-            <div class="col-md-6 text-center block py-1">
+            <div class="col-sm-6 text-center block py-1">
                 <div class="small-box bg-gradient-warning">
                     <div class="inner">
                         <h3>{{ $cantCotiz[0]->cantidad }}</h3>
@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6 text-center block py-1">
+            <div class="col-sm-6 text-center block py-1">
                 <div class="small-box bg-gradient-danger">
                     <div class="inner">
                         <h3>{{ $vencimientos[0]->proximos }}</h3>

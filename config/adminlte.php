@@ -226,12 +226,6 @@ return [
 
     'menu' => [
         [
-            'text'  => 'calendars',
-            'icon'  => 'fas fa-calendar-alt',
-            'can'   => 'es-administracion',
-            'route' => 'administracion.calendario.vencimientos',
-        ],
-        [
             'text'   => 'work_orders',
             'icon'   => 'fas fa-tools',
             'route'  => 'administracion.ordentrabajo.index',
@@ -315,8 +309,13 @@ return [
             'can'     => 'es-administracion',
             'submenu' => [
                 [
-                    'text'  => 'reporting_generator',
-                    'route' => 'administracion.reportes',
+                    'text'       => 'calendars',
+                    'route'      => 'administracion.calendario.vencimientos',
+                    'icon_color' => 'orange',
+                ],
+                [
+                    'text'       => 'reporting_generator',
+                    'route'      => 'administracion.reportes',
                     'icon_color' => 'orange',
                 ],
             ],
