@@ -5,45 +5,14 @@
 @section('css') {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.css" /> --}}
     <style>
         .dataTable>thead>tr>th[class*="sort"]:before,
-        .dataTable>thead>tr>th[class*="sort"]:after {
-            content: "" !important;
-        }
-
-        #tabla1.dataTable tfoot th {
-            border-top: none;
-            border-bottom: 1px solid #111;
-        }
-
-        #tabla2.dataTable {
-            overflow: auto;
-        }
-
-        .search input[type=text] {
-            font-size: 17px;
-            border: none;
-            outline: none;
-        }
-
-        .search input[type=text] {
-            font-size: 17px;
-            border: none;
-            outline: rgba(0, 0, 0, 0);
-        }
-
-        .search button {
-            background: #fff;
-            font-size: 17px;
-            border: none;
-            opacity: 0.4;
-        }
-
-        .hide {
-            display: none
-        }
-
-        .LockCreate{
-            display: none
-        }
+        .dataTable>thead>tr>th[class*="sort"]:after{content:""!important;}
+        #tabla1.dataTable tfoot th{border-top:none;border-bottom:1px solid #111;}
+        #tabla2.dataTable{overflow:auto;}
+        .search input[type=text]{font-size:17px;border:none;outline:none;}
+        .search input[type=text]{font-size:17px;border:none;outline:rgba(0,0,0,0);}
+        .search button {background:#fff;font-size:17px;border:none;opacity:0.4;}
+        .hide{display:none}
+        .LockCreate{display:none}
     </style>
 @endsection
 
@@ -63,112 +32,30 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-@section('plugins.Datatables', true)
-@section('plugins.DatatablesPlugins', true)
+    @section('plugins.Datatables', true)
+    @section('plugins.DatatablesPlugins', true)
 
-<div class="wrapper">
-    <div class="card">
-        <div class="card-header">
-            {{-- <div class="desktop">
-                @include('administracion.cotizaciones.partials.tabla-desktop')
-            </div> --}}
-            <div class="mobile">
-                @include('administracion.listaprecios.partials.datatable-index')
+    <div class="wrapper">
+        <div class="card">
+            <div class="card-header">
+                <div class="mobile">
+                    @include('administracion.listaprecios.partials.datatable-index')
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @section('js')
-@include('partials.alerts')
-<script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.4/locale/es.js"></script>
-
-<script>
-    function borrarListado(id) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Borrar Listado',
-            text: 'Esta acción borrará todos los prodcutos del proveedor.',
-            confirmButtonText: 'Borrar',
-            showCancelButton: true,
-            cancelButtonText: 'Cancelar',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                debugger;
-                $('#borrar-' + id).submit();
-                window.location.replace('{{ route('administracion.listaprecios.index') }}');
-            }else if (
-                result.dismiss === Swal.DismissReason.cancel
-            ) {
-                swalWithBootstrapButtons.fire(
-                    'Cancelado',
-                    'Operación cancelada por usuario, no se borra el listado de proveedor',
-                    'error'
-                )
-            }
-        });
-    };
-
-    $("#ListasSinProductos").on('click', function() {
-        $(location).attr('href', 'listaprecios/create')
-    });
-
-    (function () {
-    'use strict'
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.querySelectorAll('.needs-validation')
-
-        // Loop over them and prevent submission
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-    })()
-
-    $(document).ready(function() {
-        $.ajax({
-            type: "GET",
-            url: "{{route('administracion.listaprecios.listasVacias')}}",
-            success: function(data){
-                if (data.message == 0){
-                    $('#ListasSinProductos').addClass('LockCreate');
-                }else{
-                    $('#ListasSinProductos').removeClass('LockCreate');
-                }
-            },
-        });
-
-        // VARIABLES LOCALES
-        var tabla;
-        tabla = $('#tabla').DataTable({
-            "paging": false,
-            "info": false,
-            "searching": false,
-            "select": false,
-        });
-    });
-
-    
-    // SCRIPT DEL SLIMSELECT
-    /*var selProducto = new SlimSelect({
-        select: '.seleccion-producto',
-        placeholder: 'Seleccione el nombre de la droga y luego su presentación...',
-    });*/
-</script>
+    @include('partials.alerts')
+    <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.4/locale/es.js"></script>
+    @include('administracion.listaprecios.js.listaprecios-index')
 @endsection
 
 @section('footer')
-<strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
-<div class="float-right d-none d-sm-inline-block">
-    <b>Versión</b> 2.0 (LARAVEL V.8)
-</div>
+    <strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
+    <div class="float-right d-none d-sm-inline-block">
+        <b>Versión</b> 2.0 (LARAVEL V.8)
+    </div>
 @endsection

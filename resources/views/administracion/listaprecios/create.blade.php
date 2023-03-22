@@ -4,18 +4,7 @@
 
 @section('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.css" />
-    <style>
-        @media (max-width: 600px) {
-            .hide {
-                display: none;
-            }
-        }
-        .error{
-            font-size: 12px;
-            color: red;
-            text-align: center;
-        }
-    </style>
+    <style>@media (max-width:600px){.hide{display:none;}}.error{font-size:12px;color:red;text-align:center;}</style>
 @endsection
 
 @section('content_header')
@@ -24,8 +13,7 @@
             <h1>Crear nuevo listado de precios de Proveedor</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-md-end">
-            <a href="{{ route('administracion.listaprecios.index') }}" role="button"
-                class="btn btn-md btn-secondary">Volver a Listados de Precios</a>
+            <a href="{{ route('administracion.listaprecios.index') }}" role="button" class="btn btn-md btn-secondary">Volver a Listados de Precios</a>
         </div>
     </div>
 @stop
@@ -33,11 +21,15 @@
 @section('content')
     {{-- NOMBRE DEL PROVEEDOR --}}
     <div class="card">
-
         <div class="card-header">
             <div class="row d-flex">
                 <div class="col-8">
-                    <h6 class="heading-small text-muted mb-1">SELECCIONAR PROVEEDOR </h6>
+                    <div class="row">
+                        <h6 class="heading-small text-muted mb-1">PROVEEDOR</h6>
+                    </div>
+                    <div class="row">
+                        <p class="text-muted mb-1" style="font-size:12px;">* Debe seleccionar la razón social y agregar al menos un producto para guardar los cambios</p>
+                    </div>
                 </div>
                 <div class="col-4 text-right">
                     <button id="guardarlista-btn" type="button" class="btn btn-sidebar btn-success">
@@ -46,86 +38,8 @@
                 </div>
             </div>
         </div>
-
         <div class="card-body">
-            <div class="pl-lg-4">
-
-                <div class="form-group">
-                    <label for="input-proveedor">Razon Social</label>
-                    <select name="proveedor" id="input-proveedor"
-                        class="selecion-proveedor form-control-alternative" autocomplete="off">
-                        <option data-placeholder="true"></option>
-                        @foreach ($proveedores as $proveedor)
-                            @if ($proveedor->id == old('proveedor'))
-                                <option value="{{ $proveedor->id }}" selected>
-                                    {{ $proveedor->cuit }} | {{ $proveedor->razon_social }}
-                                </option>
-                            @else
-                                <option value="{{ $proveedor->id }}">
-                                    {{ $proveedor->cuit }} | {{ $proveedor->razon_social }}
-                                </option>
-                            @endif
-                        @endforeach
-                    </select>
-                    @error('proveedor')<div class="invalid-feedback">{{$message}}</div>@enderror
-                </div>
-
-                <div class="form-row d-flex">
-                    <table id="tabla1" class="table table-bordered table-responsive-md" width="100%">
-                        <thead>
-                            <th>Código de Proveedor</th>
-                            <th>Droga</th>
-                            <th>Forma/Presentacion</th>
-                            <th>Costo</th>
-                            <th>Acciones</th>
-                        </thead>
-
-                        <tbody>
-                            <tr>
-                                <td id="td-codigo">
-                                    <input type="text" name="codigo" id="codigo" maxlength="15"  style="height: 30px"  class="form-control" autocomplete="off">
-                                    <p class="error">Este campo es necesario</p>
-                                </td>
-
-                                <td id="td-producto">
-                                    <select name="producto" id="input-producto" class="selecion-producto form-control-alternative" autocomplete="off">
-                                        <option data-placeholder="true" value="0"></option>
-                                        @foreach ($productos as $producto)
-                                            <option value="{{ $producto->id }}">{{ $producto->id }}- {{ $producto->droga }}</option>
-                                        @endforeach
-                                    </select>
-                                    <p class="error">Este campo es necesario</p>
-                                </td>
-
-                                <td id="td-presentacion">
-                                    <select name="presentacion" id="input-presentacion" class="selecion-presentacion form-control-alternative" autocomplete="off">
-                                    <option data-placeholder="true" value="0"></option>
-                                        @foreach ($presentaciones as $presentacion)
-                                            @if ($presentacion->id == old('presentacion'))
-                                                <option value="{{ $presentacion->id }}" selected>{{ $presentacion->id }}- {{ $presentacion->forma }}, {{ $presentacion->presentacion }}</option>
-                                            @else
-                                                <option value="{{ $presentacion->id }}">{{ $presentacion->id }}- {{ $presentacion->forma }}, {{ $presentacion->presentacion }}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                    <p class="error">Este campo es necesario</p>
-                                </td>
-
-                                <td id="td-precio">
-                                    <input type="number" name="precio_compra" id="precio_compra" style="height: 30px" class="form-control" autocomplete="off">
-                                    <p class="error">Este campo es necesario y debe tener formato de precio</p>
-                                </td>
-
-                                <td>
-                                    <a id="additem" type="button" href="#" class="btn btn-sidebar btn-primary"><i class="fas fa-plus"></i></a>
-                                    <a id="clearitem" type="button" href="#" class="btn btn-sidebar btn-danger"><i class="fas fa-eraser"></i></a>
-                                </td>
-                            </tr>
-                        </tbody>  
-                    </table>
-                </div>
-
-            </div>
+            @include('administracion.listaprecios.partials.form-selectproveedor')
         </div>
     </div>
 
@@ -139,35 +53,8 @@
                     </div>
                 </div>
             </div>
-
             <div class="card-body">
-                <div class="pl-lg-4">
-                    
-                    <form action="{{ route('administracion.listaprecios.create') }}" method="POST" class="needs-validation" autocomplete="off" novalidate>
-                        @csrf
-                        <div class="form-row d-flex">   
-                            <table id="tabla2" class="table table-bordered table-responsive-md" width="100%">
-                                <thead>
-                                    <th>Código de Proveedor</th>
-                                    <th>Droga</th>
-                                    <th>Forma/Presentacion</th>
-                                    <th>Costo</th>
-                                    <th>Quitar</th>
-                                </thead>
-                                <tbody>
-                                    <tr class="1eritem">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>  
-                            </table>
-                        </div>
-                    </form>
-
-                </div>
+                @include('administracion.listaprecios.partials.form-detallelistaprecios')
             </div>
             <div class="overlay"><i class="fas fa-ban text-gray"></i></div>           
         </div>
@@ -177,191 +64,7 @@
 
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
-    <script>
-        var nitem = 0;
-        var codigosProv = [];
-        var productosProv = [];
-
-        $(document).ready(function(){
-
-            window.CSRF_TOKEN = '{{ csrf_token() }}';
-            var bandera = 0;
-            $('#additem').hide();
-            $('#clearitem').hide();
-            $('.error').hide();
-            $('#guardarlista-btn').prop('disabled', true);
-         
-            //Habilita botones para agregar o remover items 
-            $("#input-proveedor").change(function() {
-                if(bandera == 0){
-                    $('#listitems .overlay').remove();
-                    $('#additem').show();
-                    //$('#clearitem').show();
-                    bandera++;
-                }else{
-                    for(var i = 0; i <= nitem; i++){
-                        $("#row" + i).remove();
-                    }
-                    nitem = 0;
-                }
-            });
-        });
-////////////////////////// //////////////////////// ////////////
-        //Valido registros ingresados para evitar error en insersión 
-        $("#additem").click(function(){ 
-            if ($('#codigo').val() != '' && $("#input-producto").val() != '' && $('#input-presentacion').val() != '' && $('#precio_compra').val() !=''){
-                validaRepetido($('#codigo').val(), $("#input-producto").val()+"|"+$('#input-presentacion').val(), $('#precio_compra').val());  
-            }else{
-                if($('#codigo').val() == ''){
-                    $('#td-codigo p').show();
-                }else{
-                    $('#td-codigo p').hide();
-                }
-                if ($("#input-producto").val() == ''){
-                    $('#td-producto p').show();
-                }else{
-                    $('#td-producto p').hide();
-                }
-                if ($('#input-presentacion').val() == ''){
-                    $('#td-presentacion p').show();
-                }else{
-                    $('#td-presentacion p').hide();
-                }
-                if ($('#precio_compra').val() ==''){
-                    $('#td-precio p').show();
-                }else{
-                    $('#td-precio p').hide();
-                }
-            }   
-    	});
-
-        //Valido que no se ingresen registros repetidos en la lista
-        function validaRepetido(addCod, addProd, addPres) {
-            nRegistros = codigosProv.length;
-            var duplica = false;
-            var duplicaCodigo = false;
-            var duplicaProducto = false;
-
-            if(nitem == 0){
-                addline(addCod, addProd, addPres);
-            }else{
-                for(var c = 0; c < nRegistros; c++){
-                    if (addCod == codigosProv[c] && addProd == productosProv[c] ){
-                        duplica = true;
-                    }else if(addCod == codigosProv[c]){
-                        duplicaCodigo = true;
-                    }else if (addProd == productosProv[c]){
-                        duplicaProducto = true;
-                    }
-                }
-                if (duplica == false && duplicaProducto == false && duplicaCodigo == false){
-                    addline(addCod, addProd, addPres);
-                }else if (duplica == true){
-                    msjAdvertencia('El producto', 'Registro');
-                }else if (duplicaCodigo == true){
-                    msjAdvertencia('El código de proveedor', 'Código de proveedor');
-                }else if (duplicaProducto == true){
-                    msjAdvertencia('El producto', 'Producto ');
-                }
-            }
-        }
-        function msjAdvertencia(mensaje, titulo){
-            event.preventDefault();
-            let advertencia = '<p>' + mensaje + ' que intenta cargar ya fue ingresado recientemente, por favor controle e intente nuevamente</p>';
-            Swal.fire({ 
-                icon: 'warning',
-                title: titulo + ' duplicado',
-                html: advertencia,
-                confirmButtonText: 'Controlar',
-                //showCancelButton: true,
-            });
-        }
-
-        //Agrego registro al final de la tabla, modifico el contador de filas
-        function addline(addCod, addProd, addPres) {
-            $('#guardarlista-btn').prop('disabled', false);
-            item = nitem;
-
-            codigosProv.push(addCod);
-            productosProv.push(addProd);
-            $("#tabla2 tbody").append("<tr id='row"+item+"'><td>"+$("#codigo").val()+"</td><td>"+$("#input-producto option:selected").html()+
-                "</td><td>"+$("#input-presentacion option:selected").html()+"</td><td>"+addPres+"</td><td><a type='submit'"+
-                "href='#' class='btn btn-sidebar btn-danger' onclick='removeline("+item+")'><i class='fas fa-minus'></i></a></td></tr>");
-            nitem++;
-        }
-
-        //Remuevo registro y reacomodo la tabla, modifico el contador de filas
-        function removeline(id){
-            var nfila = id;
-            for(var r = id; r < nitem; r++){
-                nfila = r + 1;
-                if(r < nitem - 1){
-                    $("#row" + r).children().remove();
-                    $("#row" + r).append($("#row" + nfila).children());
-                    $("#row" + r + " a").attr("onclick","removeline("+r+")");
-                    $("#row" + nfila).children().remove();
-                    // Actualizo vectores
-                    codigosProv[r] = codigosProv[nfila];
-                    productosProv[r] = productosProv[nfila];
-                }else{
-                    $("#row" + r).remove(); 
-                    codigosProv.pop();
-                    productosProv.pop();
-                }
-            }
-            nitem = nitem - 1;  
-            if (nitem == 0) {
-                $('#guardarlista-btn').prop('disabled', true);
-            }
-        }
-
-        //Envío por ajax la tabla para insertar en la base de datos
-        $("#guardarlista-btn").click(function(){
-            if(nitem > 0){
-                for(var i = 0; i < nitem; i++){
-                    $idprov = $("#input-proveedor").val();
-                    $codprod = $("#row" + i + " td:eq(" + 0 + ")").text();
-                    $idprod = $("#row" + i + " td:eq(" + 1 + ")").text().split("-")[0];
-                    $idpres = $("#row" + i + " td:eq(" + 2 + ")").text().split("-")[0];
-                    $cost = $("#row" + i + " td:eq(" + 3 + ")").text();
-
-                    $micadena = $idprov + "|" + $codprod + "|" + $idprod + "|" + $idpres + "|" + $cost;
-                    var datos = { cadena: $micadena};
-                    $.ajax({
-                        headers: { 'X-CSRF-TOKEN': window.CSRF_TOKEN = '{{ csrf_token() }} '},
-                        url: "{{ route('administracion.listaprecios.create') }}",
-                        type: "POST",
-                        data: datos,
-                    }).done(function(response) {
-                        Swal.fire({
-                            title: 'Agregar Listado',
-                            icon: response.alert,
-                            text: response.message,
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        debugger;
-                        window.location.replace('{{ route('administracion.listaprecios.index') }}');
-                    });
-                }
-            }
-        });
-
-        
-        new SlimSelect({
-            select: '.selecion-proveedor',
-            placeholder: 'Seleccione un proveedor de la lista',
-        })
-
-        new SlimSelect({
-            select: '.selecion-presentacion',
-            placeholder: 'Seleccione una presentación de la lista',
-        })
-        new SlimSelect({
-            select: '.selecion-producto',
-            placeholder: 'Seleccione una producto de la lista',
-        })
-    </script>
+    @include('administracion.listaprecios.js.listaprecios-create')
 @endsection
 
 @section('footer')
