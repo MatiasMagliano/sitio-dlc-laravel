@@ -18,8 +18,15 @@
             <h1>Ver/Editar cotización</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-xl-end">
-            <a href="{{ route('administracion.cotizaciones.index') }}" role="button"
-                class="btn btn-md btn-secondary">Volver</a>
+            <a
+                @if(url()->previous() == route('administracion.cotizaciones.index'))
+                    href="{{route('administracion.cotizaciones.index')}}"
+                @elseif (url()->previous() == route('administracion.cotizaciones.historico'))
+                    href="{{route('administracion.cotizaciones.historico')}}"
+                @endif
+                role="button" class="btn btn-md btn-secondary">
+                    Volver
+            </a>
         </div>
     </div>
 @endsection
