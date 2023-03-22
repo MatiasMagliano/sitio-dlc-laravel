@@ -18,6 +18,89 @@
 @endsection
 
 @section('content')
+    {{-- GRAFICOS JS-CHART --}}
+@section('plugins.Chartjs', true)
+    <div class="row">
+
+        {{-- GRAFICO TOP-10 CLIENTES --}}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-gradient-gray-dark">
+                    <h3 class="card-title">
+                        Top-10 cotizaciones por cliente
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
+                        <div class="chartjs-size-monitor">
+                            <div class="chartjs-size-monitor-expand">
+                                <div class=""></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink">
+                                <div class=""></div>
+                            </div>
+                        </div>
+                        <canvas id="top-ten-clientes" height="400"
+                            style="height: 400px; display: block; width:100%; margin: auto;" width="901"
+                            class="chartjs-render-monitor"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- GRAFICO APROBADAS vs RECHAZADAS --}}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-gradient-gray-dark">
+                    <h3 class="card-title">
+                        Cotizaciones aprobadas vs rechazadas
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
+                        <div class="chartjs-size-monitor">
+                            <div class="chartjs-size-monitor-expand">
+                                <div class=""></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink">
+                                <div class=""></div>
+                            </div>
+                        </div>
+                        <canvas id="cantidad-aprobRechaz" height="400"
+                            style="height: 400px; display: block; width:100%; margin: auto;" width="901"
+                            class="chartjs-render-monitor"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- GRAFICO PÉRDIDAS POR VENCIMIENTOS --}}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-gradient-gray-dark">
+                    <h3 class="card-title">
+                        Pérdidas por vencimientos
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
+                        <div class="chartjs-size-monitor">
+                            <div class="chartjs-size-monitor-expand">
+                                <div class=""></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink">
+                                <div class=""></div>
+                            </div>
+                        </div>
+                        <canvas id="perdida-vencimiento" height="400"
+                            style="height: 400px; display: block; width:100%; margin: auto;" width="901"
+                            class="chartjs-render-monitor"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @section('plugins.Datatables', true)
     @section('plugins.DatatablesPlugins', true)
     @section('plugins.TempusDominusBs4', true)
@@ -30,8 +113,8 @@
                     aria-controls="listados" aria-selected="true">Listados</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="perfil-tab" data-toggle="tab" href="#perfil" role="tab"
-                    aria-controls="perfil" aria-selected="false">Reportes</a>
+                <a class="nav-link" id="perfil-tab" data-toggle="tab" href="#perfil" role="tab" aria-controls="perfil"
+                    aria-selected="false">Reportes</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="contacto-tab" data-toggle="tab" href="#contacto" role="tab"
@@ -55,20 +138,24 @@
                     </li>
                 </ul>
                 <div class="tab-content ml-3 tab border" id="tabContentClientes">
-                    <div class="tab-pane fade show active" id="clientes" role="tabpanel" aria-labelledby="clientes-tab">
+                    <div class="tab-pane fade show active" id="clientes" role="tabpanel"
+                        aria-labelledby="clientes-tab">
                         {{-- VERTICAL TABS DE CLIENTES --}}
                         <div class="row">
                             <div class="col-1">
                                 <div class="nav flex-column nav-tabs" role="tablist" aria-orientation="vertical">
-                                    <a href="#listado" class="nav-link active" role="tab" data-toggle="tab" aria-selected="true">Lista</a>
-                                    <a href="#ventas" class="nav-link" role="tab" data-toggle="tab" aria-selected="false">Ventas</a>
+                                    <a href="#listado" class="nav-link active" role="tab" data-toggle="tab"
+                                        aria-selected="true">Lista</a>
+                                    <a href="#ventas" class="nav-link" role="tab" data-toggle="tab"
+                                        aria-selected="false">Ventas</a>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="tab-content tab">
                                     {{-- LISTA DE CLIENTES --}}
                                     <div role="tabpanel" class="tab-pane fade in show active" id="listado">
-                                        <h5 class=" mb-3">Seleccione el orden del listado y luego Generar o Descargar</h5 class=" mb-3">
+                                        <h5 class=" mb-3">Seleccione el orden del listado y luego Generar o Descargar</h5
+                                            class=" mb-3">
                                         <div class="row">
                                             <div class="col-3">
                                                 <form action="" id="frm-list-clientes" autocomplete="off">
@@ -92,7 +179,8 @@
 
                                     {{-- LISTA DE VENTAS --}}
                                     <div role="tabpanel" class="tab-pane fade" id="ventas">
-                                        <h5 class=" mb-3">Seleccione el tipo de reporte, el rango de fechas y luego Generar o Descargar</h5 class=" mb-3">
+                                        <h5 class=" mb-3">Seleccione el tipo de reporte, el rango de fechas y luego
+                                            Generar o Descargar</h5 class=" mb-3">
                                         <div class="row">
                                             <div class="col-3">
                                                 <form action="" id="frm-list-ventas" autocomplete="off">
@@ -138,7 +226,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="desde">Desde *</label>
-                                                <x-adminlte-input-date name="input-desde" id="desde" igroup-size="md" :config="$config_desde" autocomplete="off" required>
+                                                <x-adminlte-input-date name="input-desde" id="desde" igroup-size="md"
+                                                    :config="$config_desde" autocomplete="off" required>
                                                     <x-slot name="appendSlot">
                                                         <div class="input-group-text">
                                                             <i class="fas fa-calendar"></i>
@@ -149,7 +238,8 @@
 
                                             <div class="form-group">
                                                 <label for="hasta">Hasta *</label>
-                                                <x-adminlte-input-date name="input-hasta" id="hasta" igroup-size="md" :config="$config_hasta" autocomplete="off" required>
+                                                <x-adminlte-input-date name="input-hasta" id="hasta" igroup-size="md"
+                                                    :config="$config_hasta" autocomplete="off" required>
                                                     <x-slot name="appendSlot">
                                                         <div class="input-group-text">
                                                             <i class="fas fa-calendar"></i>
@@ -174,142 +264,269 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="perfil" role="tabpanel" aria-labelledby="perfil-tab">FORMULARIO DE PERFIL</div>
-            <div class="tab-pane fade" id="contacto" role="tabpanel" aria-labelledby="contacto-tab">FORMULARIO DE CONTACTO</div>
+            <div class="tab-pane fade" id="perfil" role="tabpanel" aria-labelledby="perfil-tab">
+                FORMULARIO DE PERFIL
+            </div>
+            <div class="tab-pane fade" id="contacto" role="tabpanel" aria-labelledby="contacto-tab">
+                FORMULARIO DE CONTACTO
+            </div>
         </div>
-
     </div>
 @endsection
 
 @section('js')
-    @include('partials.alerts')
-    <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
+@include('partials.alerts')
+<script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
 
-    <script type="text/javascript">
-    var concretadas = [
-        {"valor": "cotizacions.confirmada", "texto": "Fecha de aprobación"},
-        {"valor": "cotizacions.identificador", "texto": "Identificador"},
-        {"valor": "clientes.razon_social", "texto": "Cliente"},
-        {"valor": "cotizacions.monto_total", "texto": "Monto total facturado"},
+<script type="text/javascript">
+    var concretadas = [{
+            "valor": "cotizacions.confirmada",
+            "texto": "Fecha de aprobación"
+        },
+        {
+            "valor": "cotizacions.identificador",
+            "texto": "Identificador"
+        },
+        {
+            "valor": "clientes.razon_social",
+            "texto": "Cliente"
+        },
+        {
+            "valor": "cotizacions.monto_total",
+            "texto": "Monto total facturado"
+        },
     ];
-    var rechazadas = [
-        {"valor": "cotizacions.rechazada", "texto": "Fecha de rechazo"},
-        {"valor": "cotizacions.identificador", "texto": "Identificador"},
-        {"valor": "cliente.razon_social", "texto": "Cliente"},
-        {"valor": "cotizacions.motivo_rechazo", "texto": "Motivo de rechazo"},
+    var rechazadas = [{
+            "valor": "cotizacions.rechazada",
+            "texto": "Fecha de rechazo"
+        },
+        {
+            "valor": "cotizacions.identificador",
+            "texto": "Identificador"
+        },
+        {
+            "valor": "cliente.razon_social",
+            "texto": "Cliente"
+        },
+        {
+            "valor": "cotizacions.motivo_rechazo",
+            "texto": "Motivo de rechazo"
+        },
     ];
 
-        $(document).ready(function() {
-            var i;
+    $(document).ready(function() {
+        //GRAFICO COTIZACIONES POR CLIENTES
+        const charData = JSON.parse(`<?php echo $maxCotizaciones; ?>`);
+        const ctx = document.getElementById("top-ten-clientes").getContext('2d');
+        const grafico = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: charData.label,
+                datasets: [{
+                    label: "Cantidad de cotizaciones",
+                    data: charData.data,
+                    backgroundColor: "rgba(221, 191, 111, 0.8)",
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        stacked: true,
+                        grid: {
+                            display: true,
+                            color: "rgba(255,99,132,0.2)"
+                        },
+                    }
+                },
+            },
+        });
 
-            // rellenado del primer select: "tipo_reporte"
-            $('#input-reporte').on('change', function(){
-                if($('#input-reporte').val() == 'ventas_concretadas'){
-                    $('select[name=orden_listado]').html("");
-                    for(i = 0; i < concretadas.length; i++){
-                        $('select[name=orden_listado]').append('<option value="' + concretadas[i]['valor'] + '">' + concretadas[i]['texto'] + '</option>');
+        //GRAFICO DONUT CANTIDAD DE COTIZ APROBADAS Y RECHAZADAS
+        const chartData = JSON.parse(`<?php echo $cotizAprobRechaz; ?>`);
+        const chartCotizs = document.getElementById("cantidad-aprobRechaz").getContext('2d');
+        const graficoCantidades = new Chart(chartCotizs, {
+            type: "doughnut",
+            data: {
+                labels: chartData.label,
+                datasets: [{
+                    data: chartData.data,
+                    backgroundColor: [
+                        "rgb(101, 247, 140)",
+                        "rgb(54, 162, 235)",
+                    ],
+                    hoverOffset: 4
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                },
+            },
+        });
+
+        //GRAFICO BARRAS PÉRDIDAS POR VENCIMIENTOS
+        const chartjData = JSON.parse(`<?php echo $perdidasPorVencimiento; ?>`);
+        const chartPerdida = document.getElementById("perdida-vencimiento").getContext('2d');
+        const graficoVencimiento = new Chart(chartPerdida, {
+            type: "bar",
+            data: {
+                labels: chartjData.label,
+                datasets: [{
+                    label: "Oportunidad de pérdida por venta al costo previo al vencimiento",
+                    data: chartjData.dataOportunidad,
+                    backgroundColor: "rgba(0, 191, 111, 0.8)",
+                    stack: 1
+                }, {
+                    label: "Perdida por vencimiento",
+                    data: chartjData.dataPerdida,
+                    backgroundColor: "rgba(221, 191, 111, 0.8)",
+                    stack: 1
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        stacked: true,
+                        grid: {
+                            display: true,
+                            color: "rgba(255,99,132,0.2)"
+                        },
                     }
-                }else{
-                    $('select[name=orden_listado]').html("");
-                    for(i = 0; i < rechazadas.length; i++){
-                        $('select[name=orden_listado]').append('<option value="' + rechazadas[i]['valor'] + '">' + rechazadas[i]['texto'] + '</option>');
-                    }
+
+                },
+            },
+        });
+
+        var i;
+
+        // rellenado del primer select: "tipo_reporte"
+        $('#input-reporte').on('change', function() {
+            if ($('#input-reporte').val() == 'ventas_concretadas') {
+                $('select[name=orden_listado]').html("");
+                for (i = 0; i < concretadas.length; i++) {
+                    $('select[name=orden_listado]').append('<option value="' + concretadas[i]['valor'] +
+                        '">' + concretadas[i]['texto'] + '</option>');
                 }
-            });
+            } else {
+                $('select[name=orden_listado]').html("");
+                for (i = 0; i < rechazadas.length; i++) {
+                    $('select[name=orden_listado]').append('<option value="' + rechazadas[i]['valor'] +
+                        '">' + rechazadas[i]['texto'] + '</option>');
+                }
+            }
+        });
 
-            var tbl_clientes = $('#tbl-clientes').DataTable({
-                "dom": "t",
-                "ordering": false,
-                "scrollY": "35vh",
-                "scrollCollapse": true,
-                "paging": false,
-                "columnDefs": [
-                    {
-                        targets: [0],
-                        name: "razon_social",
-                        data: "razon_social",
-                        className: "align-middle",
+        var tbl_clientes = $('#tbl-clientes').DataTable({
+            "dom": "t",
+            "ordering": false,
+            "scrollY": "35vh",
+            "scrollCollapse": true,
+            "paging": false,
+            "columnDefs": [{
+                    targets: [0],
+                    name: "razon_social",
+                    data: "razon_social",
+                    className: "align-middle",
+                },
+                {
+                    targets: [1],
+                    name: "regimen_trib",
+                    data: "regimen_trib",
+                    className: "align-middle",
+                },
+                {
+                    targets: [2],
+                    name: "contacto",
+                    data: "contacto",
+                    className: "align-middle",
+                },
+                {
+                    targets: [3],
+                    name: "ultima_compra",
+                    data: "ultima_compra",
+                    className: "align-middle text-center",
+                    render: function(data) {
+                        return moment(new Date(data)).format("DD/MM/YYYY");
                     },
-                    {
-                        targets: [1],
-                        name: "regimen_trib",
-                        data: "regimen_trib",
-                        className: "align-middle",
-                    },
-                    {
-                        targets: [2],
-                        name: "contacto",
-                        data: "contacto",
-                        className: "align-middle",
-                    },
-                    {
-                        targets: [3],
-                        name: "ultima_compra",
-                        data: "ultima_compra",
-                        className: "align-middle text-center",
-                        render: function(data) {
-                            return moment(new Date(data)).format("DD/MM/YYYY");
-                        },
-                    },
-                ],
-            });
+                },
+            ],
+        });
 
-            var tbl_ventas = $('#tbl-ventas').DataTable({
-                "dom": "t",
-                "ordering": false,
-                "columnDefs": [
-                    {
-                        targets: [0],
-                        name: "fecha_aprobacion",
-                        data: "fecha_aprobacion",
-                        className: "align-middle text-center",
-                        render: function(data) {
-                            return moment(new Date(data)).format("DD/MM/YYYY");
-                        },
+        var tbl_ventas = $('#tbl-ventas').DataTable({
+            "dom": "t",
+            "ordering": false,
+            "columnDefs": [{
+                    targets: [0],
+                    name: "fecha_aprobacion",
+                    data: "fecha_aprobacion",
+                    className: "align-middle text-center",
+                    render: function(data) {
+                        return moment(new Date(data)).format("DD/MM/YYYY");
                     },
-                    {
-                        targets: [1],
-                        name: "identificador",
-                        data: "identificador",
-                        className: "align-middle text-center",
-                    },
-                    {
-                        targets: [2],
-                        name: "cliente",
-                        data: "cliente",
-                        className: "align-middle",
-                    },
-                    {
-                        targets: [3],
-                        name: "monto_total",
-                        data: "monto_total",
-                        className: "align-middle text-center",
-                    },
-                    {
-                        targets: [4],
-                        name: "punto_entrega",
-                        data: "punto_entrega",
-                        className: "align-middle",
-                    },
-                ],
-            });
+                },
+                {
+                    targets: [1],
+                    name: "identificador",
+                    data: "identificador",
+                    className: "align-middle text-center",
+                },
+                {
+                    targets: [2],
+                    name: "cliente",
+                    data: "cliente",
+                    className: "align-middle",
+                },
+                {
+                    targets: [3],
+                    name: "monto_total",
+                    data: "monto_total",
+                    className: "align-middle text-center",
+                },
+                {
+                    targets: [4],
+                    name: "punto_entrega",
+                    data: "punto_entrega",
+                    className: "align-middle",
+                },
+            ],
+        });
 
-            // REQUEST PARA LISTADO DE CLIENTES
-            $('#frm-list-clientes').submit(function(e){
-                let orden = $('#frm-list-clientes').serialize();
-                $.ajax({
-                    url: "{{route('administracion.reportes.lst_clientes')}}",
-                    type: "GET",
-                    data: orden,
-                    success: function(response){
-                        // devuelve un objeto cargado de datos
-                        tbl_clientes.clear().draw();
-                        tbl_clientes.rows.add(response).draw()
-                    },
-                    error: function(response) {
+        // REQUEST PARA LISTADO DE CLIENTES
+        $('#frm-list-clientes').submit(function(e) {
+            let orden = $('#frm-list-clientes').serialize();
+            $.ajax({
+                url: "{{ route('administracion.reportes.lst_clientes') }}",
+                type: "GET",
+                data: orden,
+                success: function(response) {
+                    // devuelve un objeto cargado de datos
+                    tbl_clientes.clear().draw();
+                    tbl_clientes.rows.add(response).draw()
+                },
+                error: function(response) {
                     var errors = response.responseJSON;
                     errores = '';
-                    $.each( errors, function( key, value ) {
+                    $.each(errors, function(key, value) {
                         errores += value;
                     });
                     Swal.fire({
@@ -318,46 +535,46 @@
                         showConfirmButton: true,
                     });
                 }
-                });
-
-                e.preventDefault();
             });
 
-            // REQUEST PARA LISTADO DE VENTAS
-            $('#frm-list-ventas').submit(function(e){
-                let orden = $('#frm-list-ventas').serialize();
-                $.ajax({
-                    url: "{{route('administracion.reportes.lst_ventas')}}",
-                    type: "GET",
-                    data: orden,
-                    success: function(response){
-                        // devuelve un objeto cargado de datos
-                        tbl_ventas.clear().draw();
-                        tbl_ventas.rows.add(response).draw()
-                    },
-                    error: function(response) {
-                        var errors = response.responseJSON;
-                        errores = '';
-                        $.each( errors, function( key, value ) {
-                            errores += value;
-                        });
-                        Swal.fire({
-                            icon: 'error',
-                            text: errores,
-                            showConfirmButton: true,
-                        });
-                    }
-                });
-
-                e.preventDefault();
-            });
+            e.preventDefault();
         });
-    </script>
+
+        // REQUEST PARA LISTADO DE VENTAS
+        $('#frm-list-ventas').submit(function(e) {
+            let orden = $('#frm-list-ventas').serialize();
+            $.ajax({
+                url: "{{ route('administracion.reportes.lst_ventas') }}",
+                type: "GET",
+                data: orden,
+                success: function(response) {
+                    // devuelve un objeto cargado de datos
+                    tbl_ventas.clear().draw();
+                    tbl_ventas.rows.add(response).draw()
+                },
+                error: function(response) {
+                    var errors = response.responseJSON;
+                    errores = '';
+                    $.each(errors, function(key, value) {
+                        errores += value;
+                    });
+                    Swal.fire({
+                        icon: 'error',
+                        text: errores,
+                        showConfirmButton: true,
+                    });
+                }
+            });
+
+            e.preventDefault();
+        });
+    });
+</script>
 @endsection
 
 @section('footer')
-    <strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
-    <div class="float-right d-none d-sm-inline-block">
-        <b>Versión</b> 2.0 (LARAVEL V.8)
-    </div>
+<strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
+<div class="float-right d-none d-sm-inline-block">
+<b>Versión</b> 2.0 (LARAVEL V.8)
+</div>
 @endsection
