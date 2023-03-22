@@ -49,13 +49,13 @@
         <div class="card">
             <div class="card-header">
                 <div class="row d-flex">
-                    <div class="col-11">
+                    <div class="col-10">
                         <h5 class="heading-small text-muted mb-1">Productos</h5>
                     </div>
-                    <div class="col-1">
-                        <button role="button" class="btn btn-success open_first_modal" data-toggle="modal" data-target="#modalAgregProducto" data-toggle="tooltip" data-placement="middle"
+                    <div class="col-2">
+                        <button role="button" class="btn btn-sm btn-primary open_first_modal" data-toggle="modal" data-target="#modalAgregProducto" data-toggle="tooltip" data-placement="middle"
                             title="Agregtar producto" value="{{ $proveedor }}">
-                        <i class="fas fa-plus"></i>
+                        <i class="fas fa-plus"></i> Agregar Prodcuto
                     </button>
                     </div>
                 </div>
@@ -134,6 +134,7 @@
 
         //AGREGAR PRODUCTO - MODAL
         $(document).on('click', '.open_first_modal', function(){
+            hideAlertValidation();
             $.ajax({
                 type: "GET",
                 url: "{{route('administracion.listaprecios.agregar.producto')}}",
@@ -161,42 +162,53 @@
         });
         //AGREGAR PRODUCTO - SUBMIT DEL FORMULARIO
         $(document).on('submit','#formAgregProducto',function(event){
+
             event.preventDefault();
-            console.log("Hola");
-            $.ajax({
-                url: '{{route('administracion.listaprecios.ingresar.producto')}}',
-                method: 'POST',
-                data: new FormData(this),
-                dataType: 'JSON',
-                contentType: false,
-                cache: false,
-                processData: false,
-                success:function(response)
-                {
-                    console.log(response); 
-                    Swal.fire({
-                        title: 'Agregar producto',
-                        icon: response.alert,
-                        text: response.message,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    debugger;
-                    location.reload();
-                },
-                error: function(response) {
-                    var errors = response.responseJSON;
-                    errores = '';
-                    $.each( errors, function( key, value ) {
-                        errores += value;
-                    });
-                    Swal.fire({
-                        icon: 'error',
-                        text: errores,
+            hideAlertValidation();
+
+            if ($('#input-ncosto')[0].valueAsNumber > 0 && $('#input-ncosto')[0].valueAsNumber != "" && $('#input-ncodigoProv')[0].value > '0' &&  $('#input-ncodigoProv')[0].value != "") {
+                $.ajax({
+                    url: '{{route('administracion.listaprecios.ingresar.producto')}}',
+                    method: 'POST',
+                    data: new FormData(this),
+                    dataType: 'JSON',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success:function(response)
+                    {
+                        console.log(response); 
+                        Swal.fire({
+                            title: 'Agregar producto',
+                            icon: response.alert,
+                            text: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        debugger;
+                        location.reload();
+                    },
+                    error: function(response) {
+                        var errors = response.responseJSON;
+                        errores = '';
+                        $.each( errors, function( key, value ) {
+                            errores += value;
+                        });
+                        Swal.fire({
+                            icon: 'error',
+                            text: errores,
                         showConfirmButton: true,
-                    });
+                        });
+                    }
+                });
+            }else{
+                if( $('#input-ncosto')[0].valueAsNumber == 0 || isNaN($('#input-ncosto')[0].valueAsNumber)) {
+                    $('#input-ncosto-feedback').removeClass('invalid-feedback');
                 }
-            });
+                if( $('#input-ncodigoProv')[0].value == 0 || (isNaN($('#input-ncodigoProv')[0].value) && $('#input-ncodigoProv')[0].value.length == 0)) {
+                    $('#input-ncodigoProv-feedback').removeClass('invalid-feedback');
+                }
+            }
         });
 
         //BORRAR PRODUCTO
@@ -229,6 +241,7 @@
         
         //MODIFICAR PRODUCTO - MODAL
         $(document).on('click', '.open_modal', function(){
+            hideAlertValidation();
             $.ajax({
                 type: "GET",
                 url: "{{route('administracion.listaprecios.editar.producto')}}",
@@ -251,40 +264,57 @@
         $(document).on('submit','#formModifProducto',function(event){
             
             event.preventDefault();
-            $.ajax({
-                url: '{{route('administracion.listaprecios.actualizar.producto')}}',
-                method: 'POST',
-                data: new FormData(this),
-                dataType: 'JSON',
-                contentType: false,
-                cache: false,
-                processData: false,
-                success:function(response)
-                {
-                    Swal.fire({
-                        title: 'Modificar producto',
-                        icon: 'success',
-                        text: response.success,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    debugger;
-                    location.reload();
-                },
-                error: function(response) {
-                    var errors = response.responseJSON;
-                    errores = '';
-                    $.each( errors, function( key, value ) {
-                        errores += value;
-                    });
-                    Swal.fire({
-                        icon: 'error',
-                        text: errores,
-                        showConfirmButton: true,
-                    });
+            hideAlertValidation();
+            if ($('#input-costo')[0].valueAsNumber > 0 && $('#input-costo')[0].valueAsNumber != "" && $('#input-codigoProv')[0].value > '0' &&  $('#input-codigoProv')[0].value != "") {
+                $.ajax({
+                    url: '{{route('administracion.listaprecios.actualizar.producto')}}',
+                    method: 'POST',
+                    data: new FormData(this),
+                    dataType: 'JSON',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success:function(response)
+                    {
+                        Swal.fire({
+                            title: 'Modificar producto',
+                            icon: 'success',
+                            text: response.success,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        debugger;
+                        location.reload();
+                    },
+                    error: function(response) {
+                        var errors = response.responseJSON;
+                        errores = '';
+                        $.each( errors, function( key, value ) {
+                            errores += value;
+                        });
+                        Swal.fire({
+                            icon: 'error',
+                            text: errores,
+                            showConfirmButton: true,
+                        });
+                    }
+                });
+            }else{
+                if( $('#input-costo')[0].valueAsNumber == 0 || isNaN($('#input-costo')[0].valueAsNumber)) {
+                    $('#input-costo-feedback').removeClass('invalid-feedback');
                 }
-            });
+                if( $('#input-codigoProv')[0].value == 0 || (isNaN($('#input-codigoProv')[0].value) && $('#input-codigoProv')[0].value.length == 0)) {
+                    $('#input-codigoProv-feedback').removeClass('invalid-feedback');
+                }
+            } 
         });
+
+        function hideAlertValidation(){
+            $('#input-codigoProv-feedback').addClass('invalid-feedback');
+            $('#input-costo-feedback').addClass('invalid-feedback');
+            $('#input-ncodigoProv-feedback').addClass('invalid-feedback');
+            $('#input-ncosto-feedback').addClass('invalid-feedback');
+        }
 
     </script>
 

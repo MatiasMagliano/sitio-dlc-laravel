@@ -16,21 +16,24 @@ use Illuminate\Support\Facades\DB;
 
 class ListaPrecioController extends Controller
 {
-
     use SoftDeletes;
 
-    public function index()
-    {
+    //LISTA DE PROVEEDOR
+    public function index() {
+        //$withoutList = "LockCreate";
         $listaPrecios = ListaPrecio::getAllListasDePrecios();
-        $proveedoresSinLista = ListaPrecio::proveedoresSinLista();
-        $count = count($proveedoresSinLista);
-        $withoutList = "LockCreate";
-        if ($count > 0){ // Usar ajax
+        /*$proveedoresSinLista = ListaPrecio::proveedoresSinLista();
+        if (!$proveedoresSinLista) {
             $withoutList = "UnLockCreate";
-        }
-        return view('administracion.listaprecios.index', compact('listaPrecios','withoutList'));
+        }*/
+    return view('administracion.listaprecios.index', compact('listaPrecios'/*,'withoutList'*/));
     }
-
+    public function getListasVacias() {
+        $proveedoresSinLista = ListaPrecio::proveedoresSinLista();
+        return response()->json(['alert' => 'success','message' => $proveedoresSinLista]);
+    }
+    
+    // - Alta
     public function create()
     {
         $productos = Producto::select('id', 'droga')->whereNull('deleted_at')->get();
@@ -48,41 +51,15 @@ class ListaPrecioController extends Controller
         ];
         return view('administracion.listaprecios.create', compact('productos','presentaciones', 'proveedores'))->with('config', $config);
     }
-
-    public function destroy(string $proveedor_id, Request $request)
-    {
-
+    // - Baja
+    public function destroy(string $proveedor_id, Request $request) {
         $data = ListaPrecio::deleteListaByProveedorId($proveedor_id);
 
         $request->session()->flash('success', 'Los productos del proveedor fueron borrados con éxito');
         return redirect()->route('administracion.listaprecios.index');
     }
 
-    public function show(string $razon_social)
-    {
-        $listaPrecios = ListaPrecio::getListaDeProveedor($razon_social);
-        $proveedor = Proveedor::getDatosProveedor($razon_social);
-        return view('administracion.listaprecios.show', compact('listaPrecios', 'proveedor'));
-    }
-
-    /*public function show(string $listaPrecio)
-    {
-        $proveedor = Proveedor::getDatosProveedor($listaPrecio);
-        return view('administracion.listaprecios.show', compact('listaPrecio','proveedor'));
-    }
-
-    public function loadDetalleListado(Request $request)
-    {
-        if ($request->ajax())
-        {
-            $listaPrecios = ListaPrecio::getListaDeProveedor("Hyatt and Sons");
-
-            return response()->json(['success' => $listaPrecios]);
-            //return response()->json($listaPrecios);
-        }
-    }*/
-    
-    public function addListadoProveedor(Request $request){
+    public function addListadoProveedor(Request $request) {
         $myarray = explode("|", $request->cadena);
         $save = new ListaPrecio;
 
@@ -93,10 +70,16 @@ class ListaPrecioController extends Controller
         $save->costo = $myarray[4];
 
         $save->save(); 
+        return response()->json(['alert' => 'success','message' => 'Listado creado con éxito.']);
     }
 
     //DETALLE DE LISTA DE PROVEEDOR
-    //- alta
+    public function show(string $razon_social) {
+        $listaPrecios = ListaPrecio::getListaDeProveedor($razon_social);
+        $proveedor = Proveedor::getDatosProveedor($razon_social);
+        return view('administracion.listaprecios.show', compact('listaPrecios', 'proveedor'));
+    }
+    // - Alta
     public function agregarProductoLista() {   
         $jsonProductos = array('dataProductos' => []);
         $productos = DB::table('productos')->get();
@@ -124,8 +107,7 @@ class ListaPrecioController extends Controller
 
         return response()->json($jsonResponse);
     }
-    public function ingresarProductoLista(Request $request)
-    {
+    public function ingresarProductoLista(Request $request) {
         $newProdLista = new ListaPrecio;
         $find_producto_listaPrecio = ListaPrecio::findByProducto($request->proveedor_id , $request->producto_id, $request->presentacion_id);
 
@@ -146,14 +128,14 @@ class ListaPrecioController extends Controller
             return response()->json(['alert' => 'warning','message' => 'El producto ya se encuentra en el listado del proveedor.']);
         }
     }
-    // - baja
+    // - Baja
     public function itemDestroy(string $razon_social, string $listaId, Request $request) {
         $data = ListaPrecio::deleteItemListaByListaId($listaId);
 
         $request->session()->flash('success', 'El producto del proveedor fue quitado de la lísta con éxito');
         return redirect()->route('administracion.listaprecios.show', $razon_social);
     }
-    // - modificación
+    // - Modificación
     public function editarProductoLista(Request $request) {
         if($request->ajax())
         {
@@ -179,6 +161,23 @@ class ListaPrecioController extends Controller
         return response()->json(['success' => 'El producto se ha modificado con éxito.']);
     }
 
+
+    /*public function show(string $listaPrecio)
+    {
+        $proveedor = Proveedor::getDatosProveedor($listaPrecio);
+        return view('administracion.listaprecios.show', compact('listaPrecio','proveedor'));
+    }
+
+    public function loadDetalleListado(Request $request)
+    {
+        if ($request->ajax())
+        {
+            $listaPrecios = ListaPrecio::getListaDeProveedor("Hyatt and Sons");
+
+            return response()->json(['success' => $listaPrecios]);
+            //return response()->json($listaPrecios);
+        }
+    }*/
     
     /*public function editItemList(string $listaId)
     {

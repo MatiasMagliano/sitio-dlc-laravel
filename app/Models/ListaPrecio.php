@@ -24,8 +24,8 @@ class ListaPrecio extends Model
         'costo',
     ];
 
-    //Index
-    public static function getAllListasDePrecios(){
+    //INDEX
+    public static function getAllListasDePrecios() {
         $allListasDePrecios = ListaPrecio::select('lista_precios.proveedor_id','proveedors.razon_social AS razon_social','proveedors.cuit AS cuit',
         ListaPrecio::raw('count(lista_precios.id) AS prods') , ListaPrecio::raw('min(lista_precios.created_at) AS creado'),
         ListaPrecio::raw('max(lista_precios.updated_at) AS modificado'))
@@ -35,18 +35,22 @@ class ListaPrecio extends Model
             ->get();
         return $allListasDePrecios;
     }
-    public static function proveedoresSinLista(){
+    public static function proveedoresSinLista() {
         $proveedoresSinLista = Proveedor::select(Proveedor::raw('count(*) AS provs'))
             ->leftjoin('lista_precios','proveedors.id','lista_precios.proveedor_id')
             ->whereNull(['proveedors.deleted_at'])
             ->whereNull('lista_precios.proveedor_id')
-            ->get();
+            ->count();
+
         return $proveedoresSinLista;
     }
+    public static function deleteListaByProveedorId($proveedor_id) {
+        $deleted = DB::table('lista_precios')->where('proveedor_id','=', $proveedor_id)->delete();
+        return $deleted;
+    }
 
-    //Show
-    public static function getListaDeProveedor($razon_social)
-    {
+    //SHOW
+    public static function getListaDeProveedor($razon_social) {
         $listado = ListaPrecio::select(
             'lista_precios.id as listaId','proveedors.id as proveedorId','proveedors.razon_social','producto_id','presentacion_id',
             'codigoProv','droga', DB::raw('CONCAT(forma, ", ", presentacion) AS detalle'),'costo','lista_precios.updated_at')
@@ -57,35 +61,27 @@ class ListaPrecio extends Model
             ->get();
         return $listado;
     }
-
-    public static function findByProducto($proveedorId , $producto_id, $presentacion_id){
+    // - Alta
+    public static function findByProducto($proveedorId , $producto_id, $presentacion_id) {
         $prodcuto_lista =  ListaPrecio::where([['proveedor_id','=', $proveedorId],['producto_id','=', $producto_id],['presentacion_id','=', $presentacion_id]])->count();
-
         return $prodcuto_lista;
     }
-
-    public static function deleteListaByProveedorId($proveedor_id)
-    {
-        $deleted = DB::table('lista_precios')->where('proveedor_id','=', $proveedor_id)->delete();
-        return $deleted;
-    }
-
-    public static function deleteItemListaByListaId($listaId)
-    {
+    // - Baja
+    public static function deleteItemListaByListaId($listaId) {
         $deleted = DB::table('lista_precios')->where('id','=', $listaId)->delete();
         return $deleted;
     }
 
-        //trae  id lote presentacion
-    public static function getIdListaPrecio($producto, $presentacion){
+
+
+    public static function getIdListaPrecio($producto, $presentacion) {
         return DB::table('lista_precios')
             ->where('producto_id', $producto)
             ->where('presentacion_id', $presentacion)
             ->pluck('id');
     }
 
-    public static function deletelistaDeProveedor($cuit)
-    {
+    public static function deletelistaDeProveedor($cuit) {
         $listaDeProveedor = DB::table('lista_precios')
         ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
         ->where('proveedors.cuit', '=', $cuit)
@@ -93,8 +89,7 @@ class ListaPrecio extends Model
         return $listaDeProveedor;
     }
 
-    public static function getItemLista($idItem)
-    {
+    public static function getItemLista($idItem) {
         $itemLista = ListaPrecio::select('lista_precios.id','producto.droga','presentacions.forma','presentacions.presentacion','lista_precio.codigoProv','lista_precio.costo')
         ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
         ->join('productos','lista_precios.producto_id','=','productos.id')
@@ -105,7 +100,7 @@ class ListaPrecio extends Model
         return $itemLista;
     }
 
-
+    // COTIZACIONES
     public static function listarDescuentos($producto, $presentacion, $cotizacion) {
 
         $mercaderia = ListaPrecio::select('proveedors.razon_social','costo AS costo_1','costo AS costo_2','costo AS costo_3','costo AS costo_4','costo AS costo_5')
@@ -175,7 +170,4 @@ class ListaPrecio extends Model
         //     ->where('lista_precios.id', ListaPrecio::getIdListaPrecio($producto, $presentacion))
         //     ->get();
     }
-
-
-
 }

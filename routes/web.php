@@ -99,7 +99,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::match(['put', 'patch'], '/listaprecios/ingresar', [ListaPrecioController::class, 'ingresarProductoLista'])->name('listaprecios.ingresar.producto');
     Route::get('/listaprecios/edit', [ListaPrecioController::class, 'editarProductoLista'])->name('listaprecios.editar.producto');
     Route::match(['put', 'patch'], '/listaprecios/actualizar', [ListaPrecioController::class, 'actualizarProductoLista'])->name('listaprecios.actualizar.producto');
-    
+    Route::get('/listaprecios/addDetail', [ListaPrecioController::class, 'getListasVacias'])->name('listaprecios.listasVacias');
     // rutas para BORRADO DE LISTA DE PRECIOS y DETALLE DE LIESTA DE PRECIOS
     Route::delete('/listaprecios/{proveedor_id}', [ListaPrecioController::class, 'destroy'])->name('listaprecios.destroy');
     //Route::delete('/listaprecios', [ListaPrecioController::class, 'deleteList'])->name('listaprecios.deleteList');

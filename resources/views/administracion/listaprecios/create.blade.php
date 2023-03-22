@@ -332,12 +332,16 @@
                         url: "{{ route('administracion.listaprecios.create') }}",
                         type: "POST",
                         data: datos,
-                    }).done(function(resultado) {
+                    }).done(function(response) {
                         Swal.fire({
-                            icon: 'success',
-                            title: 'Listado creado',
-                            text: 'Ahora será redirigido a la pagina Listados de Precios',
-                        })
+                            title: 'Agregar Listado',
+                            icon: response.alert,
+                            text: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        debugger;
+                        window.location.replace('{{ route('administracion.listaprecios.index') }}');
                     });
                 }
             }

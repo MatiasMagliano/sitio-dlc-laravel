@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
-            <form action="" method="POST" id="formAgregProducto" enctype="multipart/form-data">
+            <form action="" method="POST" id="formAgregProducto" enctype="multipart/form-data" class="needs-validation" novalidate>
                 @csrf
                 @method('PATCH')
                 <input type="hidden" name="proveedor_id" id="input-nproveedorId" value="{{ $proveedorItem->id }}">
@@ -36,21 +36,16 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="input-ncodigoProv">Código de Proveedor *</label>
-                                <input type="number" name="codigoProv" id="input-ncodigoProv" min="0"
-                                    class="form-control @error('cantidad') is-invalid @enderror"
-                                    value="@if(old('cantidad')){{old('cantidad')}}@else{{0}}@endif">
-                                    @error('cantidad')<div class="invalid-feedback">{{$message}}</div>@enderror
+                                <input type="text" name="codigoProv" id="input-ncodigoProv" class="form-control" required>
+                                <div id="input-ncodigoProv-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Debe ingresar un dato válido</div>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="form-group">
                                 <label for="input-ncosto">Costo *</label>
-                                <input type="number" name="costo" id="input-ncosto" min="0"
-                                    class="form-control @error('precio') is-invalid @enderror"
-                                    value="@if(old('precio')){{old('precio')}}@else{{0}}@endif"
-                                    step=".01">
-                                    @error('precio')<div class="invalid-feedback">{{$message}}</div>@enderror
+                                <input type="number" name="costo" id="input-ncosto" min="0" class="form-control" step=".01" required>
+                                <div id="input-ncosto-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Debe ingresar un importe mayor a 0</div>
                             </div>
                         </div>
 
@@ -72,7 +67,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
-            <form action="" method="POST" id="formModifProducto" enctype="multipart/form-data">
+            <form action="" method="POST" id="formModifProducto" enctype="multipart/form-data" class="needs-validation" novalidate>
                 @csrf
                 @method('PATCH')
                 <input type="hidden" name="listaId" id="input-listaId" value="">
@@ -94,21 +89,16 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="input-codigoProv">Código de Proveedor *</label>
-                                <input type="number" name="codigoProv" id="input-codigoProv" min="0"
-                                    class="form-control @error('cantidad') is-invalid @enderror"
-                                    value="@if(old('cantidad')){{old('cantidad')}}@else{{0}}@endif">
-                                    @error('cantidad')<div class="invalid-feedback">{{$message}}</div>@enderror
+                                <input type="text" name="codigoProv" id="input-codigoProv" class="form-control" required>
+                                <div id="input-codigoProv-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Debe ingresar un dato válido</div>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="form-group">
                                 <label for="input-costo">Costo *</label>
-                                <input type="number" name="costo" id="input-costo" min="0"
-                                    class="form-control @error('precio') is-invalid @enderror"
-                                    value="@if(old('precio')){{old('precio')}}@else{{0}}@endif"
-                                    step=".01">
-                                    @error('precio')<div class="invalid-feedback">{{$message}}</div>@enderror
+                                <input type="number" name="costo" id="input-costo" min="0" class="form-control" step=".01" required>
+                                <div id="input-costo-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Debe ingresar un importe mayor a 0</div>
                             </div>
                         </div>
 

@@ -40,6 +40,10 @@
         .hide {
             display: none
         }
+
+        .LockCreate{
+            display: none
+        }
     </style>
 @endsection
 
@@ -48,10 +52,11 @@
         <div class="col-xl-8">
             <h1>Listado de Precios</h1>
         </div>
-
-        <div class="col-md-4 d-flex justify-content-md-end">
-
-            <a id="{{ $withoutList }}" role="button" class="btn btn-md btn-success">Nuevo</a>
+        <div class="col-md-2 d-flex justify-content-md-end">
+            <a id="ListasSinProductos" role="button" class="btn btn-sm LockCreate btn-primary">Agregar Listado</a>
+        </div>
+        <div class="col-md-2 d-flex justify-content-md-end">
+            <a id="" role="button" class="btn btn-sm btn-success" hidden>Nuevo Listado</a>
         </div>
     </div>
 @stop
@@ -106,7 +111,42 @@
         });
     };
 
+    $("#ListasSinProductos").on('click', function() {
+        $(location).attr('href', 'listaprecios/create')
+    });
+
+    (function () {
+    'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+
     $(document).ready(function() {
+        $.ajax({
+            type: "GET",
+            url: "{{route('administracion.listaprecios.listasVacias')}}",
+            success: function(data){
+                if (data.message == 0){
+                    $('#ListasSinProductos').addClass('LockCreate');
+                }else{
+                    $('#ListasSinProductos').removeClass('LockCreate');
+                }
+            },
+        });
+
         // VARIABLES LOCALES
         var tabla;
         tabla = $('#tabla').DataTable({
@@ -115,27 +155,9 @@
             "searching": false,
             "select": false,
         });
-
-        $("#LockCreate").click(function() {
-            borrarListado
-            var datos = $(this).attr('id');
-            $.ajax({
-                type: "GET",
-                data: datos,
-            }).done(function(resultado) {
-                alert(resultado);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Listado creado',
-                    text: 'Ahora será redirigido a la pagina Listados de Precios',
-                })
-            });
-        });
-
-        $("#UnLockCreate").on('click', function() {
-            $(location).attr('href', 'listaprecios/create')
-        });
     });
+
+    
     // SCRIPT DEL SLIMSELECT
     /*var selProducto = new SlimSelect({
         select: '.seleccion-producto',
