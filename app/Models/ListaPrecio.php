@@ -45,7 +45,8 @@ class ListaPrecio extends Model
         return $proveedoresSinLista;
     }
     public static function deleteListaByProveedorId($proveedor_id) {
-        $deleted = DB::table('lista_precios')->where('proveedor_id','=', $proveedor_id)->delete();
+        $deleted = ListaPrecio::select('*')->where('proveedor_id','=', $proveedor_id);
+
         return $deleted;
     }
 

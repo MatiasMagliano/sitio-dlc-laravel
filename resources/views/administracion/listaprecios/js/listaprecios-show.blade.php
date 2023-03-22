@@ -144,8 +144,8 @@
             cancelButtonText: 'Cancelar',
         }).then((result) => {
             if (result.isConfirmed) {
-                debugger;
                 $('#borrar-' + item).submit();
+                sleep(20);
                 window.location.replace('{{ route('administracion.listaprecios.show','rs') }}');
             }else if (
                 result.dismiss === Swal.DismissReason.cancel
@@ -195,16 +195,15 @@
                 cache: false,
                 processData: false,
                 success:function(response)
-                {
+                {                   
                     Swal.fire({
                         title: 'Modificar producto',
                         icon: 'success',
                         text: response.success,
                         showConfirmButton: false,
                         timer: 1500
-                    });
-                    debugger;
-                    location.reload();
+                    });  
+                    location.reload(); 
                 },
                 error: function(response) {
                     var errors = response.responseJSON;
@@ -218,14 +217,15 @@
                         showConfirmButton: true,
                     });
                 }
+                
             });
         }else{
             if( $('#input-costo')[0].valueAsNumber == 0 || isNaN($('#input-costo')[0].valueAsNumber)) {
                 $('#input-costo-feedback').removeClass('invalid-feedback');
             }
-            if( $('#input-codigoProv')[0].value == 0 || (isNaN($('#input-codigoProv')[0].value) && $('#input-codigoProv')[0].value.length == 0)) {
+            /*if( $('#input-codigoProv')[0].value == 0 || (isNaN($('#input-codigoProv')[0].value) && $('#input-codigoProv')[0].value.length == 0)) {
                 $('#input-codigoProv-feedback').removeClass('invalid-feedback');
-            }
+            }*/
         } 
     });
 

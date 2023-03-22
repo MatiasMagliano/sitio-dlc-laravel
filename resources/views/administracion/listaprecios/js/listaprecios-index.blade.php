@@ -6,11 +6,11 @@
             text: 'Esta acción borrará todos los prodcutos del proveedor.',
             confirmButtonText: 'Borrar',
             showCancelButton: true,
-            cancelButtonText: 'Cancelar',
+            cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                debugger;
                 $('#borrar-' + id).submit();
+                sleep(20);
                 window.location.replace('{{ route('administracion.listaprecios.index') }}');
             }else if (
                 result.dismiss === Swal.DismissReason.cancel

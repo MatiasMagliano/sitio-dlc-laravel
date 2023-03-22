@@ -90,8 +90,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     // rutas para LISTA DE PRECIOS
     Route::get('/listaprecios/mostrarLista', [ListaPrecioController::class, 'mostrarLista'])->name('listaprecios.mostrarLista');
     Route::get('/listaprecios/loadDetalleListado', [ListaPrecioController::class, 'loadDetalleListado'])->name('cotizaciones.loadDetalleListado');
-    Route::get('/listaprecios/exportlist', [ListaPrecioController::class, 'exportlist'])->name('listaprecios.exportlist');
     Route::post('/listaprecios/create', [ListaPrecioController::class, 'addListadoProveedor'])->name('listaprecios.create');
+    Route::get('/listaprecios/exportlist', [ListaPrecioController::class, 'exportlist'])->name('listaprecios.exportlist');
     
     // rutas para DETALLE DE LISTA DE PRECIOS
     Route::get('/listaprecios/show/{razon_social}/editar', [ProductoController::class, 'show'])->name('listaprecios.show');

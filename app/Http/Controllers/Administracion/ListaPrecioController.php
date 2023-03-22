@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\DB;
 
 class ListaPrecioController extends Controller
 {
-    use SoftDeletes;
 
     //LISTA DE PROVEEDOR
     public function index() {
@@ -54,7 +53,7 @@ class ListaPrecioController extends Controller
     // - Baja
     public function destroy(string $proveedor_id, Request $request) {
         $data = ListaPrecio::deleteListaByProveedorId($proveedor_id);
-
+        $data->delete();
         $request->session()->flash('success', 'Los productos del proveedor fueron borrados con éxito');
         return redirect()->route('administracion.listaprecios.index');
     }
@@ -153,7 +152,6 @@ class ListaPrecioController extends Controller
         $producto_listaPrecio = ListaPrecio::find($request->listaId);
         $datos = $request->validate([
             'costo'  => 'required|numeric|min:0',
-            'codigoProv'    => 'required|numeric|regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
         ]);
 
         $producto_listaPrecio->update($datos);

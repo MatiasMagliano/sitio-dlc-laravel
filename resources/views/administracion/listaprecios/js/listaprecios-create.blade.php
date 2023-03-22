@@ -165,7 +165,7 @@
                         showConfirmButton: false,
                         timer: 1500
                     });
-                    debugger;
+                    //debugger;
                     window.location.replace('{{ route('administracion.listaprecios.index') }}');
                 });
             }
