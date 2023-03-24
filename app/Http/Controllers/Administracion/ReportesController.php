@@ -22,37 +22,52 @@ class ReportesController extends Controller
     public function create()
     {
         $usuarios = User::all();
-        $reportes = collect([
+        $modulos = collect([
             (object)[
                 "value" => 0,
-                "text"  => "Mejor proveedor, por rango de vencimiento"
+                "text"  => "Productos"
             ],
             (object)[
                 "value" => 1,
-                "text"  => "Rendimiento por usuario"
+                "text"  => "Proveedores"
             ],
             (object)[
                 "value" => 2,
-                "text"  => "Productos más vendido por temporada"
+                "text"  => "Clientes"
             ],
             (object)[
                 "value" => 3,
-                "text"  => "Clientes mejor porcentaje de margen"
+                "text"  => "Lotes"
             ],
             (object)[
                 "value" => 4,
-                "text"  => "Clientes con mayor volumen de compra"
-            ],
-            (object)[
-                "value" => 5,
-                "text"  => "Margen de ganancia historico por producto"
-            ],
-            (object)[
-                "value" => 6,
-                "text"  => "Proveedores con mayor productos de interés"
+                "text"  => "Cotizaciones/ventas"
             ],
         ]);
 
-        return view('administracion.reportes.crear', compact('reportes', 'usuarios'));
+        $submodulos = collect([
+            (object)[
+                "value" => 0,
+                "text"  => "Reporte Mejor proveedor, por rango de vencimiento"
+            ],
+            (object)[
+                "value" => 1,
+                "text"  => " - - Clientes mejor porcentaje de margen"
+            ],
+            (object)[
+                "value" => 2,
+                "text"  => " - - Clientes con mayor volumen de compra"
+            ],
+            (object)[
+                "value" => 3,
+                "text"  => " - - Clientes por puntos de entrega"
+            ],
+            (object)[
+                "value" => 4,
+                "text"  => " - - Clientes por por mayoría"
+            ],
+        ]);
+
+        return view('administracion.reportes.crear', compact('modulos', 'usuarios', 'submodulos'));
     }
 }

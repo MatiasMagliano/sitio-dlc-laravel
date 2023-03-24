@@ -72,9 +72,9 @@
             const reporte = new SlimSelect({
                 select: '.selector-reporte',
                 placeholder: 'Seleccione un tipo de reporte',
-                onChange: (info) => {
-                    getReporte(id);
-                }
+                // onChange: (info) => {
+                //     getReporte(id);
+                // }
             });
 
             const usuario = new SlimSelect({
