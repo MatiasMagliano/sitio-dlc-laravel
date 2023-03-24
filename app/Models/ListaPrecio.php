@@ -29,7 +29,7 @@ class ListaPrecio extends Model
         $allListasDePrecios = ListaPrecio::select('lista_precios.proveedor_id','proveedors.razon_social AS razon_social','proveedors.cuit AS cuit',
         ListaPrecio::raw('count(lista_precios.id) AS prods') , ListaPrecio::raw('min(lista_precios.created_at) AS creado'),
         ListaPrecio::raw('max(lista_precios.updated_at) AS modificado'))
-            ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
+            ->Join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
             ->groupBy('proveedors.cuit','proveedors.razon_social','lista_precios.proveedor_id')
             ->orderBy('proveedors.razon_social')
             ->get();

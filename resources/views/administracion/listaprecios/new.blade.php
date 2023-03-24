@@ -4,45 +4,39 @@
 
 @section('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.css" />
-    <style>@media (max-width:600px){.hide{display:none;}}.error{font-size:12px;color:red;text-align:center;}</style>
+    <style>
+        .texto-header{padding:0 20px;height:60px;overflow-y:auto;/*font-size: 14px;*/font-weight:500;color:#000000;}
+        .texto-header::-webkit-scrollbar{width:5px;background-color:#282828;}
+        .texto-header::-webkit-scrollbar-thumb{background-color:#3bd136;}
+        @media(max-width:600px){.hide{display:none;}}
+    </style>
 @endsection
 
 @section('content_header')
     <div class="row">
-        <div class="col-md-8">
-            <h1>Listado de Precios/ Agregar Productos</h1>
+        <div class="col-xl-8">
+            <h1>Listado de Precios/ Nuevo Listado</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-md-end">
-            <a href="{{ route('administracion.listaprecios.index') }}" role="button" class="btn btn-md btn-secondary">Volver a Listados de Precios</a>
+            <button type="submit" class="btn btn-sidebar btn-success">
+                <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span>
+            </button>
         </div>
     </div>
 @stop
 
+{{-- aquí va contenido --}}
 @section('content')
-    {{-- NOMBRE DEL PROVEEDOR --}}
-    <div class="card">
-        <div class="card-header">
-            <div class="row d-flex">
-                <div class="col-8">
-                    <div class="row">
-                        <h6 class="heading-small text-muted mb-1">PROVEEDOR</h6>
-                    </div>
-                    <div class="row">
-                        <p class="text-muted mb-1" style="font-size:12px;">* Debe seleccionar la razón social y agregar al menos un producto para guardar los cambios</p>
-                    </div>
-                </div>
-                <div class="col-4 text-right">
-                    <button id="guardarlista-btn" type="button" class="btn btn-sidebar btn-success">
-                        <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span>
-                    </button>
-                </div>
+    @section('plugins.inputmask', true)
+    @section('plugins.Datatables', true)
+    @section('plugins.DatatablesPlugins', true)
+    <div class="wrapper">
+        <div class="card">
+            <div class="card-body">
+                @include('administracion.listaprecios.partials.form-proveedornew')
             </div>
         </div>
-        <div class="card-body">
-            @include('administracion.listaprecios.partials.form-selectproveedor')
-        </div>
     </div>
-
 
     <div class="card-group">
         <div id="listitems" class="card mt-3">
@@ -59,12 +53,12 @@
             <div class="overlay"><i class="fas fa-ban text-gray"></i></div>           
         </div>
     </div>
-
 @endsection
 
 @section('js')
+    @include('partials.alerts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
-    @include('administracion.listaprecios.js.listaprecios-create')
+    @include('administracion.listaprecios.js.listaprecios-new')
 @endsection
 
 @section('footer')

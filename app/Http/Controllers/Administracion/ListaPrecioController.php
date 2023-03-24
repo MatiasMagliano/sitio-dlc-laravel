@@ -19,22 +19,23 @@ class ListaPrecioController extends Controller
 
     //LISTA DE PROVEEDOR
     public function index() {
-        //$withoutList = "LockCreate";
         $listaPrecios = ListaPrecio::getAllListasDePrecios();
-        /*$proveedoresSinLista = ListaPrecio::proveedoresSinLista();
-        if (!$proveedoresSinLista) {
-            $withoutList = "UnLockCreate";
-        }*/
-    return view('administracion.listaprecios.index', compact('listaPrecios'/*,'withoutList'*/));
+        return view('administracion.listaprecios.index', compact('listaPrecios'/*,'withoutList'*/));
     }
     public function getListasVacias() {
         $proveedoresSinLista = ListaPrecio::proveedoresSinLista();
         return response()->json(['alert' => 'success','message' => $proveedoresSinLista]);
     }
+    public function newLista() {
+        $productos = Producto::select('id','droga')->get();
+        $presentaciones = Presentacion::select('id','forma','presentacion','hospitalario','trazabilidad','divisible')->get();
+        $provincias = DB::table('provincias')->select('id', 'nombre')->get();
+        $localidades = DB::table('localidades')->select('id', 'nombre')->get();
+        return view('administracion.listaprecios.new', compact('productos','presentaciones','provincias','localidades'));
+    }
     
     // - Alta
-    public function create()
-    {
+    public function create(){
         $productos = Producto::select('id', 'droga')->whereNull('deleted_at')->get();
         $presentaciones = Presentacion::select('id', 'forma', 'presentacion')->whereNull('deleted_at')->get();
 
@@ -50,6 +51,7 @@ class ListaPrecioController extends Controller
         ];
         return view('administracion.listaprecios.create', compact('productos','presentaciones', 'proveedores'))->with('config', $config);
     }
+
     // - Baja
     public function destroy(string $proveedor_id, Request $request) {
         $data = ListaPrecio::deleteListaByProveedorId($proveedor_id);
@@ -57,7 +59,6 @@ class ListaPrecioController extends Controller
         $request->session()->flash('success', 'Los productos del proveedor fueron borrados con éxito');
         return redirect()->route('administracion.listaprecios.index');
     }
-
     public function addListadoProveedor(Request $request) {
         $myarray = explode("|", $request->cadena);
         $save = new ListaPrecio;
@@ -72,12 +73,14 @@ class ListaPrecioController extends Controller
         return response()->json(['alert' => 'success','message' => 'Listado creado con éxito.']);
     }
 
+
     //DETALLE DE LISTA DE PROVEEDOR
     public function show(string $razon_social) {
         $listaPrecios = ListaPrecio::getListaDeProveedor($razon_social);
         $proveedor = Proveedor::getDatosProveedor($razon_social);
         return view('administracion.listaprecios.show', compact('listaPrecios', 'proveedor'));
     }
+
     // - Alta
     public function agregarProductoLista() {   
         $jsonProductos = array('dataProductos' => []);
@@ -127,6 +130,7 @@ class ListaPrecioController extends Controller
             return response()->json(['alert' => 'warning','message' => 'El producto ya se encuentra en el listado del proveedor.']);
         }
     }
+
     // - Baja
     public function itemDestroy(string $razon_social, string $listaId, Request $request) {
         $data = ListaPrecio::deleteItemListaByListaId($listaId);
@@ -134,6 +138,7 @@ class ListaPrecioController extends Controller
         $request->session()->flash('success', 'El producto del proveedor fue quitado de la lísta con éxito');
         return redirect()->route('administracion.listaprecios.show', $razon_social);
     }
+
     // - Modificación
     public function editarProductoLista(Request $request) {
         if($request->ajax())
@@ -160,12 +165,12 @@ class ListaPrecioController extends Controller
     }
 
 
+
     /*public function show(string $listaPrecio)
     {
         $proveedor = Proveedor::getDatosProveedor($listaPrecio);
         return view('administracion.listaprecios.show', compact('listaPrecio','proveedor'));
     }
-
     public function loadDetalleListado(Request $request)
     {
         if ($request->ajax())
@@ -176,16 +181,13 @@ class ListaPrecioController extends Controller
             //return response()->json($listaPrecios);
         }
     }*/
-    
     /*public function editItemList(string $listaId)
     {
         $itemListaPrecio = ListaPrecio::getItemLista($listaId);
         return view('administracion.listaprecios.edit', compact('itemListaPrecio'));
     }*/
-    
     /*public function exportlist(Request $request){
         $RS = $request->collect('search-rs');
         return Excel::download(new ListaPrecioExport($RS), 'ListadoPrecios.xlsx');
     }*/ 
-
 }
