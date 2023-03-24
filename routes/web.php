@@ -92,7 +92,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::get('/listaprecios/loadDetalleListado', [ListaPrecioController::class, 'loadDetalleListado'])->name('cotizaciones.loadDetalleListado');
     Route::post('/listaprecios/create', [ListaPrecioController::class, 'addListadoProveedor'])->name('listaprecios.create');
     Route::get('/listaprecios/exportlist', [ListaPrecioController::class, 'exportlist'])->name('listaprecios.exportlist');
-    
+
     // rutas para DETALLE DE LISTA DE PRECIOS
     Route::get('/listaprecios/show/{razon_social}/editar', [ProductoController::class, 'show'])->name('listaprecios.show');
     Route::get('/listaprecios/add', [ListaPrecioController::class, 'agregarProductoLista'])->name('listaprecios.agregar.producto');
@@ -157,9 +157,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     route::get('/calendarios/vencimiento', [CalendarioController::class, 'index'])->name('calendario.vencimientos');
 
     // rutas de REPORTES
-    Route::get('reportes', [ReportesController::class, 'index'])->name('reportes');
-    Route::get('reportes/lst_clientes', [ReportesController::class, 'lst_clientes'])->name('reportes.lst_clientes');
-    Route::get('reportes/lst_ventas', [ReportesController::class, 'lst_ventas'])->name('reportes.lst_ventas');
+    Route::resource('reportes', ReportesController::class);
 });
 
 // RUTAS PARA EXPEDICION y, se incluye administración en la configuración del GATE

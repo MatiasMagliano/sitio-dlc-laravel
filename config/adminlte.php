@@ -315,7 +315,7 @@ return [
                 ],
                 [
                     'text'       => 'reporting_generator',
-                    'route'      => 'administracion.reportes',
+                    'route'      => 'administracion.reportes.index',
                     'icon_color' => 'orange',
                 ],
             ],

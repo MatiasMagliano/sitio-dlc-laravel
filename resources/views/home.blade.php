@@ -11,7 +11,7 @@
             width: auto;
         }
         .px-10 {
-            padding: 1% 25%;
+            padding: 1% 20%;
         }
     </style>
 @endsection
@@ -25,15 +25,15 @@
     <div class="container-fluid px-10 py-5 overflow-hidden">
         <div class="row justify-content-center px-5 mx-auto">
             <div class="col-sm-6 text-center block py-1">
-                <div class="small-box bg-gradient-success">
+                <div class="small-box bg-gradient-warning">
                     <div class="inner">
-                        <h3>{{ $cantOT[0]->cantidad }}</h3>
-                        <p>Órdenes de trabajo en producción</p>
+                        <h3>{{ $cantCotiz[0]->cantidad }}</h3>
+                        <p>Cotizaciones pendientes de finalizar</p>
                     </div>
                     <div class="icon">
-                        <i class="fas fa-tools"></i>
+                        <i class="fas fa-edit"></i>
                     </div>
-                    <a href="{{ route('administracion.ordentrabajo.index') }}" class="small-box-footer">Más
+                    <a href="{{ route('administracion.cotizaciones.index') }}" class="small-box-footer">Más
                         información <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
@@ -54,15 +54,15 @@
         </div>
         <div class="row justify-content-center px-5 mx-auto">
             <div class="col-sm-6 text-center block py-1">
-                <div class="small-box bg-gradient-warning">
+                <div class="small-box bg-gradient-success">
                     <div class="inner">
-                        <h3>{{ $cantCotiz[0]->cantidad }}</h3>
-                        <p>Cotizaciones pendientes de finalizar</p>
+                        <h3>{{ $cantOT[0]->cantidad }}</h3>
+                        <p>Órdenes de trabajo en producción</p>
                     </div>
                     <div class="icon">
-                        <i class="fas fa-edit"></i>
+                        <i class="fas fa-tools"></i>
                     </div>
-                    <a href="{{ route('administracion.cotizaciones.index') }}" class="small-box-footer">Más
+                    <a href="{{ route('administracion.ordentrabajo.index') }}" class="small-box-footer">Más
                         información <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>

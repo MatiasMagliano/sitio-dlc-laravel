@@ -8,9 +8,11 @@
 @section('content_header')
     <div class="row">
         <div class="col-xl-8">
-            <h1>Generador de reportes</h1>
+            <h1>Administrar reportes</h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
+            <a href="{{ route('administracion.reportes.create') }}" role="button" class="btn btn-md btn-success">Nuevo reporte</a>
+            &nbsp;
             <a href="{{ route('home') }}" role="button" class="btn btn-md btn-secondary">Volver</a>
         </div>
     </div>
@@ -18,563 +20,95 @@
 @endsection
 
 @section('content')
-    {{-- GRAFICOS JS-CHART --}}
-@section('plugins.Chartjs', true)
-    <div class="row">
-
-        {{-- GRAFICO TOP-10 CLIENTES --}}
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-gradient-gray-dark">
-                    <h3 class="card-title">
-                        Top-10 cotizaciones por cliente
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
-                        <div class="chartjs-size-monitor">
-                            <div class="chartjs-size-monitor-expand">
-                                <div class=""></div>
-                            </div>
-                            <div class="chartjs-size-monitor-shrink">
-                                <div class=""></div>
-                            </div>
-                        </div>
-                        <canvas id="top-ten-clientes" height="400"
-                            style="height: 400px; display: block; width:100%; margin: auto;" width="901"
-                            class="chartjs-render-monitor"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- GRAFICO APROBADAS vs RECHAZADAS --}}
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-gradient-gray-dark">
-                    <h3 class="card-title">
-                        Cotizaciones aprobadas vs rechazadas
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
-                        <div class="chartjs-size-monitor">
-                            <div class="chartjs-size-monitor-expand">
-                                <div class=""></div>
-                            </div>
-                            <div class="chartjs-size-monitor-shrink">
-                                <div class=""></div>
-                            </div>
-                        </div>
-                        <canvas id="cantidad-aprobRechaz" height="400"
-                            style="height: 400px; display: block; width:100%; margin: auto;" width="901"
-                            class="chartjs-render-monitor"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- GRAFICO PÉRDIDAS POR VENCIMIENTOS --}}
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-gradient-gray-dark">
-                    <h3 class="card-title">
-                        Pérdidas por vencimientos
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="chart" id="revenue-chart" style="position: relative; height: 400px;">
-                        <div class="chartjs-size-monitor">
-                            <div class="chartjs-size-monitor-expand">
-                                <div class=""></div>
-                            </div>
-                            <div class="chartjs-size-monitor-shrink">
-                                <div class=""></div>
-                            </div>
-                        </div>
-                        <canvas id="perdida-vencimiento" height="400"
-                            style="height: 400px; display: block; width:100%; margin: auto;" width="901"
-                            class="chartjs-render-monitor"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     @section('plugins.Datatables', true)
     @section('plugins.DatatablesPlugins', true)
-    @section('plugins.TempusDominusBs4', true)
-    <div class="container-fluid">
-        <h4>Seleccione un tipo de reporte</h4>
-
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="listados-tab" data-toggle="tab" href="#listados" role="tab"
-                    aria-controls="listados" aria-selected="true">Listados</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="perfil-tab" data-toggle="tab" href="#perfil" role="tab" aria-controls="perfil"
-                    aria-selected="false">Reportes</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="contacto-tab" data-toggle="tab" href="#contacto" role="tab"
-                    aria-controls="contacto" aria-selected="false">Contacto</a>
-            </li>
-        </ul>
-        <div class="tab-content ml-3" id="tabGeneral">
-            <div class="tab-pane fade show active" id="listados" role="tabpanel" aria-labelledby="listados-tab">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="clientes-tab" data-toggle="tab" href="#clientes" role="tab"
-                            aria-controls="clientes" aria-selected="true">Clientes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="cotizaciones-tab" data-toggle="tab" href="#cotizaciones" role="tab"
-                            aria-controls="cotizaciones" aria-selected="false">Cotizaciones</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="productos-tab" data-toggle="tab" href="#productos" role="tab"
-                            aria-controls="productos" aria-selected="false">productos</a>
-                    </li>
-                </ul>
-                <div class="tab-content ml-3 tab border" id="tabContentClientes">
-                    <div class="tab-pane fade show active" id="clientes" role="tabpanel"
-                        aria-labelledby="clientes-tab">
-                        {{-- VERTICAL TABS DE CLIENTES --}}
-                        <div class="row">
-                            <div class="col-1">
-                                <div class="nav flex-column nav-tabs" role="tablist" aria-orientation="vertical">
-                                    <a href="#listado" class="nav-link active" role="tab" data-toggle="tab"
-                                        aria-selected="true">Lista</a>
-                                    <a href="#ventas" class="nav-link" role="tab" data-toggle="tab"
-                                        aria-selected="false">Ventas</a>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="tab-content tab">
-                                    {{-- LISTA DE CLIENTES --}}
-                                    <div role="tabpanel" class="tab-pane fade in show active" id="listado">
-                                        <h5 class=" mb-3">Seleccione el orden del listado y luego Generar o Descargar</h5
-                                            class=" mb-3">
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <form action="" id="frm-list-clientes" autocomplete="off">
-                                                    @include('administracion.reportes.partes.lst-clientes.frm-lst-clientes')
-                                                </form>
-                                            </div>
-                                            <div class="col border bg-light">
-                                                <table class="table" id="tbl-clientes">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Razón social</th>
-                                                            <th>Régimen tributario</th>
-                                                            <th>Contacto</th>
-                                                            <th>Última compra</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {{-- LISTA DE VENTAS --}}
-                                    <div role="tabpanel" class="tab-pane fade" id="ventas">
-                                        <h5 class=" mb-3">Seleccione el tipo de reporte, el rango de fechas y luego
-                                            Generar o Descargar</h5 class=" mb-3">
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <form action="" id="frm-list-ventas" autocomplete="off">
-                                                    @include('administracion.reportes.partes.lst-clientes.frm-lst-ventas')
-                                                </form>
-                                            </div>
-                                            <div class="col border bg-light">
-                                                <table class="table" id="tbl-ventas">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>F. Aprobación/Rechazo</th>
-                                                            <th>Identificador</th>
-                                                            <th>Cliente</th>
-                                                            <th>Monto</th>
-                                                            <th>Pto. Entrega/Motivo rechazo</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="tab-pane fade" id="cotizaciones" role="tabpanel" aria-labelledby="cotizaciones-tab">
-                        <div class="row">
-                            <div class="col-2">
-                                <form action="" id="frm-list-cotizaciones">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <label for="input-orden">Orden del listado *</label>
-                                                <select class="form-control" name="orden-listado" id="input-orden">
-                                                    <option selected>Fecha creación</option>
-                                                    <option>Fecha última modificación</option>
-                                                    <option>Estado</option>
-                                                    <option>Cliente</option>
-                                                    <option>Monto</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="desde">Desde *</label>
-                                                <x-adminlte-input-date name="input-desde" id="desde" igroup-size="md"
-                                                    :config="$config_desde" autocomplete="off" required>
-                                                    <x-slot name="appendSlot">
-                                                        <div class="input-group-text">
-                                                            <i class="fas fa-calendar"></i>
-                                                        </div>
-                                                    </x-slot>
-                                                </x-adminlte-input-date>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="hasta">Hasta *</label>
-                                                <x-adminlte-input-date name="input-hasta" id="hasta" igroup-size="md"
-                                                    :config="$config_hasta" autocomplete="off" required>
-                                                    <x-slot name="appendSlot">
-                                                        <div class="input-group-text">
-                                                            <i class="fas fa-calendar"></i>
-                                                        </div>
-                                                    </x-slot>
-                                                </x-adminlte-input-date>
-                                            </div>
-                                        </div>
-                                        <div class="card-footer text-right">
-                                            <button type="submit" class="btn btn-sidebar btn-success">Generar</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="col">
-                                CONTENIDO DEL REPORTE DE COTIZACIONES
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="productos" role="tabpanel" aria-labelledby="productos-tab">
-                        FORMULARIO DE PRODUCTOS
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="perfil" role="tabpanel" aria-labelledby="perfil-tab">
-                FORMULARIO DE PERFIL
-            </div>
-            <div class="tab-pane fade" id="contacto" role="tabpanel" aria-labelledby="contacto-tab">
-                FORMULARIO DE CONTACTO
-            </div>
+    <div class="card">
+        <div class="card-body">
+            <table id="tabla_reportes" class="table table-bordered" width="100%">
+                <thead class="bg-gray">
+                    <th>Nombre corto</th>
+                    <th>Razón social</th>
+                    <th>Cond. AFIP</th>
+                    <th>Contacto</th>
+                    <th>Punto de entrega principal</th>
+                    <th>Última compra</th>
+                    <th></th>
+                </thead>
+                <tfoot style="display: table-header-group;">
+                    <tr class=" bg-gradient-light">
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                </tbody>
+            </table>
         </div>
     </div>
 @endsection
 
 @section('js')
-@include('partials.alerts')
-<script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
+    @include('partials.alerts')
+    <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+        // se agrega el campo de búsqueda por columna
+        $('#tabla_reportes tfoot th').slice(0, 4).each(function() {
+            $(this).html('<input type="text" class="form-control" placeholder="Buscar" />');
+        });
 
-<script type="text/javascript">
-    var concretadas = [{
-            "valor": "cotizacions.confirmada",
-            "texto": "Fecha de aprobación"
-        },
-        {
-            "valor": "cotizacions.identificador",
-            "texto": "Identificador"
-        },
-        {
-            "valor": "clientes.razon_social",
-            "texto": "Cliente"
-        },
-        {
-            "valor": "cotizacions.monto_total",
-            "texto": "Monto total facturado"
-        },
-    ];
-    var rechazadas = [{
-            "valor": "cotizacions.rechazada",
-            "texto": "Fecha de rechazo"
-        },
-        {
-            "valor": "cotizacions.identificador",
-            "texto": "Identificador"
-        },
-        {
-            "valor": "cliente.razon_social",
-            "texto": "Cliente"
-        },
-        {
-            "valor": "cotizacions.motivo_rechazo",
-            "texto": "Motivo de rechazo"
-        },
-    ];
+        // el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
+        var tabla_clientes = $('#tabla_clientes').DataTable({
+            "processing": true,
+            "dom": 'ltip',
+            "order": [0, 'asc'],
+            "responsive": [{
+                "details": {
+                    renderer: function(api, rowIdx, columns) {
+                        var data = $.map(columns, function(col, i) {
+                            return col.hidden ?
+                                '<tr data-dt-row="' + col.rowIndex +
+                                '" data-dt-column="' +
+                                col.columnIndex + '">' +
+                                '<td>' + col.title + ':' + '</td> ' +
+                                '<td>' + col.data + '</td>' +
+                                '</tr>' :
+                                '';
+                        }).join('');
 
-    $(document).ready(function() {
-        //GRAFICO COTIZACIONES POR CLIENTES
-        const charData = JSON.parse(`<?php echo $maxCotizaciones; ?>`);
-        const ctx = document.getElementById("top-ten-clientes").getContext('2d');
-        const grafico = new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels: charData.label,
-                datasets: [{
-                    label: "Cantidad de cotizaciones",
-                    data: charData.data,
-                    backgroundColor: "rgba(221, 191, 111, 0.8)",
-                }],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false,
-                    },
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        stacked: true,
-                        grid: {
-                            display: true,
-                            color: "rgba(255,99,132,0.2)"
-                        },
+                        return data ?
+                            $('<table/>').append(data) :
+                            false;
                     }
-                },
-            },
-        });
-
-        //GRAFICO DONUT CANTIDAD DE COTIZ APROBADAS Y RECHAZADAS
-        const chartData = JSON.parse(`<?php echo $cotizAprobRechaz; ?>`);
-        const chartCotizs = document.getElementById("cantidad-aprobRechaz").getContext('2d');
-        const graficoCantidades = new Chart(chartCotizs, {
-            type: "doughnut",
-            data: {
-                labels: chartData.label,
-                datasets: [{
-                    data: chartData.data,
-                    backgroundColor: [
-                        "rgb(101, 247, 140)",
-                        "rgb(54, 162, 235)",
-                    ],
-                    hoverOffset: 4
-                }],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false,
-                    },
-                },
-            },
-        });
-
-        //GRAFICO BARRAS PÉRDIDAS POR VENCIMIENTOS
-        const chartjData = JSON.parse(`<?php echo $perdidasPorVencimiento; ?>`);
-        const chartPerdida = document.getElementById("perdida-vencimiento").getContext('2d');
-        const graficoVencimiento = new Chart(chartPerdida, {
-            type: "bar",
-            data: {
-                labels: chartjData.label,
-                datasets: [{
-                    label: "Oportunidad de pérdida por venta al costo previo al vencimiento",
-                    data: chartjData.dataOportunidad,
-                    backgroundColor: "rgba(0, 191, 111, 0.8)",
-                    stack: 1
-                }, {
-                    label: "Perdida por vencimiento",
-                    data: chartjData.dataPerdida,
-                    backgroundColor: "rgba(221, 191, 111, 0.8)",
-                    stack: 1
-                }],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false,
-                    },
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        stacked: true,
-                        grid: {
-                            display: true,
-                            color: "rgba(255,99,132,0.2)"
-                        },
-                    }
-
-                },
-            },
-        });
-
-        var i;
-
-        // rellenado del primer select: "tipo_reporte"
-        $('#input-reporte').on('change', function() {
-            if ($('#input-reporte').val() == 'ventas_concretadas') {
-                $('select[name=orden_listado]').html("");
-                for (i = 0; i < concretadas.length; i++) {
-                    $('select[name=orden_listado]').append('<option value="' + concretadas[i]['valor'] +
-                        '">' + concretadas[i]['texto'] + '</option>');
                 }
-            } else {
-                $('select[name=orden_listado]').html("");
-                for (i = 0; i < rechazadas.length; i++) {
-                    $('select[name=orden_listado]').append('<option value="' + rechazadas[i]['valor'] +
-                        '">' + rechazadas[i]['texto'] + '</option>');
-                }
-            }
-        });
+            }],
+            initComplete: function() {
+                // Apply the search
+                this.api()
+                    .columns([0, 1, 2, 3])
+                    .every(function() {
+                        var that = this;
 
-        var tbl_clientes = $('#tbl-clientes').DataTable({
-            "dom": "t",
-            "ordering": false,
-            "scrollY": "35vh",
-            "scrollCollapse": true,
-            "paging": false,
-            "columnDefs": [{
-                    targets: [0],
-                    name: "razon_social",
-                    data: "razon_social",
-                    className: "align-middle",
-                },
-                {
-                    targets: [1],
-                    name: "regimen_trib",
-                    data: "regimen_trib",
-                    className: "align-middle",
-                },
-                {
-                    targets: [2],
-                    name: "contacto",
-                    data: "contacto",
-                    className: "align-middle",
-                },
-                {
-                    targets: [3],
-                    name: "ultima_compra",
-                    data: "ultima_compra",
-                    className: "align-middle text-center",
-                    render: function(data) {
-                        return moment(new Date(data)).format("DD/MM/YYYY");
-                    },
-                },
-            ],
-        });
-
-        var tbl_ventas = $('#tbl-ventas').DataTable({
-            "dom": "t",
-            "ordering": false,
-            "columnDefs": [{
-                    targets: [0],
-                    name: "fecha_aprobacion",
-                    data: "fecha_aprobacion",
-                    className: "align-middle text-center",
-                    render: function(data) {
-                        return moment(new Date(data)).format("DD/MM/YYYY");
-                    },
-                },
-                {
-                    targets: [1],
-                    name: "identificador",
-                    data: "identificador",
-                    className: "align-middle text-center",
-                },
-                {
-                    targets: [2],
-                    name: "cliente",
-                    data: "cliente",
-                    className: "align-middle",
-                },
-                {
-                    targets: [3],
-                    name: "monto_total",
-                    data: "monto_total",
-                    className: "align-middle text-center",
-                },
-                {
-                    targets: [4],
-                    name: "punto_entrega",
-                    data: "punto_entrega",
-                    className: "align-middle",
-                },
-            ],
-        });
-
-        // REQUEST PARA LISTADO DE CLIENTES
-        $('#frm-list-clientes').submit(function(e) {
-            let orden = $('#frm-list-clientes').serialize();
-            $.ajax({
-                url: "{{ route('administracion.reportes.lst_clientes') }}",
-                type: "GET",
-                data: orden,
-                success: function(response) {
-                    // devuelve un objeto cargado de datos
-                    tbl_clientes.clear().draw();
-                    tbl_clientes.rows.add(response).draw()
-                },
-                error: function(response) {
-                    var errors = response.responseJSON;
-                    errores = '';
-                    $.each(errors, function(key, value) {
-                        errores += value;
+                        $('input', this.footer()).on('keyup change clear', function() {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                            }
+                        });
                     });
-                    Swal.fire({
-                        icon: 'error',
-                        text: errores,
-                        showConfirmButton: true,
-                    });
-                }
-            });
-
-            e.preventDefault();
-        });
-
-        // REQUEST PARA LISTADO DE VENTAS
-        $('#frm-list-ventas').submit(function(e) {
-            let orden = $('#frm-list-ventas').serialize();
-            $.ajax({
-                url: "{{ route('administracion.reportes.lst_ventas') }}",
-                type: "GET",
-                data: orden,
-                success: function(response) {
-                    // devuelve un objeto cargado de datos
-                    tbl_ventas.clear().draw();
-                    tbl_ventas.rows.add(response).draw()
-                },
-                error: function(response) {
-                    var errors = response.responseJSON;
-                    errores = '';
-                    $.each(errors, function(key, value) {
-                        errores += value;
-                    });
-                    Swal.fire({
-                        icon: 'error',
-                        text: errores,
-                        showConfirmButton: true,
-                    });
-                }
-            });
-
-            e.preventDefault();
+            },
         });
     });
-</script>
+    </script>
 @endsection
 
 @section('footer')
-<strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
-<div class="float-right d-none d-sm-inline-block">
-<b>Versión</b> 2.0 (LARAVEL V.8)
-</div>
+    <strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
+    <div class="float-right d-none d-sm-inline-block">
+        <b>Versión</b> 2.0 (LARAVEL V.8)
+    </div>
 @endsection
