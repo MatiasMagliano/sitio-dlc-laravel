@@ -24,6 +24,11 @@
         });
     };
 
+    $("#NuevoListado").on('click', function() {
+        $(location).attr('href', 'listaprecios/new')
+    });
+
+
     $("#ListasSinProductos").on('click', function() {
         $(location).attr('href', 'listaprecios/create')
     });

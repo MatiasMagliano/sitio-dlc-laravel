@@ -25,7 +25,7 @@
             <a id="ListasSinProductos" role="button" class="btn btn-sm LockCreate btn-primary">Agregar Listado</a>
         </div>
         <div class="col-md-2 d-flex justify-content-md-end">
-            <a id="" role="button" class="btn btn-sm btn-success" hidden>Nuevo Listado</a>
+            <a id="NuevoListado" role="button" class="btn btn-sm btn-success">Nuevo Listado</a>
         </div>
     </div>
 @stop
