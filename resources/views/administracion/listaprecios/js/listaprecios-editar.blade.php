@@ -1,6 +1,8 @@
 <script>
-    /*$(document).ready(function() {
-                var tablaProductos = $('#tablaProductos').DataTable( {
+    var frs = true;
+    $(document).ready(function() {
+        frs = true;
+                /*var tablaProductos = $('#tablaProductos').DataTable( {
                     "dom": "t",
                     "processing": true,
                     "scrollY": "35vh",
@@ -49,29 +51,35 @@
                             "class": "align-middle text-center",
                         }
                     ],
-                });
-    });*/
+                });*/
+    });
 
     //AGREGAR PRODUCTO - MODAL
     $(document).on('click', '.open_first_modal', function(){
+        //ndiv = $(".opSelected").remove();
+        
+        
         hideAlertValidation();
         $.ajax({
             type: "GET",
-            url: "{{route('administracion.listaprecios.agregar.producto')}}",
+            url: "{{route('administracion.listaprecios.editar.traerDataAgregarProductoLista')}}",
             success: function(data){
                 console.log(data);
                 var rProducto = data.dataResponse[0];
-                    
-                for(var i = 0; i < rProducto.nombre.dataProductos.length; i++){
-                    $(".seleccion-producto").prepend("<option value='"+ rProducto.nombre.dataProductos[i].productoId +"' selected='selected'>"+ rProducto.nombre.dataProductos[i].droga +"</option>");
-                }
-                var selProducto = new SlimSelect({
-                    select: '.seleccion-producto',
-                    placeholder: 'Seleccione el nombre de la droga...',
-                });
+                  
+                if(frs){
+                    for(var i = 0; i < rProducto.nombre.dataProductos.length; i++){
+                        $(".seleccion-producto").append("<option value='"+ rProducto.nombre.dataProductos[i].productoId +"' class='opSelected' selected='selected'>"+ rProducto.nombre.dataProductos[i].droga +"</option>");
+                    }
+                    var selProducto = new SlimSelect({
+                        select: '.seleccion-producto',
+                        placeholder: 'Seleccione el nombre de la droga...',
+                    });
     
-                for(var i = 0; i < rProducto.detalle.dataPresentaciones.length; i++){
-                    $(".seleccion-presentacion").prepend("<option value='"+ rProducto.detalle.dataPresentaciones[i].presentacionId +"' selected='selected'>"+ rProducto.detalle.dataPresentaciones[i].presentacion +"</option>");
+                    for(var i = 0; i < rProducto.detalle.dataPresentaciones.length; i++){
+                        $(".seleccion-presentacion").append("<option value='"+ rProducto.detalle.dataPresentaciones[i].presentacionId +"' class='opSelected' selected='selected'>"+ rProducto.detalle.dataPresentaciones[i].presentacion +"</option>");
+                    }
+                    frs = false;
                 }
                 var selPresentacion = new SlimSelect({
                     select: '.seleccion-presentacion',
@@ -88,7 +96,7 @@
 
         if ($('#input-ncosto')[0].valueAsNumber > 0 && $('#input-ncosto')[0].valueAsNumber != "" && $('#input-ncodigoProv')[0].value > '0' &&  $('#input-ncodigoProv')[0].value != "") {
             $.ajax({
-                url: '{{route('administracion.listaprecios.ingresar.producto')}}',
+                url: '{{route('administracion.listaprecios.editar.ingresarProductoLista')}}',
                 method: 'POST',
                 data: new FormData(this),
                 dataType: 'JSON',
@@ -97,7 +105,6 @@
                 processData: false,
                 success:function(response)
                 {
-                    console.log(response); 
                     Swal.fire({
                         title: 'Agregar producto',
                         icon: response.alert,
@@ -105,7 +112,7 @@
                         showConfirmButton: false,
                         timer: 1500
                     });
-                    debugger;
+                    
                     location.reload();
                 },
                 error: function(response) {
@@ -129,6 +136,7 @@
                 $('#input-ncodigoProv-feedback').removeClass('invalid-feedback');
             }
         }
+        
     });
 
     //BORRAR PRODUCTO
@@ -146,7 +154,7 @@
             if (result.isConfirmed) {
                 $('#borrar-' + item).submit();
                 sleep(20);
-                window.location.replace('{{ route('administracion.listaprecios.show','rs') }}');
+                window.location.replace('{{ route('administracion.listaprecios.editar','rs') }}');
             }else if (
                 result.dismiss === Swal.DismissReason.cancel
                 ) {
@@ -164,7 +172,7 @@
         hideAlertValidation();
         $.ajax({
             type: "GET",
-            url: "{{route('administracion.listaprecios.editar.producto')}}",
+            url: "{{route('administracion.listaprecios.editar.traerDataModificarProductoLista')}}",
             data: {producto: $(this).val()},
             success: function(data){
                 $('#input-droga').val(
@@ -187,7 +195,7 @@
         hideAlertValidation();
         if ($('#input-costo')[0].valueAsNumber > 0 && $('#input-costo')[0].valueAsNumber != "" && $('#input-codigoProv')[0].value > '0' &&  $('#input-codigoProv')[0].value != "") {
             $.ajax({
-                url: '{{route('administracion.listaprecios.actualizar.producto')}}',
+                url: '{{route('administracion.listaprecios.editar.actualizarProductoLista')}}',
                 method: 'POST',
                 data: new FormData(this),
                 dataType: 'JSON',

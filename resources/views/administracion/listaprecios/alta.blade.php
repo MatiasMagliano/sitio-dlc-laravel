@@ -15,12 +15,10 @@
 @section('content_header')
     <div class="row">
         <div class="col-xl-8">
-            <h1>Listado de Precios/ Nuevo Listado</h1>
+            <h1>Listado de Precios/ Alta de Proveedor</h1>
         </div>
-        <div class="col-md-4 d-flex justify-content-md-end">
-            <button type="submit" class="btn btn-sidebar btn-success">
-                <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span>
-            </button>
+        <div class="col-md-4 d-flex justify-content-xl-end">
+            <a href="{{ route('administracion.listaprecios.index') }}" role="button" class="btn btn-md btn-secondary" title="Volver a Listados">Volver al Listado</a>
         </div>
     </div>
 @stop
@@ -37,28 +35,12 @@
             </div>
         </div>
     </div>
-
-    <div class="card-group">
-        <div id="listitems" class="card mt-3">
-            <div class="card-header">
-                <div class="row d-flex">
-                    <div class="col-8">
-                        <h6 class="heading-small text-muted mb-1">PRODUCTOS</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                @include('administracion.listaprecios.partials.form-detallelistaprecios')
-            </div>
-            <div class="overlay"><i class="fas fa-ban text-gray"></i></div>           
-        </div>
-    </div>
 @endsection
 
 @section('js')
     @include('partials.alerts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
-    @include('administracion.listaprecios.js.listaprecios-new')
+    @include('administracion.listaprecios.js.listaprecios-alta')
 @endsection
 
 @section('footer')

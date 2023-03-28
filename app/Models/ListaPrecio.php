@@ -26,15 +26,48 @@ class ListaPrecio extends Model
 
     //INDEX
     public static function getAllListasDePrecios() {
-        $allListasDePrecios = ListaPrecio::select('lista_precios.proveedor_id','proveedors.razon_social AS razon_social','proveedors.cuit AS cuit',
-        ListaPrecio::raw('count(lista_precios.id) AS prods') , ListaPrecio::raw('min(lista_precios.created_at) AS creado'),
-        ListaPrecio::raw('max(lista_precios.updated_at) AS modificado'))
-            ->Join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
-            ->groupBy('proveedors.cuit','proveedors.razon_social','lista_precios.proveedor_id')
+        $allListasDePrecios = ListaPrecio::select('lista_precios.proveedor_id','proveedors.razon_social AS razon_social',
+        'proveedors.cuit AS cuit', 'proveedors.created_at AS alta', ListaPrecio::raw('count(lista_precios.id) AS prods'), 
+        ListaPrecio::raw('min(lista_precios.created_at) AS creado'), ListaPrecio::raw('max(lista_precios.updated_at) AS modificado'))
+            ->rightJoin('proveedors','lista_precios.proveedor_id','=','proveedors.id')
+            ->groupBy('proveedors.cuit','proveedors.razon_social','lista_precios.proveedor_id', 'proveedors.created_at')
             ->orderBy('proveedors.razon_social')
             ->get();
         return $allListasDePrecios;
     }
+
+    // - Alta
+    public static function findByRSCUIT($razon_social, $cuit) {
+        $existe = Proveedor::where([['razon_social','=', $razon_social],['cuit','=', $cuit]])->count();
+        return $existe;
+    }
+    public static function findByRS($razon_social) {
+        $existe = Proveedor::where([['razon_social','=', $razon_social]])->count();
+        return $existe;
+    }
+    public static function findByCUIT($cuit) {
+        $existe = Proveedor::select('razon_social as RS')
+            ->where('cuit','=',$cuit)
+            ->get()->first();
+
+        return $existe;
+    }
+    public static function getprovByRS($razon_social) {
+        $existe = Proveedor::select('*')->where('razon_social','=',$razon_social)->get()->first();
+        return $existe;
+    }
+    public static function getUbicacion($provincia_id, $localidad_id) {
+        $existe = Localidad::select('localidades.nombre AS localidad','provincias.nombre AS provincia')
+            ->join('provincias','localidades.provincia_id','=','provincias.id')
+            ->where([['provincias.id','=',$provincia_id],['localidades.id','=',$localidad_id]])
+            ->get()->first();
+        return $existe;
+    }
+    public static function getProveedorId($razon_social){
+        $existe = Proveedor::select('*')->where('razon_social','=',$razon_social)->get()->first();
+        return $existe;
+    }
+
     public static function proveedoresSinLista() {
         $proveedoresSinLista = Proveedor::select(Proveedor::raw('count(*) AS provs'))
             ->leftjoin('lista_precios','proveedors.id','lista_precios.proveedor_id')
@@ -44,20 +77,19 @@ class ListaPrecio extends Model
 
         return $proveedoresSinLista;
     }
-    public static function deleteListaByProveedorId($proveedor_id) {
-        $deleted = ListaPrecio::select('*')->where('proveedor_id','=', $proveedor_id);
-
-        return $deleted;
+    public static function GetListaPreciosByProveedorId($proveedor_id) {
+        $data = ListaPrecio::select('*')->where('proveedor_id','=', $proveedor_id);
+        return $data;
     }
 
     //SHOW
     public static function getListaDeProveedor($razon_social) {
         $listado = ListaPrecio::select(
-            'lista_precios.id as listaId','proveedors.id as proveedorId','proveedors.razon_social','producto_id','presentacion_id',
+            'lista_precios.id as listaId','lista_precios.proveedor_id','proveedors.razon_social','producto_id','presentacion_id',
             'codigoProv','droga', DB::raw('CONCAT(forma, ", ", presentacion) AS detalle'),'costo','lista_precios.updated_at')
             ->join('productos','lista_precios.producto_id','=','productos.id')
-            ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
             ->join('presentacions','lista_precios.presentacion_id','=','presentacions.id')
+            ->rightJoin('proveedors','lista_precios.proveedor_id','=','proveedors.id')
             ->where('proveedors.razon_social','=', $razon_social)
             ->get();
         return $listado;
@@ -68,9 +100,9 @@ class ListaPrecio extends Model
         return $prodcuto_lista;
     }
     // - Baja
-    public static function deleteItemListaByListaId($listaId) {
-        $deleted = DB::table('lista_precios')->where('id','=', $listaId)->delete();
-        return $deleted;
+    public static function GetProductoListaPreciosByListaId($listaId) {
+        $data = ListaPrecio::select('*')->where('id','=', $listaId);
+        return $data;
     }
 
 
