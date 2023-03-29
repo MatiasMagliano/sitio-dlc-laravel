@@ -1,7 +1,18 @@
-<form action="{{ route('administracion.clientes.store') }}" method="post" class="needs-validation" autocomplete="off"novalidate>
+<form action="" method="POST" id="formAgregProveedor" class="needs-validation" autocomplete="off" novalidate>
     @csrf
+    @method('PATCH')
     <div class="pl-lg-4">
-        <h6 class="heading-small text-muted mb-1 mt-2">Datos del Nuevo Proveedor</h6>
+        
+        <div class="row d-flex m-1">
+            <div class="col-10">
+                <h6 class="heading-small text-muted">Datos básicos del Proveedor</h6>
+            </div>
+            <div class="col-2 d-flex justify-content-xl-end">
+                <button type="submit" id="guardarAprobada" class="btn btn-sm btn-sidebar btn-success">
+                    <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar y continuar</span>
+                </button>
+            </div>
+        </div>
         <hr>
         <div class="row d-flex m-1">
             <div class="form-group col">
@@ -16,38 +27,47 @@
             </div>
         </div>
         <div class="row d-flex m-1">   
-            <div class="form-group col-4">
-                <label for="input-tipo_afip"><span class="hide">Tipo *</span> de Inscripción</label>
-                <select name="tipo_afip" id="input-tipo_afip" class="form-control @error('tipo_afip') is-invalid @enderror">
-                    <option>Seleccione una opción</option>
-                    <option value="cuil" {{ old('tipo_afip') == 'cuil' ? 'selected' : '' }}>CUIL</option>
-                    <option value="cuit" {{ old('tipo_afip') == 'cuit' ? 'selected' : '' }}>CUIT</option>
-                </select>
-                @error('tipo_afip')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
             <div class="form-group col">
-                <label for="input-afip">Número *</label>
-                <input type="text" name="afip" id="input-afip"
-                    class="form-control @error('afip') is-invalid @enderror" value="{{ old('afip') }}">
-                <small id="input-afip-tip" class="form-text text-muted">Ingrese solo números.</small>
-                @error('afip')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                <label for="input-cuit">Número *</label>
+                <input type="text" name="cuit" id="input-cuit"
+                    class="form-control" value="">
+                <small id="input-cuit-tip" class="form-text text-muted">Ingrese solo números.</small>
             </div>
         </div>
+        
+        <br>
+        <div class="row d-flex m-1">
+            <h6 class="heading-small text-muted">Datos de contacto del Proveedor</h6>
+        </div>
+        <hr>
         <div class="row d-flex m-1">   
             <div class="form-group col">
                 <label for="input-email">E-mail de Contacto *</label>
-                <input type="email" name="email" id="input-email"
-                    class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}">
+                <input type="email" name="email" id="input-email" class="form-control @error('email') is-invalid @enderror"  
+                    placeholder="No posee dirección wb" value="{{ old('email') }}">
                 @error('email')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
         </div>
 
+        <div class="row d-flex m-1">
+            <div class="form-group col">
+                <label for="input-web">Dirección Web *</label>
+                <input type="web" name="web" id="input-web"
+                    class="form-control form-control-sm @error('web') is-invalid @enderror"
+                    value="{{ old('web') }}">
+                @error('web')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <br>
+        <div class="row d-flex m-1">
+            <h6 class="heading-small text-muted">Datos de ubicación del Proveedor</h6>
+        </div>
+        <hr>
         <div class="row d-flex m-1">
             <div class="form-group col">
                 <label for="input-domicilio">Dirección *</label>
@@ -97,17 +117,7 @@
             </div>
         </div>
 
-        <div class="row d-flex m-1">
-            <div class="form-group col">
-                <label for="input-web">Dirección Web *</label>
-                <input type="web" name="web" id="input-web"
-                    class="form-control form-control-sm @error('web') is-invalid @enderror"
-                    value="{{ old('web') }}">
-                @error('web')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-        </div>
+        
         
         {{--<h6 class="heading-small text-muted mb-1 mt-5">Datos de Contacto *</h6>
         <hr>

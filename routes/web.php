@@ -88,25 +88,39 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::resource('/trazabilidad', TrazabilidadController::class);
 
     // rutas para LISTA DE PRECIOS
-    Route::get('/listaprecios/mostrarLista', [ListaPrecioController::class, 'mostrarLista'])->name('listaprecios.mostrarLista');
+    
+    /*Route::get('/listaprecios/mostrarLista', [ListaPrecioController::class, 'mostrarLista'])->name('listaprecios.mostrarLista');
     Route::get('/listaprecios/loadDetalleListado', [ListaPrecioController::class, 'loadDetalleListado'])->name('cotizaciones.loadDetalleListado');
     Route::post('/listaprecios/create', [ListaPrecioController::class, 'addListadoProveedor'])->name('listaprecios.create');
     Route::get('/listaprecios/new', [ListaPrecioController::class, 'newLista'])->name('listaprecios.new');
+    Route::match(['put', 'patch'], '/listaprecios/crear', [ListaPrecioController::class, 'ingresarNuevoProveedor'])->name('listaprecios.crear.proveedor');
+    //Route::post('/listaprecios/crear', [ListaPrecioController::class, 'ingresarNuevoProveedor'])->name('listaprecios.crear.proveedor');
     Route::get('/listaprecios/exportlist', [ListaPrecioController::class, 'exportlist'])->name('listaprecios.exportlist');
-
+    
     // rutas para DETALLE DE LISTA DE PRECIOS
-    Route::get('/listaprecios/show/{razon_social}/editar', [ProductoController::class, 'show'])->name('listaprecios.show');
-    Route::get('/listaprecios/add', [ListaPrecioController::class, 'agregarProductoLista'])->name('listaprecios.agregar.producto');
-    Route::match(['put', 'patch'], '/listaprecios/ingresar', [ListaPrecioController::class, 'ingresarProductoLista'])->name('listaprecios.ingresar.producto');
-    Route::get('/listaprecios/edit', [ListaPrecioController::class, 'editarProductoLista'])->name('listaprecios.editar.producto');
-    Route::match(['put', 'patch'], '/listaprecios/actualizar', [ListaPrecioController::class, 'actualizarProductoLista'])->name('listaprecios.actualizar.producto');
+    */
+    Route::get('/listaprecios/alta', [ListaPrecioController::class, 'AgregarListadoPreciosProveedor'])->name('listaprecios.alta');
+    Route::get('/listaprecios/{razon_social}', [ListaPrecioController::class, 'MostrarListado'])->name('listaprecios.editar');  
+    Route::match(['put', 'patch'], '/listaprecios/alta/ListadoPrecios', [ListaPrecioController::class, 'NuevoListadoPrecioProveedor'])->name('listaprecios.alta.nuevoListadoPrecioProveedor');
+    Route::delete('/listaprecios/{razon_social}/editar/{listaId}', [ListaPrecioController::class, 'QuitarProductoLista'])->name('listaprecios.editar.quitarProductoLista');
+    Route::delete('/listaprecios/{proveedor_id}/vaciarListado', [ListaPrecioController::class, 'VaciarListado'])->name('listaprecios.vaciar');
+    Route::get('/listaprecios/editar/dataAgregarProducto', [ListaPrecioController::class, 'TraerDataAgregarProductoLista'])->name('listaprecios.editar.traerDataAgregarProductoLista');
+    Route::match(['put', 'patch'], '/listaprecios/ingresar', [ListaPrecioController::class, 'IngresarProductoLista'])->name('listaprecios.editar.ingresarProductoLista');
+    Route::get('/listaprecios/dataModificarProducto', [ListaPrecioController::class, 'TraerDataModificarProductoLista'])->name('listaprecios.editar.traerDataModificarProductoLista');
+    Route::match(['put', 'patch'], '/listaprecios/editar/actualizar', [ListaPrecioController::class, 'ActualizarProductoLista'])->name('listaprecios.editar.actualizarProductoLista');
+    
+    Route::get('/listaprecios/ajaxIndexDt', [ListaPrecioController::class, 'ajaxdt'])->name('listaprecios.ajax');
+    /*editar.ingresarProducto
+    //Route::get('/listaprecios/show/{razon_social}/editar', [ListaPrecioController::class, 'show'])->name('listaprecios.show');
+    
+    
+    
     Route::get('/listaprecios/addDetail', [ListaPrecioController::class, 'getListasVacias'])->name('listaprecios.listasVacias');
     // rutas para BORRADO DE LISTA DE PRECIOS y DETALLE DE LIESTA DE PRECIOS
-    Route::delete('/listaprecios/{proveedor_id}', [ListaPrecioController::class, 'destroy'])->name('listaprecios.destroy');
     //Route::delete('/listaprecios', [ListaPrecioController::class, 'deleteList'])->name('listaprecios.deleteList');
-    Route::delete('/listaprecios/show/{razon_social}/editar/{listaId}', [ListaPrecioController::class, 'itemDestroy'])->name('listaprecios.show.itemDestroy');
-
-    Route::resource('/listaprecios', ListaPrecioController::class)->except('edit', 'update');
+    
+    */
+    Route::resource('/listaprecios', ListaPrecioController::class)/*->except('edit')*/;
 
     // rutas de COTIZACIONES
     Route::get('/cotizaciones/{cotizacion}/finalizar', [CotizacionController::class, 'finalizar'])

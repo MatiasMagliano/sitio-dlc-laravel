@@ -17,10 +17,10 @@
             </div>
             <div class="col-md-4 d-flex justify-content-xl-end">
                 {{-- <a href="{{ route('administracion.listaprecios.index') }}" role="button" class="btn btn-md btn-success" style="margin-right:5px" title="Actualizar masivo">Actualizar listado</a> --}}
-            <a href="{{ route('administracion.listaprecios.index') }}" role="button" class="btn btn-md btn-secondary" title="Volver a Listados">Volver al Listado</a>
+                <a href="{{ route('administracion.listaprecios.index') }}" role="button" class="btn btn-md btn-secondary" title="Volver a Listados">Volver al Listado</a>
+            </div>
         </div>
-    </div>
-@stop
+    @stop
 
 @section('content')
     <div class="card">
@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="card-body">
-            @include('administracion.listaprecios.partials.datatable-showheader')
+            @include('administracion.listaprecios.partials.datatable-editarheader')
         </div>
     </div>
 
@@ -55,11 +55,11 @@
                 </div>
             </div>
             <div class="card-body">
-                @include('administracion.listaprecios.partials.datatable-showitems')
+                @include('administracion.listaprecios.partials.datatable-editaritems')
             </div>
         </div>
     </div>
-    @include('administracion.listaprecios.partials.modal-show')
+    @include('administracion.listaprecios.partials.modal-editar')
 
 @endsection
 
@@ -68,7 +68,7 @@
     @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
-    @include('administracion.listaprecios.js.listaprecios-show')
+    @include('administracion.listaprecios.js.listaprecios-editar')
 @endsection
 
 

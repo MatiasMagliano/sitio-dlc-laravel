@@ -18,14 +18,17 @@
 
 @section('content_header')
     <div class="row">
-        <div class="col-xl-8">
-            <h1>Listado de Precios</h1>
+        <div class="col-xl-10">
+            <h1> Listado de Precios</h1>
         </div>
-        <div class="col-md-2 d-flex justify-content-md-end">
+        {{-- <div class="col-md-2 d-flex justify-content-md-end">
             <a id="ListasSinProductos" role="button" class="btn btn-sm LockCreate btn-primary">Agregar Listado</a>
-        </div>
+        </div> --}}
         <div class="col-md-2 d-flex justify-content-md-end">
-            <a id="NuevoListado" role="button" class="btn btn-sm btn-success">Nuevo Listado</a>
+            <a href="{{ route('administracion.listaprecios.alta') }}" role="button" class="btn btn-sm btn-success" 
+                data-toggle="tooltip" data-placement="bottom" title="Agregar lista de precios">
+                <i class="fas fa-plus"></i> Nuevo Listado</a>
+            </a>
         </div>
     </div>
 @stop
@@ -50,6 +53,8 @@
     @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.4/locale/es.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script> --}}
     @include('administracion.listaprecios.js.listaprecios-index')
 @endsection
 
