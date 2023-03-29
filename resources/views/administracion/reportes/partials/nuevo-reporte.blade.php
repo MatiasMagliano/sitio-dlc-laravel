@@ -27,6 +27,7 @@
     </div>
 
     {{-- SEGUNDA LÍNEA. CONTIENE: campos del ENCABEZADO adicionales personalizados --}}
+    <h4 class="pt-3">Encabezado del reporte</h4>
     <hr>
     <div class="row d-flex m-3">
         <div class="form-group col-2">
@@ -57,6 +58,7 @@
     </div>
 
     {{-- TERCERA LÍNEA. CONTIENE: reporte de módulo --}}
+    <h4 class="pt-5">Cuerpo del reporte</h4>
     <hr>
     <div class="row d-flex m-3">
         <div class="form-group col">
@@ -76,8 +78,8 @@
 
     <div class="row d-flex m-3">
         <div class="form-group col-2">
-            <label for="crear-campo">CUERPO REPORTE <small class="text-gray">(agrega texto al cuerpo del reporte)</small></label><br>
-            <div id="crear-campos" class="btn-group" role="group" aria-label="Crear campos adicionales">
+            <label for="crear-campo">CAMPOS DEL CUERPO <small class="text-gray">(agrega texto al cuerpo del reporte)</small></label><br>
+            <div id="crear-campos-adicionales" class="btn-group" role="group" aria-label="Crear campos adicionales al cuerpo del reporte">
                 <button type="button" id="btn_crear_campo_reporte" class="btn btn-sm btn-success">
                     <i class="fas fa-plus"></i> agregar
                 </button>
@@ -86,6 +88,25 @@
 
         <div class="form-group col-10">
             <div id="wrapper-campos" style="width: 100%">
+            </div>
+        </div>
+    </div>
+
+    {{-- CUARTA LÍNEA. CONTIENE: listados --}}
+    <h4 class="pt-5">Listados anexados</h4>
+    <hr>
+    <div class="row d-flex m-3">
+        <div class="form-group col-2">
+            <label for="crear-campo">LISTADOS ANEXADOS <small class="text-gray">(anexa listados al cuerpo del reporte)</small></label><br>
+            <div id="crear-listados" class="btn-group" role="group" aria-label="Anexar listados al reporte">
+                <button type="button" id="btn_crear_listado" class="btn btn-sm btn-success">
+                    <i class="fas fa-plus"></i> agregar
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group col-10">
+            <div id="wrapper-listados" style="width: 100%">
             </div>
         </div>
     </div>

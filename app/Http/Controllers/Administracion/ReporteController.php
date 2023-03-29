@@ -44,19 +44,19 @@ class ReporteController extends Controller
                 "text"  => "Reporte de cliente con mejor margen de ganancias"
             ],
             (object)[
-                "value" => 4,
+                "value" => 5,
                 "text"  => "Reporte de cliente con mayor volumen de compra"
             ],
             (object)[
-                "value" => 4,
+                "value" => 6,
                 "text"  => "Reporte de margen de ganancia por producto"
             ],
             (object)[
-                "value" => 4,
+                "value" => 7,
                 "text"  => "Reporte de proveedores con mayor productos de interés"
             ],
             (object)[
-                "value" => 4,
+                "value" => 8,
                 "text"  => "Reporte de órdenes impresas  con % de producto incompleta"
             ],
         ]);
@@ -68,4 +68,64 @@ class ReporteController extends Controller
     {
         dd($request);
     }
+
+    public function getListados(Request $request)
+    {
+        $listados = collect([
+            (object)[
+                'value' => 0,
+                'text'  => 'Productos sin stock por proveedor'
+            ],
+            (object)[
+                'value' => 1,
+                'text'  => 'Producto por vencimientos a largo plazo'
+            ],
+            (object)[
+                'value' => 2,
+                'text'  => 'Proveedores por volumen mayor de productos'
+            ],
+            (object)[
+                'value' => 3,
+                'text'  => 'Proveedores por volumen de lotes'
+            ],
+            (object)[
+                'value' => 4,
+                'text'  => 'Cotizaciones brutas por usuario'
+            ],
+            (object)[
+                'value' => 5,
+                'text'  => 'Cotizaciones aprobadas por usuario'
+            ],
+            (object)[
+                'value' => 6,
+                'text'  => 'Procentual de cotizaciones por usuario'
+            ],
+            (object)[
+                'value' => 7,
+                'text'  => 'Procentual de cotizaciones (aprobadas y rechazadas) por usuario'
+            ],
+            (object)[
+                'value' => 8,
+                'text'  => 'Porcentual de cotizaciones (aprobada y rechazadas) valorizada por usuario'
+            ],
+            (object)[
+                'value' => 9,
+                'text'  => 'Órdenes de trabajo generadas sin stock'
+            ],
+        ]);
+
+        if ($request->ajax())
+        {
+            return response()->json($listados);
+        }
+
+    }
 }
+
+
+/*
+PARA DEVOLVER IMAGENES EN BASE64
+$raw_image_string = base64_decode($base64_img_string);
+
+return response($raw_image_string)->header('Content-Type', 'image/png');
+*/

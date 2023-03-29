@@ -48,7 +48,8 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-    <form action="{{route('administracion.reportes.store')}}" method="post" class="needs-validation" autocomplete="off" novalidate>
+    <form action="{{ route('administracion.reportes.store') }}" method="post" enctype=multipart/form-data
+        class="needs-validation" autocomplete="off" novalidate>
         @csrf
 
         <div class="card">
@@ -66,20 +67,21 @@
             </div>
 
             <div class="card-body">
-                <div class="form-group bg-gradient-lightblue">
-                    <label for="input-reporte">Tipo de reporte *<small class="small gray">(Formato de
-                            salida)</small></label>
-                    <select name="reporte_o_listado" id="input-reporte"
-                        class="form-control @error('reporte_id') is-invalid @enderror"
-                        aria-label="Selección del tipo de reporte">
-                        <option value="" selected disabled>Seleccione un tipo de reporte...</option>
-                        <option value="reporte">Reporte</option>
-                        <option value="listado">Listado</option>
-                    </select>
-                    @error('reporte_o_listado')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+                <x-adminlte-card title="Seleccione un cliente *" theme="lightblue" theme-mode="outline"
+                    body-class=" bg-gradient-lightblue">
+                    <div class="form-group">
+                        <select name="reporte_o_listado" id="input-reporte"
+                            class="form-control @error('reporte_id') is-invalid @enderror"
+                            aria-label="Selección del tipo de reporte">
+                            <option selected disabled>Seleccione un tipo de reporte...</option>
+                            <option value="reporte">Reporte</option>
+                            <option value="listado">Listado</option>
+                        </select>
+                        @error('reporte_o_listado')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </x-adminlte-card>
 
 
                 {{-- DIV QUE REVELA EL FORMULARIO DE REPORTES --}}
@@ -113,12 +115,29 @@
     <script type="text/javascript">
         var maxCamposEncabezado = 3; //cantidad maxima permitida de campos
         var maxCamposCuerpo = 5; //cantidad maxima permitida de campos
+        var maxListados = 5; //cantidad maxima permitida de campos
         var addButtonEncabezado = $('#btn_crear_campo_encabezado'); //selector botón agregar campos
         var addButtonCuerpo = $('#btn_crear_campo_reporte'); //selector botón agregar campos
+        var addButtonListado = $('#btn_crear_listado'); //selector botón agregar campos
         var wrapperEncabezado = $('#wrapper-encabezado'); //wrapper que contiene los summernotes
         var wrapperCuerpo = $('#wrapper-campos'); //wrapper que contiene los summernotes
+        var wrapperListado = $('#wrapper-listados'); //wrapper que contiene los summernotes
         var y = 1; //contador inicial de campos de encabezado
         var x = 1; //contador inicial de campos de cuerpo
+        var z = 1; //contador inicial de listados
+
+        function llenarSelect(selector)
+        {
+            $.get(
+                '{{route('administracion.ajax.obtener.listados')}}',
+                function(data) {
+                    var objeto = $(selector);
+                    objeto.empty();
+                    for (var i=0; i<data.length; i++) {
+                        objeto.append('<option value="' + data[i].value + '">' + data[i].text + '</option>');
+                    }
+                });
+        }
 
         // botón editar del campo ENCABEZADO, tomado desde su wrapper para hacerlo generico
         $('.div-encabezado').on('click', '#edit', (function(parametro) {
@@ -129,7 +148,7 @@
             });
         }));
 
-        // botón buardar del campo ENCABEZADO
+        // botón guardar del campo ENCABEZADO
         $('.div-encabezado').on('click', '#save', (function(parametro) {
             var markup = $('#campo-encabezado').summernote('code');
             $('#campo-encabezado').summernote('destroy');
@@ -154,12 +173,18 @@
                 placeholder: 'Seleccione un reporte inicial...',
             });
 
+
+
             // lógica que agrega CAMPOS AL ENCABEZADO DEL REPORTE
             $(addButtonEncabezado).click(function() {
                 //Check maximum number of fields
                 if (y < maxCamposEncabezado) {
                     let fieldHTML =
-                        '<div><button type="button" class="btn btn-sm btn-danger remove_button"><i class="fas fa-minus"></i></button>&nbsp;&nbsp;&nbsp;<label for="campo-encabezado-'+y+'">Campo adicional encabezado Nº'+y+' *</label><div style="width: 100%"><textarea name="campo-adicional-encabezado-'+y+'" id="campo-encabezado-'+y+'" class="form-control campo-adicional-encabezado"></textarea></div></div>';
+                        '<div><button type="button" class="btn btn-sm btn-danger remove_button"><i class="fas fa-minus"></i></button>&nbsp;&nbsp;&nbsp;<label for="campo-encabezado-' +
+                        y + '">Campo adicional encabezado Nº' + y +
+                        ' *</label><div style="width: 100%"><textarea name="campo-adicional-encabezado-' +
+                        y + '" id="campo-encabezado-' + y +
+                        '" class="form-control campo-adicional-encabezado"></textarea></div></div>';
                     $(wrapperEncabezado).append(fieldHTML); //Add field html
                     $('.campo-adicional-encabezado').summernote();
                     y++; //Increment field counter
@@ -172,12 +197,17 @@
             });
 
 
+
             // lógica que agrega CAMPOS AL CUERPO DEL REPORTE
             $(addButtonCuerpo).click(function() {
                 //Check maximum number of fields
                 if (x < maxCamposCuerpo) {
                     let fieldHTML =
-                        '<div><button type="button" class="btn btn-sm btn-danger remove_button"><i class="fas fa-minus"></i></button>&nbsp;&nbsp;&nbsp;<label for="campo-reporte-'+x+'">Campo adicional Nº'+x+' *</label><div style="width: 100%"><textarea name="campo-reporte-'+x+'" id="campo-reporte-'+x+'"" class="form-control campo-reporte"></textarea></div></div>';
+                        '<div><button type="button" class="btn btn-sm btn-danger remove_button"><i class="fas fa-minus"></i></button>&nbsp;&nbsp;&nbsp;<label for="campo-reporte-' +
+                        x + '">Campo adicional Nº' + x +
+                        ' *</label><div style="width: 100%"><textarea name="campo-reporte-' + x +
+                        '" id="campo-reporte-' + x +
+                        '"" class="form-control campo-reporte"></textarea></div></div>';
                     $(wrapperCuerpo).append(fieldHTML); //Add field html
                     $('.campo-reporte').summernote();
                     x++; //Increment field counter
@@ -187,6 +217,28 @@
                 e.preventDefault();
                 $(this).parent('div').remove(); //Remove field html
                 x--; //Decrement field counter
+            });
+
+
+            // lógica que agrega LISTADOS AL REPORTE
+            $(addButtonListado).click(function() {
+                //Check maximum number of fields
+                if (z < maxListados) {
+                    let fieldHTML =
+                        '<div class="form-group"><label for="seleccion-listado-' + z +
+                        '">Listado anexado Nº' + z +
+                        ' *</label><select name="cliente_id" id="input-cliente" class="form-control seleccion-listado-' +
+                        z +
+                        ' form-control-alternative"><option data-placeholder="true"></option></select></div>';
+                    $(wrapperListado).append(fieldHTML); //Add field html
+                    llenarSelect('.seleccion-listado-' + z);
+                    z++; //Increment field counter
+                }
+            });
+            $(wrapperListado).on('click', '.remove_button', function(e) {
+                e.preventDefault();
+                $(this).parent('div').remove(); //Remove field html
+                z--; //Decrement field counter
             });
         });
     </script>

@@ -20,7 +20,7 @@
 @section('content')
     <x-adminlte-card title="Seleccione un cliente *" theme="lightblue" theme-mode="outline" body-class=" bg-gradient-lightblue">
         <div class="form-group">
-            <select name="cliente_id" id="input-cliente" class="selecion-cliente form-control-alternative">
+            <select name="cliente_id" id="input-cliente" class="seleccion-cliente form-control-alternative">
                 <option data-placeholder="true"></option>
                 @foreach ($clientes as $cliente)
                     <option value="{{ $cliente->id }}">[{{ $cliente->nombre_corto }}]
@@ -117,7 +117,7 @@
             }
 
             const cliente = new SlimSelect({
-                select: '.selecion-cliente',
+                select: '.seleccion-cliente',
                 placeholder: 'Seleccione el nombre corto o largo del cliente',
                 onChange: (dde) => {
                     getDirecciones(dde);
