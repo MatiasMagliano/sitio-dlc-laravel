@@ -11,7 +11,7 @@
             <h1>Administrar reportes</h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
-            <a href="{{ route('administracion.reportes.create') }}" role="button" class="btn btn-md btn-success">Nuevo reporte</a>
+            <a href="{{ route('administracion.reportes.create') }}" role="button" class="btn btn-md btn-success">Nuevo reporte o listado</a>
             &nbsp;
             <a href="{{ route('home') }}" role="button" class="btn btn-md btn-secondary">Volver</a>
         </div>
@@ -23,21 +23,20 @@
     @section('plugins.Datatables', true)
     @section('plugins.DatatablesPlugins', true)
     <div class="card">
+        <div class="card-header">
+            <h4>Listado de reportes creados por todos los usuarios</h4>
+        </div>
         <div class="card-body">
             <table id="tabla_reportes" class="table table-bordered" width="100%">
                 <thead class="bg-gray">
-                    <th>Nombre corto</th>
-                    <th>Razón social</th>
-                    <th>Cond. AFIP</th>
-                    <th>Contacto</th>
-                    <th>Punto de entrega principal</th>
-                    <th>Última compra</th>
+                    <th>Identificador</th>
+                    <th>Dirigido a...</th>
+                    <th>Tipo</th>
+                    <th>fecha de creación</th>
                     <th></th>
                 </thead>
                 <tfoot style="display: table-header-group;">
                     <tr class=" bg-gradient-light">
-                        <th></th>
-                        <th></th>
                         <th></th>
                         <th></th>
                         <th></th>

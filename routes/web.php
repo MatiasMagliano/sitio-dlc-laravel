@@ -13,7 +13,7 @@ use App\Http\Controllers\Administracion\CotizacionController;
 use App\Http\Controllers\Administracion\ListaPrecioController;
 use App\Http\Controllers\Administracion\ClienteController;
 use App\Http\Controllers\Administracion\OrdenTrabajoController;
-use App\Http\Controllers\Administracion\ReportesController;
+use App\Http\Controllers\Administracion\ReporteController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\DireccionEntregaController;
 use App\Http\Controllers\HomeController;
@@ -158,7 +158,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     route::get('/calendarios/vencimiento', [CalendarioController::class, 'index'])->name('calendario.vencimientos');
 
     // rutas de REPORTES
-    Route::resource('reportes', ReportesController::class);
+    Route::resource('reportes', ReporteController::class);
 });
 
 // RUTAS PARA EXPEDICION y, se incluye administración en la configuración del GATE
