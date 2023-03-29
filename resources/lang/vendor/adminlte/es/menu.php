@@ -40,5 +40,5 @@ return [
     'quotation_list'                => 'Últimas cotizaciones',
     'quotation_history'             => 'Histórico cotizaciones',
     'reporting'                     => 'Reportes',
-    'reporting_generator'           => 'Generar reporte'
+    'reporting_generator'           => 'Administrar reportes'
 ];
