@@ -63,4 +63,9 @@ class ReporteController extends Controller
 
         return view('administracion.reportes.crear', compact('encabezado', 'reportes'));
     }
+
+    public function store(Request $request)
+    {
+        dd($request);
+    }
 }

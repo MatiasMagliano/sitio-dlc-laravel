@@ -45,8 +45,7 @@
 {{-- aquí va contenido --}}
 @section('content')
     @section('plugins.inputmask', true)
-    <form action="{{ route('administracion.clientes.store') }}" method="post" class="needs-validation" autocomplete="off"
-        novalidate>
+    <form action="{{ route('administracion.clientes.store') }}" method="post" class="needs-validation" autocomplete="off" novalidate>
         @csrf
 
         <div class="card">
@@ -60,14 +59,17 @@
                                 href="{{ route('administracion.dde.create') }}">Cliente/Agregar puntos de
                                 entrega</a>.</p>
                     </div>
-                    <div class="col-2 text-right">
-                        <button type="submit" class="btn btn-sidebar btn-success"><i
-                                class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span></button>
-                    </div>
                 </div>
             </div>
             <div class="card-body">
                 @include('administracion.clientes.partials.formulario')
+            </div>
+
+            <div class="card-footer">
+                <div class="text-right pb-5 pr-3">
+                    <button type="submit" class="btn btn-sidebar btn-success"><i
+                            class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span></button>
+                </div>
             </div>
         </div>
     </form>

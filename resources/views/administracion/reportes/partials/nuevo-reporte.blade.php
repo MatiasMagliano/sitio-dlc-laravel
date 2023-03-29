@@ -26,17 +26,14 @@
         </div>
     </div>
 
-    {{-- SEGUNDA LÍNEA. CONTIENE: campos adicionales personalizados --}}
+    {{-- SEGUNDA LÍNEA. CONTIENE: campos del ENCABEZADO adicionales personalizados --}}
     <hr>
     <div class="row d-flex m-3">
         <div class="form-group col-2">
-            <label for="crear-campo">ENCABEZADO</label><br>
+            <label for="crear-campo">CAMPOS ENCABEZADO <small class="text-gray">(agrega texto al encabezado del reporte)</small></label><br>
             <div id="crear-campos" class="btn-group" role="group" aria-label="Crear campos adicionales">
-                <button type="button" id="btn_crear_campo" class="btn btn-sm btn-success">
-                    <i class="fas fa-plus"></i>
-                </button>
-                <button type="button" class="btn btn-sm btn-danger">
-                    <i class="fas fa-minus"></i>
+                <button type="button" id="btn_crear_campo_encabezado" class="btn btn-sm btn-success">
+                    <i class="fas fa-plus"></i> agregar
                 </button>
             </div>
         </div>
@@ -52,6 +49,8 @@
                         <button id="edit" class="btn btn-sm btn-primary" type="button">Editar</button>
                         <button id="save" class="btn btn-sm btn-success" type="button">Guardar</button>
                     </div>
+                </div>
+                <div id="wrapper-encabezado" style="width: 100%">
                 </div>
             </div>
         </div>
@@ -80,10 +79,7 @@
             <label for="crear-campo">CUERPO REPORTE <small class="text-gray">(agrega texto al cuerpo del reporte)</small></label><br>
             <div id="crear-campos" class="btn-group" role="group" aria-label="Crear campos adicionales">
                 <button type="button" id="btn_crear_campo_reporte" class="btn btn-sm btn-success">
-                    <i class="fas fa-plus"></i>
-                </button>
-                <button type="button" id="btn_borrar_campo_reporte" class="btn btn-sm btn-danger">
-                    <i class="fas fa-minus"></i>
+                    <i class="fas fa-plus"></i> agregar
                 </button>
             </div>
         </div>

@@ -48,7 +48,7 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-    <form action="" method="post" class="needs-validation" autocomplete="off" novalidate>
+    <form action="{{route('administracion.reportes.store')}}" method="post" class="needs-validation" autocomplete="off" novalidate>
         @csrf
 
         <div class="card">
@@ -66,7 +66,7 @@
             </div>
 
             <div class="card-body">
-                {{-- <div class="form-group">
+                <div class="form-group bg-gradient-lightblue">
                     <label for="input-reporte">Tipo de reporte *<small class="small gray">(Formato de
                             salida)</small></label>
                     <select name="reporte_o_listado" id="input-reporte"
@@ -79,7 +79,7 @@
                     @error('reporte_o_listado')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                </div> --}}
+                </div>
 
 
                 {{-- DIV QUE REVELA EL FORMULARIO DE REPORTES --}}
@@ -94,11 +94,13 @@
                 </div>
             </div>
 
-            {{-- BOTON GUARDAR --}}
-            <div class="text-right p-3">
-                <button type="submit" class="btn btn-sidebar btn-success">
-                    <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span>
-                </button>
+            <div class="car-footer">
+                {{-- BOTON GUARDAR --}}
+                <div class="text-right pb-5 pr-3">
+                    <button type="submit" class="btn btn-sidebar btn-success">
+                        <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span>
+                    </button>
+                </div>
             </div>
         </div>
     </form>
@@ -109,6 +111,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
 
     <script type="text/javascript">
+        var maxCamposEncabezado = 3; //cantidad maxima permitida de campos
+        var maxCamposCuerpo = 5; //cantidad maxima permitida de campos
+        var addButtonEncabezado = $('#btn_crear_campo_encabezado'); //selector botón agregar campos
+        var addButtonCuerpo = $('#btn_crear_campo_reporte'); //selector botón agregar campos
+        var wrapperEncabezado = $('#wrapper-encabezado'); //wrapper que contiene los summernotes
+        var wrapperCuerpo = $('#wrapper-campos'); //wrapper que contiene los summernotes
+        var y = 1; //contador inicial de campos de encabezado
+        var x = 1; //contador inicial de campos de cuerpo
+
         // botón editar del campo ENCABEZADO, tomado desde su wrapper para hacerlo generico
         $('.div-encabezado').on('click', '#edit', (function(parametro) {
             // console.log();
@@ -143,28 +154,36 @@
                 placeholder: 'Seleccione un reporte inicial...',
             });
 
-            // lógica que agrega campos de reporte
-            var maxField = 5; //cantidad maxima permitida de campos
-            var addButton = $('#btn_crear_campo_reporte'); //selector botón agregar campos
-            var removeButton = $('#btn_borrar_campo_reporte') //selector botón borrar campos
-            var wrapper = $('#wrapper-campos'); //wrapper que contiene los summernotes
-            var x = 1; //contador inicial de campos
-            var fieldHTML =
-                '<label for="campo-reporte">Campo adicional '+x+' *</label><div style="width: 100%"><textarea name="campo-reporte-'+x+'" id="campo-cuerpo" class="form-control"></textarea></div>';
+            // lógica que agrega CAMPOS AL ENCABEZADO DEL REPORTE
+            $(addButtonEncabezado).click(function() {
+                //Check maximum number of fields
+                if (y < maxCamposEncabezado) {
+                    let fieldHTML =
+                        '<div><button type="button" class="btn btn-sm btn-danger remove_button"><i class="fas fa-minus"></i></button>&nbsp;&nbsp;&nbsp;<label for="campo-encabezado-'+y+'">Campo adicional encabezado Nº'+y+' *</label><div style="width: 100%"><textarea name="campo-adicional-encabezado-'+y+'" id="campo-encabezado-'+y+'" class="form-control campo-adicional-encabezado"></textarea></div></div>';
+                    $(wrapperEncabezado).append(fieldHTML); //Add field html
+                    $('.campo-adicional-encabezado').summernote();
+                    y++; //Increment field counter
+                }
+            });
+            $(wrapperEncabezado).on('click', '.remove_button', function(e) {
+                e.preventDefault();
+                $(this).parent('div').remove(); //Remove field html
+                y--; //Decrement field counter
+            });
 
-            //Once add button is clicked
-            $(addButton).click(function() {
-                //Check maximum number of input fields
-                if (x < maxField) {
-                    $(wrapper).append(fieldHTML); //Add field html
-                    let textarea = '#campo-cuerpo-'+x;
-                    $(textarea).summernote();
+
+            // lógica que agrega CAMPOS AL CUERPO DEL REPORTE
+            $(addButtonCuerpo).click(function() {
+                //Check maximum number of fields
+                if (x < maxCamposCuerpo) {
+                    let fieldHTML =
+                        '<div><button type="button" class="btn btn-sm btn-danger remove_button"><i class="fas fa-minus"></i></button>&nbsp;&nbsp;&nbsp;<label for="campo-reporte-'+x+'">Campo adicional Nº'+x+' *</label><div style="width: 100%"><textarea name="campo-reporte-'+x+'" id="campo-reporte-'+x+'"" class="form-control campo-reporte"></textarea></div></div>';
+                    $(wrapperCuerpo).append(fieldHTML); //Add field html
+                    $('.campo-reporte').summernote();
                     x++; //Increment field counter
                 }
             });
-
-            //Once remove button is clicked
-            $(removeButton).on('click', '.remove_button', function(e) {
+            $(wrapperCuerpo).on('click', '.remove_button', function(e) {
                 e.preventDefault();
                 $(this).parent('div').remove(); //Remove field html
                 x--; //Decrement field counter
