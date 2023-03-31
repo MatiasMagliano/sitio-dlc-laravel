@@ -30,6 +30,18 @@ class ListadosSeeder extends Seeder
                 'query'   => 'SELECT * FROM listados'
             ],
             [
+                'nombre'  => 'Productos y sus vencimientos',
+                'query'   => 'SELECT * FROM listados'
+            ],
+            [
+                'nombre'  => 'Márgenes de ganancias por producto',
+                'query'   => 'SELECT * FROM listados'
+            ],
+            [
+                'nombre'  => 'Prooductos más vendidos',
+                'query'   => 'SELECT * FROM listados'
+            ],
+            [
                 'nombre'  => 'Proveedores por volumen de lotes',
                 'query'   => 'SELECT * FROM listados'
             ],
@@ -55,6 +67,10 @@ class ListadosSeeder extends Seeder
             ],
             [
                 'nombre'  => 'Órdenes de trabajo generadas sin stock',
+                'query'   => 'SELECT * FROM listados'
+            ],
+            [
+                'nombre'  => 'Productos por proveedor',
                 'query'   => 'SELECT * FROM listados'
             ],
         ];

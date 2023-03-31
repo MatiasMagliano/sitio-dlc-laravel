@@ -16,39 +16,35 @@ class ReporteModulosSeeder extends Seeder
     {
         $reportes = [
             [
-                'nombre'    => 'Reporte Mejor proveedor, por rango de vencimiento',
+                'nombre'    => 'Reporte mejor proveedor',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'  => 'Rendimiento (en lineas cotizadas) por usuario. acá buscamos indicadores de desempeño',
+                'nombre'    => 'Reporte de rendimiento de usuario',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'  => 'Rendimiento (en dinero) por usuario. acá buscamos indicadores de desempeño',
+                'nombre'    => 'Reporte de ventas *',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'  => 'Reporte productos más vendidos por temporada',
+                'nombre'    => 'Reporte de ventas por temporada',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'  => 'Reporte de cliente con mejor margen de ganancias',
+                'nombre'    => 'Reporte de cliente con mejor margen de ganancias',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'  => 'Reporte de cliente con mayor volumen de compra',
+                'nombre'    => 'Reporte rendimiento de producto',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'  => 'Reporte de margen de ganancia por producto',
+                'nombre'    => 'Reporte de valoración de proveedores',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'  => 'Reporte de proveedores con mayor productos de interés',
-                'query'     => 'SELECT * FROM listados'
-            ],
-            [
-                'nombre'  => 'Reporte de órdenes impresas  con % de producto incompleta',
+                'nombre'    => 'Reporte de ordenes de trabajo',
                 'query'     => 'SELECT * FROM listados'
             ],
         ];
