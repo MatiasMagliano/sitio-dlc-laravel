@@ -3,8 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Reporte;
 
-class CreateEncabezadosTable extends Migration
+class CreateListadosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +14,10 @@ class CreateEncabezadosTable extends Migration
      */
     public function up()
     {
-        Schema::create('encabezados', function (Blueprint $table) {
+        Schema::create('listados', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre');
+            $table->string('query');
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreateEncabezadosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('encabezados');
+        Schema::dropIfExists('listados');
     }
 }

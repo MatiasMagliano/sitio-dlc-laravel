@@ -85,7 +85,7 @@
 
 
                 {{-- DIV QUE REVELA EL FORMULARIO DE REPORTES --}}
-                <div id="div_reportes" class="reporte">
+                <div id="div_reportes" class="box reporte">
                     <hr>
                     @include('administracion.reportes.partials.nuevo-reporte')
                 </div>
@@ -93,15 +93,6 @@
                 {{-- DIV QUE REVELA EL FORMULARIO DE LISTADOS --}}
                 <div id="div_listados" class="box listado">
                     <hr>Este es el div de LISTADOS
-                </div>
-            </div>
-
-            <div class="car-footer">
-                {{-- BOTON GUARDAR --}}
-                <div class="text-right pb-5 pr-3">
-                    <button type="submit" class="btn btn-sidebar btn-success">
-                        <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span>
-                    </button>
                 </div>
             </div>
         </div>
@@ -126,35 +117,28 @@
         var x = 1; //contador inicial de campos de cuerpo
         var z = 1; //contador inicial de listados
 
-        function llenarSelect(selector)
-        {
+        function llenarSelect(selector) {
             $.get(
-                '{{route('administracion.ajax.obtener.listados')}}',
+                '{{ route('administracion.ajax.obtener.listados') }}',
                 function(data) {
                     var objeto = $(selector);
                     objeto.empty();
-                    for (var i=0; i<data.length; i++) {
-                        objeto.append('<option value="' + data[i].value + '">' + data[i].text + '</option>');
+                    for (var i = 0; i < data.length; i++) {
+                        if(i == 0){
+                            objeto.append('<option value="" selected disabled>Seleccione un tipo de listado...</option>');
+                        }
+                        objeto.append('<option value="' + data[i].id + '">' + data[i].nombre + '</option>');
                     }
                 });
         }
 
-        // botón editar del campo ENCABEZADO, tomado desde su wrapper para hacerlo generico
-        $('.div-encabezado').on('click', '#edit', (function(parametro) {
-            // console.log();
+        $(document).ready(function() {
+
             $('#campo-encabezado').summernote({
                 focus: true,
                 disableResizeEditor: true,
             });
-        }));
 
-        // botón guardar del campo ENCABEZADO
-        $('.div-encabezado').on('click', '#save', (function(parametro) {
-            var markup = $('#campo-encabezado').summernote('code');
-            $('#campo-encabezado').summernote('destroy');
-        }));
-
-        $(document).ready(function() {
             $("#input-reporte").change(function() {
                 $(this).find("option:selected").each(function() {
                     var optionValue = $(this).attr("value");
@@ -225,7 +209,8 @@
                 //Check maximum number of fields
                 if (z < maxListados) {
                     let fieldHTML =
-                        '<div class="form-group"><label for="seleccion-listado-' + z +
+                        '<div class="form-group"><button type="button" class="btn btn-sm btn-danger remove_button"><i class="fas fa-minus"></i></button>&nbsp;&nbsp;&nbsp;<label for="seleccion-listado-' +
+                        z +
                         '">Listado anexado Nº' + z +
                         ' *</label><select name="cliente_id" id="input-cliente" class="form-control seleccion-listado-' +
                         z +

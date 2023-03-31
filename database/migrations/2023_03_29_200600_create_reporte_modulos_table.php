@@ -3,8 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Reporte;
 
-class CreateReportesTable extends Migration
+class CreateReporteModulosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +14,11 @@ class CreateReportesTable extends Migration
      */
     public function up()
     {
-        Schema::create('reportes', function (Blueprint $table) {
+        Schema::create('reporte_modulos', function (Blueprint $table) {
             $table->id();
-            $table->string('identificador');
-            $table->string('dirigido_a');
-
-            $table->timestamps('fecha_creacion');
+            $table->string('nombre');
+            $table->string('query');
+            $table->timestamps();
         });
     }
 
@@ -29,6 +29,6 @@ class CreateReportesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reportes');
+        Schema::dropIfExists('reporte_modulos');
     }
 }

@@ -44,13 +44,6 @@
             @section('plugins.Summernote', true)
             <div class="div-encabezado" style="width: 100%">
                 <textarea name="campo-encabezado" id="campo-encabezado" class="form-control" readonly>{!! html_entity_decode($encabezado) !!}</textarea>
-                {{-- BOTONES DE EDICIÓN DEL CAMPO ACTUAL --}}
-                <div class="text-right">
-                    <div class="btn-group" role="group">
-                        <button id="edit" class="btn btn-sm btn-primary" type="button">Editar</button>
-                        <button id="save" class="btn btn-sm btn-success" type="button">Guardar</button>
-                    </div>
-                </div>
                 <div id="wrapper-encabezado" style="width: 100%">
                 </div>
             </div>
@@ -67,7 +60,7 @@
                 class="selector-reporte @error('reporte_id') is-invalid @enderror">
                 <option data-placeholder="true"></option>
                 @foreach ($reportes as $reporte)
-                    <option value="{{ $reporte->value }}">{{ $reporte->text }}</option>
+                    <option value="{{ $reporte->id }}">{{ $reporte->nombre }}</option>
                 @endforeach
             </select>
             @error('reporte_id')
@@ -108,6 +101,15 @@
         <div class="form-group col-10">
             <div id="wrapper-listados" style="width: 100%">
             </div>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        {{-- BOTON GUARDAR --}}
+        <div class="text-right pb-5 pr-3">
+            <button type="submit" class="btn btn-sidebar btn-success">
+                <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span>
+            </button>
         </div>
     </div>
 </div>
