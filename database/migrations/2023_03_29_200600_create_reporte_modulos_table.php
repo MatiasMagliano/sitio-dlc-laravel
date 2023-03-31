@@ -17,7 +17,7 @@ class CreateReporteModulosTable extends Migration
         Schema::create('reporte_modulos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->string('query');
+            $table->mediumText('query');
             $table->timestamps();
         });
     }
