@@ -134,4 +134,15 @@ class ClienteController extends Controller
             return Response()->json($localidades);
         }
     }
+
+    public function obtenerDde(Request $request){
+        if($request->ajax()){
+            $dde = DB::table('direcciones_entrega')
+                ->select('direcciones_entrega.id AS value', 'direcciones_entrega.lugar_entrega AS text')
+                ->where('cliente_id', '=', $request->cliente_id)
+                ->orderBy('text', 'ASC')
+                ->get();
+            return Response()->json($dde);
+        }
+    }
 }
