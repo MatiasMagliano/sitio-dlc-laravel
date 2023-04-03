@@ -17,6 +17,7 @@ class CreateListadosTable extends Migration
         Schema::create('listados', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->longText('estructura_html');
             $table->mediumText('query');
             $table->timestamps();
         });
