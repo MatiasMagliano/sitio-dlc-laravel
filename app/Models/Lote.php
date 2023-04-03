@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Lote extends Model
 {
@@ -75,6 +76,16 @@ class Lote extends Model
             ->where('lote_presentacion_producto.producto_id', '=', $producto)
             ->withTrashed()
             ->get();
+    }
+
+    public static function promedioPrecioLotes($producto, $presentacion)
+    {
+        return Lote::select(DB::raw('round(AVG(precio_compra),2) as promedio_precio'))
+            ->join('lote_presentacion_producto', 'lotes.id', '=', 'lote_presentacion_producto.lote_id')
+            ->where('lote_presentacion_producto.presentacion_id', '=', $presentacion)
+            ->where('lote_presentacion_producto.producto_id', '=', $producto)
+            ->withTrashed()
+            ->value('promedio_precio');
     }
 
     public function deposito(){
