@@ -54,7 +54,7 @@ class LotePresentacionProductoSeeder extends Seeder
                         'producto_id' => $producto->id,
                         'presentacion_id' => $presentacion->id,
                         'proveedor_id' => $proveedor,
-                        'costo' => $this->faker->randomFloat(2, 50, 1000),
+                        'costo' => $lote->precio_compra + rand(100, 250)/10
                     ]);
                 }
             }
