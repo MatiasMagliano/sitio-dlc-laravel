@@ -29,7 +29,7 @@ class PresentacionFactory extends Factory
             ),
             2 => array (
                 'nombre' => 'BLISTER',
-                'cantidad' => ' por '. rand(1, 15) .' comprimidos',
+                'cantidad' => ' por '. rand(1, 15),
                 'medida' => 'unidades',
                 'divisible' => 1
             ),
