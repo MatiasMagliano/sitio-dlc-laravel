@@ -8,21 +8,12 @@ use App\Models\Lote;
 use App\Models\LotePresentacionProducto;
 use App\Models\Presentacion;
 use App\Models\Producto;
-use App\Models\Proveedor;
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
 
 class LotePresentacionProductoSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        //se genera el faker
-        $this->faker = Faker::create();
 
         // se hace de esta manera, para evitar lotes duplicados en productos diferentes
         foreach (Producto::all() as $producto){
@@ -30,8 +21,6 @@ class LotePresentacionProductoSeeder extends Seeder
             for($i = 1; $i <= $maxPresentacion; $i++){
                 $presentacion = Presentacion::factory()->create();
                 $deposito = DepositoCasaCentral::factory()->create();
-
-                $codigoProv =  $this->faker->numberBetween(1000000, 9999999);
 
                 $maxLote = rand(1, 5);
                 for($j = 1; $j <= $maxLote; $j++){
@@ -44,18 +33,6 @@ class LotePresentacionProductoSeeder extends Seeder
                         'dcc_id' => $deposito->id,
                     ]);
                     $deposito->increment('existencia', $lote->cantidad);
-                }
-                $maxProveedor = rand(1, 3);
-                for($k = 1; $k <= $maxProveedor; $k++)
-                {
-                    $proveedor = Proveedor::inRandomOrder()->first()->id;
-                    ListaPrecio::create([
-                        'codigoProv' => $codigoProv,
-                        'producto_id' => $producto->id,
-                        'presentacion_id' => $presentacion->id,
-                        'proveedor_id' => $proveedor,
-                        'costo' => $lote->precio_compra + rand(100, 250)/10
-                    ]);
                 }
             }
         }

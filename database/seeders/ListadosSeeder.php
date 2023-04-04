@@ -26,7 +26,7 @@ class ListadosSeeder extends Seeder
             [
                 'nombre'  => 'Producto por vencimientos a largo plazo',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'   => 'SELECT productos.droga, CONCAT(presentacions.forma, " ", presentacions.presentacion) AS presentación, TIMESTAMPDIFF(MONTH, lotes.fecha_compra, lotes.fecha_vencimiento)AS meses FROM lote_presentacion_producto INNER JOIN productos on productos.id = lote_presentacion_producto.producto_id INNER JOIN presentacions on presentacions.id = lote_presentacion_producto.presentacion_id INNER JOIN lotes on lotes.id = lote_presentacion_producto.lote_id ORDER BY meses DESC; '
+                'query'   => 'SELECT productos.droga, CONCAT(presentacions.forma, " ", presentacions.presentacion) AS presentación, TIMESTAMPDIFF(MONTH, lotes.fecha_compra, lotes.fecha_vencimiento)AS meses FROM lote_presentacion_producto INNER JOIN productos on productos.id = lote_presentacion_producto.producto_id INNER JOIN presentacions on presentacions.id = lote_presentacion_producto.presentacion_id INNER JOIN lotes on lotes.id = lote_presentacion_producto.lote_id ORDER BY `productos`.`droga` ASC, meses DESC; '
             ],
             [
                 'nombre'  => 'Proveedores por mayor volumen de productos',

@@ -61,7 +61,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     // rutas de CLIENTES
     Route::get('/clientes/ajaxObtenerClientes', [ClienteController::class, 'obtenerClientes'])->name('clientes.ajax.obtener');
     Route::get('/clientes/ajaxObtenerLocalidades', [ClienteController::class, 'obtenerLocalidades'])->name('clientes.ajax.obtenerLocalidades');
-    Route::get('/clientes/ajaxObtenerDde', [ClienteController::class, 'obtenerDde'])->name('clientes.ajax.obtenerDde');;
+    Route::get('/clientes/ajaxObtenerDde', [ClienteController::class, 'obtenerDde'])->name('clientes.ajax.obtenerDde');
     Route::resource('/clientes', ClienteController::class);
 
     // rutas de PROVEEDORES
