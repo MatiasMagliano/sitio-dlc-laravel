@@ -15,7 +15,7 @@
                 <td class="RazonSocial" style="vertical-align: middle;">{{ $proveedorItem->razon_social }}</td>
                 <td style="vertical-align: middle;">{{ $proveedorItem->cuit }}</td>
                 <td style="vertical-align: middle;">{{ $proveedorItem->direccion }}</td>
-                <td style="vertical-align: middle;">{{ $proveedorItem->created_at }}</td>
+                <td style="vertical-align: middle;">{{ $proveedorItem->created_at->format('d/m/Y') }}</td>
             </tr>
         @endforeach
     </tbody>

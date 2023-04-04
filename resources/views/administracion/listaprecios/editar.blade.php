@@ -13,7 +13,7 @@
             @foreach ($proveedor as $proveedorItem)
                 <h1>Lista de Precios de: {{ $proveedorItem->razon_social }}</h1>
             @endforeach
-            
+
             </div>
             <div class="col-md-4 d-flex justify-content-xl-end">
                 {{-- <a href="{{ route('administracion.listaprecios.index') }}" role="button" class="btn btn-md btn-success" style="margin-right:5px" title="Actualizar masivo">Actualizar listado</a> --}}
@@ -39,6 +39,7 @@
 
     @section('plugins.Datatables', true)
     @section('plugins.DatatablesPlugins', true)
+    @section('plugins.TempusDominusBs4', true)
     <div class="wrapper">
         <div class="card">
             <div class="card-header">
@@ -48,8 +49,8 @@
                     </div>
                     <div class="col-2">
                         <button role="button" class="btn btn-sm btn-primary open_first_modal" data-toggle="modal" data-target="#modalAgregProducto" data-toggle="tooltip" data-placement="middle"
-                            title="Agregtar producto" value="{{ $proveedor }}">
-                        <i class="fas fa-plus"></i> Agregar Prodcuto
+                            title="Agregar producto" value="{{ $proveedor }}">
+                        <i class="fas fa-plus"></i> Agregar Producto
                     </button>
                     </div>
                 </div>

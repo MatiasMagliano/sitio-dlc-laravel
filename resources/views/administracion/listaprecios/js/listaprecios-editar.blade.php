@@ -2,63 +2,37 @@
     var frs = true;
     $(document).ready(function() {
         frs = true;
-                /*var tablaProductos = $('#tablaProductos').DataTable( {
-                    "dom": "t",
-                    "processing": true,
-                    "scrollY": "35vh",
-                    "scrollCollapse": true,
-                    "paging": false,
-                    "order": [0, 'asc'],
-                    "columns": [
-                        {
-                            "data": "listaId",
-                            "class": "align-middle text-center",
-                        },
-                        {
-                            "data": "proveedorId",
-                            "class": "align-middle text-center",
-                        },
-                        {
-                            "data": "razon_social",
-                            "class": "align-middle text-center",
-                        },
-                        {
-                            "data": "producto_id",
-                            "class": "align-middle text-center",
-                        },
-                        {
-                            "data": "presentacion_id",
-                            "class": "align-middle text-center",
-                        },
-                        {
-                            "data": "codigoProv",
-                            "class": "align-middle text-center",
-                        },
-                        {
-                            "data": "droga",
-                            "class": "align-middle",
-                        },
-                        {
-                            "data": "detalle",
-                            "class": "align-middle",
-                        },
-                        {
-                            "data": "costo",
-                            "class": "align-middle text-center",
-                        },
-                        {
-                            "data": "updated_at",
-                            "class": "align-middle text-center",
-                        }
-                    ],
-                });*/
+        var tablaProductos = $('#tablaProductos').DataTable( {
+            dom: "tp",
+            pageLength: 10,
+            scrollY: "35vh",
+            scrollCollapse: true,
+            order: [1, 'asc'],
+            columnDefs: [
+                {
+                    targets: [0],
+                    className: "align-middle text-center",
+                },
+                {
+                    targets: [4],
+                    className: "align-middle text-center",
+                    'render': function(data) {
+                        return moment(new Date(data)).format("DD/MM/YYYY");
+                    },
+                },
+                {
+                    targets: [3],
+                    className: "align-middle text-center",
+                },
+            ],
+        });
     });
 
     //AGREGAR PRODUCTO - MODAL
     $(document).on('click', '.open_first_modal', function(){
         //ndiv = $(".opSelected").remove();
-        
-        
+
+
         hideAlertValidation();
         $.ajax({
             type: "GET",
@@ -66,7 +40,7 @@
             success: function(data){
                 console.log(data);
                 var rProducto = data.dataResponse[0];
-                  
+
                 if(frs){
                     for(var i = 0; i < rProducto.nombre.dataProductos.length; i++){
                         $(".seleccion-producto").append("<option value='"+ rProducto.nombre.dataProductos[i].productoId +"' class='opSelected' selected='selected'>"+ rProducto.nombre.dataProductos[i].droga +"</option>");
@@ -75,7 +49,7 @@
                         select: '.seleccion-producto',
                         placeholder: 'Seleccione el nombre de la droga...',
                     });
-    
+
                     for(var i = 0; i < rProducto.detalle.dataPresentaciones.length; i++){
                         $(".seleccion-presentacion").append("<option value='"+ rProducto.detalle.dataPresentaciones[i].presentacionId +"' class='opSelected' selected='selected'>"+ rProducto.detalle.dataPresentaciones[i].presentacion +"</option>");
                     }
@@ -112,7 +86,7 @@
                         showConfirmButton: false,
                         timer: 1500
                     });
-                    
+
                     location.reload();
                 },
                 error: function(response) {
@@ -136,7 +110,7 @@
                 $('#input-ncodigoProv-feedback').removeClass('invalid-feedback');
             }
         }
-        
+
     });
 
     //BORRAR PRODUCTO
@@ -166,7 +140,7 @@
             }
         });
     };
-    
+
     //MODIFICAR PRODUCTO - MODAL
     $(document).on('click', '.open_modal', function(){
         hideAlertValidation();
@@ -190,7 +164,7 @@
         });
     //MODIFICAR PRODUCTO - SUBMIT DEL FORMULARIO
     $(document).on('submit','#formModifProducto',function(event){
-        
+
         event.preventDefault();
         hideAlertValidation();
         if ($('#input-costo')[0].valueAsNumber > 0 && $('#input-costo')[0].valueAsNumber != "" && $('#input-codigoProv')[0].value > '0' &&  $('#input-codigoProv')[0].value != "") {
@@ -203,15 +177,15 @@
                 cache: false,
                 processData: false,
                 success:function(response)
-                {                   
+                {
                     Swal.fire({
                         title: 'Modificar producto',
                         icon: 'success',
                         text: response.success,
                         showConfirmButton: false,
                         timer: 1500
-                    });  
-                    location.reload(); 
+                    });
+                    location.reload();
                 },
                 error: function(response) {
                     var errors = response.responseJSON;
@@ -225,7 +199,7 @@
                         showConfirmButton: true,
                     });
                 }
-                
+
             });
         }else{
             if( $('#input-costo')[0].valueAsNumber == 0 || isNaN($('#input-costo')[0].valueAsNumber)) {
@@ -234,7 +208,7 @@
             /*if( $('#input-codigoProv')[0].value == 0 || (isNaN($('#input-codigoProv')[0].value) && $('#input-codigoProv')[0].value.length == 0)) {
                 $('#input-codigoProv-feedback').removeClass('invalid-feedback');
             }*/
-        } 
+        }
     });
 
     function hideAlertValidation(){

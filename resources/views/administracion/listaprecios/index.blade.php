@@ -25,7 +25,7 @@
             <a id="ListasSinProductos" role="button" class="btn btn-sm LockCreate btn-primary">Agregar Listado</a>
         </div> --}}
         <div class="col-md-2 d-flex justify-content-md-end">
-            <a href="{{ route('administracion.listaprecios.alta') }}" role="button" class="btn btn-sm btn-success" 
+            <a href="{{ route('administracion.listaprecios.alta') }}" role="button" class="btn btn-sm btn-success"
                 data-toggle="tooltip" data-placement="bottom" title="Agregar lista de precios">
                 <i class="fas fa-plus"></i> Nuevo Listado</a>
             </a>
@@ -37,6 +37,7 @@
 @section('content')
     @section('plugins.Datatables', true)
     @section('plugins.DatatablesPlugins', true)
+    @section('plugins.TempusDominusBs4', true)
 
     <div class="wrapper">
         <div class="card">
@@ -52,9 +53,6 @@
 @section('js')
     @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.4/locale/es.js"></script>
-    {{-- <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script> --}}
     @include('administracion.listaprecios.js.listaprecios-index')
 @endsection
 

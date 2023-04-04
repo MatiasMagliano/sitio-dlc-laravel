@@ -30,7 +30,7 @@
                         <span class="badge badge-info">Alta de proveedor</span>
                     @endif
                 </td>
-                <td class="fechaUpdate">
+                <td>
                     @if(isset($listaPrecio->modificado))
                         {{ $listaPrecio->modificado }}
                     @else
@@ -40,9 +40,9 @@
 
                 <td style="vertical-align: middle; text-align:center;">
                     @if(isset($listaPrecio->creado))
-                        <a href="{{ route('administracion.listaprecios.editar', ['razon_social' => $listaPrecio->razon_social]) }}" class="btn btn-link" 
+                        <a href="{{ route('administracion.listaprecios.editar', ['razon_social' => $listaPrecio->razon_social]) }}" class="btn btn-link"
                             data-toggle="tooltip" data-placement="bottom" title="Editar lista de precios">
-                            <i class="fas fa-pencil-alt"></i>
+                            <i class="fas fa-search "></i>
                         </a>
                         <form action="{{ route('administracion.listaprecios.vaciar', ['proveedor_id' => $listaPrecio->proveedor_id]) }}"
                             id="borrar-{{ $listaPrecio->proveedor_id }}" method="post" class="d-inline">
@@ -54,7 +54,7 @@
                             </button>
                         </form>
                     @else
-                        <a href="{{ route('administracion.listaprecios.editar', ['razon_social' => $listaPrecio->razon_social]) }}" class="btn btn-link text-success" 
+                        <a href="{{ route('administracion.listaprecios.editar', ['razon_social' => $listaPrecio->razon_social]) }}" class="btn btn-link text-success"
                             data-toggle="tooltip" data-placement="bottom" title="Agregar lista de precios">
                             <i class="fas fa-plus"></i>
                         </a>
