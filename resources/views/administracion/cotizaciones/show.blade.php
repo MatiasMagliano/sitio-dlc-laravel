@@ -23,6 +23,8 @@
                     href="{{route('administracion.cotizaciones.index')}}"
                 @elseif (url()->previous() == route('administracion.cotizaciones.historico'))
                     href="{{route('administracion.cotizaciones.historico')}}"
+                @else
+                    href="{{route('administracion.cotizaciones.index')}}"
                 @endif
                 role="button" class="btn btn-md btn-secondary">
                     Volver
