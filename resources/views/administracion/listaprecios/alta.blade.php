@@ -31,7 +31,7 @@
     <div class="wrapper">
         <div class="card">
             <div class="card-body">
-                @include('administracion.listaprecios.partials.form-proveedornew')
+                @include('administracion.listaprecios.partials.form-altaproveedor')
             </div>
         </div>
     </div>

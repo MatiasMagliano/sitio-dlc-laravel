@@ -23,14 +23,29 @@
         });
     };
 
-    /*$("#NuevoListado").on('click', function() {
-        $(location).attr('href', 'listaprecios/agregar')
-    });*/
-
-
-    /*$("#ListasSinProductos").on('click', function() {
-        $(location).attr('href', 'listaprecios/create')
-    });*/
+    function restaurarListado(id) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Restaurar Listado',
+            text: 'Esta acción volverá atras al último estado del listado del proveedor.',
+            confirmButtonText: 'Restaurar',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#restaurar-' + id).submit();
+                sleep(20);
+            }else if (
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'Operación cancelada por usuario, no se restaura el listado de proveedor',
+                    'error'
+                )
+            }
+        });
+    };
 
     (function () {
     'use strict'
@@ -52,28 +67,12 @@
     })()
 
     $(document).ready(function() {
-        /*$.ajax({
-            type: "GET",
-            url: "{{--route('administracion.listaprecios.listasVacias')--}}",
-            success: function(data){
-                if (data.message == 0){
-                    $('#ListasSinProductos').addClass('LockCreate');
-                }else{
-                    $('#ListasSinProductos').removeClass('LockCreate');
-                }
-            },
-        });*/
 
         // VARIABLES LOCALES
-        var tabla;
-        /*tabla = $('#tabla').DataTable({
-            "paging": false,
-            "info": false,
-            "searching": false,
-            "select": false,
-        });*/
+        	
+        let table = new DataTable('#tabla');
 
-        var tabla = $('#tabla').dataTable({
+        /*var tabla = $('#tabla').dataTable({
             orderCellsTop: true,
             fixedHeader: true
             /*"dom": "rltip",
@@ -138,9 +137,10 @@
                             }
                         });
                     });
-            },*/
-        });
-        $('#tabla tfoot th').slice(0, 3).each(function(i) {
+            },
+        });*/
+
+        /*$('#tabla tfoot th').slice(0, 3).each(function(i) {
             $(this).html('<input type="text" class="form-control rs-' + i + '" placeholder="Buscar" />');
 
             $('.rs-' + i, this).on('keyup change', function(){
@@ -158,9 +158,9 @@
                 });
                 /*if(tabla.column(i).search() !== this.value){
                     table.column(i).search(this.value).draw();
-                }*/
+                }
             });
-        });
+        });*/
 
         /*$('#tabla tfoot th').slice(0, 3).each(function() {
             $(this).html('<input type="text" class="form-control" placeholder="Buscar" />');
@@ -171,8 +171,62 @@
                 }
             });
         });*/
+        //$('#tabla_filter label').append("<button type='button' class='btn btn-sm btn-link text-primary' title='Mas filtros'><i class='fas fa-solid fa-filter'></i></button>");
     });
 
+    /*$('#tabla').dataTable({
+            "dom": "rltip",
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url: "{{ route('administracion.listaprecios.ajax') }}",
+                method: "GET"
+            },
+            "order": [0, 'desc'],
+            "columnDefs": [{
+                    targets: [0],
+                    name: "fecha-modificacion",
+                    className: "align-middle text-center",
+                    'render': function(data) {
+                        return moment(new Date(data)).format("DD/MM/YYYY");
+                    },
+                },
+                {
+                    targets: [1],
+                    name: "razon_social",
+                    className: "align-middle text-center font-weight-bold",
+                },
+                {
+                    targets: [2],
+                    name: "creado",
+                    className: "align-middle",
+                },
+                {
+                    targets: [3],
+                    name: "modificado",
+                    className: "align-middle",
+                },
+                {
+                    targets: [4],
+                    name: "acciones",
+                    className: "align-middle text-center",
+                    orderable: false,
+                },
+            ],
+            "initComplete": function() {
+                this.api()
+                    .columns([1, 2, 3, 4])
+                    .every(function() {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change clear', function() {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                            }
+                        });
+                    });
+            },
+        });*/
     
     // SCRIPT DEL SLIMSELECT
     /*var selProducto = new SlimSelect({

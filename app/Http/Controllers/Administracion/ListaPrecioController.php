@@ -23,7 +23,111 @@ class ListaPrecioController extends Controller
     public function index() {
         $listaPrecios = ListaPrecio::getAllListasDePrecios();
         return view('administracion.listaprecios.index', compact('listaPrecios'));
-    } 
+        //return view('administracion.listaprecios.index');
+    }
+
+    public function ajaxdt(Request $request)
+    {
+        // RESPONDE UN JSON PARA POPULAR EL SERVERSIDE-DATATABLE
+        $search = $request->query('search', array('value' => '', 'regex' => false));
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'desc'));
+
+        // busqueda general
+        $filter = $search['value'];
+        // busqueda individual
+        $GLOBALS['b_columna'] = Arr::except($request->query('columns'), array('_token', '_method'));
+
+        $sortColumns = array(
+            0 => 'proveedors.razon_social',
+            1 => 'alta',
+            2 => 'modificado'
+        ); //Columnas con buscarores
+
+        // QUERY COMPLETA DE COTIZACIONES
+        $query = ListaPrecio::select(
+            'lista_precios.proveedor_id',
+            'proveedors.razon_social AS razon_social',
+            'proveedors.cuit AS cuit', 
+            'proveedors.created_at AS alta', 
+            ListaPrecio::raw('count(lista_precios.id) AS prods'), 
+            ListaPrecio::raw('min(lista_precios.created_at) AS creado'), 
+            ListaPrecio::raw('max(lista_precios.updated_at) AS modificado')
+            )->whereNull('proveedors.deleted_at');
+            
+            
+        $query->rightJoin('proveedors','lista_precios.proveedor_id','=','proveedors.id')
+                ->groupBy('proveedors.cuit','proveedors.razon_social','lista_precios.proveedor_id', 'proveedors.created_at')
+                ->orderBy('proveedors.razon_social')
+                ->get();
+
+        $query->rightJoin('proveedors', function($join){
+            $join->on('lista_precios.proveedor_id', '=', 'proveedors.id')
+                ->where(function($query){
+                    $b_columna = $GLOBALS['b_columna'];
+                    if(isset($b_columna[0]['search']['value'])) {
+                        $query = $query->where('proveedors.razon_social', 'like', '%'.$b_columna[0]['search']['value'].'%');
+                    }
+                });
+        });
+
+        $query->rightJoin('proveedors', function($join){
+            $join->on('lista_precios.proveedor_id', '=', 'proveedors.id')
+                ->where(function($query){
+                    $b_columna = $GLOBALS['b_columna'];
+                    if(isset($b_columna[1]['search']['value'])) {
+                        $query = $query->where('creado', 'like', '%'.$b_columna[1]['search']['value'].'%');
+                    }
+                });
+        });
+
+        $query->rightJoin('proveedors', function($join){
+            $join->on('lista_precios.proveedor_id', '=', 'proveedors.id')
+                ->where(function($query){
+                    $b_columna = $GLOBALS['b_columna'];
+                    if(isset($b_columna[2]['search']['value'])) {
+                        $query = $query->where('modificado', 'like', '%'.$b_columna[2]['search']['value'].'%');
+                    }
+                });
+        });
+
+        //filtro particular
+        $b_columna = $GLOBALS['b_columna'];
+        if(isset($b_columna[1]['search']['value'])) {
+            $query->where('identificador', 'like', '%'.$b_columna[1]['search']['value'].'%');
+        }
+
+        $recordsTotal = $query->count();
+
+        $sortColumnName = $sortColumns[$order[0]['column']];
+
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $json = array(
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        );
+
+        $listado = $query->get();
+
+        foreach ($listado as $lista) {
+            $json['data'][] = [
+                view('administracion.listaprecio.partials.razon_social', ['lista' => $lista])->render(),
+                view('administracion.listaprecio.partials.creado', ['lista' => $lista])->render(),
+                view('administracion.listaprecio.partials.modificado', ['lista' => $lista])->render(),
+                view('administracion.listaprecio.partials.acciones', ['lista' => $lista])->render(),
+            ];
+        }
+
+        return $json;
+    }
+
     public function AgregarListadoPreciosProveedor() {
         $productos = Producto::select('id','droga')->get();
         $presentaciones = Presentacion::select('id','forma','presentacion','hospitalario','trazabilidad','divisible')->get();
@@ -70,13 +174,11 @@ class ListaPrecioController extends Controller
                     
                     $proveedor->save();
 
-                    $proveedorId = ListaPrecio::getProveedorId($request->razon_social);
-                    
-                    return redirect()->action(
-                        [ListaPrecioController::class, 'show'], ['listaprecio' => $proveedorId->id]
-                    );
+                    return response()->json(['alert' => 'success','message' => 'El alta de proveedor se ejecutó correctamente. Ahora será redirigido a la página principal']);
+                    //return redirect()->route('administracion.listaprecios.editar', ['razon_social' => $request->razon_social]);
+                    //return redirect()->route('administracion.listaprecios.editar', ['razon_social' => 'hg65hdnyt-yu']);
                     //$this->show(strval($request->razon_social));
-                    //return redirect()->route('administracion.listaprecios.show', ['razon_social' => strval($request->razon_social)]);
+                    //return redirect()->route('administracion.listaprecios.editar', $request->razon_social);
                 }
             }
         }
@@ -117,6 +219,16 @@ class ListaPrecioController extends Controller
 
         $save->save(); 
         return response()->json(['alert' => 'success','message' => 'Listado creado con éxito.']);
+    }
+    // - RollBack
+    public function VolverListado(string $proveedor_id/*, Request $request*/) {
+        $data = ListaPrecio::GetListadoUltimoEstado($proveedor_id);
+        foreach($data as $item) {
+            $item->deleted_at = NULL;
+            $item->save();
+        }
+        //return $data;
+        return redirect()->route('administracion.listaprecios.index');
     }
 
 
