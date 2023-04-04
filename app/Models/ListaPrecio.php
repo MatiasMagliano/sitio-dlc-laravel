@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-
+use Hamcrest\Core\HasToString;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class ListaPrecio extends Model
 {
+
+    use SoftDeletes;
 
     protected $table = 'lista_precios';
 
@@ -21,19 +23,51 @@ class ListaPrecio extends Model
         'producto_id',
         'presentacion_id',
         'proveedor_id',
-        'costo',
+        'costo'
     ];
 
     //INDEX
     public static function getAllListasDePrecios() {
-        $allListasDePrecios = ListaPrecio::select('lista_precios.proveedor_id','proveedors.razon_social AS razon_social',
-        'proveedors.cuit AS cuit', 'proveedors.created_at AS alta', ListaPrecio::raw('count(lista_precios.id) AS prods'), 
-        ListaPrecio::raw('min(lista_precios.created_at) AS creado'), ListaPrecio::raw('max(lista_precios.updated_at) AS modificado'))
-            ->rightJoin('proveedors','lista_precios.proveedor_id','=','proveedors.id')
-            ->groupBy('proveedors.cuit','proveedors.razon_social','lista_precios.proveedor_id', 'proveedors.created_at')
+        $allListasDePrecios = Proveedor::select('proveedors.id AS proveedorId','proveedors.razon_social AS razon_social',
+        'proveedors.cuit AS cuit', /*'proveedors.created_at AS alta',*/ //ListaPrecio::raw('min(lista_precios.created_at) AS creado'), 
+        ListaPrecio::raw('count(lista_precios.id) AS prods'),
+        ListaPrecio::raw('count(lista_precios.deleted_at) AS inactives'), ListaPrecio::raw('count(lista_precios.id) - count(lista_precios.deleted_at) AS actives'), 
+        ListaPrecio::raw('CASE WHEN min(lista_precios.created_at) IS NULL THEN proveedors.created_at ELSE min(lista_precios.created_at) END AS creado'),
+        ListaPrecio::raw('CASE WHEN max(lista_precios.updated_at) IS NULL THEN proveedors.created_at ELSE max(lista_precios.updated_at) END AS modificado'),
+        ListaPrecio::raw('MAX(lista_precios.deleted_at) AS lasts')/*,ListaPrecio::raw('max(lista_precios.updated_at) AS modificado')*/)
+            ->leftJoin('lista_precios','lista_precios.proveedor_id','=','proveedors.id')
+            ->groupBy('proveedors.id','proveedors.cuit','proveedors.razon_social','lista_precios.proveedor_id', 'proveedors.created_at')
             ->orderBy('proveedors.razon_social')
             ->get();
         return $allListasDePrecios;
+    }
+    public static function getAllListasDePrecios1() {
+        $allListasDePrecios = ListaPrecio::select('proveedors.id AS proveedorId','proveedors.razon_social AS razon_social',
+        'proveedors.cuit AS cuit', /*'proveedors.created_at AS alta',*/ //ListaPrecio::raw('min(lista_precios.created_at) AS creado'), 
+        ListaPrecio::raw('count(lista_precios.id) AS prods'),
+        ListaPrecio::raw('count(lista_precios.deleted_at) AS inactives'), ListaPrecio::raw('count(lista_precios.id) - count(lista_precios.deleted_at) AS actives'), 
+        ListaPrecio::raw('CASE WHEN min(lista_precios.created_at) IS NULL THEN proveedors.created_at ELSE min(lista_precios.created_at) END AS creado'),
+        ListaPrecio::raw('CASE WHEN max(lista_precios.updated_at) IS NULL THEN proveedors.created_at ELSE max(lista_precios.updated_at) END AS modificado'),
+        'lista_precios.deleted_at'/*,ListaPrecio::raw('max(lista_precios.updated_at) AS modificado')*/)
+            ->rightJoin('proveedors','lista_precios.proveedor_id','=','proveedors.id')
+            ->groupBy('proveedors.id','proveedors.cuit','proveedors.razon_social','lista_precios.proveedor_id', 'proveedors.created_at','lista_precios.deleted_at')
+            ->orderBy('proveedors.razon_social');
+
+
+        $listados = ListaPrecio::select('proveedors.id AS proveedorId','proveedors.razon_social AS razon_social',
+        'proveedors.cuit AS cuit', /*'proveedors.created_at AS alta',*/ //ListaPrecio::raw('min(lista_precios.created_at) AS creado'), 
+        ListaPrecio::raw('count(lista_precios.id) AS prods'),
+        ListaPrecio::raw('count(lista_precios.deleted_at) AS inactives'), ListaPrecio::raw('count(lista_precios.id) - count(lista_precios.deleted_at) AS actives'), 
+        ListaPrecio::raw('CASE WHEN min(lista_precios.created_at) IS NULL THEN proveedors.created_at ELSE min(lista_precios.created_at) END AS creado'),
+        ListaPrecio::raw('CASE WHEN max(lista_precios.updated_at) IS NULL THEN proveedors.created_at ELSE max(lista_precios.updated_at) END AS modificado'),
+        'lista_precios.deleted_at'/*,ListaPrecio::raw('max(lista_precios.updated_at) AS modificado')*/)
+            ->rightJoin('proveedors','lista_precios.proveedor_id','=','proveedors.id')
+            ->whereNotNull('lista_precios.deleted_at')
+            ->groupBy('proveedors.id','proveedors.cuit','proveedors.razon_social','lista_precios.proveedor_id', 'proveedors.created_at','lista_precios.deleted_at')
+            ->orderBy('proveedors.razon_social')
+            ->union($allListasDePrecios)
+            ->get();
+        return $listados;
     }
 
     // - Alta
@@ -79,6 +113,23 @@ class ListaPrecio extends Model
     }
     public static function GetListaPreciosByProveedorId($proveedor_id) {
         $data = ListaPrecio::select('*')->where('proveedor_id','=', $proveedor_id);
+        return $data;
+    }
+    // - RollBack
+    public static function GetListadoUltimoEstado($proveedor_id) {
+        $lastTime = ListaPrecio::select('deleted_at')
+            ->onlyTrashed()
+            ->where('proveedor_id','=', $proveedor_id)
+            ->orderBy('deleted_at', 'desc')
+            ->first();
+
+        $data = ListaPrecio::select('id','producto_id','presentacion_id','proveedor_id','codigoProv','costo','created_at','updated_at',
+        ListaPrecio::raw('MAX(deleted_at) AS deleted_at'))
+            ->onlyTrashed()
+            ->where('proveedor_id','=', $proveedor_id)
+            ->where('deleted_at','=', $lastTime->deleted_at)
+            ->groupBy('id','producto_id','presentacion_id','proveedor_id','codigoProv','costo','created_at','updated_at')
+            ->get();
         return $data;
     }
 

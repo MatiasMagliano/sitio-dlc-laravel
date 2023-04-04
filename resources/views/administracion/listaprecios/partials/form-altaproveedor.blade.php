@@ -17,21 +17,16 @@
         <div class="row d-flex m-1">
             <div class="form-group col">
                 <label for="input-razon_social">Razón social *</label>
-                <input type="text" name="razon_social" id="input-razon_social"
-                    class="form-control @error('razon_social') is-invalid @enderror"
-                    placeholder="Nombre completo del cliente o nombre de fantasía" value="{{ old('razon_social') }}"
-                    autofocus>
-                @error('razon_social')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                <input type="text" name="razon_social" id="input-razon_social" class="form-control" placeholder="Nombre completo del proveedor o nombre de fantasía" required autofocus>
+                <div id="input-razon_social-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
             </div>
         </div>
         <div class="row d-flex m-1">   
             <div class="form-group col">
                 <label for="input-cuit">Número *</label>
-                <input type="text" name="cuit" id="input-cuit"
-                    class="form-control" value="">
+                <input type="text" name="cuit" id="input-cuit" class="form-control" required>
                 <small id="input-cuit-tip" class="form-text text-muted">Ingrese solo números.</small>
+                <div id="input-cuit-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
             </div>
         </div>
         
@@ -43,23 +38,16 @@
         <div class="row d-flex m-1">   
             <div class="form-group col">
                 <label for="input-email">E-mail de Contacto *</label>
-                <input type="email" name="email" id="input-email" class="form-control @error('email') is-invalid @enderror"  
-                    placeholder="No posee dirección wb" value="{{ old('email') }}">
-                @error('email')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                <input type="email" name="email" id="input-email" class="form-control" placeholder="No posee dirección wb" required>
+                <div id="input-email-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
             </div>
         </div>
 
         <div class="row d-flex m-1">
             <div class="form-group col">
                 <label for="input-web">Dirección Web *</label>
-                <input type="web" name="web" id="input-web"
-                    class="form-control form-control-sm @error('web') is-invalid @enderror"
-                    value="{{ old('web') }}">
-                @error('web')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                <input type="web" name="web" id="input-web" class="form-control form-control-sm" required>
+                <div id="input-web-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
             </div>
         </div>
 
@@ -71,20 +59,15 @@
         <div class="row d-flex m-1">
             <div class="form-group col">
                 <label for="input-domicilio">Dirección *</label>
-                <input type="domicilio" name="domicilio" id="input-domicilio"
-                    class="form-control form-control-sm @error('domicilio') is-invalid @enderror"
-                    value="{{ old('domicilio') }}">
-                @error('domicilio')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                <input type="domicilio" name="domicilio" id="input-domicilio" class="form-control form-control-sm">
+                <div id="input-domicilio-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
             </div>
         </div>
 
         <div class="row d-flex m-1">
             <div class="form-group col-6">
                 <label for="input-provincia">Provincia *</label>
-                <select name="provincia_id" id="input-provincia"
-                    class="selector-provincia @error('provincia_id') is-invalid @enderror">
+                <select name="provincia_id" id="input-provincia" class="selector-provincia">
                     <option data-placeholder="true"></option>
                     @foreach ($provincias as $provincia)
                         @if ($provincia->id == old('provincia_id'))
@@ -94,14 +77,11 @@
                         @endif
                     @endforeach
                 </select>
-                @error('provincia_id')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                <div id="input-provincia-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
             </div>
             <div class="form-group col-6">
                 <label for="input-localidad">Localidad *</label>
-                <select id="input-localidad" name="localidad_id"
-                    class="selector-localidad @error('localidad_id') is-invalid @enderror">
+                <select id="input-localidad" name="localidad_id" class="selector-localidad">
                     <option data-placeholder="true"></option>
                     @foreach ($localidades as $localidad)
                         @if ($localidad->id == old('localidad_id'))
@@ -111,12 +91,9 @@
                         @endif
                     @endforeach
                 </select>
-                @error('localidad_id')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                <div id="input-localidad-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
             </div>
         </div>
-
         
         
         {{--<h6 class="heading-small text-muted mb-1 mt-5">Datos de Contacto *</h6>

@@ -23,14 +23,29 @@
         });
     };
 
-    /*$("#NuevoListado").on('click', function() {
-        $(location).attr('href', 'listaprecios/agregar')
-    });*/
-
-
-    /*$("#ListasSinProductos").on('click', function() {
-        $(location).attr('href', 'listaprecios/create')
-    });*/
+    function restaurarListado(id) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Restaurar Listado',
+            text: 'Esta acción volverá atras al último estado del listado del proveedor.',
+            confirmButtonText: 'Restaurar',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#restaurar-' + id).submit();
+                sleep(20);
+            }else if (
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'Operación cancelada por usuario, no se restaura el listado de proveedor',
+                    'error'
+                )
+            }
+        });
+    };
 
     (function () {
     'use strict'
@@ -52,11 +67,6 @@
     })()
 
     $(document).ready(function() {
-
-
-        $('#tabla tfoot th').slice(0, 3).each(function(i) {
-            $(this).html('<input type="text" class="form-control" placeholder="Buscar" />');
-        });
         /*$.ajax({
             type: "GET",
             url: "{{--route('administracion.listaprecios.listasVacias')--}}",
@@ -70,15 +80,10 @@
         });*/
 
         // VARIABLES LOCALES
-        var tabla;
-        /*tabla = $('#tabla').DataTable({
-            "paging": false,
-            "info": false,
-            "searching": false,
-            "select": false,
-        });*/
 
-        var tabla = $('#tabla').dataTable({
+        let table = new DataTable('#tabla');
+
+        /*var tabla = $('#tabla').dataTable({
             orderCellsTop: true,
             fixedHeader: true,
             dom: "rltip",
@@ -117,7 +122,28 @@
                             }
                         });
                     });
-            },
+            },*/
+        });
+        $('#tabla tfoot th').slice(0, 3).each(function(i) {
+            $(this).html('<input type="text" class="form-control rs-' + i + '" placeholder="Buscar" />');
+
+            $('.rs-' + i, this).on('keyup change', function(){
+                var title = this.value.toUpperCase();
+                $("#tabla tr").find('td:eq(' + i + ')').each(function () {
+
+                    //obtenemos el codigo de la celda
+                    codigo = $(this).html();
+                    var exist = codigo.includes(title);
+                    if(!exist){
+                        $(this).parent().hide();
+                    }else{
+                        $(this).parent().show();
+                    }
+                });
+                /*if(tabla.column(i).search() !== this.value){
+                    table.column(i).search(this.value).draw();
+                }*/
+            });
         });
 
         /*$('#tabla tfoot th').slice(0, 3).each(function() {
@@ -129,6 +155,7 @@
                 }
             });
         });*/
+        //$('#tabla_filter label').append("<button type='button' class='btn btn-sm btn-link text-primary' title='Mas filtros'><i class='fas fa-solid fa-filter'></i></button>");
     });
 
 

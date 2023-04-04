@@ -104,6 +104,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::match(['put', 'patch'], '/listaprecios/alta/ListadoPrecios', [ListaPrecioController::class, 'NuevoListadoPrecioProveedor'])->name('listaprecios.alta.nuevoListadoPrecioProveedor');
     Route::delete('/listaprecios/{razon_social}/editar/{listaId}', [ListaPrecioController::class, 'QuitarProductoLista'])->name('listaprecios.editar.quitarProductoLista');
     Route::delete('/listaprecios/{proveedor_id}/vaciarListado', [ListaPrecioController::class, 'VaciarListado'])->name('listaprecios.vaciar');
+    Route::get('/listaprecios/{proveedor_id}/volverListado', [ListaPrecioController::class, 'VolverListado'])->name('listaprecios.volverListado');
     Route::get('/listaprecios/editar/dataAgregarProducto', [ListaPrecioController::class, 'TraerDataAgregarProductoLista'])->name('listaprecios.editar.traerDataAgregarProductoLista');
     Route::match(['put', 'patch'], '/listaprecios/ingresar', [ListaPrecioController::class, 'IngresarProductoLista'])->name('listaprecios.editar.ingresarProductoLista');
     Route::get('/listaprecios/dataModificarProducto', [ListaPrecioController::class, 'TraerDataModificarProductoLista'])->name('listaprecios.editar.traerDataModificarProductoLista');

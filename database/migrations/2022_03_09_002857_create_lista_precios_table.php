@@ -24,6 +24,7 @@ class CreateListapreciosTable extends Migration
             $table->string('codigoProv', 18)->constrained();
             $table->decimal('costo', 10, 2);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
