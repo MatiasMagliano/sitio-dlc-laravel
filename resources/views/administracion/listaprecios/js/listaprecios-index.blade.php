@@ -67,20 +67,6 @@
     })()
 
     $(document).ready(function() {
-        /*$.ajax({
-            type: "GET",
-            url: "{{--route('administracion.listaprecios.listasVacias')--}}",
-            success: function(data){
-                if (data.message == 0){
-                    $('#ListasSinProductos').addClass('LockCreate');
-                }else{
-                    $('#ListasSinProductos').removeClass('LockCreate');
-                }
-            },
-        });*/
-
-        // VARIABLES LOCALES
-
         let table = new DataTable('#tabla');
 
         /*var tabla = $('#tabla').dataTable({
@@ -93,7 +79,7 @@
                 url: "{{-- route('administracion.cotizaciones.ajax') --}}",
                 method: "GET"
             },
-            "order": [0, 'desc'],*/
+            "order": [0, 'desc'],
             columnDefs: [
                 {
                     targets: [1],
@@ -122,8 +108,9 @@
                             }
                         });
                     });
-            },*/
-        });
+            },
+        });*/
+
         $('#tabla tfoot th').slice(0, 3).each(function(i) {
             $(this).html('<input type="text" class="form-control rs-' + i + '" placeholder="Buscar" />');
 
@@ -157,11 +144,4 @@
         });*/
         //$('#tabla_filter label').append("<button type='button' class='btn btn-sm btn-link text-primary' title='Mas filtros'><i class='fas fa-solid fa-filter'></i></button>");
     });
-
-
-    // SCRIPT DEL SLIMSELECT
-    /*var selProducto = new SlimSelect({
-        select: '.seleccion-producto',
-        placeholder: 'Seleccione el nombre de la droga y luego su presentación...',
-    });*/
 </script>

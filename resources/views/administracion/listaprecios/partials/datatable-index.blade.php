@@ -45,7 +45,7 @@
                 </td>
 
                 <td style="vertical-align: middle; text-align:center;">
-                    @if(isset($listaPrecio->creado))
+                    @if($listaPrecio->prods > 0)
                         <a href="{{ route('administracion.listaprecios.editar', ['razon_social' => $listaPrecio->razon_social]) }}" class="btn btn-link"
                             data-toggle="tooltip" data-placement="bottom" title="Editar lista de precios">
                             <i class="fas fa-search "></i>
