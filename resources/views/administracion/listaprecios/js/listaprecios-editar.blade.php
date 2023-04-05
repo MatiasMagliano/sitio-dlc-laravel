@@ -36,9 +36,6 @@
 
     //AGREGAR PRODUCTO - MODAL
     $(document).on('click', '.open_first_modal', function(){
-        //ndiv = $(".opSelected").remove();
-
-
         hideAlertValidation();
         $.ajax({
             type: "GET",
@@ -70,7 +67,6 @@
     });
     //AGREGAR PRODUCTO - SUBMIT DEL FORMULARIO
     $(document).on('submit','#formAgregProducto',function(event){
-
         event.preventDefault();
         hideAlertValidation();
 
@@ -165,22 +161,22 @@
             url: "{{route('administracion.listaprecios.editar.traerDataModificarProductoLista')}}",
             data: {producto: $(this).val()},
             success: function(data){
+                console.log(data);
                 $('#input-droga').val(
                     data.producto.droga +
                     " - " +
                     data.presentacion.forma +
                     ", " +
                     data.presentacion.presentacion
-                    );
-                    $('#input-listaId').val(data.producto_listaPrecio.id);
-                    $('#input-codigoProv').val(data.producto_listaPrecio.codigoProv);
-                    $('#input-costo').val(data.producto_listaPrecio.costo);
-                },
-            });
+                );
+                $('#input-listaId').val(data.producto_listaPrecio.id);
+                $('#input-codigoProv').val(data.producto_listaPrecio.codigoProv);
+                $('#input-costo').val(data.producto_listaPrecio.costo);
+            },
         });
+    });
     //MODIFICAR PRODUCTO - SUBMIT DEL FORMULARIO
     $(document).on('submit','#formModifProducto',function(event){
-
         event.preventDefault();
         hideAlertValidation();
         if ($('#input-costo')[0].valueAsNumber > 0 && $('#input-costo')[0].valueAsNumber != "" && $('#input-codigoProv')[0].value > '0' &&  $('#input-codigoProv')[0].value != "") {
