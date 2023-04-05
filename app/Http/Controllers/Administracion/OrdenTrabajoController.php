@@ -80,42 +80,10 @@ class OrdenTrabajoController extends Controller
             $deposito = DepositoCasaCentral::find(
                 LotePresentacionProducto::getIdDeposito($producto->producto_id, $producto->presentacion_id) //devuelve un solo pivot relacionado a prod/pres
             );
-            // Si hay lotes disponibles, el proceso termina con la impresión de la OT
-            // de lo contrario, se deberán asignar manualmente los lotes una vez arquiridos.
-            // Lógica que genera un array->tostring de lotes disponibles o asigna -1 cuando no hay lotes
-            if($deposito->cotizacion > 0)
-            {
-                $lotes = array();
-                $lotesDeProducto = LotePresentacionProducto::getLotes($producto->producto_id, $producto->presentacion_id);
-                $resto = $producto->cantidad;
-                $cont  = 0;
-                while($resto >= 0 && $lotesDeProducto->count() >= $cont)
-                {
-                    $cantLote = Lote::find($lotesDeProducto[$cont]);
-                    $resto -= $cantLote->cantidad;
-                    $lotes[] = $cantLote->id; //array_push
-                    $deposito->decrement('cotizacion', $cantLote->cantidad);
-                    $cont++;
-                }
 
-                ProductoOrdenTrabajo::create([
-                    'orden_trabajo_id'  => $orden->id,
-                    'producto_id'       => $producto->producto_id,
-                    'presentacion_id'   => $producto->presentacion_id,
-                    'lotes'             => implode(', ', $lotes),
-                    'cantidad'          => $producto->cantidad,
-                ]);
-            }
-            else
-            {
-                ProductoOrdenTrabajo::create([
-                    'orden_trabajo_id'  => $orden->id,
-                    'producto_id'       => $producto->producto_id,
-                    'presentacion_id'   => $producto->presentacion_id,
-                    'lotes'             => -1,
-                    'cantidad'          => $producto->cantidad,
-                ]);
-            }
+
+            // LOGICA QUE AGREGA A UN ARRAY LOS ID's DE LOTES AFECTADOS A LA ORDEN DE TRABAJO
+
         }
 
         if(OrdenTrabajo::LotesCompletos($orden->id))
