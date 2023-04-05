@@ -1,13 +1,11 @@
-@if ($producto->hospitalario === 1 && $producto->trazabilidad === 1)
-    <span style="color: #425b9e;">HOSPITALARIO</span> - {{$producto->forma. ", " .$producto->presentacion}} - <span style="color: #9e4942;">TRAZABLE</span>
-@else
-    @if ($producto->hospitalario === 1)
-        <span style="color: #425b9e;">HOSPITALARIO</span> - {{$producto->forma. ", " .$producto->presentacion}}
+{{ $producto->forma . ', ' . $producto->presentacion }}
+@if ($producto->hospitalario === 1)
+    - <span class="text-primary">HOSPITALARIO</span>
 
-    @elseif ($producto->trazabilidad === 1)
-        {{$producto->forma. ", " .$producto->presentacion}} - <span style="color: #9e4942;">TRAZABLE</span>
+@elseif ($producto->trazabilidad === 1)
+    - <span class="text-warning">TRAZABLE</span>
 
-    @else
-        {{$producto->forma. ", " .$producto->presentacion}}
-    @endif
+@elseif ($producto->divisible === 1)
+    - <span class="text-danger">HOSPITALARIO</span>
+    
 @endif
