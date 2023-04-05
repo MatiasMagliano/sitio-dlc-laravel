@@ -51,7 +51,7 @@ class ListadosSeeder extends Seeder
             [
                 'nombre'  => 'Productos más vendidos',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'   => 'SELECT * FROM listados'
+                'query'   => 'SELECT CONCAT(p.droga, ", " , pr.forma, " ", pr.presentacion, CASE WHEN pr.hospitalario = 1 THEN " - H" ELSE "" END, CASE WHEN pr.trazabilidad = 1 THEN " - T" ELSE "" END, CASE WHEN pr.divisible = 1 THEN " - D" ELSE "" END) AS producto, COUNT(CONCAT(p.droga, ", " , pr.forma, " ", pr.presentacion)) AS cant_productos FROM cotizacions co INNER JOIN producto_cotizados pco ON co.id = pco.cotizacion_id AND co.confirmada IS NOT NULL INNER JOIN productos p ON pco.producto_id = p.id INNER JOIN presentacions pr ON pco.presentacion_id = pr.id GROUP BY p.droga, pr.forma, pr.presentacion, pr.hospitalario, pr.trazabilidad, pr.divisible ORDER BY cant_productos DESC;'
             ],
             [
                 'nombre'  => 'Proveedores por volumen de lotes',
@@ -66,17 +66,17 @@ class ListadosSeeder extends Seeder
             [
                 'nombre'  => 'Cotizaciones aprobadas por usuario',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'   => 'SELECT * FROM listados'
+                'query'   => 'SELECT u.name, COUNT(co.id) AS cant_cotizaciones FROM cotizacions co INNER JOIN users u ON co.user_id = u.id AND co.confirmada IS NOT NULL GROUP BY u.name ORDER BY cant_cotizaciones DESC;'
             ],
             [
                 'nombre'  => 'Procentual de cotizaciones por usuario',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'   => 'SELECT * FROM listados'
+                'query'   => ''
             ],
             [
                 'nombre'  => 'Procentual de cotizaciones (aprobadas y rechazadas) por usuario',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'   => 'SELECT * FROM listados'
+                'query'   => 'SELECT u.name, COUNT(co1.id) AS co_aprobadas, COUNT(co0.id) AS co_rechazadas, ROUND(COUNT(co1.id) * 100 / (COUNT(co1.id) + COUNT(co0.id)),2) AS porcentual_apr, ROUND(COUNT(co0.id) * 100 / (COUNT(co1.id) + COUNT(co0.id)),2) AS porcentual_rec FROM users u LEFT JOIN cotizacions co1 ON u.id = co1.user_id AND co1.confirmada IS NOT NULL LEFT JOIN cotizacions co0 ON u.id = co0.user_id AND co0.rechazada IS NOT NULL GROUP BY u.name ORDER BY co_aprobadas DESC, co_rechazadas ASC;'
             ],
             [
                 'nombre'  => 'Porcentual de cotizaciones (aprobada y rechazadas) valorizada por usuario',
