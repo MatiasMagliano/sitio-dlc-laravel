@@ -1,6 +1,6 @@
 <div class="text-center">
     <div class="btn-group" role="group" aria-label="Acciones de producto">
-        <a href="{{route('administracion.productos.edit', ['producto' => $producto, 'presentacion' => $presentacion])}}" class="btn btn-link" data-toggle="tooltip" data-placement="middle" title="Editar producto">
+        <a href="{{route('administracion.productos.edit', ['producto' => $producto->idProducto, 'presentacion' => $producto->idPresentacion])}}" class="btn btn-link" data-toggle="tooltip" data-placement="middle" title="Editar producto">
             <i class="fas fa-pencil-alt"></i>
         </a>
         <a href="#" role="button" class="btn btn-link text-danger" data-toggle="tooltip" data-placement="middle" title="Editar producto">

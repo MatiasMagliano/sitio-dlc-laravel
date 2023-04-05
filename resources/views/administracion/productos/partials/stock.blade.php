@@ -1,7 +1,5 @@
-@foreach ($presentacion->dcc as $dcc)
-    <div class="row">
-        <div class="col text-center">{{$dcc->existencia}}</div>
-        <div class="col text-center">{{$dcc->cotizacion}}</div>
-        <div class="col text-center">{{$dcc->existencia - $dcc->cotizacion}}</div>
-    </div>
-@endforeach
+<div class="row">
+    <div class="col text-center">{{$producto->existencia}}</div>
+    <div class="col text-center">{{$producto->cotizacion}}</div>
+    <div class="col text-center">{{$producto->existencia - $producto->cotizacion}}</div>
+</div>

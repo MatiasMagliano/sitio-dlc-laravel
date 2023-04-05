@@ -103,15 +103,3 @@
         </div>
     </div>
 </div>
-
-{{-- DATOS DEL LOTE --}}
-<div class="card mt-3">
-    <div class="card-header">
-        <h6 class="heading-small text-muted mb-1">DATOS DEL LOTE</h6>
-    </div>
-    <div class="card-body">
-        <div class="pl-lg-4">
-            <p>Para agregar lotes a producto, podrá hacerlo en la siguiente <a href="{{route('administracion.lotes.index')}}">sección</a></p>
-        </div>
-    </div>
-</div>

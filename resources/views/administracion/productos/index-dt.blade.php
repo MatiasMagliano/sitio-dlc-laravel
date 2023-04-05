@@ -2,12 +2,40 @@
 
 @section('title', 'Administrar Productos')
 
+@section('css')
+    <style>
+        .texto-header {
+            padding: 20px;
+            height: 90px;
+            overflow-y: auto;
+            /*font-size: 14px;*/
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .texto-header::-webkit-scrollbar {
+            width: 5px;
+            background-color: #282828;
+        }
+
+        .texto-header::-webkit-scrollbar-thumb {
+            background-color: #3bd136;
+        }
+
+        @media (max-width: 600px) {
+            .hide {
+                display: none;
+            }
+        }
+    </style>
+@endsection
+
 @section('content_header')
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-xl-8">
             <h1>Administración de productos</h1>
         </div>
-        <div class="col-md-4 d-flex justify-content-md-end">
+        <div class="col-xl-4 d-flex justify-content-md-end">
             <a href="{{ route('administracion.productos.create') }}" role="button" class="btn btn-md btn-success">Crear
                 producto</a>
             &nbsp;
@@ -22,6 +50,17 @@
 @section('plugins.DatatablesPlugins', true)
 @section('plugins.TempusDominusBs4', true)
 <div class="card">
+    <div class="card-header bg-gray-light">
+        <div class="texto-header">
+            <h5>Productos, descripción y stock</h5>
+            <p>
+                Los términos de búsqueda se realizan en los campos debajo de cada columna habilitada.
+            </p>
+            <p>
+                Desde aquí podrá modificar el nombre de la droga y su presentación. Para modificar los lotes de producto, ingrese en la <a href="route('administracion.lotes.index')" class="btn-link">siguiente</a> sección.
+            </p>
+        </div>
+    </div>
     <div class="card-body">
         <table id="tabla-productos" class="table table-bordered" width="100%">
             <thead class="bg-gray">
@@ -32,6 +71,15 @@
                 <th>STOCK - CASA CENTRAL<br><span class="small text-nowrap">existencia | cotizización | disponible</span></th>
                 <th></th>
             </thead>
+            <tfoot style="display: table-header-group;">
+                <tr class=" bg-gradient-light">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </tfoot>
             <tbody>
             </tbody>
         </table>
@@ -44,76 +92,64 @@
 <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
 <script>
     $(document).ready(function() {
+        moment.locale('es');
+
+        $('#tabla-productos tfoot th').slice(0, 2).each(function() {
+            $(this).html('<input type="text" class="form-control" placeholder="Buscar" />');
+        });
+
         $('#tabla-productos').DataTable({
-            "responsive": true,
-            "processing": true,
-            "serverSide": true,
-            "dom": "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-                "<'row'<'col-sm-12'B>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-            "lengthMenu": [
-                [10, 25, 50, -1],
-                ['10', '25', '50', 'Todos']
-            ],
-            "ajax": {
+            dom: "rltip",
+            processing: true,
+            serverSide: true,
+            ajax: {
                 url: "{{ route('administracion.productos.ajax') }}",
                 method: "GET"
             },
-            "buttons": [{
-                    extend: 'copyHtml5',
-                    text: 'Copiar al portapapeles',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
+            order: [0, 'asc'],
+            columnDefs: [
+                {
+                    targets: [0],
+                    name: "droga",
+                    className: "align-middle",
                 },
                 {
-                    extend: 'excelHtml5',
-                    filename: 'productos',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
+                    targets: [1],
+                    name: "presentacion",
+                    className: "align-middle",
                 },
                 {
-                    extend: 'print',
-                    text: 'Imprimir',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
+                    targets: [2],
+                    name: "lotes",
+                    className: "align-middle small",
+                },
+                {
+                    targets: [3],
+                    name: "stock",
+                    className: "align-middle",
+                    width: 100,
+                    orderable: false,
+                },
+                {
+                    targets: [4],
+                    name: "acciones",
+                    className: "align-middle",
+                    orderable: false,
                 },
             ],
+            "initComplete": function() {
+                this.api()
+                    .columns([0, 1])
+                    .every(function() {
+                        var that = this;
 
-            "columnDefs": [{
-                    className: "align-middle",
-                    targets: [0]
-                },
-                {
-                    className: "align-middle",
-                    orderable: false,
-                    targets: [1]
-                },
-                // {
-                //     className: "align-middle",
-                //     orderable: false,
-                //     targets: [2]
-                // },
-                {
-                    className: "align-middle text-center small",
-                    orderable: false,
-                    targets: [2]
-                },
-                {
-                    className: "align-middle",
-                    orderable: false,
-                    targets: [3],
-                    width: 100
-                },
-                {
-                    className: "align-middle",
-                    orderable: false,
-                    targets: [4],
-                },
-            ]
+                        $('input', this.footer()).on('keyup change clear', function() {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                            }
+                        });
+                    });
+            },
         });
     });
 </script>
