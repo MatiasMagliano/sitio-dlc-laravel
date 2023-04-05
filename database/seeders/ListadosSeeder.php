@@ -60,22 +60,30 @@ class ListadosSeeder extends Seeder
             [
                 'nombre'  => 'Cotizaciones brutas por usuario',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'   => 'SELECT users.name, COUNT(cotizacions.id) as cant_cotizaciones FROM cotizacions INNER JOIN users on users.id = cotizacions.user_id GROUP BY users.name ORDER BY `cantidad_cotizaciones` DESC '
+                'query'   => 'SELECT users.name, COUNT(cotizacions.id) as cant_cotizaciones FROM cotizacions INNER JOIN users on users.id = cotizacions.user_id GROUP BY users.name ORDER BY `cant_cotizaciones` DESC;'
+                //PRODUCCIÓN (LÍNEAS COTIZADAS) POR USUARIO
+                //SELECT u.name, COUNT(co.id) as cant_cotizaciones FROM cotizacions co INNER JOIN users u on u.id = co.user_id INNER JOIN producto_cotizados pco ON co.id = pco.cotizacion_id GROUP BY u.name ORDER BY cant_cotizaciones DESC;
             ],
             [
                 'nombre'  => 'Cotizaciones aprobadas por usuario',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
                 'query'   => 'SELECT u.name, COUNT(co.id) AS cant_cotizaciones FROM cotizacions co INNER JOIN users u ON co.user_id = u.id AND co.confirmada IS NOT NULL GROUP BY u.name ORDER BY cant_cotizaciones DESC;'
+                //PRODUCCIÓN (LÍNEAS COTIZADAS APROBADAS) POR USUARIO
+                //SELECT u.name, COUNT(co.id) AS cant_cotizaciones FROM cotizacions co INNER JOIN users u ON co.user_id = u.id AND co.confirmada IS NOT NULL INNER JOIN producto_cotizados pco ON co.id = pco.cotizacion_id GROUP BY u.name ORDER BY cant_cotizaciones DESC;
             ],
             [
                 'nombre'  => 'Procentual de cotizaciones por usuario',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
                 'query'   => 'SELECT u.name, COUNT(u.id), TOT_CO.cotizaciones AS cant_cotizaciones, ROUND((COUNT(u.id) * 100 / TOT_CO.cotizaciones),2) AS porcentaje_co FROM cotizacions co INNER JOIN users u ON co.user_id = u.id CROSS JOIN(SELECT COUNT(*) AS cotizaciones FROM cotizacions) TOT_CO GROUP BY u.name ORDER BY porcentaje_co DESC;'
+                //REALCIÓN DE PRODUCCIÓN (LÍNEAS COTIZADAS APROBADAS) POR USUARIO
+                //SELECT u.name, COUNT(u.id), TOT_CO.cotizaciones AS cant_cotizaciones, TOT_LIN_CO.lineas_cotizadas , ROUND((COUNT(u.id) * 100 / TOT_LIN_CO.lineas_cotizadas),2) AS porcentaje_co FROM cotizacions co INNER JOIN users u ON co.user_id = u.id INNER JOIN producto_cotizados pco ON co.ID = pco.cotizacion_id CROSS JOIN(SELECT COUNT(*) AS cotizaciones FROM cotizacions) TOT_CO CROSS JOIN(SELECT COUNT(*) AS lineas_cotizadas FROM producto_cotizados) TOT_LIN_CO GROUP BY u.name ORDER BY porcentaje_co DESC;
             ],
             [
                 'nombre'  => 'Procentual de cotizaciones (aprobadas y rechazadas) por usuario',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
                 'query'   => 'SELECT u.name, COUNT(co1.id) AS co_aprobadas, COUNT(co0.id) AS co_rechazadas, ROUND(COUNT(co1.id) * 100 / (COUNT(co1.id) + COUNT(co0.id)),2) AS porcentual_apr, ROUND(COUNT(co0.id) * 100 / (COUNT(co1.id) + COUNT(co0.id)),2) AS porcentual_rec FROM users u LEFT JOIN cotizacions co1 ON u.id = co1.user_id AND co1.confirmada IS NOT NULL LEFT JOIN cotizacions co0 ON u.id = co0.user_id AND co0.rechazada IS NOT NULL GROUP BY u.name ORDER BY co_aprobadas DESC, co_rechazadas ASC;'
+                //REALCIÓN DE PRODUCCIÓN (LÍNEAS COTIZADAS APROVADAS Y RECHAZADAS) POR USUARIO
+                //SELECT u.name, IFNULL(CO_AP.lineas,0) AS lineas_ap, IFNULL(CO_RE.lineas,0) AS lineas_re, CASE WHEN (IFNULL(CO_AP.lineas,0) + IFNULL(CO_RE.lineas,0)) <> 0 THEN ROUND(IFNULL(CO_AP.lineas,0) * 100 / (IFNULL(CO_AP.lineas,0) + IFNULL(CO_RE.lineas,0)),2) ELSE 0 END AS porcentual_apr, CASE WHEN (IFNULL(CO_AP.lineas,0) + IFNULL(CO_RE.lineas,0)) <> 0 THEN ROUND(IFNULL(CO_RE.lineas,0) * 100 / (IFNULL(CO_AP.lineas,0) + IFNULL(CO_RE.lineas,0)),2) ELSE 0 END AS porcentual_rec FROM users u LEFT JOIN( SELECT u.name, COUNT(pco.id) AS lineas FROM cotizacions co LEFT JOIN producto_cotizados pco ON co.id = pco.cotizacion_id INNER JOIN users u ON co.user_id = u.id AND co.confirmada IS NOT NULL GROUP BY u.name )CO_AP ON u.name = CO_AP.name LEFT JOIN( SELECT u.name, COUNT(pco.id) AS lineas FROM cotizacions co LEFT JOIN producto_cotizados pco ON co.id = pco.cotizacion_id INNER JOIN users u ON co.user_id = u.id AND co.rechazada IS NOT NULL GROUP BY u.name )CO_RE ON u.name = CO_RE.name GROUP BY u.name ORDER BY porcentual_apr DESC, porcentual_rec ASC;
             ],
             [
                 'nombre'  => 'Porcentual de cotizaciones (aprobada y rechazadas) valorizada por usuario',
