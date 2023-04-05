@@ -74,6 +74,7 @@ class Lote extends Model
             ->leftJoin('lote_presentacion_producto', 'lotes.id', '=', 'lote_presentacion_producto.lote_id')
             ->where('lote_presentacion_producto.presentacion_id', '=', $presentacion)
             ->where('lote_presentacion_producto.producto_id', '=', $producto)
+            ->where('lotes.cantidad', '>', 0)
             ->withTrashed()
             ->get();
     }
