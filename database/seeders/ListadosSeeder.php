@@ -70,7 +70,7 @@ class ListadosSeeder extends Seeder
             [
                 'nombre'  => 'Procentual de cotizaciones por usuario',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'   => ''
+                'query'   => 'SELECT u.name, COUNT(u.id), TOT_CO.cotizaciones AS cant_cotizaciones, ROUND((COUNT(u.id) * 100 / TOT_CO.cotizaciones),2) AS porcentaje_co FROM cotizacions co INNER JOIN users u ON co.user_id = u.id CROSS JOIN(SELECT COUNT(*) AS cotizaciones FROM cotizacions) TOT_CO GROUP BY u.name ORDER BY porcentaje_co DESC;'
             ],
             [
                 'nombre'  => 'Procentual de cotizaciones (aprobadas y rechazadas) por usuario',
@@ -81,6 +81,10 @@ class ListadosSeeder extends Seeder
                 'nombre'  => 'Porcentual de cotizaciones (aprobada y rechazadas) valorizada por usuario',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
                 'query'   => 'SELECT * FROM listados'
+                // PORCENTAJES IMPORTE SIN DISCRIMINAR ESTADO DE COTIZACIONES
+                //SELECT u.name, SUM(co.monto_total) AS importe_usuario, TOT_CO.importe_total, ROUND(SUM(co.monto_total) * 100 / TOT_CO.importe_total, 3) AS porcentaje_usuario FROM cotizacions co INNER JOIN users u ON co.user_id = u.id CROSS JOIN(SELECT SUM(co.monto_total) AS importe_total FROM cotizacions co) TOT_CO GROUP BY u.name ORDER BY porcentaje_usuario DESC;
+                // PORCENTAJES IMPORTE DISCRIMINADO POR APROVADAS Y RECHAZADAS (SE PUEDE AGREGAR EL RESTO DE ESTADOS)
+                //SELECT u.name, TOT_CO.importe_total, IFNULL(ROUND(SUM(co1.monto_total) * 100 / TOT_CO.importe_total, 3),0) AS porc_aporv_usuario, IFNULL(ROUND(SUM(co0.monto_total) * 100 / TOT_CO.importe_total, 3),0) AS porc_recha_usuario FROM users u LEFT JOIN cotizacions co1 ON u.id = co1.user_id AND co1.confirmada IS NOT NULL LEFT JOIN cotizacions co0 ON u.id = co0.user_id AND co0.rechazada IS NOT NULL CROSS JOIN(SELECT SUM(co.monto_total) AS importe_total FROM cotizacions co) TOT_CO GROUP BY u.name ORDER BY porc_aporv_usuario DESC, porc_recha_usuario ASC;
             ],
             [
                 'nombre'  => 'Órdenes de trabajo generadas sin stock',
@@ -90,7 +94,7 @@ class ListadosSeeder extends Seeder
             [
                 'nombre'  => 'Productos por proveedor',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'   => 'SELECT * FROM listados'
+                'query'   => 'SELECT pv.razon_social, COUNT(lp.id) AS cant_productos FROM lista_precios lp INNER JOIN proveedors pv ON lp.proveedor_id = pv.id GROUP BY pv.razon_social ORDER BY cant_productos DESC;'
             ],
         ];
 
