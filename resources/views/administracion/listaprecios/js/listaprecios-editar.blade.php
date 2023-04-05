@@ -1,4 +1,10 @@
 <script>
+    $(document).ready(function() {
+        hideAlertValidation();
+        $("#input-ncodigoProv").on('input', function (evt) {$(this).val($(this).val().replace(/[^0-9]/g, ''));});
+    });
+
+
     var frs = true;
     $(document).ready(function() {
         frs = true;
@@ -79,15 +85,24 @@
                 processData: false,
                 success:function(response)
                 {
-                    Swal.fire({
-                        title: 'Agregar producto',
-                        icon: response.alert,
-                        text: response.message,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    if(response.alert == "success"){
+                        Swal.fire({
+                            title: 'Agregar producto',
+                            icon: response.alert,
+                            text: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
 
-                    location.reload();
+                        location.reload();
+                    }else{
+                        Swal.fire({
+                            title: 'Agregar producto',
+                            icon: response.alert,
+                            text: response.message,
+                            showConfirmButton: false,
+                        });
+                    }
                 },
                 error: function(response) {
                     var errors = response.responseJSON;
@@ -98,10 +113,12 @@
                     Swal.fire({
                         icon: 'error',
                         text: errores,
-                    showConfirmButton: true,
+                        showConfirmButton: true,
+                        timer: 1500
                     });
                 }
             });
+
         }else{
             if( $('#input-ncosto')[0].valueAsNumber == 0 || isNaN($('#input-ncosto')[0].valueAsNumber)) {
                 $('#input-ncosto-feedback').removeClass('invalid-feedback');
@@ -110,7 +127,6 @@
                 $('#input-ncodigoProv-feedback').removeClass('invalid-feedback');
             }
         }
-
     });
 
     //BORRAR PRODUCTO
