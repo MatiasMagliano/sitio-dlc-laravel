@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="card-body">
-            @include('administracion.listaprecios.partials.form-selectproveedor')
+            @include('administracion.listaprecios.partials.create-proveedor_form')
         </div>
     </div>
 
@@ -54,7 +54,7 @@
                 </div>
             </div>
             <div class="card-body">
-                @include('administracion.listaprecios.partials.form-detallelistaprecios')
+                @include('administracion.listaprecios.partials.create-detalle_datatable')
             </div>
             <div class="overlay"><i class="fas fa-ban text-gray"></i></div>           
         </div>
@@ -64,7 +64,7 @@
 
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
-    @include('administracion.listaprecios.js.listaprecios-create')
+    @include('administracion.listaprecios.js.create-listaprecios_JS')
 @endsection
 
 @section('footer')

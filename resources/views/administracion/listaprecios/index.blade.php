@@ -40,7 +40,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="mobile">
-                    @include('administracion.listaprecios.partials.datatable-index')
+                    @include('administracion.listaprecios.partials.index-datatable')
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
 @section('js')
     @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
-    @include('administracion.listaprecios.js.listaprecios-index')
+    @include('administracion.listaprecios.js.index-listaprecios_JS')
 @endsection
 
 @section('footer')

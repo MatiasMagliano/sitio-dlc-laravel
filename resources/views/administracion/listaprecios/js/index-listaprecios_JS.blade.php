@@ -67,7 +67,37 @@
     })()
 
     $(document).ready(function() {
-        let table = new DataTable('#tabla');
+        //let table = new DataTable('#tabla');
+        var tabla = $('#tabla').DataTable( {
+            dom: "tp",
+            pageLength: 10,
+            scrollCollapse: true,
+            order: [0, 'asc'],
+            columnDefs: [
+                {
+                    targets: [0],
+                    className: "align-middle",
+                },
+                {
+                    targets: [1],
+                    className: "align-middle text-center",
+                    'render': function(data) {
+                        return moment(new Date(data)).format("DD-MM-YYYY HH:mm:ss");
+                    },
+                },
+                {
+                    targets: [2],
+                    className: "align-middle text-center",
+                    'render': function(data) {
+                        return moment(new Date(data)).format("DD-MM-YYYY HH:mm:ss");
+                    },
+                },
+                {
+                    targets: [3],
+                    className: "align-middle text-center",
+                }
+            ],
+        });
 
         /*var tabla = $('#tabla').dataTable({
             orderCellsTop: true,

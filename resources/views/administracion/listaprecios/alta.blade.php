@@ -31,7 +31,7 @@
     <div class="wrapper">
         <div class="card">
             <div class="card-body">
-                @include('administracion.listaprecios.partials.form-altaproveedor')
+                @include('administracion.listaprecios.partials.alta-proveedor_form')
             </div>
         </div>
     </div>
@@ -40,7 +40,7 @@
 @section('js')
     @include('partials.alerts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
-    @include('administracion.listaprecios.js.listaprecios-alta')
+    @include('administracion.listaprecios.js.alta-listaprecios_JS')
 @endsection
 
 @section('footer')

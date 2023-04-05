@@ -23,7 +23,7 @@
                     targets: [4],
                     className: "align-middle text-center",
                     'render': function(data) {
-                        return moment(new Date(data)).format("DD/MM/YYYY");
+                        return moment(new Date(data)).format("DD-MM-YYYY HH:mm:ss");
                     },
                 },
                 {

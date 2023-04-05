@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="card-body">
-            @include('administracion.listaprecios.partials.datatable-editarheader')
+            @include('administracion.listaprecios.partials.editar-header_datatable')
         </div>
     </div>
 
@@ -57,11 +57,11 @@
                 </div>
             </div>
             <div class="card-body">
-                @include('administracion.listaprecios.partials.datatable-editaritems')
+                @include('administracion.listaprecios.partials.editar-items_datatable')
             </div>
         </div>
     </div>
-    @include('administracion.listaprecios.partials.modal-editar')
+    @include('administracion.listaprecios.partials.editar-modal_form')
 
 @endsection
 
@@ -70,7 +70,7 @@
     @include('partials.alerts')
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
-    @include('administracion.listaprecios.js.listaprecios-editar')
+    @include('administracion.listaprecios.js.editar-listaprecios_JS')
 @endsection
 
 
