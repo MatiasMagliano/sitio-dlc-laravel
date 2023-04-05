@@ -88,7 +88,6 @@ class CotizacionController extends Controller
             $join->on('cotizacions.user_id', '=', 'users.id')
                 ->where(function($query){
                     $b_columna = $GLOBALS['b_columna'];
-                    $query->select('*');
                     if(isset($b_columna[3]['search']['value'])) {
                         $query->where('name', 'like', '%'.$b_columna[3]['search']['value'].'%');
                     }
