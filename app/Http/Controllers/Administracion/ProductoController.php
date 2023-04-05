@@ -13,6 +13,8 @@ use App\Models\Producto;
 use App\Models\Proveedor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class ProductoController extends Controller
 {
@@ -36,88 +38,89 @@ class ProductoController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', array(0, 'asc'));
 
+        // búsqueda global, textbox dom:rltip
         $filter = $search['value'];
+        //busqueda individual
+        $GLOBALS['b_columna'] = Arr::except($request->query('columns'), array('_token', '_method'));
 
         $sortColumns = array(
-            0 => 'droga',
+            0 => 'productos.droga',
             1 => 'presentacion',
-            2 => 'hosp-traz',
-            3 => 'lotes',
-            4 => 'dcc',
-            8 => 'acciones'
+            2 => 'lotes',
+            3 => 'stock',
         );
 
-        // QUERY COMPLETA DE PRODUCTOS
-        $query = Producto::select('*')
-            ->with(
-                array(
-                    'presentacion' => function($query)
-                    {
-                        $query->select(
-                                'presentacions.id',
-                                'presentacions.forma',
-                                'presentacions.presentacion',
-                                'presentacions.hospitalario',
-                                'presentacions.trazabilidad'
-                            )
-                            ->groupBy([
-                                'presentacions.id',
-                                'presentacions.forma',
-                                'presentacions.presentacion',
-                                'presentacions.hospitalario',
-                                'presentacions.trazabilidad'
-                            ])->with(
-                                array(
-                                    'lote' => function($query)
-                                    {
-                                        $query->select('*')
-                                            /*->wherePivotIn('producto_id', ARRAY DE PRODUCTOS )*/;
-                                    },
-                                    'dcc' => function($query){
-                                        $query->select(
-                                            'existencia',
-                                            'cotizacion',
-                                            'disponible'
-                                        )->groupBy([
-                                            'existencia',
-                                            'cotizacion',
-                                            'disponible',
-                                            'deposito_casa_centrals.id',
-                                            'deposito_casa_centrals.existencia',
-                                            'deposito_casa_centrals.cotizacion',
-                                            'deposito_casa_centrals.disponible',
-                                            'deposito_casa_centrals.created_at',
-                                            'deposito_casa_centrals.updated_at',
-                                            'lote_presentacion_producto.producto_id',
-                                            'lote_presentacion_producto.presentacion_id',
-                                            'lote_presentacion_producto.dcc_id',
-                                        ]);
-                                    }
-                                )
-                            );
-                    }
-                )
-            );
+        // NUEVA QUERY COMPLETA DE RODUCTOS (ver archivo, query vieja)
+        $query = LotePresentacionProducto::select(
+            'productos.id AS idProducto',
+            'productos.droga',
+            'presentacions.id AS idPresentacion',
+            'presentacions.forma',
+            'presentacions.presentacion',
+            DB::raw('GROUP_CONCAT(lotes.identificador) AS lotes'),
+            'deposito_casa_centrals.existencia',
+            'deposito_casa_centrals.cotizacion',
+            'deposito_casa_centrals.disponible'
+        )
+        ->where(
+            'lotes.cantidad',
+            '>',
+            0
+        )
+        ->groupBy(
+            'productos.id',
+            'productos.droga',
+            'presentacions.id',
+            'presentacions.forma',
+            'presentacions.presentacion',
+            'deposito_casa_centrals.existencia',
+            'deposito_casa_centrals.cotizacion',
+            'deposito_casa_centrals.disponible'
+        );
 
+        // se agregan las cláusulas join con su respectiva búsqueda (si la necesitara)
+        $query->join('productos', function ($join) {
+            $join->on('lote_presentacion_producto.producto_id', '=', 'productos.id')
+                ->where(function ($query) {
+                    $b_columna = $GLOBALS['b_columna'];
+                    if (isset($b_columna[0]['search']['value'])) {
+                        $query->where('productos.droga', 'like', '%' . $b_columna[0]['search']['value'] . '%');
+                    }
+                });
+        });
+        $query->join('presentacions', function ($join) {
+            $join->on('lote_presentacion_producto.presentacion_id', '=', 'presentacions.id')
+                ->where(function ($query) {
+                    $b_columna = $GLOBALS['b_columna'];
+                    if (isset($b_columna[1]['search']['value'])) {
+                        $query->where('presentacions.forma', 'like', '%' . $b_columna[1]['search']['value'] . '%');
+                    }
+                });
+        });
+        $query->join('lotes', function ($join) {
+            $join->on('lote_presentacion_producto.lote_id', '=', 'lotes.id');
+        });
+        $query->join('deposito_casa_centrals', function ($join) {
+            $join->on('lote_presentacion_producto.dcc_id', '=', 'deposito_casa_centrals.id');
+        });
+
+        // filtro general (si estuviera)
         if (!empty($filter)) {
-            $query->where('droga', 'like', '%' . $filter . '%');
+            $query->where('productos.droga', 'like', '%' . $filter . '%');
+        }
+        //filtro particular
+        $b_columna = $GLOBALS['b_columna'];
+        if (isset($b_columna[1]['search']['value'])) {
+            $query->where('productos.droga', 'like', '%' . $b_columna[0]['search']['value'] . '%');
         }
 
         $recordsTotal = $query->count();
 
         $sortColumnName = $sortColumns[$order[0]['column']];
 
-        // se detecta el length -1
-        if($length == '-1')
-        {
-            $query->orderBy($sortColumnName, $order[0]['dir']);
-        }
-        else
-        {
-            $query->orderBy($sortColumnName, $order[0]['dir'])
-                ->take($length)
-                ->skip($start);
-        }
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
 
         $json = array(
             'draw' => $draw,
@@ -128,18 +131,14 @@ class ProductoController extends Controller
 
         $productos = $query->get();
 
-        foreach ($productos as $producto)
-        {
-            foreach ($producto->presentacion as $presentacion)
-            {
-                $json['data'][] = [
-                    $producto->droga,
-                    view('administracion.productos.partials.presentaciones', ['presentacion' => $presentacion])->render(),
-                    view('administracion.productos.partials.lotes', ['presentacion' => $presentacion])->render(),
-                    view('administracion.productos.partials.stock', ['presentacion' => $presentacion])->render(),
-                    view('administracion.productos.partials.acciones', ['producto' => $producto, 'presentacion' => $presentacion])->render(),
-                ];
-            }
+        foreach ($productos as $producto) {
+            $json['data'][] = [
+                $producto->droga,
+                view('administracion.productos.partials.presentaciones', ['producto' => $producto])->render(),
+                view('administracion.productos.partials.lotes', ['producto' => $producto])->render(),
+                view('administracion.productos.partials.stock', ['producto' => $producto])->render(),
+                view('administracion.productos.partials.acciones', ['producto' => $producto])->render(),
+            ];
         }
 
         return $json;
@@ -226,9 +225,7 @@ class ProductoController extends Controller
 
             $request->session()->flash('success', 'El producto y su lote, se han creado con éxito');
             return redirect(route('administracion.productos.index'));
-        }
-        else
-        {
+        } else {
             // se fuerza la relación pero SIN LOS DATOS DE LOTE y se guarda el modelo producto
             // se crea un nuevo depósito dcc
             $deposito = DepositoCasaCentral::create([
@@ -288,16 +285,18 @@ class ProductoController extends Controller
     }
 
     // Ajax responde dt de proveedores en vistas de edición de producto
-    public function ajaxProveedores(Request $request){
-        if($request->ajax()){
+    public function ajaxProveedores(Request $request)
+    {
+        if ($request->ajax()) {
             $proveedor = Producto::proveedores($request->producto, $request->presentacion);
             return response()->json($proveedor);
         }
     }
 
     // Ajax que guarda un nuevo proveedor a un producto
-    public function ajaxNuevoPorveedor(Request $request){
-        if($request->ajax()){
+    public function ajaxNuevoPorveedor(Request $request)
+    {
+        if ($request->ajax()) {
 
             // validación pura de Laravel
             $request->validate([

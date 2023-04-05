@@ -21,19 +21,7 @@ class Producto extends Model
         return $this->belongsToMany(
             Presentacion::class,
             LotePresentacionProducto::class,
-        )->groupBy([
-                'lote_presentacion_producto.producto_id',
-                'lote_presentacion_producto.presentacion_id',
-                'presentacions.id',
-                'presentacions.forma',
-                'presentacions.presentacion',
-                'presentacions.hospitalario',
-                'presentacions.trazabilidad',
-                'presentacions.divisible',
-                'presentacions.created_at',
-                'presentacions.updated_at',
-                'presentacions.deleted_at'
-        ]);
+        );
     }
     public function lote()
     {

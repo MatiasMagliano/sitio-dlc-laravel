@@ -20,13 +20,12 @@ class ListadosSeeder extends Seeder
             [
                 'nombre'  => 'Productos sin stock por proveedor',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'   => 'SELECT productos.droga, CONCAT(presentacions.forma, " ", presentacions.presentacion) AS "presentacion", proveedors.razon_social, lotes.precio_compra FROM lote_presentacion_producto
-                INNER JOIN productos on productos.id = lote_presentacion_producto.producto_id INNER JOIN presentacions on presentacions.id = lote_presentacion_producto.presentacion_id INNER JOIN lotes ON lotes.id = lote_presentacion_producto.id INNER JOIN lista_precios on lista_precios.producto_id = lote_presentacion_producto.producto_id AND lista_precios.presentacion_id = lote_presentacion_producto.presentacion_id INNER JOIN proveedors ON proveedors.id = lista_precios.proveedor_id WHERE lotes.cantidad = 0 GROUP BY proveedors.razon_social;'
+                'query'   => 'SELECT CONCAT(productos.droga, ", ", presentacions.forma, " ", presentacions.presentacion) AS droga_presentacion, proveedors.razon_social AS proveido_por, lotes.precio_compra AS ultimo_precio FROM lote_presentacion_producto INNER JOIN productos on productos.id = lote_presentacion_producto.producto_id INNER JOIN presentacions on presentacions.id = lote_presentacion_producto.presentacion_id INNER JOIN lotes ON lotes.id = lote_presentacion_producto.id INNER JOIN lista_precios on lista_precios.producto_id = lote_presentacion_producto.producto_id AND lista_precios.presentacion_id = lote_presentacion_producto.presentacion_id INNER JOIN proveedors ON proveedors.id = lista_precios.proveedor_id WHERE lotes.cantidad = 0 ORDER BY droga_presentacion, proveedors.razon_social;'
             ],
             [
                 'nombre'  => 'Producto por vencimientos a largo plazo',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'   => 'SELECT productos.droga, CONCAT(presentacions.forma, " ", presentacions.presentacion) AS presentación, TIMESTAMPDIFF(MONTH, lotes.fecha_compra, lotes.fecha_vencimiento)AS meses FROM lote_presentacion_producto INNER JOIN productos on productos.id = lote_presentacion_producto.producto_id INNER JOIN presentacions on presentacions.id = lote_presentacion_producto.presentacion_id INNER JOIN lotes on lotes.id = lote_presentacion_producto.lote_id ORDER BY `productos`.`droga` ASC, meses DESC; '
+                'query'   => 'SELECT CONCAT(productos.droga, ", ", presentacions.forma, " ", presentacions.presentacion) AS droga_presentacion, DATE_FORMAT(lotes.fecha_vencimiento, "%d/%m/%Y") AS fecha_vencimiento, TIMESTAMPDIFF(MONTH, NOW(), lotes.fecha_vencimiento) AS meses_al_vencimiento FROM lote_presentacion_producto INNER JOIN productos on productos.id = lote_presentacion_producto.producto_id INNER JOIN presentacions on presentacions.id = lote_presentacion_producto.presentacion_id INNER JOIN lotes on lotes.id = lote_presentacion_producto.lote_id ORDER BY meses_al_vencimiento DESC;'
             ],
             [
                 'nombre'  => 'Proveedores por mayor volumen de productos',
@@ -36,7 +35,7 @@ class ListadosSeeder extends Seeder
             [
                 'nombre'  => 'Productos y sus vencimientos',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'   => 'SELECT productos.droga, CONCAT(presentacions.forma, " ", presentacions.presentacion) AS presentación, lotes.identificador, lotes.fecha_vencimiento FROM lote_presentacion_producto INNER JOIN productos on productos.id = lote_presentacion_producto.producto_id INNER JOIN presentacions on presentacions.id = lote_presentacion_producto.presentacion_id INNER JOIN lotes on lotes.id = lote_presentacion_producto.lote_id ORDER BY `productos`.`droga` ASC, lotes.fecha_vencimiento DESC; '
+                'query'   => 'SELECT CONCAT(productos.droga, ", ", presentacions.forma, " ", presentacions.presentacion) AS droga_presentacion, lotes.identificador, DATE_FORMAT(lotes.fecha_vencimiento, "%d/%m/%Y") AS fecha_vencimiento FROM lote_presentacion_producto INNER JOIN productos on productos.id = lote_presentacion_producto.producto_id INNER JOIN presentacions on presentacions.id = lote_presentacion_producto.presentacion_id INNER JOIN lotes on lotes.id = lote_presentacion_producto.lote_id ORDER BY droga_presentacion ASC, fecha_vencimiento DESC;'
             ],
             [
                 'nombre'  => 'Márgen de ganancia por producto, con precio de cotización',
