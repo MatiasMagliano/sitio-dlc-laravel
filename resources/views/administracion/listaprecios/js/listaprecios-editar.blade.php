@@ -1,4 +1,10 @@
 <script>
+    $(document).ready(function() {
+        hideAlertValidation();
+        $("#input-ncodigoProv").on('input', function (evt) {$(this).val($(this).val().replace(/[^0-9]/g, ''));});
+    });
+
+
     var frs = true;
     $(document).ready(function() {
         frs = true;
@@ -30,9 +36,6 @@
 
     //AGREGAR PRODUCTO - MODAL
     $(document).on('click', '.open_first_modal', function(){
-        //ndiv = $(".opSelected").remove();
-
-
         hideAlertValidation();
         $.ajax({
             type: "GET",
@@ -64,7 +67,6 @@
     });
     //AGREGAR PRODUCTO - SUBMIT DEL FORMULARIO
     $(document).on('submit','#formAgregProducto',function(event){
-
         event.preventDefault();
         hideAlertValidation();
 
@@ -79,15 +81,24 @@
                 processData: false,
                 success:function(response)
                 {
-                    Swal.fire({
-                        title: 'Agregar producto',
-                        icon: response.alert,
-                        text: response.message,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    if(response.alert == "success"){
+                        Swal.fire({
+                            title: 'Agregar producto',
+                            icon: response.alert,
+                            text: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
 
-                    location.reload();
+                        location.reload();
+                    }else{
+                        Swal.fire({
+                            title: 'Agregar producto',
+                            icon: response.alert,
+                            text: response.message,
+                            showConfirmButton: false,
+                        });
+                    }
                 },
                 error: function(response) {
                     var errors = response.responseJSON;
@@ -98,10 +109,12 @@
                     Swal.fire({
                         icon: 'error',
                         text: errores,
-                    showConfirmButton: true,
+                        showConfirmButton: true,
+                        timer: 1500
                     });
                 }
             });
+
         }else{
             if( $('#input-ncosto')[0].valueAsNumber == 0 || isNaN($('#input-ncosto')[0].valueAsNumber)) {
                 $('#input-ncosto-feedback').removeClass('invalid-feedback');
@@ -110,7 +123,6 @@
                 $('#input-ncodigoProv-feedback').removeClass('invalid-feedback');
             }
         }
-
     });
 
     //BORRAR PRODUCTO
@@ -149,22 +161,22 @@
             url: "{{route('administracion.listaprecios.editar.traerDataModificarProductoLista')}}",
             data: {producto: $(this).val()},
             success: function(data){
+                console.log(data);
                 $('#input-droga').val(
                     data.producto.droga +
                     " - " +
                     data.presentacion.forma +
                     ", " +
                     data.presentacion.presentacion
-                    );
-                    $('#input-listaId').val(data.producto_listaPrecio.id);
-                    $('#input-codigoProv').val(data.producto_listaPrecio.codigoProv);
-                    $('#input-costo').val(data.producto_listaPrecio.costo);
-                },
-            });
+                );
+                $('#input-listaId').val(data.producto_listaPrecio.id);
+                $('#input-codigoProv').val(data.producto_listaPrecio.codigoProv);
+                $('#input-costo').val(data.producto_listaPrecio.costo);
+            },
         });
+    });
     //MODIFICAR PRODUCTO - SUBMIT DEL FORMULARIO
     $(document).on('submit','#formModifProducto',function(event){
-
         event.preventDefault();
         hideAlertValidation();
         if ($('#input-costo')[0].valueAsNumber > 0 && $('#input-costo')[0].valueAsNumber != "" && $('#input-codigoProv')[0].value > '0' &&  $('#input-codigoProv')[0].value != "") {

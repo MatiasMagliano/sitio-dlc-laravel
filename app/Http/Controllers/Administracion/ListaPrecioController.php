@@ -251,6 +251,34 @@ class ListaPrecioController extends Controller
         }
 
         $jsonPresentaciones = array('dataPresentaciones' => []);
+        $presentacions = ListaPrecio::AllPresentacionsToPost();
+        //$presentacions = DB::table('presentacions')->get();
+        foreach($presentacions as $presentacion) {
+            $jsonPresentaciones['dataPresentaciones'][] = [
+                'presentacionId' => $presentacion->id,
+                'presentacion' => $presentacion->forma. ', ' .$presentacion->presentacion. $presentacion->Inp
+            ];
+        }
+
+        $jsonResponse = array('dataResponse' => []);
+        $jsonResponse['dataResponse'][] = [
+            'nombre' => $jsonProductos,
+            'detalle' => $jsonPresentaciones
+        ];
+            
+        return response()->json($jsonResponse);
+    }
+    public function TraerDataAgregarProductoLista1() {   
+        $jsonProductos = array('dataProductos' => []);
+        $productos = DB::table('productos')->get();
+        foreach($productos as $producto) {
+            $jsonProductos['dataProductos'][] = [
+                'productoId' => $producto->id,
+                'droga' => $producto->droga
+            ];
+        }
+
+        $jsonPresentaciones = array('dataPresentaciones' => []);
         $presentacions = DB::table('presentacions')->get();
         foreach($presentacions as $presentacion) {
             $jsonPresentaciones['dataPresentaciones'][] = [
@@ -269,23 +297,29 @@ class ListaPrecioController extends Controller
     }
     public function IngresarProductoLista(Request $request) {
         $newProdLista = new ListaPrecio;
-        $find_producto_listaPrecio = ListaPrecio::findByProducto($request->proveedor_id , $request->producto_id, $request->presentacion_id);
+        $existeCodigo = ListaPrecio::findCodigoProv($request->codigoProv);
 
-        if(!$find_producto_listaPrecio){
-            $datos = $request->validate([
-                'producto_id' => 'required',
-                'presentacion_id' => 'required',
-                'costo'  => 'required|numeric|min:0',
-                'codigoProv'    => 'required|numeric|regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
-            ]);
+        if(!$existeCodigo){
+            $existeProducto = ListaPrecio::findByProducto($request->proveedor_id , $request->producto_id, $request->presentacion_id);
+            if(!$existeProducto){
+                $datos = $request->validate([
+                    'producto_id' => 'required',
+                    'presentacion_id' => 'required',
+                    'costo' => 'required|numeric|min:0',
+                    'codigoProv' => 'required|numeric|regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
+                ]);
+        
+                $newProdLista = new ListaPrecio($request->all());
+                $newProdLista->save();
     
-            $newProdLista = new ListaPrecio($request->all());
-            $newProdLista->save();
-
-            return response()->json(['alert' => 'success','message' => 'El producto se ha modificado con éxito.']);
-            
+                return response()->json(['alert' => 'success','message' => 'El producto se ha modificado con éxito.']);
+                
+            }else{
+                return response()->json(['alert' => 'warning','message' => 'El producto ya se encuentra en el listado del proveedor.']);
+            }
+        
         }else{
-            return response()->json(['alert' => 'warning','message' => 'El producto ya se encuentra en el listado del proveedor.']);
+            return response()->json(['alert' => 'warning','message' => 'Ya existe un producto con el mismo código de proveedor.']);
         }
     }
 

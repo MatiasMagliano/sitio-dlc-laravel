@@ -137,7 +137,11 @@ class ListaPrecio extends Model
     public static function getListaDeProveedor($razon_social) {
         $listado = ListaPrecio::select(
             'lista_precios.id as listaId','lista_precios.proveedor_id','proveedors.razon_social','producto_id','presentacion_id',
-            'codigoProv','droga', DB::raw('CONCAT(forma, ", ", presentacion) AS detalle'),'costo','lista_precios.updated_at')
+            'codigoProv','droga', 'costo','lista_precios.updated_at',
+            DB::raw('CONCAT(forma, ", ", presentacion) AS detalle'),
+            DB::raw('CASE WHEN presentacions.hospitalario = 1 THEN "Hospitalario" ELSE "" END AS hospotalario'),
+            DB::raw('CASE WHEN presentacions.trazabilidad = 1 THEN "Trazable" ELSE "" END AS trazabilidad'),
+            DB::raw('CASE WHEN presentacions.divisible = 1 THEN "Divisible" ELSE "" END AS divisible'))
             ->join('productos','lista_precios.producto_id','=','productos.id')
             ->join('presentacions','lista_precios.presentacion_id','=','presentacions.id')
             ->rightJoin('proveedors','lista_precios.proveedor_id','=','proveedors.id')
@@ -146,9 +150,20 @@ class ListaPrecio extends Model
         return $listado;
     }
     // - Alta
+    public static function AllPresentacionsToPost() {
+        $data =  Presentacion::select('id','forma','presentacion',
+            Presentacion::raw('CONCAT(CASE WHEN hospitalario = 1 THEN " - H" ELSE "" END, CASE WHEN trazabilidad = 1 THEN " - T" ELSE "" END, CASE WHEN divisible = 1 THEN " - D" ELSE "" END) AS Inp'),
+            'hospitalario','trazabilidad','divisible','created_at','updated_at', 'deleted_at')
+        ->get();
+        return $data;
+    }
+    public static function findCodigoProv($codigoProv) {
+        $data =  ListaPrecio::where('codigoProv','=', $codigoProv)->count();
+        return $data;
+    }
     public static function findByProducto($proveedorId , $producto_id, $presentacion_id) {
-        $prodcuto_lista =  ListaPrecio::where([['proveedor_id','=', $proveedorId],['producto_id','=', $producto_id],['presentacion_id','=', $presentacion_id]])->count();
-        return $prodcuto_lista;
+        $data =  ListaPrecio::where([['proveedor_id','=', $proveedorId],['producto_id','=', $producto_id],['presentacion_id','=', $presentacion_id]])->count();
+        return $data;
     }
     // - Baja
     public static function GetProductoListaPreciosByListaId($listaId) {

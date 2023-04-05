@@ -13,7 +13,18 @@
                 @if(isset($listaPrecio->updated_at))
                     <td style="vertical-align: middle;">{{ $listaPrecio->codigoProv }}</td>
                     <td style="vertical-align: middle;">{{ $listaPrecio->droga }}</td>
-                    <td style="vertical-align: middle;">{{ $listaPrecio->detalle }}</td>
+                    <td style="vertical-align: middle;">
+                        {{ $listaPrecio->detalle }}<br>
+                        @if($listaPrecio->hospitalario != "")
+                            - <strong class="text-danger">{{ $listaPrecio->hospitalario }}</strong>
+                        @endif
+                        @if($listaPrecio->trazabilidad != "")
+                            - <strong class="text-warning">{{ $listaPrecio->trazabilidad }}</strong>
+                        @endif
+                        @if($listaPrecio->divisible != "")
+                            - <strong class="text-primary">{{ $listaPrecio->divisible }}</strong>
+                        @endif
+                    </td>
                     <td style="vertical-align: middle;">$ {{ $listaPrecio->costo }}</td>
                     <td style="vertical-align: middle;">{{ $listaPrecio->updated_at }}</td>
                     <td style="vertical-align: middle; text-align:center;">

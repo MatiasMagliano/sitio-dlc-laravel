@@ -23,6 +23,7 @@
     @stop
 
 @section('content')
+    @section('plugins.inputmask', true)
     <div class="card">
         <div class="card-header">
             <div class="row d-flex">

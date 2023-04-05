@@ -2,7 +2,7 @@
 
 @section('title', 'Administrar Productos')
 
-@section('css') {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.css" /> --}}
+@section('css')
     <style>
         .dataTable>thead>tr>th[class*="sort"]:before,
         .dataTable>thead>tr>th[class*="sort"]:after{content:""!important;}
@@ -21,9 +21,6 @@
         <div class="col-xl-10">
             <h1> Listado de Precios</h1>
         </div>
-        {{-- <div class="col-md-2 d-flex justify-content-md-end">
-            <a id="ListasSinProductos" role="button" class="btn btn-sm LockCreate btn-primary">Agregar Listado</a>
-        </div> --}}
         <div class="col-md-2 d-flex justify-content-md-end">
             <a href="{{ route('administracion.listaprecios.alta') }}" role="button" class="btn btn-sm btn-success"
                 data-toggle="tooltip" data-placement="bottom" title="Agregar lista de precios">

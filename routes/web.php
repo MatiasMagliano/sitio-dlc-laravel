@@ -88,17 +88,6 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::resource('/trazabilidad', TrazabilidadController::class);
 
     // rutas para LISTA DE PRECIOS
-
-    /*Route::get('/listaprecios/mostrarLista', [ListaPrecioController::class, 'mostrarLista'])->name('listaprecios.mostrarLista');
-    Route::get('/listaprecios/loadDetalleListado', [ListaPrecioController::class, 'loadDetalleListado'])->name('cotizaciones.loadDetalleListado');
-    Route::post('/listaprecios/create', [ListaPrecioController::class, 'addListadoProveedor'])->name('listaprecios.create');
-    Route::get('/listaprecios/new', [ListaPrecioController::class, 'newLista'])->name('listaprecios.new');
-    Route::match(['put', 'patch'], '/listaprecios/crear', [ListaPrecioController::class, 'ingresarNuevoProveedor'])->name('listaprecios.crear.proveedor');
-    //Route::post('/listaprecios/crear', [ListaPrecioController::class, 'ingresarNuevoProveedor'])->name('listaprecios.crear.proveedor');
-    Route::get('/listaprecios/exportlist', [ListaPrecioController::class, 'exportlist'])->name('listaprecios.exportlist');
-
-    // rutas para DETALLE DE LISTA DE PRECIOS
-    */
     Route::get('/listaprecios/alta', [ListaPrecioController::class, 'AgregarListadoPreciosProveedor'])->name('listaprecios.alta');
     Route::get('/listaprecios/{razon_social}', [ListaPrecioController::class, 'MostrarListado'])->name('listaprecios.editar');
     Route::match(['put', 'patch'], '/listaprecios/alta/ListadoPrecios', [ListaPrecioController::class, 'NuevoListadoPrecioProveedor'])->name('listaprecios.alta.nuevoListadoPrecioProveedor');
@@ -107,7 +96,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::get('/listaprecios/{proveedor_id}/volverListado', [ListaPrecioController::class, 'VolverListado'])->name('listaprecios.volverListado');
     Route::get('/listaprecios/editar/dataAgregarProducto', [ListaPrecioController::class, 'TraerDataAgregarProductoLista'])->name('listaprecios.editar.traerDataAgregarProductoLista');
     Route::match(['put', 'patch'], '/listaprecios/ingresar', [ListaPrecioController::class, 'IngresarProductoLista'])->name('listaprecios.editar.ingresarProductoLista');
-    Route::get('/listaprecios/dataModificarProducto', [ListaPrecioController::class, 'TraerDataModificarProductoLista'])->name('listaprecios.editar.traerDataModificarProductoLista');
+    Route::get('/listaprecios/editar/dataModificarProducto', [ListaPrecioController::class, 'TraerDataModificarProductoLista'])->name('listaprecios.editar.traerDataModificarProductoLista');
     Route::match(['put', 'patch'], '/listaprecios/editar/actualizar', [ListaPrecioController::class, 'ActualizarProductoLista'])->name('listaprecios.editar.actualizarProductoLista');
 
     Route::get('/listaprecios/ajaxIndexDt', [ListaPrecioController::class, 'ajaxdt'])->name('listaprecios.ajax');

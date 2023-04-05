@@ -23,7 +23,7 @@
                         </select>
                         @error('producto')<div class="invalid-feedback">{{$message}}</div>@enderror
 
-                        <label for="input-npresentacion">Presentacion</label>
+                        <label for="input-npresentacion">Presentacion <sup><strong>1</strong></sup></label>
                         <select name="presentacion_id" id="input-presentacion_id"
                             class="seleccion-presentacion col @error('producto') is-invalid @enderror">
                             <option data-placeholder="true"></option>
@@ -53,8 +53,13 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" id="guardarAprobada" class="btn btn-success">Continuar</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <div class="text-secondary"><sup><strong>1</strong></sup></div>
+                        <div class="text-secondary"><strong>H</strong>: Hospitalario</div>
+                        <div class="text-secondary"><strong>T</strong>: Trazable</div>
+                        <div class="text-secondary"><strong>D</strong>: Divisible</div>
+                        <button type="submit" id="guardarAprobada" class="btn btn-success">Continuar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
                 </div>
             </form>
 
