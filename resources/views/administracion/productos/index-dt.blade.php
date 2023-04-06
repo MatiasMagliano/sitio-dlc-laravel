@@ -57,7 +57,7 @@
                 Los términos de búsqueda se realizan en los campos debajo de cada columna habilitada.
             </p>
             <p>
-                Desde aquí podrá modificar el nombre de la droga y su presentación. Para modificar los lotes de producto, ingrese en la <a href="route('administracion.lotes.index')" class="btn-link">siguiente</a> sección.
+                Desde aquí podrá modificar el nombre de la droga y su presentación. Para modificar los lotes de producto, ingrese en la <a href="{{route('administracion.lotes.index')}}" class="btn-link">siguiente</a> sección.
             </p>
         </div>
     </div>
@@ -99,15 +99,15 @@
         });
 
         $('#tabla-productos').DataTable({
-            dom: "rltip",
-            processing: true,
-            serverSide: true,
-            ajax: {
+            "dom": "rltip",
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
                 url: "{{ route('administracion.productos.ajax') }}",
                 method: "GET"
             },
-            order: [0, 'asc'],
-            columnDefs: [
+            "order": [0, 'asc'],
+            "columnDefs": [
                 {
                     targets: [0],
                     name: "droga",

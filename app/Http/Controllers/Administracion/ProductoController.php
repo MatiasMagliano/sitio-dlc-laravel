@@ -36,7 +36,7 @@ class ProductoController extends Controller
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
-        $order = $request->query('order', array(0, 'asc'));
+        $order = $request->query('order', array(0, 'desc'));
 
         // búsqueda global, textbox dom:rltip
         $filter = $search['value'];
@@ -50,59 +50,52 @@ class ProductoController extends Controller
             3 => 'stock',
         );
 
-        // NUEVA QUERY COMPLETA DE RODUCTOS (ver archivo, query vieja)
+        // NUEVA QUERY COMPLETA DE RODUCTOS (ver archivo query vieja)
         $query = LotePresentacionProducto::select(
             'productos.id AS idProducto',
-            'productos.droga',
             'presentacions.id AS idPresentacion',
+            'productos.droga',
             'presentacions.forma',
             'presentacions.presentacion',
             DB::raw('GROUP_CONCAT(lotes.identificador) AS lotes'),
             'deposito_casa_centrals.existencia',
             'deposito_casa_centrals.cotizacion',
-            'deposito_casa_centrals.disponible'
+            'deposito_casa_centrals.disponible',
         )
         ->where(
             'lotes.cantidad',
             '>',
             0
-        )
-        ->groupBy(
+        )->groupBy(
             'productos.id',
             'productos.droga',
             'presentacions.id',
             'presentacions.forma',
             'presentacions.presentacion',
+            'deposito_casa_centrals.id',
             'deposito_casa_centrals.existencia',
             'deposito_casa_centrals.cotizacion',
             'deposito_casa_centrals.disponible'
         );
 
         // se agregan las cláusulas join con su respectiva búsqueda (si la necesitara)
-        $query->join('productos', function ($join) {
-            $join->on('lote_presentacion_producto.producto_id', '=', 'productos.id')
-                ->where(function ($query) {
-                    $b_columna = $GLOBALS['b_columna'];
-                    if (isset($b_columna[0]['search']['value'])) {
-                        $query->where('productos.droga', 'like', '%' . $b_columna[0]['search']['value'] . '%');
-                    }
-                });
-        });
-        $query->join('presentacions', function ($join) {
-            $join->on('lote_presentacion_producto.presentacion_id', '=', 'presentacions.id')
-                ->where(function ($query) {
-                    $b_columna = $GLOBALS['b_columna'];
-                    if (isset($b_columna[1]['search']['value'])) {
-                        $query->where('presentacions.forma', 'like', '%' . $b_columna[1]['search']['value'] . '%');
-                    }
-                });
-        });
-        $query->join('lotes', function ($join) {
-            $join->on('lote_presentacion_producto.lote_id', '=', 'lotes.id');
-        });
-        $query->join('deposito_casa_centrals', function ($join) {
-            $join->on('lote_presentacion_producto.dcc_id', '=', 'deposito_casa_centrals.id');
-        });
+        $query->join('productos', 'lote_presentacion_producto.producto_id', '=', 'productos.id')
+            ->where(function ($query) {
+                $b_columna = $GLOBALS['b_columna'];
+                if (isset($b_columna[0]['search']['value'])) {
+                    $query->where('productos.droga', 'like', '%' . $b_columna[0]['search']['value'] . '%');
+                }
+            });
+        $query->join('presentacions', 'lote_presentacion_producto.presentacion_id', '=', 'presentacions.id')
+            ->where(function ($query) {
+                $b_columna = $GLOBALS['b_columna'];
+                if (isset($b_columna[1]['search']['value'])) {
+                    $query->where('presentacions.forma', 'like', '%' . $b_columna[1]['search']['value'] . '%');
+                    $query->orWhere('presentacions.presentacion', 'like', '%' . $b_columna[1]['search']['value'] . '%');
+                }
+            });
+        $query->join('lotes', 'lote_presentacion_producto.lote_id', '=', 'lotes.id');
+        $query->join('deposito_casa_centrals', 'lote_presentacion_producto.dcc_id', '=', 'deposito_casa_centrals.id');
 
         // filtro general (si estuviera)
         if (!empty($filter)) {
@@ -110,11 +103,12 @@ class ProductoController extends Controller
         }
         //filtro particular
         $b_columna = $GLOBALS['b_columna'];
-        if (isset($b_columna[1]['search']['value'])) {
+        if (isset($b_columna[0]['search']['value'])) {
             $query->where('productos.droga', 'like', '%' . $b_columna[0]['search']['value'] . '%');
         }
 
-        $recordsTotal = $query->count();
+        // EL ERROR ESTÁ ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        $recordsTotal = DB::table('presentacions')->count();
 
         $sortColumnName = $sortColumns[$order[0]['column']];
 
