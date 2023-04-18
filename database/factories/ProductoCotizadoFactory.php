@@ -32,7 +32,7 @@ class ProductoCotizadoFactory extends Factory
         $precio   = $this->faker->randomFloat(2, 10, 500);
 
         //actualiza el stock
-        $deposito->decrement('existencia', $cantidad);
+        //$deposito->decrement('existencia', $cantidad);
         $deposito->increment('cotizacion', $cantidad);
 
         return [

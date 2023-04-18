@@ -6,6 +6,6 @@
     - <span class="text-warning">TRAZABLE</span>
 
 @elseif ($producto->divisible === 1)
-    - <span class="text-danger">HOSPITALARIO</span>
-    
+    - <span class="text-danger">DIVISIBLE</span>
+
 @endif

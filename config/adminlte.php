@@ -311,12 +311,17 @@ return [
                 [
                     'text'       => 'calendars',
                     'route'      => 'administracion.calendario.vencimientos',
-                    'icon_color' => 'orange',
+                    'icon_color' => 'yellow',
                 ],
                 [
                     'text'       => 'reporting_generator',
                     'route'      => 'administracion.reportes.index',
                     'icon_color' => 'orange',
+                ],
+                [
+                    'text'       => 'create_report',
+                    'route'      => 'administracion.reportes.create',
+                    'icon_color' => 'blue',
                 ],
             ],
         ],
