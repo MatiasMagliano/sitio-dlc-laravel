@@ -80,7 +80,7 @@
                 </x-adminlte-card>
 
 
-                {{-- DIV QUE CARGA UNA VISTA DE REPORTE O DE LISTADO YA RENDEREADA --}}
+                {{-- DIV QUE CARGA UNA VISTA DE REPORTE O LISTADO YA RENDEREADA --}}
             @section('plugins.Summernote', true)
             <div id="contenido"></div>
         </div>
@@ -93,7 +93,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
 
 <script type="text/javascript">
-    var maxCamposEncabezado = 1; //cantidad maxima permitida de campos
+    var maxCamposEncabezado = 3; //cantidad maxima permitida de campos
     var maxCamposCuerpo = 5; //cantidad maxima permitida de campos
     var maxListados = 5; //cantidad maxima permitida de campos
     //var addButtonEncabezado = $('#btn_crear_campo_encabezado'); //selector botón agregar campos
@@ -129,8 +129,8 @@
             let fieldHTML =
                 '<div><button type="button" class="btn btn-sm btn-danger remove_button"><i class="fas fa-minus"></i></button>&nbsp;&nbsp;&nbsp;<label for="campo-encabezado-' +
                 y + '">Campo adicional encabezado Nº' + y +
-                ' *</label><div style="width: 100%"><textarea name="campo-adicional-encabezado-' +
-                y + '" id="campo-encabezado-' + y +
+                ' *</label><div style="width: 100%"><textarea name="campo-adicional-encabezado[]" id="campo-encabezado-' +
+                y +
                 '" class="form-control campo-adicional-encabezado"></textarea></div></div>';
             $("#contenido").find("#wrapper-encabezado").append(fieldHTML); // Agrega el campo html
             $('.campo-adicional-encabezado').summernote();
@@ -146,21 +146,21 @@
 
 
     // lógica que agrega CAMPOS AL CUERPO DEL REPORTE
-    $(addButtonCuerpo).click(function() {
+    $("#contenido").on("click", "#btn_crear_campo_reporte", function() {
         //Check maximum number of fields
         if (x < maxCamposCuerpo) {
             let fieldHTML =
                 '<div><button type="button" class="btn btn-sm btn-danger remove_button"><i class="fas fa-minus"></i></button>&nbsp;&nbsp;&nbsp;<label for="campo-reporte-' +
                 x + '">Campo adicional Nº' + x +
-                ' *</label><div style="width: 100%"><textarea name="campo-reporte-' + x +
-                '" id="campo-reporte-' + x +
-                '"" class="form-control campo-reporte"></textarea></div></div>';
-            $(wrapperCuerpo).append(fieldHTML); //Add field html
-            $('.campo-reporte').summernote();
+                ' *</label><div style="width: 100%"><textarea name="campo-cuerpo-' + x +
+                '" id="campo-cuerpo-' + x +
+                '"" class="form-control campo-cuerpo"></textarea></div></div>';
+            $("#contenido").find("#wrapper-campos").append(fieldHTML); //Add field html
+            $('.campo-cuerpo').summernote();
             x++; //Increment field counter
         }
     });
-    $(wrapperCuerpo).on('click', '.remove_button', function(e) {
+    $("#contenido").on('click', '#wrapper-campos .remove_button', function(e) {
         e.preventDefault();
         $(this).parent('div').remove(); //Remove field html
         x--; //Decrement field counter
@@ -168,22 +168,24 @@
 
 
     // lógica que agrega LISTADOS AL REPORTE
-    $(addButtonListado).click(function() {
+    $("#contenido").on("click", "#btn_crear_listado", function() {
         //Check maximum number of fields
         if (z < maxListados) {
+            // se crea un select con el listado de los listados, jaja
             let fieldHTML =
                 '<div class="form-group"><button type="button" class="btn btn-sm btn-danger remove_button"><i class="fas fa-minus"></i></button>&nbsp;&nbsp;&nbsp;<label for="seleccion-listado-' +
                 z +
                 '">Listado anexado Nº' + z +
-                ' *</label><select name="cliente_id" id="input-cliente" class="form-control seleccion-listado-' +
+                ' *</label><select name="reporte_id[]" id="input-cliente" class="form-control seleccion-listado-' +
                 z +
                 ' form-control-alternative"><option data-placeholder="true"></option></select></div>';
-            $(wrapperListado).append(fieldHTML); //Add field html
+            $("#contenido").find("#wrapper-listados").append(fieldHTML); //Add field html
+            // se enecesita numerarlos para llenarlos oportunamente
             llenarSelect('.seleccion-listado-' + z);
             z++; //Increment field counter
         }
     });
-    $(wrapperListado).on('click', '.remove_button', function(e) {
+    $("#contenido").on('click', '#wrapper-listados .remove_button', function(e) {
         e.preventDefault();
         $(this).parent('div').remove(); //Remove field html
         z--; //Decrement field counter
@@ -217,8 +219,8 @@
 @endsection
 
 @section('footer')
-    <strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
-    <div class="float-right d-none d-sm-inline-block">
-        <b>Versión</b> 2.0 (LARAVEL V.8)
-    </div>
+<strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
+<div class="float-right d-none d-sm-inline-block">
+    <b>Versión de software 2.8</b> (PHP: v{{ phpversion() }} | LARAVEL: v.{{ App::VERSION() }})
+</div>
 @endsection

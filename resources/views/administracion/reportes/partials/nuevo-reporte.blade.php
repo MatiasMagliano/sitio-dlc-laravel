@@ -31,12 +31,10 @@
     <hr>
     <div class="row d-flex m-3">
         <div class="form-group col-2">
-            <label for="crear-campo">CAMPOS ENCABEZADO <small class="text-gray">(agrega texto al encabezado del reporte)</small></label><br>
-            <div id="crear-campos" class="btn-group" role="group" aria-label="Crear campos adicionales">
-                <button type="button" id="btn_crear_campo_encabezado" class="btn btn-sm btn-success">
-                    <i class="fas fa-plus"></i> agregar
-                </button>
-            </div>
+            <label for="btn_crear_campo_encabezado">CAMPOS ENCABEZADO <small class="text-gray">(agrega texto al encabezado del reporte)</small></label><br>
+            <button type="button" id="btn_crear_campo_encabezado" class="btn btn-sm btn-success">
+                <i class="fas fa-plus"></i> agregar
+            </button>
         </div>
 
         <div class="form-group col-10">
@@ -70,12 +68,10 @@
 
     <div class="row d-flex m-3">
         <div class="form-group col-2">
-            <label for="crear-campo">CAMPOS DEL CUERPO <small class="text-gray">(agrega texto al cuerpo del reporte)</small></label><br>
-            <div id="crear-campos-adicionales" class="btn-group" role="group" aria-label="Crear campos adicionales al cuerpo del reporte">
-                <button type="button" id="btn_crear_campo_reporte" class="btn btn-sm btn-success">
-                    <i class="fas fa-plus"></i> agregar
-                </button>
-            </div>
+            <label for="btn_crear_campo_reporte">CAMPOS DEL CUERPO <small class="text-gray">(agrega texto al cuerpo del reporte)</small></label><br>
+            <button type="button" id="btn_crear_campo_reporte" class="btn btn-sm btn-success">
+                <i class="fas fa-plus"></i> agregar
+            </button>
         </div>
 
         <div class="form-group col-10">
