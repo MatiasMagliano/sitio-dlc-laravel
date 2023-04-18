@@ -10,7 +10,7 @@
             color: white;
             background-color: darkgreen;
         }
-</style>    
+</style>
 @endsection
 
 @section('title', 'Administrar usuarios')
@@ -61,7 +61,7 @@
                         <td class="text-center" style="vertical-align: middle;">
                             {{--El botón modificar no lleva a un modal. Lleva a una vista nueva, para respetar la idiosincrasia de Laravel--}}
                             <a href="{{ route('admin.users.edit', $usuario->id) }}" role="button" class="btn btn-sm btn-default btn-edt-hover mx-1 shadow"><i class="fas fa-lg fa-fw fa-cog"></i></a>
-                            
+
                             {{--se crea este método, porque el borrado en Laravel se hace por POST--}}
                             <a class="btn btn-rm-hover btn-sm btn-light mx-1 shadow"
                                 onclick="event.preventDefault();
@@ -80,12 +80,12 @@
             </tbody>
         </table>
     </x-adminlte-card>
-    
+
     {{--MODAL CREAR CLIENTE--}}
     <x-adminlte-modal id="modalCrearUsuario" title="Crear usuario" theme="blue" icon="fas fa-user" size='md' v-centered>
         <form action="{{ route('admin.users.store') }}" method="post">
             @include('admin.users.partials.formulario-usuarios', ['band_crear' => true])
-            
+
             {{-- Register button --}}
             <div class="d-flex justify-content-end">
                 <x-adminlte-button data-dismiss="modal" theme="secondary" label="Cerrar" style="margin: 0 10px"/>
@@ -122,7 +122,7 @@
                                     '</tr>' :
                                     '';
                             } ).join('');
-        
+
                             return data ?
                                 $('<table/>').append( data ) :
                                 false;
@@ -142,7 +142,7 @@
 @section('footer')
     <strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
     <div class="float-right d-none d-sm-inline-block">
-        <b>Versión</b> 2.0 (LARAVEL V.8)
+        <b>Versión de software 2.8</b> (PHP: v{{phpversion()}} | LARAVEL: v.{{App::VERSION()}})
     </div>
 @endsection
 
