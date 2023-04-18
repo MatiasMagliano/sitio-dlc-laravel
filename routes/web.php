@@ -163,6 +163,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     // rutas de REPORTES
     Route::get('reportes/getListados', [ReporteController::class, 'getListados'])->name('ajax.obtener.listados');
+    Route::get('reportes/loadView', [ReporteController::class, 'loadView'])->name('ajax.load.view');
     Route::resource('reportes', ReporteController::class);
 });
 

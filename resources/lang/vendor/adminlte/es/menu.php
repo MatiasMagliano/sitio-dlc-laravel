@@ -11,6 +11,7 @@ return [
     'admin_tools'                   => 'Sist-admin',
     'add_quotation'                 => 'Crear cotización',
     'clients'                       => 'Clientes',
+    'create_report'                 => 'Crear reporte o listado',
     'dde'                           => 'Direcciones de entrega',
     'blog'                          => 'Blog',
     'main_navigation'               => 'MENU PRINCIPAL',

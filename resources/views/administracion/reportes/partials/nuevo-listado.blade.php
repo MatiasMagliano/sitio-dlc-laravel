@@ -1,11 +1,11 @@
 <div class="pl-lg-5 pr-lg-5 border">
-    <h6 class="heading-small text-muted mb-1 mt-2">Encabezado del reporte</h6>
+    <h6 class="heading-small text-muted mb-1 mt-2">Encabezado del listado</h6>
     <br>
 
-    {{-- PRIMERA LÍNEA. CONTIENE: nombre del reporte y dirigido a --}}
+    {{-- PRIMERA LÍNEA. CONTIENE: nombre del listado y dirigido a --}}
     <div class="form-group row d-flex m-3">
         <div class="form-group col">
-            <label for="input-nombre">Nombre del reporte *</label>
+            <label for="input-nombre">Nombre del listado *</label>
             <input type="text" name="nombre" id="input-nombre"
                 class="form-control form-control-sm @error('nombre') is-invalid @enderror" value="{{ old('nombre') }}">
             @error('nombre')
@@ -27,11 +27,11 @@
     </div>
 
     {{-- SEGUNDA LÍNEA. CONTIENE: campos del ENCABEZADO adicionales personalizados --}}
-    <h4 class="pt-3">Encabezado del reporte</h4>
+    <h4 class="pt-3">Encabezado del listado</h4>
     <hr>
     <div class="row d-flex m-3">
         <div class="form-group col-2">
-            <label for="crear-campo">CAMPOS ENCABEZADO <small class="text-gray">(agrega texto al encabezado del reporte)</small></label><br>
+            <label for="crear-campo">CAMPOS ENCABEZADO <small class="text-gray">(agrega texto al encabezado del listado)</small></label><br>
             <div id="crear-campos" class="btn-group" role="group" aria-label="Crear campos adicionales">
                 <button type="button" id="btn_crear_campo_encabezado" class="btn btn-sm btn-success">
                     <i class="fas fa-plus"></i> agregar
@@ -41,6 +41,7 @@
 
         <div class="form-group col-10">
             <label for="campo-encabezado">Encabezado por defecto *</label>
+            @section('plugins.Summernote', true)
             <div class="div-encabezado" style="width: 100%">
                 <textarea name="campo-encabezado" id="campo-encabezado" class="form-control" readonly>{!! html_entity_decode($encabezado) !!}</textarea>
                 <div id="wrapper-encabezado" style="width: 100%">
@@ -50,11 +51,11 @@
     </div>
 
     {{-- TERCERA LÍNEA. CONTIENE: reporte de módulo --}}
-    <h4 class="pt-5">Cuerpo del reporte</h4>
+    <h4 class="pt-5">Cuerpo del listado</h4>
     <hr>
     <div class="row d-flex m-3">
         <div class="form-group col">
-            <label for="input-reporte">Reporte principal *</label>
+            <label for="input-reporte">Listado principal *</label>
             <select name="reporte_id" id="input-reporte"
                 class="selector-reporte @error('reporte_id') is-invalid @enderror">
                 <option data-placeholder="true"></option>
@@ -70,7 +71,7 @@
 
     <div class="row d-flex m-3">
         <div class="form-group col-2">
-            <label for="crear-campo">CAMPOS DEL CUERPO <small class="text-gray">(agrega texto al cuerpo del reporte)</small></label><br>
+            <label for="crear-campo">CAMPOS DEL CUERPO <small class="text-gray">(agrega texto al cuerpo del listado)</small></label><br>
             <div id="crear-campos-adicionales" class="btn-group" role="group" aria-label="Crear campos adicionales al cuerpo del reporte">
                 <button type="button" id="btn_crear_campo_reporte" class="btn btn-sm btn-success">
                     <i class="fas fa-plus"></i> agregar
@@ -89,7 +90,7 @@
     <hr>
     <div class="row d-flex m-3">
         <div class="form-group col-2">
-            <label for="crear-campo">LISTADOS ANEXADOS <small class="text-gray">(anexa listados al cuerpo del reporte)</small></label><br>
+            <label for="crear-campo">LISTADOS ANEXADOS <small class="text-gray">(anexa más listados al cuerpo)</small></label><br>
             <div id="crear-listados" class="btn-group" role="group" aria-label="Anexar listados al reporte">
                 <button type="button" id="btn_crear_listado" class="btn btn-sm btn-success">
                     <i class="fas fa-plus"></i> agregar

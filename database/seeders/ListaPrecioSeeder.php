@@ -24,6 +24,9 @@ class ListaPrecioSeeder extends Seeder
 
         foreach($productos as $lpp)
         {
+            // traer el lote correcpondiente y crear UNA lista de precios para ese lote. Luego semillar dos o tres listas de precios.
+
+            
             $max_proveedor = rand(1, 5);
             for($i = 0; $i < $max_proveedor; $i++)
             {

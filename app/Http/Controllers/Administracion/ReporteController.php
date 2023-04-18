@@ -3,12 +3,7 @@
 namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cliente;
-use App\Models\User;
-use App\Models\Cotizacion;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\ReporteModulos;
 use App\Models\Listado;
 
@@ -23,10 +18,8 @@ class ReporteController extends Controller
 
     public function create()
     {
-        $encabezado = '<h1 class="text-danger" align="center"><u>Droguería de la ciudad</u></h1><h5 class="" align="center">Raymundo Montenegro 2654 - CÓRDOBA<br></h5>';
-        $reportes = ReporteModulos::all();
 
-        return view('administracion.reportes.crear', compact('encabezado', 'reportes'));
+        return view('administracion.reportes.crear');
     }
 
     public function store(Request $request)
@@ -43,6 +36,30 @@ class ReporteController extends Controller
             return response()->json($listados);
         }
 
+    }
+
+    public function loadView(Request $request)
+    {
+        $encabezado = '<h1 class="text-danger" align="center"><u>Droguería de la ciudad</u></h1><h5 class="" align="center">Raymundo Montenegro 2654 - CÓRDOBA<br></h5>';
+        $reportes = ReporteModulos::all();
+
+        if ($request->ajax())
+        {
+            if($request->seleccion == 'reporte')
+            {
+                return view('administracion.reportes.partials.nuevo-reporte')
+                    ->with('encabezado', $encabezado)
+                    ->with("reportes", $reportes)
+                    ->render();
+            }
+            else
+            {
+                return view('administracion.reportes.partials.nuevo-listado')
+                    ->with('encabezado', $encabezado)
+                    ->with("reportes", $reportes)
+                    ->render();
+            }
+        }
     }
 }
 
