@@ -16,42 +16,42 @@ class ReporteModulosSeeder extends Seeder
     {
         $reportes = [
             [
-                'nombre'    => 'Reporte mejor proveedor',
+                'nombre'    => 'Mejor proveedor',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'    => 'Reporte de rendimiento de usuario',
+                'nombre'    => 'Rendimiento de usuario',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'    => 'Reporte de ventas *',
+                'nombre'    => 'Ventas *',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'    => 'Reporte de ventas por temporada',
+                'nombre'    => 'Ventas por temporada',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'    => 'Reporte de cliente con mejor margen de ganancias',
+                'nombre'    => 'Cliente con mejor márgen de ganancias',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'    => 'Reporte rendimiento de producto',
+                'nombre'    => 'Rendimiento de producto',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'    => 'Reporte de valoración de proveedores',
+                'nombre'    => 'Valoración de proveedores',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
                 'query'     => 'SELECT * FROM listados'
             ],
             [
-                'nombre'    => 'Reporte de ordenes de trabajo',
+                'nombre'    => 'Órdenes de trabajo',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
                 'query'     => 'SELECT * FROM listados'
             ],

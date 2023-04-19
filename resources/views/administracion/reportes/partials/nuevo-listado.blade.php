@@ -1,6 +1,7 @@
+<h4>Crear LISTADO</h4>
 <div class="pl-lg-5 pr-lg-5 border">
-    <h6 class="heading-small text-muted mb-1 mt-2">Encabezado del listado</h6>
-    <br>
+    <h6 class="heading-small text-muted mb-1 mt-2">Datos básicos del listado</h6>
+    <hr>
 
     {{-- PRIMERA LÍNEA. CONTIENE: nombre del listado y dirigido a --}}
     <div class="form-group row d-flex m-3">
@@ -31,19 +32,16 @@
     <hr>
     <div class="row d-flex m-3">
         <div class="form-group col-2">
-            <label for="crear-campo">CAMPOS ENCABEZADO <small class="text-gray">(agrega texto al encabezado del listado)</small></label><br>
-            <div id="crear-campos" class="btn-group" role="group" aria-label="Crear campos adicionales">
-                <button type="button" id="btn_crear_campo_encabezado" class="btn btn-sm btn-success">
-                    <i class="fas fa-plus"></i> agregar
-                </button>
-            </div>
+            <label for="btn_crear_campo_encabezado">CAMPOS ENCABEZADO <small class="text-gray">(agrega texto al encabezado del listado)</small></label><br>
+            <button type="button" id="btn_crear_campo_encabezado" class="btn btn-sm btn-success">
+                <i class="fas fa-plus"></i> agregar
+            </button>
         </div>
 
         <div class="form-group col-10">
             <label for="campo-encabezado">Encabezado por defecto *</label>
-            @section('plugins.Summernote', true)
             <div class="div-encabezado" style="width: 100%">
-                <textarea name="campo-encabezado" id="campo-encabezado" class="form-control" readonly>{!! html_entity_decode($encabezado) !!}</textarea>
+                <textarea name="campo-encabezado" class="form-control campo-encabezado" readonly>{!! html_entity_decode($encabezado) !!}</textarea>
                 <div id="wrapper-encabezado" style="width: 100%">
                 </div>
             </div>
@@ -55,15 +53,15 @@
     <hr>
     <div class="row d-flex m-3">
         <div class="form-group col">
-            <label for="input-reporte">Listado principal *</label>
-            <select name="reporte_id" id="input-reporte"
-                class="selector-reporte @error('reporte_id') is-invalid @enderror">
+            <label for="input-listado-ppal">Listado principal *</label>
+            <select name="listado-ppal_id" id="input-listado-ppal"
+                class="selector-listado-ppal @error('listado-ppal_id') is-invalid @enderror">
                 <option data-placeholder="true"></option>
-                @foreach ($reportes as $reporte)
-                    <option value="{{ $reporte->id }}">{{ $reporte->nombre }}</option>
+                @foreach ($listados as $listado)
+                    <option value="{{ $listado->id }}">{{ $listado->nombre }}</option>
                 @endforeach
             </select>
-            @error('reporte_id')
+            @error('listado-ppal_id')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>

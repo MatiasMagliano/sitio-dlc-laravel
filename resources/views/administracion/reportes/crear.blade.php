@@ -23,6 +23,10 @@
             background-color: #3bd136;
         }
 
+        .box {
+            display: none;
+        }
+
         @media (max-width: 600px) {
             .hide {
                 display: none;
@@ -34,7 +38,7 @@
 @section('content_header')
     <div class="row">
         <div class="col-md-8">
-            <h1>Crear reporte</h1>
+            <h1>Crear documento</h1>
         </div>
         <div class="col-md-4 d-flex justify-content-md-end">
             <a href="{{ route('administracion.reportes.index') }}" role="button" class="btn btn-md btn-secondary">Volver</a>
@@ -62,28 +66,48 @@
                 </div>
             </div>
 
-            <div class="card-body">
-                <x-adminlte-card title="Seleccione un cliente *" theme="lightblue" theme-mode="outline"
-                    body-class=" bg-gradient-lightblue">
-                    <div class="form-group">
-                        <select name="reporte_o_listado" id="input-reporte"
-                            class="form-control @error('reporte_id') is-invalid @enderror"
-                            aria-label="Selección del tipo de reporte">
-                            <option selected disabled>Seleccione un tipo de reporte...</option>
-                            <option value="reporte">Reporte</option>
-                            <option value="listado">Listado</option>
-                        </select>
-                        @error('reporte_o_listado')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+            {{-- MODAL AGREGAR PROVEEDOR - FORMULARIO JAVASCRIPT --}}
+            <div class="modal fade" id="modalSelecionDocumento" tabindex="-1" aria-labelledby="" aria-hidden="true">
+                <div class="modal-dialog modal-md modal-dialog-centered">
+                    <div class="modal-content">
+
+                        {{-- CABECERA --}}
+                        <div class="modal-header bg-gradient-lightblue">
+                            <h5 class="modal-title">Selección tipo de documento</h5>
+                        </div>
+
+                        {{-- CUERPO --}}
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <select name="reporte_o_listado" id="input-reporte" class="form-control">
+                                    <option selected disabled>Seleccione un documento...</option>
+                                    <option value="reporte" {{ old('reporte_o_listado') == 'reporte' ? 'selected' : '' }}>
+                                        Reporte</option>
+                                    <option value="listado" {{ old('reporte_o_listado') == 'listado' ? 'selected' : '' }}>
+                                        Listado</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {{-- FOOTER --}}
+                        <div class="modal-footer">
+                            <button id="btnSeleccDoc" class="btn btn-sm btn-success">Seleccionar</button>
+                        </div>
                     </div>
-                </x-adminlte-card>
+                </div>
+            </div>
 
-
-                {{-- DIV QUE CARGA UNA VISTA DE REPORTE O LISTADO YA RENDEREADA --}}
+            <div class="card-body">
             @section('plugins.Summernote', true)
-            <div id="contenido"></div>
+            <div class="reporte box">
+                @include('administracion.reportes.partials.nuevo-reporte')
+            </div>
+
+            <div class="listado box">
+                @include('administracion.reportes.partials.nuevo-listado')
+            </div>
         </div>
+    </div>
     </div>
 </form>
 @endsection
@@ -96,15 +120,24 @@
     var maxCamposEncabezado = 3; //cantidad maxima permitida de campos
     var maxCamposCuerpo = 5; //cantidad maxima permitida de campos
     var maxListados = 5; //cantidad maxima permitida de campos
-    //var addButtonEncabezado = $('#btn_crear_campo_encabezado'); //selector botón agregar campos
-    var addButtonCuerpo = $('#btn_crear_campo_reporte'); //selector botón agregar campos
-    var addButtonListado = $('#btn_crear_listado'); //selector botón agregar campos
-    //var wrapperEncabezado = $('#wrapper-encabezado'); //wrapper que contiene los summernotes
-    var wrapperCuerpo = $('#wrapper-campos'); //wrapper que contiene los summernotes
-    var wrapperListado = $('#wrapper-listados'); //wrapper que contiene los summernotes
     var y = 1; //contador inicial de campos de encabezado
     var x = 1; //contador inicial de campos de cuerpo
     var z = 1; //contador inicial de listados
+
+    // lanza el modal al inicio de la página
+    $(window).on('load', function() {
+        if ('{{ old('reporte_o_listado', 'ninguno') }}' === 'ninguno') {
+            $('#modalSelecionDocumento').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                },
+                'show'
+            );
+        } else {
+            iniciarForm();
+            $('#modalSelecionDocumento').modal('hide')
+        }
+    });
 
     function llenarSelect(selector) {
         $.get(
@@ -120,6 +153,37 @@
                     objeto.append('<option value="' + data[i].id + '">' + data[i].nombre + '</option>');
                 }
             });
+    }
+
+    function iniciarForm() {
+        // activación del summernote del encabezado
+        $('.campo-encabezado').summernote({
+            focus: true,
+            disableResizeEditor: true,
+        });
+
+        // activación del slimselect de reportes
+        var reporte = new SlimSelect({
+            select: '.selector-reporte',
+            placeholder: 'Seleccione un reporte inicial...',
+        });
+
+        // activación del slimselect de listados
+        var reporte = new SlimSelect({
+            select: '.selector-listado-ppal',
+            placeholder: 'Seleccione un reporte inicial...',
+        });
+
+        $("#input-reporte").find("option:selected").each(function() {
+            var optionValue = $(this).attr("value");
+            if (optionValue) {
+                $(".box").not("." + optionValue).hide();
+                $("." + optionValue).show();
+            } else {
+                $(".box").hide();
+            }
+        });
+        $('#modalSelecionDocumento').modal('hide');
     }
 
     // lógica que agrega CAMPOS AL ENCABEZADO DEL REPORTE
@@ -192,27 +256,9 @@
     });
 
     $(document).ready(function() {
-        $("#input-reporte").on('change', function(event) {
-            $.get(
-                '{{ route('administracion.ajax.load.view') }}', {
-                    seleccion: this.value
-                },
-                function(vista) {
-                    $("#contenido").html(vista);
-
-                    // activación del summernote del encabezado
-                    $('#campo-encabezado').summernote({
-                        focus: true,
-                        disableResizeEditor: true,
-                    });
-
-                    // activación del slimselect de reportes
-                    var reporte = new SlimSelect({
-                        select: '.selector-reporte',
-                        placeholder: 'Seleccione un reporte inicial...',
-                    });
-                }
-            );
+        $("#btnSeleccDoc").on('click', function(event) {
+            event.preventDefault();
+            iniciarForm();
         });
     });
 </script>

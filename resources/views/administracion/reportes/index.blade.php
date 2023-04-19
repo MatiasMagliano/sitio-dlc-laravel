@@ -62,7 +62,7 @@
         });
 
         // el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
-        var tabla_clientes = $('#tabla_clientes').DataTable({
+        var tabla_clientes = $('#tabla_reportes').DataTable({
             "processing": true,
             "dom": 'ltip',
             "order": [0, 'asc'],

@@ -1,6 +1,7 @@
+<h4>Crear REPORTE</h4>
 <div class="pl-lg-5 pr-lg-5 border">
-    <h6 class="heading-small text-muted mb-1 mt-2">Encabezado del reporte</h6>
-    <br>
+    <h6 class="heading-small text-muted mb-1 mt-2">Datos básicos del reporte</h6>
+    <hr>
 
     {{-- PRIMERA LÍNEA. CONTIENE: nombre del reporte y dirigido a --}}
     <div class="form-group row d-flex m-3">
@@ -40,7 +41,7 @@
         <div class="form-group col-10">
             <label for="campo-encabezado">Encabezado por defecto *</label>
             <div class="div-encabezado" style="width: 100%">
-                <textarea name="campo-encabezado" id="campo-encabezado" class="form-control" readonly>{!! html_entity_decode($encabezado) !!}</textarea>
+                <textarea name="campo-encabezado" class="form-control campo-encabezado" readonly>{!! html_entity_decode($encabezado) !!}</textarea>
                 <div id="wrapper-encabezado" style="width: 100%">
                 </div>
             </div>
@@ -53,7 +54,7 @@
     <div class="row d-flex m-3">
         <div class="form-group col">
             <label for="input-reporte">Reporte principal *</label>
-            <select name="reporte_id" id="input-reporte"
+            <select name="reporte_id" 
                 class="selector-reporte @error('reporte_id') is-invalid @enderror">
                 <option data-placeholder="true"></option>
                 @foreach ($reportes as $reporte)
