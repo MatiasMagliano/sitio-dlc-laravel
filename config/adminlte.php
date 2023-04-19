@@ -226,12 +226,6 @@ return [
 
     'menu' => [
         [
-            'text'   => 'work_orders',
-            'icon'   => 'fas fa-tools',
-            'route'  => 'administracion.ordentrabajo.index',
-            'can'    => ['es-administracion', 'es-expedicion'],
-        ],
-        [
             'text'    => 'clients',
             'icon'    => 'fas fa-users',
             'can'     => 'es-administracion',
@@ -259,6 +253,11 @@ return [
             'can'       => 'es-administracion',
             'submenu'   => [
                 [
+                    'text'  => 'add_quotation',
+                    'route' => 'administracion.cotizaciones.create',
+                    'icon'  => 'fab fa-shopify',
+                ],
+                [
                     'text'  => 'quotation_list',
                     'route' => 'administracion.cotizaciones.index',
                     'icon'  => 'fas fa-list',
@@ -268,18 +267,37 @@ return [
                     'route' => 'administracion.cotizaciones.historico',
                     'icon'  => 'fas fa-history',
                 ],
-                [
-                    'text'  => 'add_quotation',
-                    'route' => 'administracion.cotizaciones.create',
-                    'icon'  => 'fab fa-shopify',
-                ],
             ],
         ],
         [
-            'text'   => 'price_list',
-            'icon'   => 'fas fa-money-check',
-            'route'  => 'administracion.listaprecios.index',
-            'can'    => ['es-administracion'],
+            'text'  => 'prices_list',
+            'icon'  => 'fas fa-money-check-alt',
+            'can'   => 'es-administracion',
+            'submenu'   => [
+                [
+                    'text'   => 'price_list',
+                    'icon'   => 'fas fa-money-check',
+                    'route'  => 'administracion.listaprecios.index',
+                ],
+                [
+                    'text'   => 'add_price_list',
+                    'icon'   => 'fas fa-hand-holding-usd',
+                    'route'  => 'administracion.listaprecios.alta',
+                ],
+            ]
+        ],
+        [
+            'text'  => 'work_orders',
+            'icon'  => 'fas fa-toolbox',
+            'can'   => 'es-administracion',
+            'submenu'   => [
+                [
+                    'text'   => 'work_orders_list',
+                    'icon'   => 'fas fa-tools',
+                    'route'  => 'administracion.ordentrabajo.index',
+                    'can'    => ['es-administracion', 'es-expedicion'],
+                ],
+            ]
         ],
         [
             'text'    => 'products_maintenance',
@@ -309,19 +327,19 @@ return [
             'can'     => 'es-administracion',
             'submenu' => [
                 [
-                    'text'       => 'calendars',
-                    'route'      => 'administracion.calendario.vencimientos',
-                    'icon_color' => 'yellow',
+                    'text'  => 'calendars',
+                    'route' => 'administracion.calendario.vencimientos',
+                    'icon'  => 'fas fa-calendar',
                 ],
                 [
-                    'text'       => 'reporting_generator',
-                    'route'      => 'administracion.reportes.index',
-                    'icon_color' => 'orange',
+                    'text'  => 'reporting_generator',
+                    'route' => 'administracion.reportes.index',
+                    'icon'  => 'fas fa-file-invoice',
                 ],
                 [
-                    'text'       => 'create_report',
-                    'route'      => 'administracion.reportes.create',
-                    'icon_color' => 'blue',
+                    'text'  => 'create_report',
+                    'route' => 'administracion.reportes.create',
+                    'icon'  => 'fas fa-file-medical',
                 ],
             ],
         ],
