@@ -29,7 +29,7 @@ class ListadosSeeder extends Seeder
             ],
             [
                 'nombre'  => 'Proveedores por mayor volumen de productos',
-                'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
+                'estructura_html' => '@php foreach ($dataset as $item) { $linea[] = (array)$item; } @endphp <h3 class="bg-gradient-lightblue">{{$titulo}}</h3> <br> <table class="table table-sm table-bordered" width="100%"> <thead> <th>Proveedor</th> <th>Cantidad de productos</th> </thead> <tbody> @foreach ($linea as $items) <tr> <td>{{$items["razon_social"]}}</td> <td class="text-center">{{$items["cant_productos"]}}</td> </tr> @endforeach </tbody> </table>',
                 'query'   => 'SELECT proveedors.razon_social, COUNT(productos.id) AS cant_productos FROM lote_presentacion_producto INNER JOIN productos on productos.id = lote_presentacion_producto.producto_id INNER JOIN presentacions on presentacions.id = lote_presentacion_producto.presentacion_id INNER JOIN lotes ON lotes.id = lote_presentacion_producto.id INNER JOIN lista_precios on lista_precios.producto_id = lote_presentacion_producto.producto_id AND lista_precios.presentacion_id = lote_presentacion_producto.presentacion_id INNER JOIN proveedors ON proveedors.id = lista_precios.proveedor_id GROUP BY proveedors.razon_social ORDER BY `cant_productos` DESC '
             ],
             [
@@ -49,7 +49,7 @@ class ListadosSeeder extends Seeder
             ],
             [
                 'nombre'  => 'Productos más vendidos',
-                'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
+                'estructura_html' => '@php foreach ($dataset as $item) { $linea[] = (array)$item; } @endphp <h3 class="bg-gradient-lightblue">{{$titulo}}</h3> <br> <table class="table table-sm table-bordered" width="100%"> <thead> <th>Producto</th> <th>Cantidad vendida</th> </thead> <tbody> @foreach ($linea as $items) <tr> <td>{{$items["producto"]}}</td> <td class="text-center">{{$items["cant_productos"]}}</td> </tr> @endforeach </tbody> </table>',
                 'query'   => 'SELECT CONCAT(p.droga, ", " , pr.forma, " ", pr.presentacion, CASE WHEN pr.hospitalario = 1 THEN " - H" ELSE "" END, CASE WHEN pr.trazabilidad = 1 THEN " - T" ELSE "" END, CASE WHEN pr.divisible = 1 THEN " - D" ELSE "" END) AS producto, COUNT(CONCAT(p.droga, ", " , pr.forma, " ", pr.presentacion)) AS cant_productos FROM cotizacions co INNER JOIN producto_cotizados pco ON co.id = pco.cotizacion_id AND co.confirmada IS NOT NULL INNER JOIN productos p ON pco.producto_id = p.id INNER JOIN presentacions pr ON pco.presentacion_id = pr.id GROUP BY p.droga, pr.forma, pr.presentacion, pr.hospitalario, pr.trazabilidad, pr.divisible ORDER BY cant_productos DESC;'
             ],
             [
