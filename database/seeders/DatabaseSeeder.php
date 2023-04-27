@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
         //orden necesario de populado
         $this->call(ListaPrecioSeeder::class);
         $this->call(CotizacionSeeder::class);
-        $this->call(ReporteModulosSeeder::class);
+        $this->call(ReportesSeeder::class);
         $this->call(ListadosSeeder::class);
     }
 }

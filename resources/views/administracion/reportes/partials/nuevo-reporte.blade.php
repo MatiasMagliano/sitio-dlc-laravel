@@ -1,111 +1,98 @@
-<h4>Crear REPORTE</h4>
-<div class="pl-lg-5 pr-lg-5 border">
-    <h6 class="heading-small text-muted mb-1 mt-2">Datos básicos del reporte</h6>
-    <hr>
+<input type="hidden" name="tipo_documento" value="{{ $documento->tipo_documento }}">
 
-    {{-- PRIMERA LÍNEA. CONTIENE: nombre del reporte y dirigido a --}}
-    <div class="form-group row d-flex m-3">
-        <div class="form-group col">
-            <label for="input-nombre">Nombre del reporte *</label>
-            <input type="text" name="nombre" id="input-nombre"
-                class="form-control form-control-sm @error('nombre') is-invalid @enderror" value="{{ old('nombre') }}">
-            @error('nombre')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="form-group col">
-            <div class="form-group col">
-                <label for="input-dirigido_a">Dirigido a *</label>
-                <input type="text" name="dirigido_a" id="input-dirigido_a"
-                    class="form-control form-control-sm @error('dirigido_a') is-invalid @enderror"
-                    value="{{ old('dirigido_a') }}">
-                @error('dirigido_a')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-        </div>
+{{-- CONTIENE: opción de agregar campos de encabezado --}}
+<div class="row d-flex pt-3">
+    <div class="form-group col-2">
+        <label for="btn_crear_campo_encabezado">
+            Campos adicionales de encabezado
+            <br>
+            <small class="text-gray">
+                (agrega hasta {{ $max_encabezados }} campos de texto al encabezado del reporte)
+            </small>
+        </label>
+        <a id="btn_crear_campo_encabezado" class="btn btn-sm btn-success" href="javascript:void(0);">
+            <i class="fas fa-plus"></i> agregar
+        </a>
     </div>
 
-    {{-- SEGUNDA LÍNEA. CONTIENE: campos del ENCABEZADO adicionales personalizados --}}
-    <h4 class="pt-3">Encabezado del reporte</h4>
-    <hr>
-    <div class="row d-flex m-3">
-        <div class="form-group col-2">
-            <label for="btn_crear_campo_encabezado">CAMPOS ENCABEZADO <small class="text-gray">(agrega texto al encabezado del reporte)</small></label><br>
-            <button type="button" id="btn_crear_campo_encabezado" class="btn btn-sm btn-success">
-                <i class="fas fa-plus"></i> agregar
-            </button>
-        </div>
-
-        <div class="form-group col-10">
-            <label for="campo-encabezado">Encabezado por defecto *</label>
-            <div class="div-encabezado" style="width: 100%">
-                <textarea name="campo-encabezado" class="form-control campo-encabezado" readonly>{!! html_entity_decode($encabezado) !!}</textarea>
-                <div id="wrapper-encabezado" style="width: 100%">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- TERCERA LÍNEA. CONTIENE: reporte de módulo --}}
-    <h4 class="pt-5">Cuerpo del reporte</h4>
-    <hr>
-    <div class="row d-flex m-3">
-        <div class="form-group col">
-            <label for="input-reporte">Reporte principal *</label>
-            <select name="reporte_id" 
-                class="selector-reporte @error('reporte_id') is-invalid @enderror">
-                <option data-placeholder="true"></option>
-                @foreach ($reportes as $reporte)
-                    <option value="{{ $reporte->id }}">{{ $reporte->nombre }}</option>
+    <div class="form-group col-10">
+        <div class="div-encabezado" style="width: 100%">
+            <div id="wrapper-encabezado" style="width: 100%">
+                @foreach (old('campo_encabezado', []) as $encabezado)
+                    <button type="button" class="btn btn-sm btn-danger remove_button">
+                        <i class="fas fa-minus"></i>
+                    </button>&nbsp;&nbsp;&nbsp;
+                    <label for="campo_encabezado">Encabezado adicional {{ $loop->index + 1 }}*</label>
+                    <textarea name="campo_encabezado[]" class="form-control campo-encabezado" onfocus="inicializarSummernote()">
+                        {!! html_entity_decode($encabezado) !!}
+                    </textarea>
                 @endforeach
-            </select>
-            @error('reporte_id')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            </div>
         </div>
     </div>
+</div>
 
-    <div class="row d-flex m-3">
-        <div class="form-group col-2">
-            <label for="btn_crear_campo_reporte">CAMPOS DEL CUERPO <small class="text-gray">(agrega texto al cuerpo del reporte)</small></label><br>
-            <button type="button" id="btn_crear_campo_reporte" class="btn btn-sm btn-success">
+{{-- CONTIENE: selector del reporte --}}
+<hr>
+<div class="row d-flex pt-3">
+    <div class="form-group col">
+        <label for="input-reporte">Reporte principal *</label>
+        <select name="reporte" class="selector-reporte @error('reporte') is-invalid @enderror">
+            <option data-placeholder="true"></option>
+            @foreach ($reportes as $reporte)
+                @if (old('reporte'))
+                    <option value="{{ $reporte->id }}" selected>{{ $reporte->nombre }}</option>campo
+                @else
+                    <option value="{{ $reporte->id }}">{{ $reporte->nombre }}</option>
+                @endif
+            @endforeach
+        </select>
+        @error('reporte')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+</div>
+
+{{-- CONTIENE: opción de agregar campos de texto adicionales al cuerpo --}}
+<hr>
+<div class="row d-flex pt-3">
+    <div class="form-group col-2">
+        <label for="btn_crear_campo_reporte">
+            Campos adicionales del cuerpo
+            <br>
+            <small class="text-gray">
+                (agrega {{ $max_texto_cuerpo }} campos de texto al cuerpo del reporte)
+            </small>
+        </label>
+        <button type="button" id="btn_crear_campo_reporte" class="btn btn-sm btn-success">
+            <i class="fas fa-plus"></i> agregar
+        </button>
+    </div>
+
+    <div class="form-group col-10">
+    </div>
+</div>
+
+{{-- CUARTA LÍNEA. CONTIENE: listados --}}
+<hr>
+<div class="row d-flex pt-3">
+    <div class="form-group col-2">
+        <label for="crear-campo">
+            Listados anexos
+            <br>
+            <small class="text-gray">
+                (anexa hasta {{ $max_encabezados }} listados al cuerpo del reporte)
+            </small>
+        </label>
+        <div id="crear-listados" class="btn-group" role="group" aria-label="Anexar listados al reporte">
+            <button type="button" id="btn_crear_listado" class="btn btn-sm btn-success">
                 <i class="fas fa-plus"></i> agregar
             </button>
         </div>
-
-        <div class="form-group col-10">
-            <div id="wrapper-campos" style="width: 100%">
-            </div>
-        </div>
     </div>
 
-    {{-- CUARTA LÍNEA. CONTIENE: listados --}}
-    <h4 class="pt-5">Listados anexados</h4>
-    <hr>
-    <div class="row d-flex m-3">
-        <div class="form-group col-2">
-            <label for="crear-campo">LISTADOS ANEXADOS <small class="text-gray">(anexa listados al cuerpo del reporte)</small></label><br>
-            <div id="crear-listados" class="btn-group" role="group" aria-label="Anexar listados al reporte">
-                <button type="button" id="btn_crear_listado" class="btn btn-sm btn-success">
-                    <i class="fas fa-plus"></i> agregar
-                </button>
-            </div>
-        </div>
-
-        <div class="form-group col-10">
-            <div id="wrapper-listados" style="width: 100%">
-            </div>
-        </div>
-    </div>
-
-    <div class="wrapper">
-        {{-- BOTON GUARDAR --}}
-        <div class="text-right pb-5 pr-3">
-            <button type="submit" class="btn btn-sidebar btn-success">
-                <i class="fas fa-share-square"></i>&nbsp;<span class="hide">Guardar</span>
-            </button>
+    <div class="form-group col-10">
+        <div id="wrapper-listados" style="width: 100%">
         </div>
     </div>
 </div>

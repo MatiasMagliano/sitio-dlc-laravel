@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Reporte;
+use App\Models\Documento;
 
 class CreateEncabezadosTable extends Migration
 {
@@ -16,7 +16,7 @@ class CreateEncabezadosTable extends Migration
     {
         Schema::create('encabezados', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
+            $table->foreignIdFor(Documento::class)->constrained();
             $table->longText('texto')->nullable();
             $table->timestamps();
         });

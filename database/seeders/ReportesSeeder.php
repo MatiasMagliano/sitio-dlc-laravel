@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\ReporteModulos;
+use App\Models\Reporte;
 
-class ReporteModulosSeeder extends Seeder
+class ReportesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,47 +16,47 @@ class ReporteModulosSeeder extends Seeder
     {
         $reportes = [
             [
-                'nombre'    => 'Mejor proveedor',
+                'nombre'          => 'Mejor proveedor',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'     => 'SELECT * FROM listados'
+                'querys'          => '["SELECT * FROM listados", "SELECT * FROM listados"]'
             ],
             [
-                'nombre'    => 'Rendimiento de usuario',
+                'nombre'          => 'Rendimiento de usuario',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'     => 'SELECT * FROM listados'
+                'querys'          => '["SELECT * FROM listados", "SELECT * FROM listados"]'
             ],
             [
-                'nombre'    => 'Ventas *',
+                'nombre'          => 'Ventas *',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'     => 'SELECT * FROM listados'
+                'querys'          => '["SELECT * FROM listados", "SELECT * FROM listados"]'
             ],
             [
-                'nombre'    => 'Ventas por temporada',
+                'nombre'          => 'Ventas por temporada',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'     => 'SELECT * FROM listados'
+                'querys'          => '["SELECT * FROM listados", "SELECT * FROM listados"]'
             ],
             [
-                'nombre'    => 'Cliente con mejor márgen de ganancias',
+                'nombre'          => 'Cliente con mejor márgen de ganancias',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'     => 'SELECT * FROM listados'
+                'querys'          => '["SELECT * FROM listados", "SELECT * FROM listados"]'
             ],
             [
-                'nombre'    => 'Rendimiento de producto',
+                'nombre'          => 'Rendimiento de producto',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'     => 'SELECT * FROM listados'
+                'querys'          => '["SELECT * FROM listados", "SELECT * FROM listados"]'
             ],
             [
-                'nombre'    => 'Valoración de proveedores',
+                'nombre'          => 'Valoración de proveedores',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'     => 'SELECT * FROM listados'
+                'querys'          => '["SELECT * FROM listados", "SELECT * FROM listados"]'
             ],
             [
-                'nombre'    => 'Órdenes de trabajo',
+                'nombre'          => 'Órdenes de trabajo',
                 'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'     => 'SELECT * FROM listados'
+                'querys'          => '["SELECT * FROM listados", "SELECT * FROM listados"]'
             ],
         ];
 
-        ReporteModulos::insert($reportes);
+        Reporte::insert($reportes);
     }
 }

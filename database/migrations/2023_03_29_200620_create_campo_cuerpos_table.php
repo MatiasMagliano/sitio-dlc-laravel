@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Reporte;
+use App\Models\Documento;
 
 class CreateCampoCuerposTable extends Migration
 {
@@ -16,8 +16,8 @@ class CreateCampoCuerposTable extends Migration
     {
         Schema::create('campo_cuerpos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->longText('campo_cuerpo')->nullable();
+            $table->foreignIdFor(Documento::class)->constrained();
+            $table->longText('texto')->nullable();
             $table->timestamps();
         });
     }

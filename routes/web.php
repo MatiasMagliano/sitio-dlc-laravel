@@ -162,8 +162,16 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     route::get('/calendarios/vencimiento', [CalendarioController::class, 'index'])->name('calendario.vencimientos');
 
     // rutas de REPORTES
+    Route::get('reportes/ajaxdt', [ReporteController::class, 'ajaxdt'])->name('reportes.ajax');
     Route::get('reportes/getListados', [ReporteController::class, 'getListados'])->name('ajax.obtener.listados');
-    Route::resource('reportes', ReporteController::class);
+    Route::get('reporte/{documento}/edit-reporte', [ReporteController::class, 'editReporte'])->name('reportes.editar.reporte');
+    Route::get('reporte/{documento}/edit-listado', [ReporteController::class, 'editListado'])->name('reportes.editar.listado');
+    Route::get('reportes/{documento}/crear-inter-reporte', [ReporteController::class, 'interReporte'])->name('reportes.inter-reportes');
+    Route::get('reportes/{documento}/crear-inter-listado', [ReporteController::class, 'interListado'])->name('reportes.inter-listados');
+    Route::get('reporte/{documento}/show-reporte', [ReporteController::class, 'showReporte'])->name('reportes.show.reporte');
+    Route::get('reporte/{documento}/show-listado', [ReporteController::class, 'showListado'])->name('reportes.show.listado');
+    Route::post('reportes/guardarDocumento', [ReporteController::class, 'guardarDocumento'])->name('reportes.guardarDocumento');
+    Route::resource('reportes', ReporteController::class)->except('show', 'edit', 'update');
 });
 
 // RUTAS PARA EXPEDICION y, se incluye administración en la configuración del GATE

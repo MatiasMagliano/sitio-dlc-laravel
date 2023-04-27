@@ -42,7 +42,7 @@ return [
     'quotation_list'                => 'Últimas cotizaciones',
     'quotation_history'             => 'Histórico cotizaciones',
     'reporting'                     => 'Reportes',
-    'reporting_generator'           => 'Administrar reportes',
+    'reporting_generator'           => 'Administrar documentos',
     'work_orders'                   => 'Ordenes de trabajo',
     'work_orders_list'              => 'Administrar OT',
 ];

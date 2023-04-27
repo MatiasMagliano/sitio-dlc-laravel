@@ -22,6 +22,8 @@
 @section('content')
     @section('plugins.Datatables', true)
     @section('plugins.DatatablesPlugins', true)
+    @section('plugins.TempusDominusBs4', true)
+
     <div class="card">
         <div class="card-header">
             <h4>Listado de reportes creados por todos los usuarios</h4>
@@ -29,14 +31,16 @@
         <div class="card-body">
             <table id="tabla_reportes" class="table table-bordered" width="100%">
                 <thead class="bg-gray">
-                    <th>Identificador</th>
+                    <th>Nombre del documento</th>
+                    <th>Creado por</th>
                     <th>Dirigido a...</th>
                     <th>Tipo</th>
-                    <th>fecha de creación</th>
+                    <th>fecha de modificación</th>
                     <th></th>
                 </thead>
                 <tfoot style="display: table-header-group;">
                     <tr class=" bg-gradient-light">
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -56,52 +60,74 @@
     <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
     <script type="text/javascript">
         $(document).ready(function() {
-        // se agrega el campo de búsqueda por columna
-        $('#tabla_reportes tfoot th').slice(0, 4).each(function() {
-            $(this).html('<input type="text" class="form-control" placeholder="Buscar" />');
-        });
+            moment.locale('es');
 
-        // el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
-        var tabla_clientes = $('#tabla_reportes').DataTable({
-            "processing": true,
-            "dom": 'ltip',
-            "order": [0, 'asc'],
-            "responsive": [{
-                "details": {
-                    renderer: function(api, rowIdx, columns) {
-                        var data = $.map(columns, function(col, i) {
-                            return col.hidden ?
-                                '<tr data-dt-row="' + col.rowIndex +
-                                '" data-dt-column="' +
-                                col.columnIndex + '">' +
-                                '<td>' + col.title + ':' + '</td> ' +
-                                '<td>' + col.data + '</td>' +
-                                '</tr>' :
-                                '';
-                        }).join('');
+            // se agrega el campo de búsqueda por columna
+            $('#tabla_reportes tfoot th').slice(0, 4).each(function() {
+                $(this).html('<input type="text" class="form-control form-control-sm" placeholder="Buscar" />');
+            });
 
-                        return data ?
-                            $('<table/>').append(data) :
-                            false;
-                    }
-                }
-            }],
-            initComplete: function() {
-                // Apply the search
-                this.api()
-                    .columns([0, 1, 2, 3])
-                    .every(function() {
-                        var that = this;
+            // el datatable es responsivo y oculta columnas de acuerdo al ancho de la pantalla
+            var tabla_clientes = $('#tabla_reportes').DataTable({
+                "dom": "rltip",
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('administracion.reportes.ajax') }}",
+                    method: "GET"
+                },
+                "columnDefs": [
+                    {
+                        targets: [0],
+                        name: "nombre_documento",
+                        className: "align-middle font-weight-bold",
+                    },
+                    {
+                        targets: [1],
+                        name: "name",
+                        className: "align-middle",
+                    },
+                    {
+                        targets: [2],
+                        name: "dirigido_a",
+                        className: "align-middle",
+                    },
+                    {
+                        targets: [3],
+                        name: "tipo",
+                        className: "align-middle text-center",
+                    },
+                    {
+                        targets: [4],
+                        name: "updated_at",
+                        className: "align-middle text-center",
+                        width: 100,
+                        'render': function(data) {
+                            return moment(new Date(data)).format("DD/MM/YYYY");
+                        },
+                    },
+                    {
+                        targets: [5],
+                        name: "acciones",
+                        className: "align-middle text-center",
+                        orderable: false,
+                    },
+                ],
+                initComplete: function() {
+                    this.api()
+                        .columns([0, 1, 2, 3])
+                        .every(function() {
+                            var that = this;
 
-                        $('input', this.footer()).on('keyup change clear', function() {
-                            if (that.search() !== this.value) {
-                                that.search(this.value).draw();
-                            }
+                            $('input', this.footer()).on('keyup change clear', function() {
+                                if (that.search() !== this.value) {
+                                    that.search(this.value).draw();
+                                }
+                            });
                         });
-                    });
-            },
+                },
+            });
         });
-    });
     </script>
 @endsection
 

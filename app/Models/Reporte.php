@@ -9,23 +9,11 @@ class Reporte extends Model
 {
     use HasFactory;
 
-    public function modulos()
-    {
-        return $this->belongsToMany(
-            ReporteModulos::class,
-            'reporte_reporte_modulo',
-            'reporte_id',
-            'reporte_modulos_id'
-        );
-    }
+    protected $table = 'reportes';
+    protected $fillable = ['nombre', 'querys'];
 
-    public function listados()
+    public function documento()
     {
-        return $this->belongsToMany(
-            Listado::class,
-            'reporte_listados',
-            'reporte_id',
-            'listado_id'
-        );
+        return $this->belongsToMany(Documento::class);
     }
 }

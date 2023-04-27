@@ -1,11 +1,11 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Reporte;
 
-class CreateReporteModulosTable extends Migration
+class CreateDocumentosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,13 @@ class CreateReporteModulosTable extends Migration
      */
     public function up()
     {
-        Schema::create('reporte_modulos', function (Blueprint $table) {
+        Schema::create('documentos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->longText('estructura_html');
-            $table->mediumText('query');
+            $table->string('tipo_documento');
+            $table->string('nombre_documento');
+            $table->string('dirigido_a');
+            $table->longText('encabezado');
+            $table->foreignIdFor(User::class)->constrained();
             $table->timestamps();
         });
     }
@@ -30,6 +32,6 @@ class CreateReporteModulosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reporte_modulos');
+        Schema::dropIfExists('documentos');
     }
 }

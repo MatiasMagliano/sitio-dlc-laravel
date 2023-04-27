@@ -3,10 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\ReporteModulos;
+use App\Models\Documento;
 use App\Models\Reporte;
 
-class CreateReporteReporteModuloTable extends Migration
+// *** T A B L A   P I V O T ***
+
+class CreateDocumentoReporteTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +17,9 @@ class CreateReporteReporteModuloTable extends Migration
      */
     public function up()
     {
-        Schema::create('reporte_reporte_modulo', function (Blueprint $table) {
+        Schema::create('documento_reporte', function (Blueprint $table) {
+            $table->foreignIdFor(Documento::class)->constrained();
             $table->foreignIdFor(Reporte::class)->constrained();
-            $table->foreignIdFor(ReporteModulos::class)->constrained();
         });
     }
 
@@ -28,6 +30,6 @@ class CreateReporteReporteModuloTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reporte_reporte_modulo');
+        Schema::dropIfExists('documento_reporte');
     }
 }

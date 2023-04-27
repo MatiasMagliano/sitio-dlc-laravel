@@ -12,13 +12,8 @@ class Listado extends Model
     protected $table = 'listados';
     protected $fillable = ['nombre', 'query'];
 
-    public function reporte()
+    public function documento()
     {
-        return $this->belongsToMany(
-            Reporte::class,
-            'reporte_listados',
-            'listado_id',
-            'reporte_id',
-        );
+        return $this->belongsToMany(Documento::class);
     }
 }
