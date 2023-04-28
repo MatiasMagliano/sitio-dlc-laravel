@@ -3,10 +3,15 @@
         $linea[] = (array) $item;
     }
     $mes_anterior = null;
+
+    foreach ($mas_vendidos as $item) {
+        $badge[] = (array) $item;
+    }
 @endphp
 
-<table class="table table-sm table-striped table-bordered" width="100%">
-    <thead>
+<h3 class="mb-3">Estadísticas de ventas en los últimos 12 meses</h2>
+<table id="prueba" class="table table-sm table-striped table-bordered" width="100%">
+    <thead class=" bg-gradient-lightblue">
         <th class="text-center">MES</th>
         <th class="text-center">VENTAS</th>
         <th class="text-center">CRECIMIENTO</th>
@@ -14,6 +19,7 @@
         <th class="text-center">PROD.COMUNES</th>
         <th class="text-center">HOSPITALARIOS</th>
         <th class="text-center">TRAZABLES</th>
+        <th class="text-center">DIVISIBLES</th>
     </thead>
     <tbody>
         @foreach ($linea as $item)
@@ -60,10 +66,36 @@
                         @endif
                     @endif
                 </td>
-                <td class="text-center"></td>
-                <td class="text-center"></td>
-                <td class="text-center"></td>
+                <td class="text-center">
+                    {{-- COMUNES --}}
+                    {{ $item['cant_comunes'] }}
+                </td>
+                <td class="text-center">
+                    {{-- HOSPITALARIOS --}}
+                    {{ $item['cant_hosp'] }}
+                </td>
+                <td class="text-center">
+                    {{-- TRAZABLES --}}
+                    {{ $item['cant_trazable'] }}
+                </td>
+                <td class="text-center">
+                    {{-- DIVISIBLES --}}
+                    {{ $item['cant_divisible'] }}
+                </td>
             </tr>
         @endforeach
     </tbody>
 </table>
+<br>
+<br>
+<h3 class="mb-3">Los 5 productos más vendidos</h2>
+<ul class="list-group">
+    @foreach ($badge as $item)
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ $item['producto'] }}
+            <span class="badge badge-success badge-pill">
+                {{ $item['cant_productos'] }}
+            </span>
+        </li>
+    @endforeach
+</ul>

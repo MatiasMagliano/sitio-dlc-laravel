@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Reporte {{$documento->nombre_documento}}')
+@section('title', 'Visualización de reportes')
 
 @section('css')
 @endsection
@@ -19,28 +19,45 @@
 
 @section('content')
     <div class="container bg-gradient-light">
+        {{-- MEMBRETE ORIGINADO POR EL ENCABEZADO --}}
         @foreach ($encabezados as $encabezado)
             {!! $encabezado !!}
         @endforeach
 
-        ACÁ IRÍA EL REPORTE <br>
+        {{-- SUBMEMBRETE --}}
+        <br>
+        <table width="100%">
+            <tr>
+                <td><strong class="ml-5">Documento dirigido a: {{$documento->dirigido_a}}</strong></td>
+                <td class="text-right">Córdoba, {{\Carbon\Carbon::now()->format("d/m/Y")}}</td>
+            </tr>
+        </table>
+        <hr>
 
+        {!! $reportes !!}
+
+        <br>
+        {{-- CAMPOS DEL CUERPO --}}
         @foreach ($campos_cuerpo as $campo)
             {!! $campo !!}
         @endforeach
 
+        {{-- LISTADOS ADJUNTOS --}}
         <h2>Listados adjuntos</h2>
         @foreach ($listados as $listado)
-            {!! $listado !!}
+            {!! $listado !!} <br>
         @endforeach
     </div>
 @endsection
 
 @section('js')
     @include('partials.alerts')
+    @yield('javascript')
     <script type="text/javascript">
         $(document).ready(function() {
+            @isset($reportes)
 
+            @endisset
         });
     </script>
 @endsection

@@ -176,6 +176,22 @@ class ReporteController extends Controller
         }
 
         // compila el reporte
+        // $query = [
+        //     'ventas' => 'SELECT MONTHNAME(confirmada) AS mes, SUM(monto_total) AS ventas FROM cotizacions GROUP BY YEAR(confirmada), MONTH(confirmada);',
+        //     'producto_mas_vendido' => 'SELECT CONCAT(p.droga, ", " , pr.forma, " ", pr.presentacion, CASE WHEN pr.hospitalario = 1 THEN " - H" ELSE "" END, CASE WHEN pr.trazabilidad = 1 THEN " - T" ELSE "" END, CASE WHEN pr.divisible = 1 THEN " - D" ELSE "" END) AS producto, COUNT(CONCAT(p.droga, ", " , pr.forma, " ", pr.presentacion)) AS cant_productos FROM cotizacions co INNER JOIN producto_cotizados pco ON co.id = pco.cotizacion_id AND co.confirmada IS NOT NULL INNER JOIN productos p ON pco.producto_id = p.id INNER JOIN presentacions pr ON pco.presentacion_id = pr.id GROUP BY producto ORDER BY cant_productos DESC LIMIT 5;',
+        // ];
+
+        foreach($documento->reportes as $reporte)
+        {
+            $querys = json_decode($reporte->querys, true);
+        }
+        $reportes = view(
+            'administracion.reportes.partials.listado',
+            [
+                'ventas' => DB::select($querys['ventas']),
+                'mas_vendidos' => DB::select($querys['producto_mas_vendido']),
+            ]
+        )->render();
 
         // compila los campos de texto
         $campos_cuerpo = array();
@@ -211,6 +227,7 @@ class ReporteController extends Controller
         return view('administracion.reportes.show-reporte')
             ->with('documento', $documento)
             ->with('encabezados', $encabezados)
+            ->with('reportes', $reportes)
             ->with('campos_cuerpo', $campos_cuerpo)
             ->with('listados', $listados);
     }
