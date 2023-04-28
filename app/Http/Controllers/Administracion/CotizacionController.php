@@ -272,6 +272,9 @@ class CotizacionController extends Controller
                 'producto_cotizados.cotizacion_id',
                 'productos.droga',
                 DB::raw('CONCAT(presentacions.forma, " ", presentacions.presentacion) AS presentacion'),
+                'presentacions.hospitalario',
+                'presentacions.trazabilidad',
+                'presentacions.divisible',
                 'producto_cotizados.cantidad',
                 'producto_cotizados.precio',
                 'producto_cotizados.total',
@@ -292,7 +295,7 @@ class CotizacionController extends Controller
             {
                 $json['data'][] = [
                     'linea' => $indice,
-                    'producto' => $dato->droga. ', ' .$dato->presentacion,
+                    'producto' => view('administracion.cotizaciones.partials.producto', ['producto' => $dato])->render(),
                     'cantidad' => $dato->cantidad,
                     'precio' => '$ '. $dato->precio,
                     'total' => '$ '. $dato->total,
