@@ -10,7 +10,7 @@ class Listado extends Model
     use HasFactory;
 
     protected $table = 'listados';
-    protected $fillable = ['nombre', 'query'];
+    protected $fillable = ['nombre', 'estructura_html', 'query'];
 
     public function documento()
     {
