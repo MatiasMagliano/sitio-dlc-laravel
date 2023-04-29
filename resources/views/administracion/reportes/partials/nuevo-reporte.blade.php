@@ -70,6 +70,8 @@
     </div>
 
     <div class="form-group col-10">
+        <div id="wrapper-campos" style="width: 100%">
+        </div>
     </div>
 </div>
 

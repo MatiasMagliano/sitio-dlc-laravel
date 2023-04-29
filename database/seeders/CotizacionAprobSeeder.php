@@ -42,7 +42,7 @@ class CotizacionAprobSeeder extends Seeder
                 $decision = rand(0, 1); // 0 --> rechaza, 1 --> aprueba
                 if($decision){
                     // se crea una fecha aleatoria dentro del año anterior
-                    $fecha = Carbon::parse($this->faker->date('d-m-Y', '21-12-2022'));
+                    $fecha = Carbon::parse($this->faker->dateTimeBetween('-1 years'));
                     //se finaliza la cotización
                     $cotizacion->monto_total = $cotizacion->productos->sum('total');
                     $cotizacion->finalizada = $fecha;

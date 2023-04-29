@@ -11,7 +11,7 @@ class Reporte extends Model
 
     protected $table = 'reportes';
     protected $fillable = ['nombre', 'estructura_html', 'querys'];
-    protected $casts = ['querys' => 'array'];
+    //protected $casts = ['querys' => 'array'];
 
     public function documento()
     {
@@ -19,11 +19,11 @@ class Reporte extends Model
     }
 
     //A T R I B U T O S
-    protected function querys(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => json_decode($value, true),
-            set: fn ($value) => json_encode($value),
-        );
-    }
+    // protected function querys(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => json_decode($value, true),
+    //         set: fn ($value) => json_encode($value),
+    //     );
+    // }
 }

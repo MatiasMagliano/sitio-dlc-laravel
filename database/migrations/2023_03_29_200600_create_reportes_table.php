@@ -17,7 +17,7 @@ class CreateReportesTable extends Migration
             $table->id();
             $table->string('nombre');
             $table->longText('estructura_html');
-            $table->json('querys');
+            $table->longText('querys');
             $table->timestamps();
         });
     }
