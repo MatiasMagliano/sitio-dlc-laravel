@@ -180,7 +180,7 @@ class ReporteController extends Controller
         {
             $querys = json_decode($reporte->querys, true);
         }
-        //dd(collect($querys));
+        // CAMBIAR LA FORMA DE RENDEREO y SUBIR A LA BBDD
         $reportes = view(
             'administracion.reportes.partials.listado',
             [
@@ -218,7 +218,6 @@ class ReporteController extends Controller
                 )
             );
         }
-        //dd($listados);
 
         return view('administracion.reportes.show-reporte')
             ->with('documento', $documento)

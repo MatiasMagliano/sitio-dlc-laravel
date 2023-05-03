@@ -2,14 +2,29 @@
     foreach ($ventas as $item) {
         $linea[] = (array) $item;
     }
-    $mes_anterior = null;
+    // se generan los datos para el grafico de ventas
+    foreach ($linea as $item) {
+        $vtas_x[] = $item['mes'];
+        $vtas_y[] = $item['ventas'];
+    }
+
+    // se generan los datos para el gráfico de torta
+    $prds_labels = ['Comunes', 'Hospitalarios', 'Trazables', 'Divisibles'];
+    $prds_datos = [0, 0, 0, 0];
+
+    // se generan los datos para el gráfico de líneas
+    $crec_mensual[];
 
     foreach ($mas_vendidos as $item) {
         $badge[] = (array) $item;
     }
+
+    // variable auxiliar para calcular la tabla
+    $mes_anterior = null;
 @endphp
 
-<h3 class="mb-3">Estadísticas de ventas en los últimos 12 meses</h2>
+
+<h3 class="mb-3">Estadísticas de ventas en los últimos 12 meses</h3>
 <table id="prueba" class="table table-sm table-striped table-bordered" width="100%">
     <thead class=" bg-gradient-lightblue">
         <th class="text-center">MES</th>
@@ -57,11 +72,11 @@
                     @else
                         @if ($crecimiento < 0)
                             <span class="text-danger">
-                                {{ number_format($crecimiento * 100 / $mes_anterior, 2, ',', '.') }}%
+                                {{ number_format(($crecimiento * 100) / $mes_anterior, 2, ',', '.') }}%
                             </span>
                         @else
                             <span class="text-success">
-                                {{ number_format($crecimiento * 100 / $mes_anterior, 2, ',', '.') }}%
+                                {{ number_format(($crecimiento * 100) / $mes_anterior, 2, ',', '.') }}%
                             </span>
                         @endif
                     @endif
@@ -69,18 +84,30 @@
                 <td class="text-center">
                     {{-- COMUNES --}}
                     {{ $item['cant_comunes'] }}
+                    @php
+                        $prds_datos[0] += $item['cant_comunes'];
+                    @endphp
                 </td>
                 <td class="text-center">
                     {{-- HOSPITALARIOS --}}
                     {{ $item['cant_hosp'] }}
+                    @php
+                        $prds_datos[1] += $item['cant_hosp'];
+                    @endphp
                 </td>
                 <td class="text-center">
                     {{-- TRAZABLES --}}
                     {{ $item['cant_trazable'] }}
+                    @php
+                        $prds_datos[2] += $item['cant_trazable'];
+                    @endphp
                 </td>
                 <td class="text-center">
                     {{-- DIVISIBLES --}}
                     {{ $item['cant_divisible'] }}
+                    @php
+                        $prds_datos[3] += $item['cant_divisible'];
+                    @endphp
                 </td>
             </tr>
         @endforeach
@@ -88,7 +115,28 @@
 </table>
 <br>
 <br>
-<h3 class="mb-3">Los 5 productos más vendidos</h2>
+
+<div class="row">
+    <div class="col">
+        <canvas id="grafico_vtas"></canvas>
+    </div>
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <canvas id="grafico_prds"></canvas>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <canvas id="grafico_prds"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+<h3 class="mb-3">Los 5 productos más vendidos</h3>
 <ul class="list-group">
     @foreach ($badge as $item)
         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -99,3 +147,62 @@
         </li>
     @endforeach
 </ul>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('grafico_vtas');
+    const cty = document.getElementById('grafico_prds');
+
+    // gráfico de ventas
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @json($vtas_x),
+            datasets: [{
+                label: 'Ventas de los últimos 12 meses',
+                data: @json($vtas_y),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Ventas generales, últimos 12 meses'
+                }
+            }
+        }
+    });
+
+    // gráfico de torta de productos(comunes, hosp, trazables, divisibles)
+    new Chart(cty, {
+        type: 'doughnut',
+        data: {
+            labels: @json($prds_labels),
+            datasets: [{
+                label: 'Productos',
+                data: @json($prds_datos),
+                backgroundColor: [
+                    'rgb(24, 49, 79)',
+                    'rgb(58, 86, 131)',
+                    'rgb(39, 8, 160)',
+                    'rgb(56, 78, 119)'
+                ],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Distribución anual de productos'
+                }
+            }
+        }
+    });
+</script>
