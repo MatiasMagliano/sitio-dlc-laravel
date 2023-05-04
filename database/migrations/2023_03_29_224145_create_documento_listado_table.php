@@ -18,6 +18,7 @@ class CreateDocumentoListadoTable extends Migration
     public function up()
     {
         Schema::create('documento_listado', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(Documento::class)->constrained();
             $table->foreignIdFor(Listado::class)->constrained();;
         });

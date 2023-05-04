@@ -43,50 +43,46 @@ class CotizacionAprobSeeder extends Seeder
                 if($decision){
                     // se crea una fecha aleatoria dentro del año anterior
                     $fecha = Carbon::parse($this->faker->dateTimeBetween('-1 years'));
+                    $cotizacion->created_at = $fecha;
                     //se finaliza la cotización
                     $cotizacion->monto_total = $cotizacion->productos->sum('total');
                     $cotizacion->finalizada = $fecha;
                     $cotizacion->cliente->ultima_cotizacion = $fecha;
                     $cotizacion->estado_id = 2;
-                    $cotizacion->save();
 
                     //se presenta y se aprueba
                     if (!$cotizacion->presentada) {
                         $fecha = $fecha->addDays(rand(1, 30));
                         $cotizacion->estado_id = 3;
                         $cotizacion->presentada = $fecha;
-                        $cotizacion->save();
 
                         $fecha = $fecha->addDays(rand(1, 30));
                         $cotizacion->confirmada = $fecha;
                         $cotizacion->estado_id = 4;
-                        $cotizacion->save();
                     }
                 }
                 else{
                     // se crea una fecha aleatoria dentro del año anterior
-                    $fecha = Carbon::parse($this->faker->date('d-m-Y', '21-12-2022'));
+                    $fecha = Carbon::parse($this->faker->dateTimeBetween('-1 years'));
+                    $cotizacion->created_at = $fecha;
                     //se finaliza la cotización
                     $cotizacion->monto_total = $cotizacion->productos->sum('total');
                     $cotizacion->finalizada = $fecha;
                     $cotizacion->cliente->ultima_cotizacion = $fecha;
                     $cotizacion->estado_id = 2;
-                    $cotizacion->save();
 
                     if (!$cotizacion->presentada) {
                         $fecha = $fecha->addDays(rand(1, 30));
                         $cotizacion->estado_id = 3;
                         $cotizacion->presentada = $fecha;
-                        $cotizacion->save();
 
                         $fecha = $fecha->addDays(rand(1, 30));
                         $cotizacion->rechazada = $fecha;
                         $cotizacion->estado_id = 5;
                         $cotizacion->motivo_rechazo = $this->faker->sentence(7, true);
-                        $cotizacion->save();
                     }
                 }
-
+                $cotizacion->updated_at = $fecha;
             }
         }
 

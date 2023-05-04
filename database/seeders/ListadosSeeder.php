@@ -54,7 +54,7 @@ class ListadosSeeder extends Seeder
             ],
             [
                 'nombre'  => 'Proveedores por volumen de lotes',
-                'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
+                'estructura_html' => '@php foreach ($dataset as $item) { $linea[] = (array)$item; } @endphp <h3 class="bg-gradient-lightblue">{{$titulo}}</h3> <br> <table class="table table-sm table-bordered" width="100%"> <thead> <th>Razón social</th> <th>Cantidad de productos</th> </thead> <tbody> @foreach ($linea as $items) <tr> <td>{{$items["razon_social"]}}</td> <td class="text-center">{{$items["cant_productos"]}}</td> </tr> @endforeach </tbody> </table>',
                 'query'   => 'SELECT * FROM listados'
             ],
             [
@@ -80,10 +80,8 @@ class ListadosSeeder extends Seeder
             ],
             [
                 'nombre'  => 'Porcentual de cotizaciones (aprobadas y rechazadas) por usuario',
-                'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
-                'query'   => 'SELECT u.name, COUNT(co1.id) AS co_aprobadas, COUNT(co0.id) AS co_rechazadas, ROUND(COUNT(co1.id) * 100 / (COUNT(co1.id) + COUNT(co0.id)),2) AS porcentual_apr, ROUND(COUNT(co0.id) * 100 / (COUNT(co1.id) + COUNT(co0.id)),2) AS porcentual_rec FROM users u LEFT JOIN cotizacions co1 ON u.id = co1.user_id AND co1.confirmada IS NOT NULL LEFT JOIN cotizacions co0 ON u.id = co0.user_id AND co0.rechazada IS NOT NULL GROUP BY u.name ORDER BY co_aprobadas DESC, co_rechazadas ASC;'
-                //REALCIÓN DE PRODUCCIÓN (LÍNEAS COTIZADAS APROVADAS Y RECHAZADAS) POR USUARIO
-                //SELECT u.name, IFNULL(CO_AP.lineas,0) AS lineas_ap, IFNULL(CO_RE.lineas,0) AS lineas_re, CASE WHEN (IFNULL(CO_AP.lineas,0) + IFNULL(CO_RE.lineas,0)) <> 0 THEN ROUND(IFNULL(CO_AP.lineas,0) * 100 / (IFNULL(CO_AP.lineas,0) + IFNULL(CO_RE.lineas,0)),2) ELSE 0 END AS porcentual_apr, CASE WHEN (IFNULL(CO_AP.lineas,0) + IFNULL(CO_RE.lineas,0)) <> 0 THEN ROUND(IFNULL(CO_RE.lineas,0) * 100 / (IFNULL(CO_AP.lineas,0) + IFNULL(CO_RE.lineas,0)),2) ELSE 0 END AS porcentual_rec FROM users u LEFT JOIN( SELECT u.name, COUNT(pco.id) AS lineas FROM cotizacions co LEFT JOIN producto_cotizados pco ON co.id = pco.cotizacion_id INNER JOIN users u ON co.user_id = u.id AND co.confirmada IS NOT NULL GROUP BY u.name )CO_AP ON u.name = CO_AP.name LEFT JOIN( SELECT u.name, COUNT(pco.id) AS lineas FROM cotizacions co LEFT JOIN producto_cotizados pco ON co.id = pco.cotizacion_id INNER JOIN users u ON co.user_id = u.id AND co.rechazada IS NOT NULL GROUP BY u.name )CO_RE ON u.name = CO_RE.name GROUP BY u.name ORDER BY porcentual_apr DESC, porcentual_rec ASC;
+                'estructura_html' => '@php foreach ($dataset as $item) { $linea[] = (array)$item; } @endphp <h3 class="bg-gradient-lightblue">{{$titulo}}</h3> <br> <table class="table table-sm table-bordered" width="100%"> <thead> <th>Usuario</th> <th>Cotizaciones aprobadas</th> <th>Cotizaciones rechazadas</th> <th>Porcentual aprobadas</th> <th>Porcentual rechazadas</th> </thead> <tbody> @foreach ($linea as $items) <tr> <td>{{$items["name"]}}</td> <td class="text-center">{{$items["co_aprobadas"]}}</td> <td class="text-center">{{$items["co_rechazadas"]}}</td> <td>{{$items["porcentual_apr"]}}</td> <td>{{$items["porcentual_rec"]}}</td> </tr> @endforeach </tbody> </table>',
+                'query'   => 'SELECT u.name, SUM(CASE WHEN co.confirmada IS NOT NULL THEN 1 ELSE 0 END) AS co_aprobadas, SUM(CASE WHEN co.rechazada IS NOT NULL THEN 1 ELSE 0 END) AS co_rechazadas, ROUND(SUM(CASE WHEN co.confirmada IS NOT NULL THEN 1 ELSE 0 END) * 100 / (SUM(CASE WHEN co.confirmada IS NOT NULL THEN 1 ELSE 0 END)+SUM(CASE WHEN co.rechazada IS NOT NULL THEN 1 ELSE 0 END)), 2) AS porcentual_apr, ROUND(SUM(CASE WHEN co.rechazada IS NOT NULL THEN 1 ELSE 0 END) * 100 / (SUM(CASE WHEN co.confirmada IS NOT NULL THEN 1 ELSE 0 END)+SUM(CASE WHEN co.rechazada IS NOT NULL THEN 1 ELSE 0 END)), 2) AS porcentual_rec FROM users u INNER JOIN cotizacions co ON u.id = co.user_id GROUP BY u.name ORDER BY co_aprobadas DESC, co_rechazadas ASC;'
             ],
             [
                 'nombre'  => 'Porcentual de cotizaciones (aprobada y rechazadas) valorizada por usuario',
@@ -101,7 +99,7 @@ class ListadosSeeder extends Seeder
             ],
             [
                 'nombre'  => 'Productos por proveedor',
-                'estructura_html' => '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>title</title></head><body></body></html>',
+                'estructura_html' => '@php foreach ($dataset as $item) { $linea[] = (array)$item; } @endphp <h3 class="bg-gradient-lightblue">{{$titulo}}</h3> <br> <table class="table table-sm table-bordered" width="100%"> <thead> <th>Razón social</th> <th>Cantidad de productos</th> </thead> <tbody> @foreach ($linea as $items) <tr> <td>{{$items["razon_social"]}}</td> <td class="text-center">{{$items["cant_productos"]}}</td> </tr> @endforeach </tbody> </table>',
                 'query'   => 'SELECT pv.razon_social, COUNT(lp.id) AS cant_productos FROM lista_precios lp INNER JOIN proveedors pv ON lp.proveedor_id = pv.id GROUP BY pv.razon_social ORDER BY cant_productos DESC;'
             ],
         ];

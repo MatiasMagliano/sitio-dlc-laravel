@@ -13,13 +13,14 @@
     $prds_datos = [0, 0, 0, 0];
 
     // se generan los datos para el gráfico de líneas
-    $crec_mensual[];
+    $crec_mensual = [];
 
     foreach ($mas_vendidos as $item) {
         $badge[] = (array) $item;
     }
 
     // variable auxiliar para calcular la tabla
+    $crecimiento = 0;
     $mes_anterior = null;
 @endphp
 
@@ -50,6 +51,7 @@
                             $crecimiento = $item['ventas'] - $mes_anterior;
                         }
                         $mes_anterior = $item['ventas'];
+                        $crec_mensual[$loop->index] = $crecimiento;
                     @endphp
                     $ {{ number_format($item['ventas'], 2, ',', '.') }}
                 </td>
@@ -118,19 +120,19 @@
 
 <div class="row">
     <div class="col">
-        <canvas id="grafico_vtas"></canvas>
+        <div class="row">
+            <div class="col">
+                <canvas id="grafico_vtas"></canvas>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <canvas id="grafico_crec"></canvas>
+            </div>
+        </div>
     </div>
     <div class="col">
-        <div class="row">
-            <div class="col">
-                <canvas id="grafico_prds"></canvas>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <canvas id="grafico_prds"></canvas>
-            </div>
-        </div>
+        <canvas id="grafico_prds"></canvas>
     </div>
 </div>
 
@@ -152,6 +154,7 @@
 <script>
     const ctx = document.getElementById('grafico_vtas');
     const cty = document.getElementById('grafico_prds');
+    const ctz = document.getElementById('grafico_crec');
 
     // gráfico de ventas
     new Chart(ctx, {
@@ -174,6 +177,32 @@
                 title: {
                     display: true,
                     text: 'Ventas generales, últimos 12 meses'
+                }
+            }
+        }
+    });
+
+    // gráfico de líneas unidas, crecimiento mensual
+    new Chart(ctz, {
+        type: 'line',
+        data: {
+            labels: @json(array_slice($vtas_x, 1)),
+            datasets: [{
+                label: 'Crecimiento porcentual',
+                data: @json(array_slice($crec_mensual, 1)),
+            }]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Crecimiento mensual'
+                },
+                filler: {
+                    propagate: false,
+                },
+                interaction: {
+                    intersect: false,
                 }
             }
         }
