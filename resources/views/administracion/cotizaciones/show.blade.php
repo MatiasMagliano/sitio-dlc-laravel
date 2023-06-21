@@ -38,7 +38,7 @@
         <div class="card-header">
             <div class="row d-flex">
                 <div class="col-8">
-                    <h5 class="heading-small text-muted mb-1">Básicos de la cotización</h5>
+                    <h5 class="heading-small text-muted mb-1">Datos de la cotización</h5>
                 </div>
                 @if (!$cotizacion->finalizada)
                     <div class="col-4 text-right">
@@ -61,62 +61,11 @@
             </div>
         </div>
         <div class="card-body">
-            <table class="table table-responsive-md" width="100%">
-                <thead>
-                    <tr>
-                        <th class="align-middle">Fecha/<br>Identificador</th>
-                        <th class="align-middle">Cliente</th>
-                        <th class="align-middle">Lugar de entrega</th>
-                        <th class="align-middle">Usuario</th>
-                        <th class="align-middle">Productos cotizados</th>
-                        <th class="align-middle">Unidades</th>
-                        <th class="align-middle">Importe</th>
-                        <th class="align-middle">ESTADO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="align-middle">
-                            {{$cotizacion->created_at->format('d/m/Y')}}<br><strong>{{$cotizacion->identificador}}</strong>
-                        </td>
-                        <td class="align-middle">
-                            {{$cotizacion->cliente->razon_social}}<br>
-                            <span style="text-transform: uppercase;">{{$cotizacion->cliente->tipo_afip}}</span>: {{$cotizacion->cliente->afip}}
-                        </td>
-                        <td class="align-middle">
-                            <strong>{{$cotizacion->dde->lugar_entrega}}</strong> <br>
-                            {{$cotizacion->dde->domicilio}} <br>
-                            {{$cotizacion->dde->localidad->nombre}}, {{$cotizacion->dde->provincia->nombre}}
-                        </td>
-                        <td class="align-middle">{{$cotizacion->user->name}}</td>
-                        <td class="align-middle">{{$cotizacion->productos->count()}}</td>
-                        <td class="align-middle">{{$cotizacion->productos->sum('cantidad')}}</td>
-                        <td class="align-middle">$ {{number_format($cotizacion->productos->sum('total'), 2, ',', '.')}}</td>
-                        <td class="align-middle">
-                            @switch($cotizacion->estado_id)
-                                @case(1)
-                                    <span class="text-fuchsia">{{$cotizacion->estado->estado}}</span>
-                                    @break
-                                @case(2)
-                                    <span class="text-success">{{$cotizacion->estado->estado}}</span>
-                                    @break
-                                @case(3)
-                                    <span class="text-secondary">{{$cotizacion->estado->estado}}</span>
-                                    @break
-                                @case(4)
-                                    <span class="text-success">{{$cotizacion->estado->estado}}</span>
-                                    @break
-                                @case(5)
-                                    <span class="text-danger">{{$cotizacion->estado->estado}}</span>
-                                    @break
-                                @default
-                            @endswitch
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            {{-- ENCABEZADO DE LA COTIZACIÓN - DATOS BÁSICOS --}}
+            @include('administracion.cotizaciones.partials.datos-basicos-cotizacion')
         </div>
     </div>
+</div>
 
     {{-- EN CASO DE SER CONFIRMADA, SE AGREGA UNA LEYENDA --}}
     @if ($cotizacion->confirmada)
@@ -199,68 +148,8 @@
     </div>
 
     {{-- MODAL EDICIÓN DE PRODUCTO --}}
-    <div class="modal fade" id="modalModifProducto" tabindex="-1" aria-labelledby="" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <form action="" method="POST" id="formModifProducto" enctype="multipart/form-data">
-                    @csrf
-                    @method('PATCH')
-                    <input type="hidden" name="prodCotiz_id" id="input-prodCotiz" value="">
-                    <div class="modal-header bg-gradient-blue">
-                        <h5 class="modal-title">Modificar producto</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
+    @include('administracion.cotizaciones.partials.modal-edicion-producto')
 
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="input-droga">Droga</label>
-                            <input type="text" name="droga" id="input-droga" min="0"class="form-control" disabled>
-                        </div>
-
-                        <div class="row d-flex">
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="input-precio">Precio *</label>
-                                    <input type="number" name="precio" id="input-precio" min="0"
-                                        class="form-control @error('precio') is-invalid @enderror"
-                                        value="@if(old('precio')){{old('precio')}}@else{{0}}@endif"
-                                        step=".01">
-                                        @error('precio')<div class="invalid-feedback">{{$message}}</div>@enderror
-                                </div>
-                            </div>
-
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="input-cantidad">Cantidad *</label>
-                                    <input type="number" name="cantidad" id="input-cantidad" min="0"
-                                        class="form-control @error('cantidad') is-invalid @enderror"
-                                        value="@if(old('cantidad')){{old('cantidad')}}@else{{0}}@endif">
-                                        @error('cantidad')<div class="invalid-feedback">{{$message}}</div>@enderror
-                                </div>
-                            </div>
-
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="input-total">Total</label>
-                                    <input type="text" name="total" id="input-total"
-                                        class="form-control @error('total') is-invalid @enderror"
-                                        value="@if(old('total')){{old('total')}}@else{{0}}@endif" disabled>
-                                        @error('total')<div class="invalid-feedback">{{$message}}</div>@enderror
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" id="guardarAprobada" class="btn btn-success">Continuar</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @section('js')
@@ -389,6 +278,7 @@
             });
         });
 
+        // BOTON CONFIRMAR COTIZACIÓN QUE APARECE DINAMICAMENTE AL PRINCIPIO DE LA PÁGINA
         function confirmarCotizacion(){
             Swal.fire({
                 icon: 'warning',

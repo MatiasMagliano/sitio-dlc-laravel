@@ -4,12 +4,10 @@ namespace App\Http\Controllers\Administracion;
 use App\Http\Controllers\Controller;
 use App\Models\Cotizacion;
 use App\Models\DepositoCasaCentral;
-use App\Models\Estado;
 use App\Models\Lote;
 use App\Models\LotePresentacionProducto;
 use App\Models\OrdenTrabajo;
 use App\Models\Producto;
-use App\Models\ProductoOrdenTrabajo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,6 +54,7 @@ class OrdenTrabajoController extends Controller
 
     public function store(Request $request)
     {
+        // SE TIENE QUE MODIFICAR COMPLETAMENTE EL MÉTODO
         // Se buscan los productos tildados
         $productos = DB::table('producto_cotizados')
             ->whereIn('id', $request->lineasOrdenTrabajo)

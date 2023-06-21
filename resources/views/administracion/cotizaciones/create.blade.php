@@ -63,14 +63,19 @@
                     @error('cliente_id')<div class="invalid-feedback">{{$message}}</div>@enderror
                 </div>
 
-                {{-- SE CARGA CON UN AJAX --}}
+                {{-- PUNTOS DE ENTREGA - SE CARGAN CON UN AJAX --}}
                 <div class="form-group">
-                    <label for="input-dde">Punto de entrega</label>
+                    <label for="input-dde">Punto de entrega*</label>
                     <select name="dde_id" id="input-dde"
                         class="selecion-dde form-control-alternative @error('dde_id') is-invalid @enderror">
                         <option data-placeholder="true"></option>
                     </select>
                     @error('dde_id')<div class="invalid-feedback">{{$message}}</div>@enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="plazoDeEntrega">Plazo de entrega*</label>
+                    <textarea name="plazo_entrega" class="form-control" id="plazoDeEntrega" rows="2"></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-success mt-4">Continuar</button>

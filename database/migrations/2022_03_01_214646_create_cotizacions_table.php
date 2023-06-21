@@ -25,6 +25,7 @@ class CreateCotizacionsTable extends Migration
             $table->unsignedBigInteger('dde_id');
             $table->foreign('dde_id')->references('id')->on('direcciones_entrega');
             $table->decimal('monto_total', 10,2)->nullable()->default(0);
+            $table->string('plazo_entrega');
             //fechas importantes que pueden o no estar de acuerdo al estado
             $table->timestamp('finalizada')->nullable();
             $table->timestamp('presentada')->nullable();

@@ -46,149 +46,58 @@
 
 {{-- aquí va contenido --}}
 @section('content')
-@section('plugins.Datatables', true)
-@section('plugins.DatatablesPlugins', true)
-@section('plugins.TempusDominusBs4', true)
-<div class="card">
-    <div class="card-header bg-gray-light">
-        <div class="texto-header">
-            <h5>Dinámica de cotizaciones</h5>
-            <p>
-                Los términos de búsqueda se realizan en los campos debajo de cada columna habilitada.
-            </p>
-            <p>
-                El orden de promoción es el siguiente: CREACIÓN -> EDICIÓN -> FINALIZACIÓN -> PRESENTACIÓN -> APROBACIÓN o RECHAZO.
-            </p>
-        </div>
-    </div>
-    <div class="card-body">
-        <table id="tabla-cotizaciones" class="table table-bordered table-responsive-md" width="100%">
-            <thead>
-                <tr class="bg-gray">
-                    <th>F. modificación</th>
-                    <th>Identificador</th>
-                    <th>Cliente</th>
-                    <th>Usuario/F. creación</th>
-                    <th>ESTADO</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tfoot style="display: table-header-group;">
-                <tr class=" bg-gradient-light">
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tfoot>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-{{-- MODAL APROBACIÓN LICITACIÓN --}}
-<div class="modal fade" id="modalAprobarCotizacion" tabindex="-1" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-gradient-blue">
-                <h5 class="modal-title">Aprobar licitación</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    @section('plugins.Datatables', true)
+    @section('plugins.DatatablesPlugins', true)
+    @section('plugins.TempusDominusBs4', true)
+    <div class="card">
+        <div class="card-header bg-gray-light">
+            <div class="texto-header">
+                <h5>Dinámica de cotizaciones</h5>
+                <p>
+                    Los términos de búsqueda se realizan en los campos debajo de cada columna habilitada.
+                </p>
+                <p>
+                    El orden de promoción es el siguiente: CREACIÓN -> EDICIÓN -> FINALIZACIÓN -> PRESENTACIÓN -> APROBACIÓN o RECHAZO.
+                </p>
             </div>
-            <form action="" method="POST" id="formAprobada" enctype="multipart/form-data">
-                @csrf
-                {{-- CAUSAS: aprobada/rechazada --}}
-                <input type="hidden" name="causa_subida" value="aprobada">
-                <div class="modal-body">
-                    <p>Deberá consignar la fecha de aprobación. Opcionalmente podrá adjuntar la Orden de Compra provista
-                        por el cliente. Esto comformará información respaldatoria a la cotización.</p>
-                    <hr>
-                    <div class="row">
-                        <div class="col form-group">
-                            <x-adminlte-input-date name="confirmada" id="confirmada" igroup-size="md" :config="$config"
-                                placeholder="{{ __('formularios.date_placeholder') }}" autocomplete="off" required>
-                                <x-slot name="appendSlot">
-                                    <div class="input-group-text bg-dark">
-                                        <i class="fas fa-calendar"></i>
-                                    </div>
-                                </x-slot>
-                            </x-adminlte-input-date>
-                        </div>
-                        <div class="col custom-file">
-                            <input type="file" class="custom-file-input" id="customFile" name="archivo"
-                                accept=".jpg,.png,.pdf">
-                            <label class="custom-file-label" for="customFile">Seleccionar archivo</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" id="guardarAprobada" class="btn btn-success">Continuar</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                </div>
-            </form>
         </div>
-    </div>
-</div>
-
-{{-- MODAL RECHAZO LICITACIÓN --}}
-<div class="modal fade" id="modalRechazarCotizacion" tabindex="-1" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-gradient-danger">
-                <h5 class="modal-title">Rechazar licitación</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+        <div class="card-body">
+            <div class="processing">
+                <table id="tabla-cotizaciones" class="table table-bordered table-responsive-md" width="100%">
+                    <thead>
+                        <tr class="bg-gray">
+                            <th>F. modificación</th>
+                            <th>Identificador</th>
+                            <th>Cliente</th>
+                            <th>Vendedor/F. creación</th>
+                            <th>Plazo de entrega</th>
+                            <th>ESTADO</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tfoot style="display: table-header-group;">
+                        <tr class=" bg-gradient-light">
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
-            <form action="" method="POST" id="formRechazada" enctype="multipart/form-data">
-                @csrf
-                {{-- CAUSAS: aprobada/rechazada --}}
-                <input type="hidden" name="causa_subida" value="rechazada">
-                <div class="modal-body">
-                    <p>Deberá consignar la fecha de rechazo y un motivo. Opcionalmente, podrá adjuntar el
-                        <strong>pliego procesado</strong> con comparativo de precios, provisto por el cliente. Se adjuntará
-                        como información respaldatoria a la cotización rechazada.
-                    </p>
-                    <div class="form-group">
-                        <label for="input-motivo_rechazo">Motivo del rechazo</label>
-                        <textarea name="motivo_rechazo" class="form-control @error('motivo_rechazo') is-invalid @enderror"
-                            id="input-motivo_rechazo" rows="2" required></textarea>
-                        <small id="input-motivo_rechazo" class="form-text text-muted">Datos relevantes como cliente
-                            ganador, fuera de término, errores de cotización, etc..</small>
-                        @error('motivo_rechazo')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="row">
-                        <div class="col form-group">
-                            <x-adminlte-input-date name="rechazada" id="rechazada" igroup-size="md" :config="$config"
-                                placeholder="{{ __('formularios.date_placeholder') }}" autocomplete="off" required>
-                                <x-slot name="appendSlot">
-                                    <div class="input-group-text bg-dark">
-                                        <i class="fas fa-calendar"></i>
-                                    </div>
-                                </x-slot>
-                            </x-adminlte-input-date>
-                        </div>
-                        <div class="col custom-file">
-                            <input type="file" class="custom-file-input" id="customFile" name="archivo"
-                                accept=".jpg,.png,.pdf">
-                            <label class="custom-file-label" for="customFile">Seleccionar archivo</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" id="guardarRechazada" class="btn btn-success">Continuar</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
+
+    {{-- MODAL APROBACIÓN LICITACIÓN --}}
+    @include('administracion.cotizaciones.partials.modal-aprobacion-licitacion')
+
+    {{-- MODAL RECHAZO LICITACIÓN --}}
+    @include('administracion.cotizaciones.partials.modal-rachazo-licitacion')
 @endsection
 
 @section('js')
@@ -230,10 +139,26 @@
         });
     };
 
+    function selectAll(){
+        var items=document.getElementsByName('lineasAprobadas[]');
+        for(var i=0; i<items.length; i++){
+            if(items[i].type=='checkbox')
+                items[i].checked=true;
+        }
+    }
+
+    function UnSelectAll(){
+        var items=document.getElementsByName('lineasAprobadas[]');
+        for(var i=0; i<items.length; i++){
+            if(items[i].type=='checkbox')
+                items[i].checked=false;
+        }
+    }
+
     $(document).ready(function() {
         moment.locale('es');
 
-        $('#tabla-cotizaciones tfoot th').slice(1, 5).each(function() {
+        $('#tabla-cotizaciones tfoot th').slice(1, 4).each(function() {
             $(this).html('<input type="text" class="form-control" placeholder="Buscar" />');
         });
 
@@ -271,12 +196,17 @@
                 },
                 {
                     targets: [4],
+                    name: "plazo_entrega",
+                    className: "align-middle",
+                },
+                {
+                    targets: [5],
                     name: "estado",
                     className: "align-middle text-center",
                     width: 100
                 },
                 {
-                    targets: [5],
+                    targets: [6],
                     name: "acciones",
                     className: "align-middle text-center",
                     orderable: false,
@@ -284,7 +214,7 @@
             ],
             "initComplete": function() {
                 this.api()
-                    .columns([1, 2, 3, 4])
+                    .columns([1, 2, 3])
                     .every(function() {
                         var that = this;
 
@@ -303,13 +233,36 @@
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
 
-        // se coloca el ACTION en el form: guardarAprobada
+        // se coloca en el ACTION el id de cotización seleccionada a APROBAR
         $('#modalAprobarCotizacion').on('show.bs.modal', function(event) {
             $('#formAprobada').attr('action', 'cotizaciones/' + event.relatedTarget.id +
                 '/aprobarCotizacion');
+
+            $('#lineasCotizadas').empty();
+            let datos = {
+                cotizacion_id: event.relatedTarget.id,
+            };
+
+            $.ajax({
+                url: "{{route('administracion.cotizadas.ajax.obtener')}}",
+                type: "GET",
+                data: datos,
+            })
+            .done(function(resultado) {
+                let linea = 1;
+                $.each(resultado, function(index){
+                    $('#lineasCotizadas').append(
+                        "<div class='form-check'>"
+                        +"<input class='form-check-input' name='lineasAprobadas[]' type='checkbox' value="+ resultado[index].cotizado_id +" id='defaultCheck1' checked>"
+                        +"<label class='form-check-label' for='defaultCheck1'>Línea "+ linea +", "+resultado[index].droga +" - "+ resultado[index].forma +" "+ resultado[index].presentacion +"</label>"
+                        +"</div>"
+                    );
+                    linea = linea + 1;
+                });
+            });
         });
 
-        // se coloca el ACTION en el form: guardarRechazada
+        // se coloca en el ACTION el id de cotización seleccionada a RECHAZADA
         $('#modalRechazarCotizacion').on('show.bs.modal', function(event) {
             $('#formRechazada').attr('action', 'cotizaciones/' + event.relatedTarget.id +
                 '/rechazarCotizacion');
