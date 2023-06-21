@@ -203,11 +203,11 @@ class ReporteController extends Controller
         }
 
         // compila los listados
-        $listados = array();
+        $arr_listados = array();
         foreach($documento->listados as $listado)
         {
             array_push(
-                $listados,
+                $arr_listados,
                 Blade::render(
                     $listado->estructura_html,
                     [
@@ -218,13 +218,14 @@ class ReporteController extends Controller
                 )
             );
         }
+        //  dd($arr_listados);
 
         return view('administracion.reportes.show-reporte')
             ->with('documento', $documento)
             ->with('encabezados', $encabezados)
             ->with('reportes', $reportes)
             ->with('campos_cuerpo', $campos_cuerpo)
-            ->with('listados', $listados);
+            ->with('listados', $arr_listados);
     }
 
     public function showListado(Documento $documento)

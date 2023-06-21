@@ -18,6 +18,7 @@ class CreateDocumentoReporteTable extends Migration
     public function up()
     {
         Schema::create('documento_reporte', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(Documento::class)->constrained();
             $table->foreignIdFor(Reporte::class)->constrained();
         });

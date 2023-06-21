@@ -8,7 +8,7 @@
 @section('content_header')
     <div class="row">
         <div class="col-xl-8">
-            <h1>Reporte {{$documento->nombre_documento}}</h1>
+            <h1>Reporte de nombre: "{{$documento->nombre_documento}}"</h1>
         </div>
         <div class="col-xl-4 d-flex justify-content-xl-end">
             <a href="{{ route('administracion.reportes.index') }}" role="button" class="btn btn-md btn-secondary">Volver</a>
