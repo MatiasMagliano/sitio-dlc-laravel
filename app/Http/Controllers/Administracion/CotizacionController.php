@@ -56,6 +56,7 @@ class CotizacionController extends Controller
         $query = Cotizacion::select(
             'cotizacions.id',
             'cotizacions.identificador',
+            'cotizacions.plazo_entrega',
             'cotizacions.user_id',
             'cotizacions.cliente_id',
             'cotizacions.dde_id',
@@ -139,6 +140,7 @@ class CotizacionController extends Controller
                 $cotizacion->identificador,
                 view('administracion.cotizaciones.partials.cliente', ['cotizacion' => $cotizacion])->render(),
                 view('administracion.cotizaciones.partials.usuario', ['cotizacion' => $cotizacion])->render(),
+                $cotizacion->plazo_entrega,
                 view('administracion.cotizaciones.partials.estados', ['cotizacion' => $cotizacion])->render(),
                 view('administracion.cotizaciones.partials.acciones', ['cotizacion' => $cotizacion])->render(),
             ];
@@ -228,19 +230,21 @@ class CotizacionController extends Controller
     {
         // se valida que los campos estén presentes
         $request->validate([
-            'identificador' => 'required|unique:cotizacions,identificador|max:50',
-            'cliente_id' => 'required'
+            'identificador' => 'required|max:50',
+            'cliente_id' => 'required',
+            'plazo_entrega' => 'required'
         ]);
+
         // Se valida que no haya una misma cotización con el mismo identificador al mismo cliente
         $existente = Cotizacion::where('cliente_id', $request->get('cliente'))
             ->where('identificador', $request->get('identificador'))
             ->where('finalizada', null)->get();
-
         if ($existente->count()) {
             $request->session()->flash('error', 'Ya existe este identificador en una cotización sin finalizar. <a href="' . route('administracion.cotizaciones.show', $existente->first()) . '">Haga click aquí para verla.</a>');
             return redirect()->route('administracion.cotizaciones.index');
         }
 
+        // se continúa con el guardado de la cotización
         $request->request->add(['estado_id' => 1]);
         $cotizacion = new Cotizacion($request->all());
 
@@ -461,6 +465,13 @@ class CotizacionController extends Controller
 
     public function aprobarCotizacion(Cotizacion $cotizacion, Request $request)
     {
+        // confirmación de las líneas aprobadas
+        $lineas_eliminadas = ProductoCotizado::select('*')
+            ->where('cotizacion_id', $cotizacion->id)
+            ->whereNotIn('id', $request->lineasAprobadas)
+            ->get();
+
+
         if ($request->hasFile('archivo')) {
             $ruta = $request->file('archivo')->storeAs(
                 'licitaciones-aprobadas',
@@ -558,6 +569,22 @@ class CotizacionController extends Controller
                 $request->session()->flash('error', 'La acción que desea ejecutar no es posible de procesar.');
                 return redirect(route('home'));
                 break;
+        }
+    }
+
+    // FUNCIONES AJAX
+    public function obtenerLineasCotizacion(Request $request)
+    {
+        if($request->ajax())
+        {
+            $lineas = DB::table('producto_cotizados')
+                ->select('producto_cotizados.id AS cotizado_id', 'productos.droga', 'presentacions.forma', 'presentacions.presentacion')
+                ->join('productos', 'producto_cotizados.producto_id', '=', 'productos.id')
+                ->join('presentacions', 'producto_cotizados.presentacion_id', '=', 'presentacions.id')
+                ->where('producto_cotizados.cotizacion_id', $request->cotizacion_id)
+                ->get();
+
+            return Response()->json($lineas);
         }
     }
 }
