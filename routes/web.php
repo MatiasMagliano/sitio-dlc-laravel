@@ -131,6 +131,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
             //edición del producto dentro de una cotización
     Route::get('/cotizaciones/loadProdCotiz', [CotizacionController::class, 'loadProdCotiz'])
         ->name('cotizaciones.loadProdCotiz');
+    Route::get('/cotizaciones/lineasCotizadas', [CotizacionController::class, 'obtenerLineasCotizacion'])
+        ->name('cotizaciones.ajax.obtener');
     Route::get('/cotizaciones/{cotizacion}/agregar/producto', [CotizacionController::class, 'agregarProducto'])
         ->name('cotizaciones.agregar.producto');
     Route::get('/cotizaciones/ajaxProductos', [CotizacionController::class, 'ajaxSlimProducto'])
@@ -177,7 +179,6 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 // RUTAS PARA EXPEDICION y, se incluye administración en la configuración del GATE
 Route::prefix('administracion')->middleware(['auth', 'auth.esExpedicion'])->name('administracion.')->group(function () {
     // rutas de ORDENES DE TRABAJO
-    Route::get('/ordentrabajo/ajaxObtenerLineas', [OrdenTrabajoController::class, 'obtenerLineasCotizacion'])->name('cotizadas.ajax.obtener');
     Route::get('/ordentrabajo/{ordentrabajo}/descargarpdf/', [OrdenTrabajoController::class, 'descargapdf'])
         ->name('ordentrabajo.descargapdf');
     Route::get('/ordentabajo/{ordentrabajo}/asignarlotes/{producto}/{presentacion}', [OrdenTrabajoController::class, 'asignarLotes'])

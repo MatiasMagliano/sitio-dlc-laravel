@@ -101,174 +101,174 @@
 @endsection
 
 @section('js')
-@include('partials.alerts')
-<script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
-<script>
-    // Reload manual de la página
-    function recargar() {
-        setTimeout(function() {
+    @include('partials.alerts')
+    <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
+    <script>
+        // Reload manual de la página
+        function recargar() {
+            setTimeout(function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Cotización presentada',
+                    text: 'La cotización quedará en espera de ser aprobada o rechazada.',
+                    confirmButtonText: 'Aceptar',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.location.href = '{{ route('administracion.cotizaciones.index') }}';
+                        return false;
+                    }
+                })
+            }, 1000)
+        };
+
+        function borrarCotizacion(id) {
+            let advertencia =
+                'Se eliminará esta cotización y todos sus productos asociados. Esta acción no se puede deshacer.';
             Swal.fire({
-                icon: 'success',
-                title: 'Cotización presentada',
-                text: 'La cotización quedará en espera de ser aprobada o rechazada.',
-                confirmButtonText: 'Aceptar',
+                icon: 'warning',
+                title: 'Borrar cotización',
+                html: '<span style=\'color: red; font-weight:800; font-size:1.3em;\'>¡ATENCION!</span><br>' +
+                    advertencia,
+                confirmButtonText: 'Borrar',
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    document.location.href = '{{ route('administracion.cotizaciones.index') }}';
-                    return false;
+                    $('#borrar-' + id).submit();
                 }
-            })
-        }, 1000)
-    };
+            });
+        };
 
-    function borrarCotizacion(id) {
-        let advertencia =
-            'Se eliminará esta cotización y todos sus productos asociados. Esta acción no se puede deshacer.';
-        Swal.fire({
-            icon: 'warning',
-            title: 'Borrar cotización',
-            html: '<span style=\'color: red; font-weight:800; font-size:1.3em;\'>¡ATENCION!</span><br>' +
-                advertencia,
-            confirmButtonText: 'Borrar',
-            showCancelButton: true,
-            cancelButtonText: 'Cancelar',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $('#borrar-' + id).submit();
+        function selectAll(){
+            var items=document.getElementsByName('lineasAprobadas[]');
+            for(var i=0; i<items.length; i++){
+                if(items[i].type=='checkbox')
+                    items[i].checked=true;
             }
-        });
-    };
-
-    function selectAll(){
-        var items=document.getElementsByName('lineasAprobadas[]');
-        for(var i=0; i<items.length; i++){
-            if(items[i].type=='checkbox')
-                items[i].checked=true;
         }
-    }
 
-    function UnSelectAll(){
-        var items=document.getElementsByName('lineasAprobadas[]');
-        for(var i=0; i<items.length; i++){
-            if(items[i].type=='checkbox')
-                items[i].checked=false;
+        function UnSelectAll(){
+            var items=document.getElementsByName('lineasAprobadas[]');
+            for(var i=0; i<items.length; i++){
+                if(items[i].type=='checkbox')
+                    items[i].checked=false;
+            }
         }
-    }
 
-    $(document).ready(function() {
-        moment.locale('es');
+        $(document).ready(function() {
+            moment.locale('es');
 
-        $('#tabla-cotizaciones tfoot th').slice(1, 4).each(function() {
-            $(this).html('<input type="text" class="form-control" placeholder="Buscar" />');
-        });
+            $('#tabla-cotizaciones tfoot th').slice(1, 4).each(function() {
+                $(this).html('<input type="text" class="form-control" placeholder="Buscar" />');
+            });
 
-        $('#tabla-cotizaciones').dataTable({
-            "dom": "rltip",
-            "processing": true,
-            "serverSide": true,
-            "ajax": {
-                url: "{{ route('administracion.cotizaciones.ajax') }}",
-                method: "GET"
-            },
-            "order": [0, 'desc'],
-            "columnDefs": [{
-                    targets: [0],
-                    name: "fecha-modificacion",
-                    className: "align-middle text-center",
-                    'render': function(data) {
-                        return moment(new Date(data)).format("DD/MM/YYYY");
+            $('#tabla-cotizaciones').dataTable({
+                "dom": "rltip",
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('administracion.cotizaciones.ajax') }}",
+                    method: "GET"
+                },
+                "order": [0, 'desc'],
+                "columnDefs": [{
+                        targets: [0],
+                        name: "fecha-modificacion",
+                        className: "align-middle text-center",
+                        'render': function(data) {
+                            return moment(new Date(data)).format("DD/MM/YYYY");
+                        },
                     },
-                },
-                {
-                    targets: [1],
-                    name: "identificador",
-                    className: "align-middle text-center font-weight-bold",
-                },
-                {
-                    targets: [2],
-                    name: "cliente",
-                    className: "align-middle",
-                },
-                {
-                    targets: [3],
-                    name: "usuario",
-                    className: "align-middle",
-                },
-                {
-                    targets: [4],
-                    name: "plazo_entrega",
-                    className: "align-middle",
-                },
-                {
-                    targets: [5],
-                    name: "estado",
-                    className: "align-middle text-center",
-                    width: 100
-                },
-                {
-                    targets: [6],
-                    name: "acciones",
-                    className: "align-middle text-center",
-                    orderable: false,
-                },
-            ],
-            "initComplete": function() {
-                this.api()
-                    .columns([1, 2, 3])
-                    .every(function() {
-                        var that = this;
+                    {
+                        targets: [1],
+                        name: "identificador",
+                        className: "align-middle text-center font-weight-bold",
+                    },
+                    {
+                        targets: [2],
+                        name: "cliente",
+                        className: "align-middle",
+                    },
+                    {
+                        targets: [3],
+                        name: "usuario",
+                        className: "align-middle",
+                    },
+                    {
+                        targets: [4],
+                        name: "plazo_entrega",
+                        className: "align-middle",
+                    },
+                    {
+                        targets: [5],
+                        name: "estado",
+                        className: "align-middle text-center",
+                        width: 100
+                    },
+                    {
+                        targets: [6],
+                        name: "acciones",
+                        className: "align-middle text-center",
+                        orderable: false,
+                    },
+                ],
+                "initComplete": function() {
+                    this.api()
+                        .columns([1, 2, 3])
+                        .every(function() {
+                            var that = this;
 
-                        $('input', this.footer()).on('keyup change clear', function() {
-                            if (that.search() !== this.value) {
-                                that.search(this.value).draw();
-                            }
+                            $('input', this.footer()).on('keyup change clear', function() {
+                                if (that.search() !== this.value) {
+                                    that.search(this.value).draw();
+                                }
+                            });
                         });
+                },
+            });
+
+            // función para que aparezca el nombre de archivo en el input
+            $(".custom-file-input").on("change", function() {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+
+            // se coloca en el ACTION el id de cotización seleccionada a APROBAR
+            $('#modalAprobarCotizacion').on('show.bs.modal', function(event) {
+                $('#formAprobada').attr('action', 'cotizaciones/' + event.relatedTarget.id +
+                    '/aprobarCotizacion');
+
+                $('#lineasCotizadas').empty();
+                let datos = {
+                    cotizacion_id: event.relatedTarget.id,
+                };
+
+                $.ajax({
+                    url: "{{route('administracion.cotizaciones.ajax.obtener')}}",
+                    type: "GET",
+                    data: datos,
+                })
+                .done(function(resultado) {
+                    let linea = 1;
+                    $.each(resultado, function(index){
+                        $('#lineasCotizadas').append(
+                            "<div class='form-check'>"
+                            +"<input class='form-check-input' name='lineasAprobadas[]' type='checkbox' value="+ resultado[index].cotizado_id +" id='defaultCheck1' checked>"
+                            +"<label class='form-check-label' for='defaultCheck1'>Línea "+ linea +", "+resultado[index].droga +" - "+ resultado[index].forma +" "+ resultado[index].presentacion +"</label>"
+                            +"</div>"
+                        );
+                        linea = linea + 1;
                     });
-            },
-        });
-
-        // función para que aparezca el nombre de archivo en el input
-        $(".custom-file-input").on("change", function() {
-            var fileName = $(this).val().split("\\").pop();
-            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-        });
-
-        // se coloca en el ACTION el id de cotización seleccionada a APROBAR
-        $('#modalAprobarCotizacion').on('show.bs.modal', function(event) {
-            $('#formAprobada').attr('action', 'cotizaciones/' + event.relatedTarget.id +
-                '/aprobarCotizacion');
-
-            $('#lineasCotizadas').empty();
-            let datos = {
-                cotizacion_id: event.relatedTarget.id,
-            };
-
-            $.ajax({
-                url: "{{route('administracion.cotizadas.ajax.obtener')}}",
-                type: "GET",
-                data: datos,
-            })
-            .done(function(resultado) {
-                let linea = 1;
-                $.each(resultado, function(index){
-                    $('#lineasCotizadas').append(
-                        "<div class='form-check'>"
-                        +"<input class='form-check-input' name='lineasAprobadas[]' type='checkbox' value="+ resultado[index].cotizado_id +" id='defaultCheck1' checked>"
-                        +"<label class='form-check-label' for='defaultCheck1'>Línea "+ linea +", "+resultado[index].droga +" - "+ resultado[index].forma +" "+ resultado[index].presentacion +"</label>"
-                        +"</div>"
-                    );
-                    linea = linea + 1;
                 });
             });
-        });
 
-        // se coloca en el ACTION el id de cotización seleccionada a RECHAZADA
-        $('#modalRechazarCotizacion').on('show.bs.modal', function(event) {
-            $('#formRechazada').attr('action', 'cotizaciones/' + event.relatedTarget.id +
-                '/rechazarCotizacion');
+            // se coloca en el ACTION el id de cotización seleccionada a RECHAZADA
+            $('#modalRechazarCotizacion').on('show.bs.modal', function(event) {
+                $('#formRechazada').attr('action', 'cotizaciones/' + event.relatedTarget.id +
+                    '/rechazarCotizacion');
+            });
         });
-    });
-</script>
+    </script>
 @endsection
 
 @section('footer')

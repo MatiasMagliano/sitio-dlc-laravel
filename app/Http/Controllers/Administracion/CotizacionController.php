@@ -12,6 +12,7 @@ use App\Models\ListaPrecio;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\ProductoCotizado;
+use App\Models\ProductoCotizadoAprobado;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Storage;
 
 class CotizacionController extends Controller
 {
-    public function index() // EN DESUSO
+    public function index()
     {
         $config = [
             'format' => 'DD/MM/YYYY',
@@ -30,7 +31,7 @@ class CotizacionController extends Controller
         return view('administracion.cotizaciones.index-dt', compact('config'));
     }
 
-    public function ajaxdt(Request $request)
+    public function ajaxdt(Request $request) // MÉTODO EN USO A TRAVÉS DE UN AJAX
     {
         // RESPONDE UN JSON PARA POPULAR EL SERVERSIDE-DATATABLE
         $search = $request->query('search', array('value' => '', 'regex' => false));
@@ -465,11 +466,17 @@ class CotizacionController extends Controller
 
     public function aprobarCotizacion(Cotizacion $cotizacion, Request $request)
     {
-        // confirmación de las líneas aprobadas
-        $lineas_eliminadas = ProductoCotizado::select('*')
+        // filtro las líneas finalmente aprobadas
+        $lineas_aprobadas = ProductoCotizado::select('*')
             ->where('cotizacion_id', $cotizacion->id)
-            ->whereNotIn('id', $request->lineasAprobadas)
+            ->whereIn('id', $request->lineasAprobadas)
             ->get();
+        
+        // creo en un solo paso todos ls productos cotizados aprobados
+        $productos_aprobados = new ProductoCotizadoAprobado();
+        $productos_aprobados->create($lineas_aprobadas);
+
+        dd($productos_aprobados);
 
 
         if ($request->hasFile('archivo')) {
