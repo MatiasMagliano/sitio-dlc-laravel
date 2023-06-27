@@ -42,6 +42,7 @@ class ProductoCotizadoFactory extends Factory
             'cantidad'          => $cantidad,
             'precio'            => $precio,
             'total'             => $cantidad * $precio,
+            'no_aprobado'       => false,
             'created_at'        => Carbon::now(),
             'updated_at'        => Carbon::now()
         ];

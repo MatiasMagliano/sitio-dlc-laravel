@@ -381,7 +381,6 @@ class CotizacionController extends Controller
             'total' => $request->get('precio') * $request->get('cantidad')
         ]);
 
-        //dd($request);
         $productoCotizado->create($request->all());
 
         $request->session()->flash('success', 'Producto agregado con éxito.');
@@ -450,7 +449,7 @@ class CotizacionController extends Controller
         return redirect(route('administracion.cotizaciones.index'));
     }
 
-    // SEPARAR LAS ACCIONES DE GENERACIÓN DE PDF generarpdf() --> sólo genera el pdf. Y PRESENTACIÓN DE COTIZACIÓN presentarCotizacion() --> pasa de estado
+    // SEPARÉ LAS ACCIONES DE GENERACIÓN DE PDF generarpdf() --> sólo genera el pdf. Y PRESENTACIÓN DE COTIZACIÓN presentarCotizacion() --> pasa de estado
     public function presentarCotizacion(Cotizacion $cotizacion, Request $request)
     {
         if (!$cotizacion->presentada) {
@@ -467,16 +466,11 @@ class CotizacionController extends Controller
     public function aprobarCotizacion(Cotizacion $cotizacion, Request $request)
     {
         // filtro las líneas finalmente aprobadas
-        $lineas_aprobadas = ProductoCotizado::select('*')
+        $lineas_aprobadas = DB::table('producto_cotizados')
             ->where('cotizacion_id', $cotizacion->id)
-            ->whereIn('id', $request->lineasAprobadas)
-            ->get();
-        
-        // creo en un solo paso todos ls productos cotizados aprobados
-        $productos_aprobados = new ProductoCotizadoAprobado();
-        $productos_aprobados->create($lineas_aprobadas);
-
-        dd($productos_aprobados);
+            ->whereNotIn('id', $request->lineasAprobadas)
+            ->get(); //->update(['no_aprobado' => true]);
+        dd($lineas_aprobadas);
 
 
         if ($request->hasFile('archivo')) {

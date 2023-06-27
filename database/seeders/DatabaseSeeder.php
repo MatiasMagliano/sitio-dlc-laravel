@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ListaPrecioSeeder::class);
         $this->call(CotizacionSeeder::class);
         $this->call(CotizacionAprobSeeder::class);
-        $this->call(ReportesSeeder::class);
-        $this->call(ListadosSeeder::class);
+        //$this->call(ReportesSeeder::class);
+        //$this->call(ListadosSeeder::class);
     }
 }

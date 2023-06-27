@@ -24,6 +24,7 @@ class CreateProductoCotizadosTable extends Migration
             $table->unsignedInteger('cantidad');
             $table->unsignedDecimal('precio', 10, 2);
             $table->unsignedDecimal('total', 10, 2);
+            $table->boolean("no_aprobado");
             $table->timestamps();
         });
     }

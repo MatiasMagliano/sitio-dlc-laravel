@@ -2,7 +2,6 @@
 // SEEDER QUE CREA ALGUNAS COTIZACIONES MÁS Y LAS APRUEBA O RECHAZA AUTOMÁTICAMENTE
 namespace Database\Seeders;
 
-use App\Http\Controllers\Administracion\CotizacionController;
 use App\Models\Cliente;
 use App\Models\Cotizacion;
 use App\Models\DireccionEntrega;
@@ -33,6 +32,7 @@ class CotizacionAprobSeeder extends Seeder
 
                 $maxProductos = rand(10, 100);
                 for($j = 1; $j <= $maxProductos; $j++){
+                    // creo una colección con los productos cotizados
                     ProductoCotizado::factory()->create([
                         'cotizacion_id' => $cotizacion->id
                     ]);
@@ -49,7 +49,6 @@ class CotizacionAprobSeeder extends Seeder
                     $cotizacion->finalizada = $fecha;
                     $cotizacion->cliente->ultima_cotizacion = $fecha;
                     $cotizacion->estado_id = 2;
-
                     //se presenta y se aprueba
                     if (!$cotizacion->presentada) {
                         $fecha = $fecha->addDays(rand(1, 30));
@@ -59,9 +58,19 @@ class CotizacionAprobSeeder extends Seeder
                         $fecha = $fecha->addDays(rand(1, 30));
                         $cotizacion->confirmada = $fecha;
                         $cotizacion->estado_id = 4;
+
+                        // pequeña función que aleatoriamente asigna true al campo "no_aprobado"
+                        // de la colección de productos cotizados arriba
+                        $prod_cotiz = ProductoCotizado::where('cotizacion_id', $cotizacion->id)->get();
+                        foreach($prod_cotiz as $prodCotiz)
+                        {
+                            $prodCotiz->no_aprobado = rand(0, 1);
+                            $prodCotiz->save();
+                        }
                     }
                 }
-                else{
+                else
+                {
                     // se crea una fecha aleatoria dentro del año anterior
                     $fecha = Carbon::parse($this->faker->dateTimeBetween('-1 years'));
                     $cotizacion->created_at = $fecha;
@@ -83,8 +92,8 @@ class CotizacionAprobSeeder extends Seeder
                     }
                 }
                 $cotizacion->updated_at = $fecha;
+                $cotizacion->save();
             }
         }
-
     }
 }

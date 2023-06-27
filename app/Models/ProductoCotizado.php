@@ -14,12 +14,23 @@ class ProductoCotizado extends Model
     protected $withCount = ['producto'];
 
     protected $fillable = [
-        'cotizacion_id', 'producto_id', 'presentacion_id', 'cantidad', 'precio', 'total'
+        'cotizacion_id',
+        'producto_id',
+        'presentacion_id',
+        'cantidad',
+        'precio',
+        'total',
+        'no_aprobado'
     ];
 
 
 
     // RELACIONES
+    public function cotizaciones(): BelongsTo
+    {
+        return $this->belongsTo(Cotizacion::class);
+    }
+
     public function producto(): BelongsTo
     {
         return $this->belongsTo(Producto::class);
@@ -29,12 +40,4 @@ class ProductoCotizado extends Model
     {
         return $this->belongsTo(Presentacion::class);
     }
-
-    public function cotizaciones(): BelongsTo
-    {
-        return $this->belongsTo(Cotizacion::class);
-    }
-
-    // RELACIÓN CONTRA DDE
-
 }

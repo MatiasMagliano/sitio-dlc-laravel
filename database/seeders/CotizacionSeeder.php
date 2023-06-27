@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Http\Controllers\Administracion\CotizacionController;
-use Illuminate\Http\Request;
 use App\Models\Cliente;
 use App\Models\Cotizacion;
 use App\Models\DireccionEntrega;
@@ -19,9 +17,6 @@ class CotizacionSeeder extends Seeder
      */
     public function run()
     {
-        //se llama al controlador CotizacionController para hacer el proceso de aprobación o rechazo
-        $controlador = new CotizacionController();
-
         foreach(Cliente::all() as $cliente){
 
             $maxCotizaciones = rand(1, 3);
@@ -45,10 +40,5 @@ class CotizacionSeeder extends Seeder
                 }
             }
         }
-
-        // PROCEDIMIENTO QUE APRUEBA O RECHAZA ALGUNAS COTIZACIONES
-
-
-        //actualiza el stock en el factory de ProductoCotizado...
     }
 }
