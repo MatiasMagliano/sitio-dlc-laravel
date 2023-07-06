@@ -1,3 +1,6 @@
+@if ($producto->no_aprobado)
+    <span class="text-danger">(LÍNEA NO APROBADA)</span><br>
+@endif
 {{ $producto->droga }}, {{$producto->presentacion}}
 @if ($producto->hospitalario === 1)
     - <span class="text-primary">HOSPITALARIO</span>

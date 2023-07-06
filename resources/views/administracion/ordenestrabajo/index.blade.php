@@ -341,32 +341,6 @@
                     },
                 ]
             });
-
-            $('#modalModificarOrden').on('show.bs.modal', function(event){
-                $('#lineasCotizadas').empty();
-
-                let datos = {
-                    cotizacion_id: event.relatedTarget.id,
-                };
-
-                $.ajax({
-                    url: "{{route('administracion.cotizadas.ajax.obtener')}}",
-                    type: "GET",
-                    data: datos,
-                })
-                .done(function(resultado) {
-                    let linea = 1;
-                    $.each(resultado, function(index){
-                        $('#lineasCotizadas').append(
-                            "<div class='form-check'>"
-                            +"<input class='form-check-input' name='lineasOrdenTrabajo[]' type='checkbox' value="+ resultado[index].cotizado_id +" id='defaultCheck1' checked>"
-                            +"<label class='form-check-label' for='defaultCheck1'>Línea "+ linea +", "+resultado[index].droga +" - "+ resultado[index].forma +" "+ resultado[index].presentacion +"</label>"
-                            +"</div>"
-                        );
-                        linea = linea + 1;
-                    });
-                });
-            });
          });
     </script>
 @endsection

@@ -283,6 +283,7 @@ class CotizacionController extends Controller
                 'producto_cotizados.cantidad',
                 'producto_cotizados.precio',
                 'producto_cotizados.total',
+                'producto_cotizados.no_aprobado',
                 'cotizacions.estado_id'
             )
                 ->join('productos', 'producto_cotizados.producto_id', '=', 'productos.id')
@@ -466,12 +467,10 @@ class CotizacionController extends Controller
     public function aprobarCotizacion(Cotizacion $cotizacion, Request $request)
     {
         // filtro las líneas finalmente aprobadas
-        $lineas_aprobadas = DB::table('producto_cotizados')
+        DB::table('producto_cotizados')
             ->where('cotizacion_id', $cotizacion->id)
             ->whereNotIn('id', $request->lineasAprobadas)
-            ->get(); //->update(['no_aprobado' => true]);
-        dd($lineas_aprobadas);
-
+            ->update(['no_aprobado' => true]);
 
         if ($request->hasFile('archivo')) {
             $ruta = $request->file('archivo')->storeAs(

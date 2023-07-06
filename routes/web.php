@@ -179,6 +179,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 // RUTAS PARA EXPEDICION y, se incluye administración en la configuración del GATE
 Route::prefix('administracion')->middleware(['auth', 'auth.esExpedicion'])->name('administracion.')->group(function () {
     // rutas de ORDENES DE TRABAJO
+    Route::get('/ordentrabajo/lineasCotizadas', [OrdenTrabajoController::class, 'obtenerLineasCotizacion'])
+        ->name('ordenTrabajo.ajax.obtener');
     Route::get('/ordentrabajo/{ordentrabajo}/descargarpdf/', [OrdenTrabajoController::class, 'descargapdf'])
         ->name('ordentrabajo.descargapdf');
     Route::get('/ordentabajo/{ordentrabajo}/asignarlotes/{producto}/{presentacion}', [OrdenTrabajoController::class, 'asignarLotes'])
