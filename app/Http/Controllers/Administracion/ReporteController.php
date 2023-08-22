@@ -3,331 +3,289 @@
 namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\Controller;
-use App\Models\CampoCuerpo;
-use App\Models\Documento;
-use App\Models\Encabezado;
+use App\Models\Cliente;
+use App\Models\Cotizacion;
+use App\Models\Proveedor;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\Listado;
-use App\Models\Reporte;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Expr\Cast\Object_;
 
 class ReporteController extends Controller
 {
     public function index()
     {
-        $documentos = Documento::all();
 
-        return view('administracion.reportes.index', compact('documentos'));
+        return view('administracion.reportes.index');
     }
 
-    public function ajaxdt(Request $request)
+    // REPORTE Nº 1 - PEDIDOS PROCESADOS POR VENDEDOR
+    public function pedProcxVendedor(Request $request)
     {
-        // RESPONDE UN JSON PARA POPULAR EL SERVERSIDE-DATATABLE
-        $search = $request->query('search', array('value' => '', 'regex' => false));
-        $draw = $request->query('draw', 0);
-        $start = $request->query('start', 0);
-        $length = $request->query('length', 25);
-        $order = $request->query('order', array(0, 'desc'));
+        $rango = explode(' - ', $request->sel_fecha_pedidos);
+        $desde = Carbon::parse($rango[0]);
+        $hasta = Carbon::parse($rango[1]);
 
-        // busqueda general
-        $filter = $search['value'];
-        // busqueda individual
-        $GLOBALS['b_columna'] = Arr::except($request->query('columns'), array('_token', '_method'));
-
-        $sortColumns = array(
-            0 => 'documentos.nombre_documento',
-            1 => 'users.name',
-            2 => 'documentos.dirigido_a',
-            3 => 'documentos.tipo_documento',
-            4 => 'documentos.updated_at'
+        // DATOS BÁSICOS DEL MEMBRETE
+        $carbon = Carbon::now();
+        $carbon->timezone('America/Argentina/Cordoba');
+        $datos_membrete = collect(
+            [
+                [
+                    'rango'          => 'período desde: ' . $rango[0] . ' hasta ' . $rango[1],
+                    'nombre_reporte' => 'Pedidos procesados por vendedor',
+                    'fecha_emision' => $carbon->format('d/m/Y'),
+                    'hora_emision' => $carbon->format('H:i')
+                ]
+            ]
         );
 
-        // QUERY COMPLETA DE COTIZACIONES
-        $query = Documento::select(
-            'documentos.id',
-            'documentos.nombre_documento',
-            'users.name',
-            'documentos.dirigido_a',
-            'documentos.tipo_documento',
-            'documentos.updated_at',
-        );
+        $datos = DB::table(function ($query) {
+            $query->select(
+                'us.name',
+                'co.identificador',
+                DB::raw("CASE WHEN co.confirmada IS NOT NULL THEN co.confirmada ELSE co.rechazada END AS fecha"),
+                'cl.razon_social',
+                DB::raw('COUNT(pc.id) AS lineas'),
+                'es.estado AS ESTADO'
+            )
+                ->from('cotizacions as co')
+                ->join('estados as es', 'co.estado_id', '=', 'es.id')
+                ->join('users as us', 'co.user_id', '=', 'us.id')
+                ->join('clientes as cl', 'co.cliente_id', '=', 'cl.id')
+                ->leftJoin('producto_cotizados as pc', 'co.id', '=', 'pc.cotizacion_id')
+                ->where(function ($query) {
+                    $query->whereNotNull('co.confirmada')
+                        ->orWhereNotNull('co.rechazada');
+                })
+                ->groupBy('co.identificador', 'us.name', 'fecha', 'cl.razon_social');
+        }, 'q')
+            ->whereBetween('q.fecha', [$desde, $hasta])
+            ->select(
+                'q.name as VENDEDOR',
+                'q.identificador as IDENT_COTIZ',
+                'q.fecha as FECHA_DE_PEDIDO',
+                'q.razon_social as CLIENTE',
+                'q.lineas as CANT_LINEAS',
+                'q.ESTADO'
+            )
+            ->orderBy('q.name')
+            ->get();
 
-        $query->join('users', 'documentos.user_id', '=', 'users.id')
-            ->where(function($query) {
-                $b_columna = $GLOBALS['b_columna'];
-                if(isset($b_columna[2]['search']['value'])) {
-                    $query->where('name', 'like', '%'.$b_columna[2]['search']['value'].'%');
-                }
-            });
+        // reorganizar los datos para que queden "VENDEDOR" -> "VENTAS"
+        $datosReorganizados = [];
+        foreach ($datos as $registro) {
+            $vendedor = $registro->VENDEDOR;
+            unset($registro->VENDEDOR);
 
-        // filtro general
-        if (!empty($filter)) {
-            $query->where('documentos.nombre_documento', 'like', '%'.$filter.'%');
+            if (!isset($datosReorganizados[$vendedor])) {
+                $datosReorganizados[$vendedor] = [];
+            }
+
+            $datosReorganizados[$vendedor][] = $registro;
         }
 
-        //filtro particular
-        $b_columna = $GLOBALS['b_columna'];
-        if(isset($b_columna[1]['search']['value'])) {
-            $query->where('nombre_documento', 'like', '%'.$b_columna[0]['search']['value'].'%');
-        }
+        //dd($datosReorganizados);
+        return view('administracion.reportes.reportes.pedProcxVendedor', compact('datos_membrete', 'datosReorganizados'));
+    }
 
-        $recordsTotal = $query->count();
+    // REPORTE Nº 4 - VENTAS POR RANGO DE FECHAS
+    public function vtasPorRangoFechas(Request $request)
+    {
+        // obtiene el rango de fechas desde request
+        $rango = explode(' - ', $request->sel_fecha_ventas);
+        $desde = Carbon::parse($rango[0]);
+        $hasta = Carbon::parse($rango[1]);
 
-        $sortColumnName = $sortColumns[$order[0]['column']];
-
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
-
-        $json = array(
-            'draw' => $draw,
-            'recordsTotal' => $recordsTotal,
-            'recordsFiltered' => $recordsTotal,
-            'data' => [],
+        // DATOS BÁSICOS DEL MEMBRETE
+        $carbon = Carbon::now();
+        $carbon->timezone('America/Argentina/Cordoba');
+        $datos_membrete = collect(
+            [
+                [
+                    'rango'          => 'período desde: ' . $rango[0] . ' hasta ' . $rango[1],
+                    'nombre_reporte' => 'Ventas por Rango de Fechas',
+                    'fecha_emision'  => $carbon->format('d/m/Y'),
+                    'hora_emision'   => $carbon->format('H:i')
+                ]
+            ]
         );
 
-        $documentos = $query->get();
+        $datos = DB::table('cotizacions as co')
+        ->join('clientes as cl', function ($join) {
+            $join->on('co.cliente_id', '=', 'cl.id')
+                 ->whereNotNull('co.confirmada');
+        })
+        ->leftJoin('producto_cotizados as pc', 'co.id', '=', 'pc.cotizacion_id')
+        ->where('pc.no_aprobado', '=', 0)
+        ->whereBetween('co.confirmada', [$desde, $hasta])
+        ->groupBy('co.id', 'co.confirmada', 'cl.razon_social')
+        ->select(
+            'co.confirmada as FECHA_DE_APROBACION',
+            'cl.razon_social as CLIENTE',
+            DB::raw('COUNT(pc.id) as CANT_LINEAS'),
+            DB::raw('ROUND(SUM(pc.total), 2) as IMPORTE')
+        )
+        ->orderByDesc('co.confirmada')
+        ->get();
 
-        foreach ($documentos as $documento) {
-            $json['data'][] = [
-                $documento->nombre_documento,
-                $documento->name,
-                $documento->dirigido_a,
-                view('administracion.reportes.partials.tipo-documento', ['documento' => $documento])->render(),
-                $documento->updated_at,
-                view('administracion.reportes.partials.acciones', ['documento' => $documento])->render(),
+        //dd($desde, $hasta);
+
+        return view('administracion.reportes.reportes.vtasxrangodefechas', compact('datos_membrete', 'datos'));
+    }
+
+    // REPORTE Nº 11 - PRODUCTOS POR TEMPORADA
+    public function repProdxTemporada(Request $request)
+    {
+        // DATOS BÁSICOS DEL MEMBRETE
+        $carbon = Carbon::now();
+        $carbon->timezone('America/Argentina/Cordoba');
+        $datos_membrete = collect(
+            [
+                [
+                    'nombre_reporte' => 'Reporte de Productos por temporada',
+                    'fecha_emision' => $carbon->format('d/m/Y'),
+                    'hora_emision' => $carbon->format('H:i')
+                ]
+            ]
+        );
+
+        // CONSULTA MYSQL
+        $periodos = ['Enero-Marzo', 'Abril-Junio', 'Julio-Septiembre', 'Octubre-Diciembre'];
+
+        $datos = Cotizacion::whereYear('confirmada', $request->anio)
+            ->whereIn(DB::raw("CASE WHEN MONTH(confirmada) < 4 THEN 'Enero-Marzo'
+                               WHEN MONTH(confirmada) < 7 THEN 'Abril-Junio'
+                               WHEN MONTH(confirmada) < 10 THEN 'Julio-Septiembre'
+                               ELSE 'Octubre-Diciembre' END"), $periodos)
+            ->join('producto_cotizados as pc', 'cotizacions.id', '=', 'pc.cotizacion_id')
+            ->join('productos as pro', 'pc.producto_id', '=', 'pro.id')
+            ->join('presentacions as pre', 'pc.presentacion_id', '=', 'pre.id')
+            ->selectRaw("CASE WHEN MONTH(confirmada) < 4 THEN 'Enero-Marzo'
+                               WHEN MONTH(confirmada) < 7 THEN 'Abril-Junio'
+                               WHEN MONTH(confirmada) < 10 THEN 'Julio-Septiembre'
+                               ELSE 'Octubre-Diciembre' END AS PERIODO,
+                     pc.id as LINEA, pro.droga as PRODUCTO, CONCAT(pre.forma, ', ', pre.presentacion) as PRESENTACION,
+                     COUNT(pc.id) as CANTIDAD")
+            ->groupBy('PERIODO', 'PRODUCTO', 'PRESENTACION')
+            ->orderBy('PERIODO')
+            ->orderByDesc('CANTIDAD')
+            ->get();
+
+        // Reorganizar los datos para un fácil acceso en la vista
+        $datosReorganizados = [];
+        foreach ($datos as $dato) {
+            $datosReorganizados[$dato->PERIODO][] = [
+                'PRODUCTO' => $dato->PRODUCTO,
+                'PRESENTACION' => $dato->PRESENTACION,
+                'CANTIDAD' => $dato->CANTIDAD,
             ];
         }
 
-        return $json;
+        //dd($datos->toSql());
+        return view('administracion.reportes.reportes.repProdxTemporada', compact('datos_membrete', 'datosReorganizados'));
     }
 
-    public function create()
+    // REPORTE Nº 12 - CLIENTES
+    public function repClientes()
     {
-        $encabezado = '<h1 class="" align="center"><font color="#000000"><span style="font-family: Arial; font-size: 1.5em">Droguería de la Ciudad</span></font></h1><h6 class="" align="center"><font color="#9C9C94">Raymundo Montenegro 2654 - Ciudad de Córdoba, Argentina</font></h6><h6 class="" align="center"><font color="#9C9C94">Tel/Fax: 0351 - 223355 - E-mail:drogciudad@example.com.ar<br></font><br></h6>';
-        return view('administracion.reportes.crear', compact('encabezado'));
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'tipo_documento'    => 'required',
-            'nombre_documento'  => 'required|max:200|unique:documentos,nombre_documento',
-            'dirigido_a'        => 'required|max:200',
-            'encabezado'        => 'required|min:1'
-        ]);
-
-        $documento = Documento::create($request->all());
-
-        //redirección de acuerdo a lo solicitado en el select
-        if ($request->tipo_documento === 'reporte') {
-            $request->session()->flash('success', 'Documento registrado con éxito. Ahora puede agrega contenido al REPORTE.');
-            return redirect()
-                ->route(
-                    'administracion.reportes.inter-reportes',
-                    ['documento' => $documento]
-                );
-        } else if ($request->tipo_documento === 'listado') {
-            $request->session()->flash('success', 'Documento registrado con éxito. Ahora puede agrega contenido al LISTADO.');
-            return redirect()
-                ->route(
-                    'administracion.reportes.inter-listados',
-                    ['documento' => $documento]
-                );
-        } else {
-            return view('administracion.reportes.index');
-        }
-    }
-
-    public function editReporte(Documento $documento, Request $request)
-    {
-        return view('administracion.reportes.edit-reporte', compact('documento'));
-    }
-
-    public function editListado(Documento $documento, Request $request)
-    {
-        return view('administracion.reportes.edit-listado', compact('documento'));
-    }
-
-    public function showReporte(Documento $documento)
-    {
-        // compila los encabezados
-        $encabezados = array();
-        array_push(
-            $encabezados,
-            view(
-                'administracion.reportes.partials.summernote',
-                ['texto' => $documento->encabezado]
-            )
-        );
-        foreach($documento->encabezados as $encabezado)
-        {
-            array_push(
-                $encabezados,
-                view(
-                        'administracion.reportes.partials.summernote',
-                        ['texto' => $encabezado->texto]
-                    )->render()
-                );
-        }
-
-        // compila el reporte
-        foreach($documento->reportes as $reporte)
-        {
-            $querys = json_decode($reporte->querys, true);
-        }
-        // CAMBIAR LA FORMA DE RENDEREO y SUBIR A LA BBDD
-        $reportes = view(
-            'administracion.reportes.partials.listado',
+        // DATOS BÁSICOS DEL MEMBRETE
+        $carbon = Carbon::now();
+        $carbon->timezone('America/Argentina/Cordoba');
+        $datos_membrete = collect(
             [
-                'ventas' => DB::select($querys['ventas']),
-                'mas_vendidos' => DB::select($querys['producto_mas_vendido']),
+                [
+                    'nombre_reporte' => 'Reporte de Clientes',
+                    'fecha_emision' => $carbon->format('d/m/Y'),
+                    'hora_emision' => $carbon->format('H:i')
+                ]
             ]
-        )->render();
-
-        // compila los campos de texto
-        $campos_cuerpo = array();
-        foreach($documento->camposCuerpo as $campo)
-        {
-            array_push(
-                $campos_cuerpo,
-                view(
-                    'administracion.reportes.partials.summernote',
-                    ['texto' => $campo->texto]
-                )->render()
-            );
-        }
-
-        // compila los listados
-        $arr_listados = array();
-        foreach($documento->listados as $listado)
-        {
-            array_push(
-                $arr_listados,
-                Blade::render(
-                    $listado->estructura_html,
-                    [
-                        'titulo' => $listado->nombre,
-                        'dataset' => DB::select($listado->query)
-                    ],
-                    deleteCachedView: true
-                )
-            );
-        }
-        //  dd($arr_listados);
-
-        return view('administracion.reportes.show-reporte')
-            ->with('documento', $documento)
-            ->with('encabezados', $encabezados)
-            ->with('reportes', $reportes)
-            ->with('campos_cuerpo', $campos_cuerpo)
-            ->with('listados', $arr_listados);
-    }
-
-    public function showListado(Documento $documento)
-    {
-        // code
-    }
-
-    public function interReporte(Documento $documento, Request $request)
-    {
-        $max_encabezados = 2;
-        $max_texto_cuerpo = 3;
-        $max_listados = 3;
-        $reportes = Reporte::orderby('nombre', 'ASC')->get();
-        $listados = Listado::orderby('nombre', 'ASC')->get();
-
-        return view(
-            'administracion.reportes.inter-reportes',
-            compact(
-                'documento',
-                'reportes',
-                'listados',
-                'max_encabezados',
-                'max_texto_cuerpo',
-                'max_listados'
-            )
         );
+
+        $clientes = Cliente::with(array('dde' => function ($query) {
+            $query->orderBy('mas_entregado', 'desc');
+        }))
+            ->get();
+        return view('administracion.reportes.reportes.repClientes', compact('clientes', 'datos_membrete'));
     }
 
-    public function interListados(Documento $documento, Request $request)
+    // REPORTE Nº 15 - PROVEEDORES
+    public function repProveedores()
     {
-        $listados = Listado::orderby('nombre', 'ASC')->get();
+        // DATOS BÁSICOS DEL MEMBRETE
+        $carbon = Carbon::now();
+        $carbon->timezone('America/Argentina/Cordoba');
+        $datos_membrete = collect(
+            [
+                [
+                    'nombre_reporte' => 'Reporte de Clientes',
+                    'fecha_emision' => $carbon->format('d/m/Y'),
+                    'hora_emision' => $carbon->format('H:i')
+                ]
+            ]
+        );
 
-        return view('administracion.reportes.inter-listados', compact('documento', 'listados'));
+
+        $proveedores = Proveedor::orderby('razon_social')->get();
+
+        return view('administracion.reportes.reportes.repoProveedores', compact('proveedores', 'datos_membrete'));
     }
 
-    public function guardarDocumento(Request $request)
+    // REPORTE Nº 17 - PRODUCTOS AL MENOR COSTO
+    public function prodAlMenorCosto()
     {
-        //dd($request);
-        if ($request->tipo_documento === 'reporte') {
-            $request->validate([
-                'reporte'             => 'required',
-                'campo_encabezado.*'  => 'sometimes|required|min:1',
-                'campo_cuerpo.*'      => 'sometimes|required|min:1',
-                'listado_adicional.*'   => 'sometimes|required|min:1'
-            ]);
+        // DATOS BÁSICOS DEL MEMBRETE
+        $carbon = Carbon::now();
+        $carbon->timezone('America/Argentina/Cordoba');
+        $datos_membrete = collect(
+            [
+                [
+                    'nombre_reporte' => 'Productos al menor ',
+                    'fecha_emision' => $carbon->format('d/m/Y'),
+                    'hora_emision' => $carbon->format('H:i')
+                ]
+            ]
+        );
 
-            // se busca el documento correspondiente
-            $documento = Documento::findOrFail($request->documento);
+        $datos = DB::table('lista_precios as lp')
+            ->join(DB::raw('(SELECT lp.id, pro.id AS proId, pre.id AS preId, MIN(lp.costo) AS costo
+                        FROM lista_precios lp
+                            INNER JOIN productos pro ON lp.producto_id = pro.id
+                            INNER JOIN presentacions pre ON lp.presentacion_id = pre.id
+                        GROUP BY pro.droga, pre.forma, pre.presentacion) AS lpq'), function ($join) {
+                $join->on('lp.costo', '=', 'lpq.costo')
+                    ->on(function ($query) {
+                        $query->whereColumn('lp.producto_id', '=', 'lpq.proId')
+                            ->whereColumn('lp.presentacion_id', '=', 'lpq.preId');
+                    });
+            })
+            ->join('proveedors as pv', 'lp.proveedor_id', '=', 'pv.id')
+            ->join('productos as pro', 'lp.producto_id', '=', 'pro.id')
+            ->join('presentacions as pre', 'lp.presentacion_id', '=', 'pre.id')
+            ->select(
+                'pro.droga as PRODUCTO',
+                DB::raw("CONCAT(pre.forma, ', ', pre.presentacion) as PRESENTACION"),
+                DB::raw("CASE
+                        WHEN (pre.hospitalario = 1 AND pre.trazabilidad = 1 AND pre.divisible = 1) THEN 'H - T - D'
+                        ELSE (CASE
+                                WHEN pre.hospitalario = 1 THEN CONCAT('H', CASE WHEN pre.trazabilidad = 1 THEN ' - T' ELSE '' END, CASE WHEN pre.divisible = 1 THEN ' - D' ELSE '' END)
+                                ELSE (CASE
+                                        WHEN pre.trazabilidad = 1 THEN CONCAT('T', CASE WHEN pre.divisible = 1 THEN ' - D' ELSE '' END)
+                                        ELSE (CASE
+                                                WHEN pre.divisible = 1 THEN 'D'
+                                                ELSE ''
+                                              END)
+                                      END)
+                              END)
+                      END AS TIPO"),
+                'pv.razon_social as PROVEEDOR',
+                'lp.codigoProv as CODIGOPROV',
+                'lp.costo as COSTO'
+            )
+            ->orderBy('pro.droga')
+            ->orderBy('pre.forma')
+            ->orderBy('pre.presentacion')
+            ->get();
 
-            // se crean los encabezados si los hubiere
-            if($request->campo_encabezado != null){
-                foreach($request->campo_encabezado as $texto_encabezado)
-                {
-                    Encabezado::create([
-                        'documento_id' => $documento->id,
-                        'texto'        => $texto_encabezado
-                    ]);
-                }
-            }
-
-            // se crea y se asocia el reporte
-            $documento->reportes()->attach($request->reporte);
-
-            // se crean los campos de texto del cuerpo
-            if($request->campo_cuerpo != null){
-                foreach($request->campo_cuerpo as $texto_cuerpo)
-                {
-                    CampoCuerpo::create([
-                        'documento_id' => $documento->id,
-                        'texto'        => $texto_cuerpo
-                    ]);
-                }
-            }
-
-            // se crean y se asocian los listados
-            if($request->listado_adicional != null){
-                foreach($request->listado_adicional as $listado)
-                {
-                    $documento->listados()->attach($listado);
-                }
-            }
-
-            $request->session()->flash('success', 'Reporte creado con éxito');
-            return redirect()->route('administracion.reportes.index');
-        }
-    }
-
-    // llena los selects cuando se agrega un listado anexado
-    public function getListados(Request $request)
-    {
-        $listados = Listado::orderby('nombre', 'ASC')->get();
-
-        if ($request->ajax()) {
-            return response()->json($listados);
-        }
+        return view('administracion.reportes.reportes.prodAlMenorCosto', compact('datos_membrete', 'datos'));
     }
 }
-
-
-/*
-PARA DEVOLVER IMAGENES EN BASE64
-$raw_image_string = base64_decode($base64_img_string);
-
-return response($raw_image_string)->header('Content-Type', 'image/png');
-*/

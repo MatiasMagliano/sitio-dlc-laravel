@@ -14,6 +14,7 @@ use App\Http\Controllers\Administracion\ListaPrecioController;
 use App\Http\Controllers\Administracion\ClienteController;
 use App\Http\Controllers\Administracion\OrdenTrabajoController;
 use App\Http\Controllers\Administracion\ReporteController;
+use App\Http\Controllers\Administracion\ReporteAjaxController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\DireccionEntregaController;
 use App\Http\Controllers\HomeController;
@@ -164,16 +165,15 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     route::get('/calendarios/vencimiento', [CalendarioController::class, 'index'])->name('calendario.vencimientos');
 
     // rutas de REPORTES
-    Route::get('reportes/ajaxdt', [ReporteController::class, 'ajaxdt'])->name('reportes.ajax');
-    Route::get('reportes/getListados', [ReporteController::class, 'getListados'])->name('ajax.obtener.listados');
-    Route::get('reporte/{documento}/edit-reporte', [ReporteController::class, 'editReporte'])->name('reportes.editar.reporte');
-    Route::get('reporte/{documento}/edit-listado', [ReporteController::class, 'editListado'])->name('reportes.editar.listado');
-    Route::get('reportes/{documento}/crear-inter-reporte', [ReporteController::class, 'interReporte'])->name('reportes.inter-reportes');
-    Route::get('reportes/{documento}/crear-inter-listado', [ReporteController::class, 'interListado'])->name('reportes.inter-listados');
-    Route::get('reporte/{documento}/show-reporte', [ReporteController::class, 'showReporte'])->name('reportes.show.reporte');
-    Route::get('reporte/{documento}/show-listado', [ReporteController::class, 'showListado'])->name('reportes.show.listado');
-    Route::post('reportes/guardarDocumento', [ReporteController::class, 'guardarDocumento'])->name('reportes.guardarDocumento');
-    Route::resource('reportes', ReporteController::class)->except('show', 'edit', 'update');
+    Route::get('reportes', [ReporteController::class, 'index'])->name('reportes.index');
+    Route::get('reportes/repClientes', [ReporteController::class, 'repClientes'])->name('reportes.rep-clientes');
+    Route::get('reportes/repProveedores', [ReporteController::class, 'repProveedores'])->name('reportes.rep-proveedores');
+    Route::post('reportes/repProdxTemporada', [ReporteController::class, 'repProdxTemporada'])->name('reportes.rep-prod-x-temporada');
+    Route::post('reportes/pedProcxVendedor', [ReporteController::class, 'pedProcxVendedor'])->name('reportes.rep-ped-proc-x-vendedor');
+    Route::get('reportes/prodAlMenorCosto', [ReporteController::class, 'prodAlMenorCosto'])->name('reportes.rep-prod-al-menor-costo');
+    Route::post('reportes/vtasPorRangoFechas', [ReporteController::class, 'vtasPorRangoFechas'])->name('reportes.rep-vtas-por-rango-fechas');
+        // rutas extra ajax REPORTES
+        Route::get('reportes/repProdxTemporada/ajax-llenar-anios-select', [ReporteAjaxController::class, 'llenarAniosSelect'])->name('reportes.ajax.llenar-anios-select');
 });
 
 // RUTAS PARA EXPEDICION y, se incluye administración en la configuración del GATE

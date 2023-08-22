@@ -82,14 +82,14 @@
                     targets: [1],
                     className: "align-middle text-center",
                     'render': function(data) {
-                        return moment(new Date(data)).format("DD-MM-YYYY HH:mm:ss");
+                        return moment(new Date(data)).format("DD/MM/YYYY HH:mm:ss");
                     },
                 },
                 {
                     targets: [2],
                     className: "align-middle text-center",
                     'render': function(data) {
-                        return moment(new Date(data)).format("DD-MM-YYYY HH:mm:ss");
+                        return moment(new Date(data)).format("DD/MM/YYYY HH:mm:ss");
                     },
                 },
                 {

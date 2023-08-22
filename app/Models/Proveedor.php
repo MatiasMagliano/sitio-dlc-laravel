@@ -20,7 +20,7 @@ class Proveedor extends Model
      * @var string[]
      */
     protected $fillable = [
-        'razonSocial',
+        'razon_social',
         'cuit',
         'contacto',
         'direccion',
@@ -33,7 +33,7 @@ class Proveedor extends Model
         ->where('proveedors.razon_social','=', $razon_social)
         ->distinct()
         ->get();
-        return $proveedor; 
+        return $proveedor;
     }
     /**
      * Get the user associated with the ListaProveedor
@@ -43,7 +43,7 @@ class Proveedor extends Model
     public function listaprecios(): HasOne
     {
         return $this->hasOne(Listaprecio::class);
-        
+
     }
 
 

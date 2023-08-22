@@ -336,11 +336,6 @@ return [
                     'route' => 'administracion.reportes.index',
                     'icon'  => 'fas fa-file-invoice',
                 ],
-                [
-                    'text'  => 'create_report',
-                    'route' => 'administracion.reportes.create',
-                    'icon'  => 'fas fa-file-medical',
-                ],
             ],
         ],
     ],
@@ -581,18 +576,23 @@ return [
                 ],
             ],
         ],
-        'Summernote' => [
+        'DateRangePicker' => [
             'active' => false,
             'files' => [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/summernote/summernote-bs4.min.js',
+                    'location' => 'vendor/moment/moment.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/daterangepicker/daterangepicker.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => 'vendor/summernote/summernote-bs4.min.css',
+                    'location' => 'vendor/daterangepicker/daterangepicker.css',
                 ],
             ],
         ],
