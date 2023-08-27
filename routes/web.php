@@ -172,8 +172,12 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::post('reportes/pedProcxVendedor', [ReporteController::class, 'pedProcxVendedor'])->name('reportes.rep-ped-proc-x-vendedor');
     Route::get('reportes/prodAlMenorCosto', [ReporteController::class, 'prodAlMenorCosto'])->name('reportes.rep-prod-al-menor-costo');
     Route::post('reportes/vtasPorRangoFechas', [ReporteController::class, 'vtasPorRangoFechas'])->name('reportes.rep-vtas-por-rango-fechas');
+    Route::post('reportes/cuotaVtasPorVendedor', [ReporteController::class, 'cuotaVtasPorVendedor'])->name('reportes.rep-cuota-vtas-por-vendedor');
+    Route::post('reportes/vtasPorTipoProd', [ReporteController::class, 'vtasPorTipoProd'])->name('reportes.rep-vtas-por-tipo-prod');
+    Route::post('reportes/prodVendPorCliente', [ReporteController::class, 'prodVendPorCliente'])->name('reportes.rep-prod-vend-por-cliente');
         // rutas extra ajax REPORTES
         Route::get('reportes/repProdxTemporada/ajax-llenar-anios-select', [ReporteAjaxController::class, 'llenarAniosSelect'])->name('reportes.ajax.llenar-anios-select');
+        Route::get('reportes/repProdxTemporada/ajax-llenar-cliente-select', [ReporteAjaxController::class, 'llenarClienteSelect'])->name('reportes.ajax.llenar-clientes-select');
 });
 
 // RUTAS PARA EXPEDICION y, se incluye administración en la configuración del GATE

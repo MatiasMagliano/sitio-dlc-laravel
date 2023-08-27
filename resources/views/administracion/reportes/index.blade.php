@@ -3,6 +3,7 @@
 @section('title', 'Administrar reportes')
 
 @section('css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.css" />
 @endsection
 
 @section('content_header')
@@ -26,54 +27,142 @@
             <div class="col">
                 <h5 class="mt-3">Reportes de procesos y ventas</h5>
                 <ul class="list-group">
-                    <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_pedprocxvend"
-                            style="cursor: pointer;">Pedidos procesados por vendedor</a></li>
-                    <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_vtasxrangofechas"
-                            style="cursor: pointer;">Ventas por rango de fechas</a></li>
+    {{-- 1 ---}}    <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_pedprocxvend" style="cursor: pointer;">Pedidos procesados por vendedor</a></li>
+
+    {{-- 3 ---}}    <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_cuotavtasxvendedor" style="cursor: pointer;">Cuota de ventas por vendedor</a></li>
+    {{-- 4 ---}}    <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_vtasxrangofechas" style="cursor: pointer;">Ventas por rango de fechas</a></li>
+    {{-- 5 ---}}    <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodvendxcliente" style="cursor: pointer;">Productos vendidos por cliente</a></li>
+    {{-- 6 ---}}    <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_vtasxtipoprod" style="cursor: pointer;">Ventas por tipo de producto</a></li>
                 </ul>
 
                 <h5 class="mt-3">Reportes de productos</h5>
                 <ul class="list-group">
-                    <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodxtemp"
-                            style="cursor: pointer;">Productos por temporada</a></li>
+    {{-- 7 ---}}    <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodxtemp" style="cursor: pointer;">Productos por temporada</a></li>
                 </ul>
             </div>
             <div class="col">
                 <h5 class="mt-3">Reportes de clientes</h5>
                 <ul class="list-group">
-                    <li class="list-group-item"><a href="{{ route('administracion.reportes.rep-clientes') }}">Clientes</a>
-                    </li>
+    {{-- 12 ---}}   <li class="list-group-item"><a href="{{ route('administracion.reportes.rep-clientes') }}">Clientes</a></li>
                 </ul>
 
                 <h5 class="mt-3">Reportes de proveedores</h5>
                 <ul class="list-group">
-                    <li class="list-group-item"><a
-                            href="{{ route('administracion.reportes.rep-proveedores') }}">Proveedores</a></li>
-                    <li class="list-group-item"><a
-                            href="{{ route('administracion.reportes.rep-prod-al-menor-costo') }}">Productos al menor
-                            costo</a></li>
+    {{-- 15 ---}}   <li class="list-group-item"><a href="{{ route('administracion.reportes.rep-proveedores') }}">Proveedores</a></li>
+    {{-- 17 ---}}   <li class="list-group-item"><a href="{{ route('administracion.reportes.rep-prod-al-menor-costo') }}">Productos al menor costo</a></li>
                 </ul>
             </div>
         </div>
     </div>
 
-    {{-- MODAL - PEDIDOS PROCESADOS POR VENDEDOR --}}
-    <div class="modal fade" id="md_pedprocxvend">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-gradient-blue">
-                    <h5 class="modal-title">Selección de datos iniciales</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="{{ route('administracion.reportes.rep-ped-proc-x-vendedor') }}" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                    @section('plugins.DateRangePicker', true)
+@section('plugins.DateRangePicker', true)
+{{-- MODAL - 1-PEDIDOS PROCESADOS POR VENDEDOR --}}
+<div class="modal fade" id="md_pedprocxvend">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-blue">
+                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('administracion.reportes.rep-ped-proc-x-vendedor') }}" method="POST">
+                @csrf
+                <div class="modal-body">
                     <div class="form-group">
                         <label for="sel_fecha">Seleccione un rango de fechas:</label>
+                        <x-adminlte-date-range name="sel_fecha" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- MODAL - 3-CUOTA DE VENTAS POR VENDEDOR --}}
+<div class="modal fade" id="md_cuotavtasxvendedor">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-blue">
+                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('administracion.reportes.rep-cuota-vtas-por-vendedor') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="sel_fecha_pedidos">Seleccione un rango de fechas:</label>
                         <x-adminlte-date-range name="sel_fecha_pedidos" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- MODAL - 5-PRODUCTOS VENDIDOS POR CLIENTE --}}
+<div class="modal fade" id="md_prodvendxcliente">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-blue">
+                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('administracion.reportes.rep-prod-vend-por-cliente') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        {{-- SLIM SELECT DE CLIENTES --}}
+                        <label for="sel_cliente">Seleccione un cliente:</label>
+                        <select class="sel-clientes-slim form-control-alternative" name="sel_cliente" id="sel_cliente"></select>
+                      </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- MODAL - 6-VENTAS POR TIPO DE PRODUCTO --}}
+<div class="modal fade" id="md_vtasxtipoprod">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-blue">
+                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('administracion.reportes.rep-vtas-por-tipo-prod') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="sel_tipo_prod">Seleccione un tipo de producto:</label>
+                        <select class="form-control" name="sel_tipo_prod" id="sel_tipo_prod">
+                          <option value="comun">Común</option>
+                          <option value="divisible">Divisible</option>
+                          <option value="hospitalario">Hospitalario</option>
+                          <option value="trazable">Trazable</option>
+                        </select>
+                      </div>
+                    <div class="form-group">
+                        <label for="sel_fecha_ventas">Seleccione un rango de fechas:</label>
+                        <x-adminlte-date-range name="sel_fecha_ventas" />
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -144,29 +233,56 @@
 
 @section('js')
 @include('partials.alerts')
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#md_prodxtemp').on('show.bs.modal', function(e) {
-            $.ajax({
-                url: "{{ route('administracion.reportes.ajax.llenar-anios-select') }}",
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    var select = $('#sel_anio');
-                    select.empty();
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
 
-                    $.each(data, function(index, item) {
-                        select.append($('<option>', {
-                            value: item.anio,
-                            text: item.anio + ' (' + item
-                                .total_cotizaciones + ' cotizaciones)'
-                        }));
-                    });
-                }
+            const select_clientes = new SlimSelect({
+                select: '.sel-clientes-slim',
+            });
+
+            // LLENAR EL SELECT DE ANIOS
+            $('#md_prodxtemp').on('show.bs.modal', function(e) {
+                $.ajax({
+                    url: "{{ route('administracion.reportes.ajax.llenar-anios-select') }}",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        var select = $('#sel_anio');
+                        select.empty();
+
+                        $.each(data, function(index, item) {
+                            select.append($('<option>', {
+                                value: item.anio,
+                                text: item.anio + ' (' + item
+                                    .total_cotizaciones + ' cotizaciones)'
+                            }));
+                        });
+                    }
+                });
+            });
+
+            // LENAR EL SELECT DE CLIENTES
+            $('#md_prodvendxcliente').on('show.bs.modal', function(e) {
+                $.ajax({
+                    url: "{{ route('administracion.reportes.ajax.llenar-clientes-select') }}",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        var select = $('#sel_cliente');
+                        select.empty();
+
+                        $.each(data, function(index, item) {
+                            select.append($('<option>', {
+                                value: item.razon_social,
+                                text: item.razon_social
+                            }));
+                        });
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 @endsection
 
 @section('footer')

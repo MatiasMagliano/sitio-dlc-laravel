@@ -88,10 +88,134 @@ class ReporteController extends Controller
         return view('administracion.reportes.reportes.pedProcxVendedor', compact('datos_membrete', 'datosReorganizados'));
     }
 
-    // REPORTE Nº 4 - VENTAS POR RANGO DE FECHAS
-    public function vtasPorRangoFechas(Request $request)
+    // REPORTE Nº 3 - CUOTA DE VENTAS POR VENDEDOR
+    public function cuotaVtasPorVendedor(Request $request)
     {
-        // obtiene el rango de fechas desde request
+        $rango = explode(' - ', $request->sel_fecha_pedidos);
+        $desde = Carbon::parse($rango[0]);
+        $hasta = Carbon::parse($rango[1]);
+
+        // DATOS BÁSICOS DEL MEMBRETE
+        $carbon = Carbon::now();
+        $carbon->timezone('America/Argentina/Cordoba');
+        $datos_membrete = collect(
+            [
+                [
+                    'rango'          => 'período desde: ' . $rango[0] . ' hasta ' . $rango[1],
+                    'nombre_reporte' => 'Cuota de ventas por vendedor',
+                    'fecha_emision' => $carbon->format('d/m/Y'),
+                    'hora_emision' => $carbon->format('H:i')
+                ]
+            ]
+        );
+
+        $datos = DB::select(
+            'SELECT
+                q.VENDEDOR,
+                q.APROBADAS,
+                q.RECHAZADAS,
+                q.TOTAL,
+                CASE WHEN (q.APROBADAS >= q.RECHAZADAS) THEN ROUND(IFNULL(q.APROBADAS / q.TOTAL * 100, 0), 2)
+                ELSE
+                (
+                    CASE WHEN q.APROBADAS = 0 THEN ROUND( IFNULL(-1 * 100, 0), 2)
+                    ELSE ROUND( IFNULL(q.APROBADAS / q.TOTAL * (-100), 0), 2)
+                    END
+                )
+                END AS "RENDIMIENTO"
+            FROM
+            (
+                SELECT
+                    us.name AS "VENDEDOR",
+                    SUM( IFNULL(aporv.total, 0) ) AS "APROBADAS",
+                    SUM(IFNULL(recha.total, 0)) AS "RECHAZADAS",
+                    SUM(IFNULL(aporv.total, 0) + IFNULL(recha.total, 0)) AS "TOTAL"
+                FROM cotizacions co
+                INNER JOIN users us ON co.user_id = us.id AND ( (co.confirmada IS NOT NULL AND co.rechazada IS NULL) OR (co.confirmada IS NULL AND co.rechazada IS NOT NULL) )
+                LEFT JOIN
+                (
+                    SELECT
+                        co.id,
+                        SUM(pc.total) AS "total"
+                    FROM cotizacions co
+                    INNER JOIN users us ON co.user_id = us.id
+                    INNER JOIN producto_cotizados pc ON co.id = pc.cotizacion_id AND pc.no_aprobado = 0
+                    WHERE confirmada IS NOT NULL AND confirmada >= ? AND confirmada <= ?
+                ) aporv ON co.id = aporv.id
+                LEFT JOIN
+                (
+                    SELECT
+                        co.id,
+                        SUM(pc.total) AS "total"
+                    FROM cotizacions co
+                    INNER JOIN users us ON co.user_id = us.id
+                    INNER JOIN producto_cotizados pc ON co.id = pc.cotizacion_id AND pc.no_aprobado = 1
+                    WHERE confirmada IS NOT NULL
+                    GROUP BY co.id
+                    UNION SELECT
+                        co.id, monto_total AS "total"
+                    FROM cotizacions co
+                    INNER JOIN users us ON co.user_id = us.id
+                    WHERE rechazada IS NOT NULL AND rechazada >= ? AND rechazada <= ?
+                ) recha ON co.id = recha.id
+                GROUP BY us.name
+            ) q;',
+            [$desde, $hasta, $desde, $hasta]
+        );
+
+        //dd($datos);
+
+        return view('administracion.reportes.reportes.cuotavtasxvendedor', compact('datos_membrete', 'datos'));
+    }
+
+    // REPORTE Nº 5 - PRODUCTOS VENDIDOS POR CLIENTE
+    public function prodVendPorCliente(Request $request)
+    {
+        $cliente = Cliente::where('razon_social', $request->sel_cliente)->first();
+
+        // DATOS BÁSICOS DEL MEMBRETE
+        $carbon = Carbon::now();
+        $carbon->timezone('America/Argentina/Cordoba');
+        $datos_membrete = collect(
+            [
+                [
+                    'nombre_reporte' => 'Cuota de ventas por vendedor',
+                    'fecha_emision' => $carbon->format('d/m/Y'),
+                    'hora_emision' => $carbon->format('H:i')
+                ]
+            ]
+        );
+
+        $datos = DB::select(
+            'SELECT
+                pro.droga AS "PRODUCTO",
+                CONCAT(pre.forma, ", ", pre.presentacion,
+                CASE WHEN (pre.hospitalario = 1 AND pre.trazabilidad = 1 AND pre.divisible = 1) THEN " | H - T - D"
+                    ELSE (
+                        CASE WHEN pre.hospitalario = 1 THEN CONCAT(" | H", CASE WHEN pre.trazabilidad = 1 THEN " - T" ELSE "" END, CASE WHEN pre.divisible = 1 THEN " - D" ELSE "" END
+                    )
+                    ELSE (
+                        CASE WHEN pre.trazabilidad = 1 THEN CONCAT(" | T", CASE WHEN pre.divisible = 1 THEN " - D" ELSE "" END
+                    )
+                    ELSE (
+                        CASE WHEN pre.divisible = 1 THEN " | D" ELSE "" END) END) END) END) AS "FORM_PRES",
+                SUM(pc.cantidad) AS "CANTIDAD",
+                SUM(pc.total) AS "IMPORTE"
+            FROM cotizacions co
+            INNER JOIN clientes cl ON co.cliente_id = cl.id AND cl.razon_social = ? INNER JOIN producto_cotizados pc ON co.id = pc.cotizacion_id AND co.confirmada IS NOT NULL AND pc.no_aprobado = 0
+            INNER JOIN productos pro ON pc.producto_id = pro.id
+            INNER JOIN presentacions pre ON pc.presentacion_id = pre.id
+            GROUP BY pro.droga, pre.forma, pre.presentacion, pre.hospitalario, pre.trazabilidad, pre.divisible
+            ORDER BY pro.droga, CANTIDAD;',
+            [$cliente->razon_social]
+        );
+
+        return view('administracion.reportes.reportes.prodVendPorCliente', compact('datos_membrete', 'datos', 'cliente'));
+    }
+
+    // REPORTE Nº 6 - VENTA POR TIPO DE PRODUCTO
+    public function vtasPorTipoProd(Request $request)
+    {
         $rango = explode(' - ', $request->sel_fecha_ventas);
         $desde = Carbon::parse($rango[0]);
         $hasta = Carbon::parse($rango[1]);
@@ -103,34 +227,48 @@ class ReporteController extends Controller
             [
                 [
                     'rango'          => 'período desde: ' . $rango[0] . ' hasta ' . $rango[1],
-                    'nombre_reporte' => 'Ventas por Rango de Fechas',
-                    'fecha_emision'  => $carbon->format('d/m/Y'),
-                    'hora_emision'   => $carbon->format('H:i')
+                    'nombre_reporte' => 'Pedidos procesados por vendedor',
+                    'fecha_emision' => $carbon->format('d/m/Y'),
+                    'hora_emision' => $carbon->format('H:i')
                 ]
             ]
         );
 
+        $tipo = $request->sel_tipo_prod;
+
         $datos = DB::table('cotizacions as co')
-        ->join('clientes as cl', function ($join) {
-            $join->on('co.cliente_id', '=', 'cl.id')
-                 ->whereNotNull('co.confirmada');
-        })
-        ->leftJoin('producto_cotizados as pc', 'co.id', '=', 'pc.cotizacion_id')
-        ->where('pc.no_aprobado', '=', 0)
-        ->whereBetween('co.confirmada', [$desde, $hasta])
-        ->groupBy('co.id', 'co.confirmada', 'cl.razon_social')
-        ->select(
-            'co.confirmada as FECHA_DE_APROBACION',
-            'cl.razon_social as CLIENTE',
-            DB::raw('COUNT(pc.id) as CANT_LINEAS'),
-            DB::raw('ROUND(SUM(pc.total), 2) as IMPORTE')
-        )
-        ->orderByDesc('co.confirmada')
-        ->get();
+            ->select('pro.droga as PRODUCTO', DB::raw("CONCAT(pre.forma, ', ', pre.presentacion) AS 'FORM_PRES'"))
+            ->selectRaw('SUM(pc.cantidad) AS CANTIDAD')
+            ->selectRaw('MAX(co.confirmada) AS ULTIMA_VENTA')
+            ->join('clientes as cl', 'co.cliente_id', '=', 'cl.id')
+            ->join('producto_cotizados as pc', function ($join) {
+                $join->on('co.id', '=', 'pc.cotizacion_id')
+                    ->where('pc.no_aprobado', '=', 0);
+            })
+            ->join('productos as pro', 'pc.producto_id', '=', 'pro.id')
+            ->join('presentacions as pre', 'pc.presentacion_id', '=', 'pre.id')
+            ->where('co.confirmada', '>=', $desde)
+            ->where('co.confirmada', '<=', $hasta)
+            ->when($tipo, function ($query, $tipo) {
+                return $query->where(function ($query) use ($tipo) {
+                    if ($tipo == 'hospitalario') {
+                        $query->where('pre.hospitalario', '=', 1);
+                    } elseif ($tipo == 'trazable') {
+                        $query->where('pre.trazabilidad', '=', 1);
+                    } elseif ($tipo == 'divisible') {
+                        $query->where('pre.divisible', '=', 1);
+                    } elseif ($tipo == 'comun') {
+                        $query->where('pre.hospitalario', '=', 0)
+                            ->where('pre.trazabilidad', '=', 0);
+                    }
+                });
+            })
+            ->groupBy('pro.droga', 'pre.forma', 'pre.presentacion', 'pre.hospitalario', 'pre.trazabilidad', 'pre.divisible')
+            ->orderBy('pro.droga')
+            ->get();
 
-        //dd($desde, $hasta);
 
-        return view('administracion.reportes.reportes.vtasxrangodefechas', compact('datos_membrete', 'datos'));
+        return view('administracion.reportes.reportes.vtasportipoprod', compact('datos_membrete', 'datos', 'tipo'));
     }
 
     // REPORTE Nº 11 - PRODUCTOS POR TEMPORADA

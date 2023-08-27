@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cliente;
 use App\Models\Cotizacion;
 use App\Models\Lote;
 use Illuminate\Http\Request;
@@ -21,5 +22,13 @@ class ReporteAjaxController extends Controller
             ->get();
 
         return response()->json($anios);
+    }
+
+    public function llenarClienteSelect()
+    {
+        $clientes = Cliente::select('razon_social')
+            ->orderBy('razon_social')->get();
+
+        return response()->json($clientes);
     }
 }

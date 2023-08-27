@@ -4,7 +4,7 @@
             @isset($datos_membrete[0]['rango'])
                 <tr>
                     <td colspan="3" class="align-middle text-center">
-                        <h5>{{$datos_membrete[0]['rango']}}         </h5>
+                        <h5>{{ $datos_membrete[0]['rango'] }}</h5>
                     </td>
                 </tr>
             @endisset
