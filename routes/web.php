@@ -175,6 +175,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::post('reportes/cuotaVtasPorVendedor', [ReporteController::class, 'cuotaVtasPorVendedor'])->name('reportes.rep-cuota-vtas-por-vendedor');
     Route::post('reportes/vtasPorTipoProd', [ReporteController::class, 'vtasPorTipoProd'])->name('reportes.rep-vtas-por-tipo-prod');
     Route::post('reportes/prodVendPorCliente', [ReporteController::class, 'prodVendPorCliente'])->name('reportes.rep-prod-vend-por-cliente');
+    Route::get('reportes/lotesystock', [ReporteController::class, 'lotesystock'])->name('reportes.rep-lotes-y-stock');
+    Route::post('reportes/prodMasVendido', [ReporteController::class, 'prodMasVendido'])->name('reportes.rep-prod-mas-vendido');
         // rutas extra ajax REPORTES
         Route::get('reportes/repProdxTemporada/ajax-llenar-anios-select', [ReporteAjaxController::class, 'llenarAniosSelect'])->name('reportes.ajax.llenar-anios-select');
         Route::get('reportes/repProdxTemporada/ajax-llenar-cliente-select', [ReporteAjaxController::class, 'llenarClienteSelect'])->name('reportes.ajax.llenar-clientes-select');

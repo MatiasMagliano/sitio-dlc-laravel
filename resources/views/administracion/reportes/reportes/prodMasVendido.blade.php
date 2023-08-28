@@ -23,25 +23,25 @@
 
     <table class="table table-bordered table-striped" width="100%">
         <thead class="bg-gradient-gray">
-            <th>Fecha de aprobación</th>
-            <th>Cliente</th>
-            <th>Cantidad de líneas</th>
-            <th>Importe</th>
+            <th>Producto</th>
+            <th>Forma / Presentación</th>
+            <th>Cantidad</th>
+            <th>Última venta</th>
         </thead>
         <tbody>
-            @foreach ($datos as $venta)
+            @foreach ($datos as $producto)
                 <tr>
-                    <td class="align-middle text-center" width="10%">
-                        {{ \Carbon\Carbon::parse($venta->FECHA_DE_APROBACION)->format('d/m/Y - H:i') }}
+                    <td class="align-middle" width="20%">
+                        {{ $producto->PRODUCTO }}
                     </td>
-                    <td class="align-middle"  width="60%">
-                        {{ $venta->CLIENTE }}
-                    </td>
-                    <td class="align-middle text-center"  width="15%">
-                        {{ $venta->CANT_LINEAS }}
+                    <td class="align-middle"  width="45%">
+                        {{ $producto->FORM_PRES }}
                     </td>
                     <td class="align-middle text-center"  width="15%">
-                        $ {{ number_format($venta->IMPORTE, 2, ',', '.') }}
+                        {{ number_format($producto->CANTIDAD, 0, ',', '.') }}
+                    </td>
+                    <td class="align-middle text-center"  width="20%">
+                        {{ \Carbon\Carbon::parse($producto->ULTIMA_VENTA)->format('d/m/Y - H:i') }}
                     </td>
                 </tr>
             @endforeach

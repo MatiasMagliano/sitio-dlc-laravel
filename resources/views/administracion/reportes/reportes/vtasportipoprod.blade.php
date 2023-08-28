@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Reporte - Ventas por tipo de producto')
+@section('title', 'Reporte - '. $datos_membrete[0]["nombre_reporte"])
 
 @section('css')
 @endsection

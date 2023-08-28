@@ -35,16 +35,19 @@
                     <td class="align-middle"  width="30%">
                         {{ $vendedor->VENDEDOR }}
                     </td>
+                    
                     <td class="align-middle text-center" width="20%">
-                        {{ $vendedor->APROBADAS }}
+                        {{ number_format($vendedor->APROBADAS, 2, ',', '.') }}
                     </td>
+
                     <td class="align-middle text-center" width="20%">
-                        {{ $vendedor->RECHAZADAS }}
+                        {{ number_format($vendedor->RECHAZADAS, 2, ',', '.') }}
                     </td>
 
                     <td class="align-middle text-center"  width="15%">
                         $ {{ number_format($vendedor->TOTAL, 2, ',', '.') }}
                     </td>
+
                     <td class="align-middle text-center"  width="15%">
                         {{ $vendedor->RENDIMIENTO }}%
                     </td>

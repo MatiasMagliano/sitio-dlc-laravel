@@ -9,11 +9,11 @@
                 </tr>
             @endisset
             <tr>
-                <td width="10%">
+                <td width="20%">
                     <span>Fecha de emisión:</span> <br>
                     <strong>{{$datos_membrete[0]["fecha_emision"]}}</strong>
                 </td>
-                <td width="80%"><h1 class="text-center">Droguería de la Ciudad</h1></td>
+                <td width="70%"><h1 class="text-center">Droguería de la Ciudad</h1></td>
                 <td rowspan="2" class="justify-content-end"  width="10%">
                     <svg width="200px" height="100px" version="1.1" viewBox="0 0 93.417 56.287"
                         xmlns="http://www.w3.org/2000/svg">
@@ -44,7 +44,7 @@
                 </td>
             </tr>
             <tr>
-                <td width="10%">
+                <td width="20%">
                     <span>Hora de emisión: </span> <br>
                     <strong>{{$datos_membrete[0]["hora_emision"]}}</strong>
                 </td>

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Reporte - '. $datos_membrete[0]["nombre_reporte"])
+@section('title', 'Reporte - Lotes y stock')
 
 @section('css')
 @endsection
@@ -21,27 +21,35 @@
     {{-- INCLUSIÓN DEL MEMBRETE --}}
     @include('administracion.reportes.reportes.membrete', ['datos_membrete' => $datos_membrete])
 
-    @foreach ($datosReorganizados as $periodo => $productos)
+    @foreach ($datosReorganizados as $identificador => $detalles)
         <div class="card">
             <div class="card-head bg-gradient-gray p-3">
-                <h3>{{ $periodo }}</h3>
+                <h3>Idetificador de lote: [{{ $identificador }}]</h3>
             </div>
             <div class="card-body">
                 <table class="table table-bordered" width="100%">
                     <thead>
                         <th>Producto</th>
                         <th>Cantidad</th>
+                        <th>Tipo de producto</th>
+                        <th>Vencimiento</th>
                     </thead>
                     <tbody>
-                        @foreach ($productos as $producto => $presentaciones)
-                            <tr>
-                                <td class="align-middle" width="70%">
-                                    {{ $presentaciones['PRESENTACION'] }}
-                                </td>
-                                <td class="align-middle text-center" width="30%">
-                                    {{ $presentaciones['CANTIDAD'] }}
-                                </td>
-                            </tr>
+                        @foreach ($detalles as $producto)
+                        <tr>
+                            <td class="align-middle" width="40%">
+                                {{ $producto['PRODUCTO_PRESENTACION'] }}
+                            </td>
+                            <td class="align-middle text-center" width="15%">
+                                {{ number_format($producto['CANTIDAD'], 0, ',', '.') }}
+                            </td>
+                            <td class="align-middle text-center" width="30%">
+                                {{ $producto['TIPO_PROD'] }}
+                            </td>
+                            <td class="align-middle text-center" width="15%">
+                                {{ \Carbon\Carbon::parse($producto['VENCIMIENTO'])->format('d/m/Y') }}
+                            </td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
