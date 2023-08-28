@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cliente;
 use App\Models\Cotizacion;
 use App\Models\Lote;
+use App\Models\Proveedor;
 use Illuminate\Http\Request;
 
 class ReporteAjaxController extends Controller
@@ -27,8 +28,18 @@ class ReporteAjaxController extends Controller
     public function llenarClienteSelect()
     {
         $clientes = Cliente::select('razon_social')
-            ->orderBy('razon_social')->get();
+            ->orderBy('razon_social', 'desc')
+            ->get();
 
         return response()->json($clientes);
+    }
+
+    public function llenarProveedorSelect()
+    {
+        $proveedores = Proveedor::select('razon_social')
+            ->orderBy('razon_social', 'desc')
+            ->get();
+
+        return response()->json($proveedores);
     }
 }

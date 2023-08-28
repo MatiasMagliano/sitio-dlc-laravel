@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Reporte - Cuota de ventas por vendedor')
+@section('title', 'Reporte - '. $datos_membrete[0]["nombre_reporte"])
 
 @section('css')
 @endsection
@@ -23,33 +23,25 @@
 
     <table class="table table-bordered table-striped" width="100%">
         <thead class="bg-gradient-gray">
-            <th>Vendedor</th>
-            <th>Aprobadas</th>
-            <th>Rechazadas</th>
-            <th>Total</th>
-            <th>Rendimiento</th>
+            <th>Razón social</th>
+            <th>Cantidad</th>
+            <th>Última cotización</th>
+            <th>Última compra</th>
         </thead>
         <tbody>
-            @foreach ($datos as $vendedor)
+            @foreach ($datos as $cliente)
                 <tr>
-                    <td class="align-middle"  width="30%">
-                        {{ $vendedor->VENDEDOR }}
+                    <td class="align-middle" width="50%">
+                        {{ $cliente->RAZON_SOCIAL }}
                     </td>
-
-                    <td class="align-middle text-center" width="20%">
-                        $ {{ number_format($vendedor->APROBADAS, 2, ',', '.') }}
+                    <td class="align-middle text-center"  width="16%">
+                        {{ number_format($cliente->CANTIDAD, 0, ',', '.') }}
                     </td>
-
-                    <td class="align-middle text-center" width="20%">
-                        $ {{ number_format($vendedor->RECHAZADAS, 2, ',', '.') }}
+                    <td class="align-middle text-center"  width="16%">
+                        {{ \Carbon\Carbon::parse($cliente->ULTIMA_COTIZACION)->format('d/m/Y - H:i') }}
                     </td>
-
-                    <td class="align-middle text-center"  width="15%">
-                        $ {{ number_format($vendedor->TOTAL, 2, ',', '.') }}
-                    </td>
-
-                    <td class="align-middle text-center"  width="15%">
-                        {{ $vendedor->RENDIMIENTO }}%
+                    <td class="align-middle text-center"  width="16%">
+                        {{ \Carbon\Carbon::parse($cliente->ULTIMA_COMPRA)->format('d/m/Y - H:i') }}
                     </td>
                 </tr>
             @endforeach

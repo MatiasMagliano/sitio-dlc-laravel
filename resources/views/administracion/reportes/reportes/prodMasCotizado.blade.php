@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Reporte - Cuota de ventas por vendedor')
+@section('title', 'Reporte - '. $datos_membrete[0]["nombre_reporte"])
 
 @section('css')
 @endsection
@@ -23,33 +23,29 @@
 
     <table class="table table-bordered table-striped" width="100%">
         <thead class="bg-gradient-gray">
-            <th>Vendedor</th>
-            <th>Aprobadas</th>
-            <th>Rechazadas</th>
-            <th>Total</th>
-            <th>Rendimiento</th>
+            <th>Producto y Presentación</th>
+            <th>Tipo de producto</th>
+            <th>Cant. veces cotizado</th>
+            <th>Cant. veces APROBADO</th>
+            <th>Cant. veces RECHAZADO</th>
         </thead>
         <tbody>
-            @foreach ($datos as $vendedor)
+            @foreach ($datos as $producto)
                 <tr>
-                    <td class="align-middle"  width="30%">
-                        {{ $vendedor->VENDEDOR }}
+                    <td class="align-middle" width="40%">
+                        {{ $producto->PROD_PRES }}
                     </td>
-
-                    <td class="align-middle text-center" width="20%">
-                        $ {{ number_format($vendedor->APROBADAS, 2, ',', '.') }}
+                    <td class="align-middle"  width="20%">
+                        {{ $producto->TIPO_PROD }}
                     </td>
-
-                    <td class="align-middle text-center" width="20%">
-                        $ {{ number_format($vendedor->RECHAZADAS, 2, ',', '.') }}
+                    <td class="align-middle text-center"  width="13%">
+                        {{ number_format($producto->COTIZ, 0, ',', '.') }}
                     </td>
-
-                    <td class="align-middle text-center"  width="15%">
-                        $ {{ number_format($vendedor->TOTAL, 2, ',', '.') }}
+                    <td class="align-middle text-center"  width="13%">
+                        {{ number_format($producto->APROB, 0, ',', '.') }}
                     </td>
-
-                    <td class="align-middle text-center"  width="15%">
-                        {{ $vendedor->RENDIMIENTO }}%
+                    <td class="align-middle text-center"  width="13%">
+                        {{ number_format($producto->RECHA, 0, ',', '.') }}
                     </td>
                 </tr>
             @endforeach

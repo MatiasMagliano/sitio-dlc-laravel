@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Reporte - Cuota de ventas por vendedor')
+@section('title', 'Reporte - '. $datos_membrete[0]["nombre_reporte"])
 
 @section('css')
 @endsection
@@ -23,33 +23,21 @@
 
     <table class="table table-bordered table-striped" width="100%">
         <thead class="bg-gradient-gray">
-            <th>Vendedor</th>
-            <th>Aprobadas</th>
-            <th>Rechazadas</th>
-            <th>Total</th>
-            <th>Rendimiento</th>
+            <th>Nº Orden de Trabajo</th>
+            <th>Fecha de aprobación</th>
+            <th>Estado</th>
         </thead>
         <tbody>
-            @foreach ($datos as $vendedor)
+            @foreach ($datos as $cliente)
                 <tr>
-                    <td class="align-middle"  width="30%">
-                        {{ $vendedor->VENDEDOR }}
+                    <td class="align-middle" width="33%">
+                        {{ $cliente->IDENT_ORDEN }}
                     </td>
-
-                    <td class="align-middle text-center" width="20%">
-                        $ {{ number_format($vendedor->APROBADAS, 2, ',', '.') }}
+                    <td class="align-middle text-center"  width="33%">
+                        {{ \Carbon\Carbon::parse($cliente->F_APROBACION)->format('d/m/Y - H:i') }}
                     </td>
-
-                    <td class="align-middle text-center" width="20%">
-                        $ {{ number_format($vendedor->RECHAZADAS, 2, ',', '.') }}
-                    </td>
-
-                    <td class="align-middle text-center"  width="15%">
-                        $ {{ number_format($vendedor->TOTAL, 2, ',', '.') }}
-                    </td>
-
-                    <td class="align-middle text-center"  width="15%">
-                        {{ $vendedor->RENDIMIENTO }}%
+                    <td class="align-middle text-center"  width="33%">
+                        {{ $cliente->ESTADO }}
                     </td>
                 </tr>
             @endforeach

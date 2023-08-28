@@ -177,9 +177,16 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::post('reportes/prodVendPorCliente', [ReporteController::class, 'prodVendPorCliente'])->name('reportes.rep-prod-vend-por-cliente');
     Route::get('reportes/lotesystock', [ReporteController::class, 'lotesystock'])->name('reportes.rep-lotes-y-stock');
     Route::post('reportes/prodMasVendido', [ReporteController::class, 'prodMasVendido'])->name('reportes.rep-prod-mas-vendido');
+    Route::post('reportes/prodMenosVendido', [ReporteController::class, 'prodMenosVendido'])->name('reportes.rep-prod-menos-vendido');
+    Route::post('reportes/prodMasCotizado', [ReporteController::class, 'prodMasCotizado'])->name('reportes.rep-prod-mas-cotizado');
+    Route::get('reportes/clientesMasCotizados', [ReporteController::class, 'clientesMasCotizados'])->name('reportes.rep-clientes-mas-cotizados');
+    Route::post('reportes/ordDeTrabajo', [ReporteController::class, 'ordDeTrabajo'])->name('reportes.rep-ord-de-trabajo');
+    Route::post('reportes/prodPorProveedor', [ReporteController::class, 'prodPorProveedor'])->name('reportes.rep-prod-por-proveedor');
+    Route::post('reportes/pedidosRechazados', [ReporteController::class, 'pedidosRechazados'])->name('reportes.rep-pedidos-rechazados');
         // rutas extra ajax REPORTES
         Route::get('reportes/repProdxTemporada/ajax-llenar-anios-select', [ReporteAjaxController::class, 'llenarAniosSelect'])->name('reportes.ajax.llenar-anios-select');
         Route::get('reportes/repProdxTemporada/ajax-llenar-cliente-select', [ReporteAjaxController::class, 'llenarClienteSelect'])->name('reportes.ajax.llenar-clientes-select');
+        Route::get('reportes/repProdxTemporada/ajax-llenar-proveedor-select', [ReporteAjaxController::class, 'llenarProveedorSelect'])->name('reportes.ajax.llenar-proveedor-select');
 });
 
 // RUTAS PARA EXPEDICION y, se incluye administración en la configuración del GATE

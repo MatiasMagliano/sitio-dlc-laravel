@@ -28,7 +28,7 @@
                 <h5 class="mt-3">Reportes de procesos y ventas</h5>
                 <ul class="list-group">
     {{-- 1 ---}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_pedprocxvend" style="cursor: pointer;">Pedidos procesados por vendedor</a></li>
-
+    {{-- 2 ---}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_pedidosrechazados" style="cursor: pointer;">Pedidos rechazados</a></li>
     {{-- 3 ---}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_cuotavtasxvendedor" style="cursor: pointer;">Cuota de ventas por vendedor</a></li>
     {{-- 4 ---}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_vtasxrangofechas" style="cursor: pointer;">Ventas por rango de fechas</a></li>
     {{-- 5 ---}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodvendxcliente" style="cursor: pointer;">Productos vendidos por cliente</a></li>
@@ -37,8 +37,10 @@
 
                 <h5 class="mt-3">Reportes de productos</h5>
                 <ul class="list-group">
-    {{-- 7 ---}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodmasvendido" style="cursor: pointer;">Producto más vendido</a></li>
+    {{-- 7 ---}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodmasvendido" style="cursor: pointer;">Productos más vendido</a></li>
+    {{-- 8 ---}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodmenosvendido" style="cursor: pointer;">Productos menos vendido</a></li>
     {{-- 9 ---}}   <li class="list-group-item"><a href="{{ route('administracion.reportes.rep-lotes-y-stock') }}">Lotes y Stock</a></li>
+    {{-- 10 --}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodmascotizados" style="cursor: pointer;">Productos más cotizados</a></li>
     {{-- 11 --}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodxtemp" style="cursor: pointer;">Productos por temporada</a></li>
                 </ul>
             </div>
@@ -46,11 +48,14 @@
                 <h5 class="mt-3">Reportes de clientes</h5>
                 <ul class="list-group">
     {{-- 12 --}}   <li class="list-group-item"><a href="{{ route('administracion.reportes.rep-clientes') }}">Clientes</a></li>
+    {{-- 13 --}}   <li class="list-group-item"><a class="btn-link" href="{{ route('administracion.reportes.rep-clientes-mas-cotizados') }}">Clientes más cotizados</a></li>
+    {{-- 14 --}}   <li class="list-group-item"><a class="text-danger" href="{{ route('administracion.reportes.rep-ord-de-trabajo') }}">Órdenes de trabajo - SIN DATOS</a></li>
                 </ul>
 
                 <h5 class="mt-3">Reportes de proveedores</h5>
                 <ul class="list-group">
     {{-- 15 --}}   <li class="list-group-item"><a href="{{ route('administracion.reportes.rep-proveedores') }}">Proveedores</a></li>
+    {{-- 16 --}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodporproveedor" style="cursor: pointer;">Productos por proveedor</a></li>
     {{-- 17 --}}   <li class="list-group-item"><a href="{{ route('administracion.reportes.rep-prod-al-menor-costo') }}">Productos al menor costo</a></li>
                 </ul>
             </div>
@@ -74,6 +79,33 @@
                     <div class="form-group">
                         <label for="sel_fecha">Seleccione un rango de fechas:</label>
                         <x-adminlte-date-range name="sel_fecha" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- MODAL - 2-PEDIDOS RECHAZADOS --}}
+<div class="modal fade" id="md_pedidosrechazados">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-blue">
+                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('administracion.reportes.rep-pedidos-rechazados') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="sel_fecha_rechazados">Seleccione un rango de fechas:</label>
+                        <x-adminlte-date-range name="sel_fecha_rechazados" />
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -232,6 +264,62 @@
     </div>
 </div>
 
+{{-- MODAL - 8-PRODUCTO MENOS VENDIDO --}}
+<div class="modal fade" id="md_prodmenosvendido">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-blue">
+                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('administracion.reportes.rep-prod-menos-vendido') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    @section('plugins.DateRangePicker', true)
+                    <div class="form-group">
+                        <label for="sel_fecha_menos_vendido">Seleccione un rango de fechas:</label>
+                        <x-adminlte-date-range name="sel_fecha_menos_vendido" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- MODAL - 10-PRODUCTOS MÁS COTIZADOS --}}
+<div class="modal fade" id="md_prodmascotizados">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-blue">
+                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('administracion.reportes.rep-prod-mas-cotizado') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    @section('plugins.DateRangePicker', true)
+                    <div class="form-group">
+                        <label for="sel_fecha_mas_cotizados">Seleccione un rango de fechas:</label>
+                        <x-adminlte-date-range name="sel_fecha_mas_cotizados" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {{-- MODAL - 11-PRODUCTOS POR TEMPORADA --}}
 <div class="modal fade" id="md_prodxtemp">
     <div class="modal-dialog modal-dialog-centered">
@@ -259,6 +347,34 @@
     </div>
 </div>
 
+{{-- MODAL - 16-PRODUCTO POR PROVEEDOR --}}
+<div class="modal fade" id="md_prodporproveedor">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-blue">
+                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('administracion.reportes.rep-prod-por-proveedor') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        {{-- SLIM SELECT DE CLIENTES --}}
+                        <label for="sel_proveedor">Seleccione un proveedor:</label>
+                        <select class="sel-proveedor-slim form-control-alternative" name="sel_proveedor" id="sel_proveedor"></select>
+                      </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('js')
@@ -269,6 +385,9 @@
 
             const select_clientes = new SlimSelect({
                 select: '.sel-clientes-slim',
+            });
+            const select_proveedor = new SlimSelect({
+                select: '.sel-proveedor-slim',
             });
 
             // LLENAR EL SELECT DE ANIOS
@@ -300,6 +419,26 @@
                     dataType: 'json',
                     success: function(data) {
                         var select = $('#sel_cliente');
+                        select.empty();
+
+                        $.each(data, function(index, item) {
+                            select.append($('<option>', {
+                                value: item.razon_social,
+                                text: item.razon_social
+                            }));
+                        });
+                    }
+                });
+            });
+
+            // LENAR EL SELECT DE PROVEEDORES
+            $('#md_prodporproveedor').on('show.bs.modal', function(e) {
+                $.ajax({
+                    url: "{{ route('administracion.reportes.ajax.llenar-proveedor-select') }}",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        var select = $('#sel_proveedor');
                         select.empty();
 
                         $.each(data, function(index, item) {

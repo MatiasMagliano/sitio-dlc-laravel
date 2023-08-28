@@ -1,20 +1,20 @@
 <div class="card">
+    @isset($datos_membrete[0]['rango'])
+        <div class="card-header text-center">
+            <h5>{{ $datos_membrete[0]['rango'] }}</h5>
+        </div>
+    @endisset
     <div class="card-body">
         <table class="table-bordered" width="100%">
-            @isset($datos_membrete[0]['rango'])
-                <tr>
-                    <td colspan="3" class="align-middle text-center">
-                        <h5>{{ $datos_membrete[0]['rango'] }}</h5>
-                    </td>
-                </tr>
-            @endisset
             <tr>
                 <td width="20%">
                     <span>Fecha de emisión:</span> <br>
-                    <strong>{{$datos_membrete[0]["fecha_emision"]}}</strong>
+                    <strong>{{ $datos_membrete[0]['fecha_emision'] }}</strong>
                 </td>
-                <td width="70%"><h1 class="text-center">Droguería de la Ciudad</h1></td>
-                <td rowspan="2" class="justify-content-end"  width="10%">
+                <td width="70%">
+                    <h1 class="text-center">Droguería de la Ciudad</h1>
+                </td>
+                <td rowspan="2" class="justify-content-end" width="10%">
                     <svg width="200px" height="100px" version="1.1" viewBox="0 0 93.417 56.287"
                         xmlns="http://www.w3.org/2000/svg">
                         <g transform="translate(-58.418 -10.973)">
@@ -46,11 +46,11 @@
             <tr>
                 <td width="20%">
                     <span>Hora de emisión: </span> <br>
-                    <strong>{{$datos_membrete[0]["hora_emision"]}}</strong>
+                    <strong>{{ $datos_membrete[0]['hora_emision'] }}</strong>
                 </td>
                 <td>
                     <h3>
-                        {{$datos_membrete[0]["nombre_reporte"]}}
+                        {{ $datos_membrete[0]['nombre_reporte'] }}
                     </h3>
                 </td>
             </tr>
