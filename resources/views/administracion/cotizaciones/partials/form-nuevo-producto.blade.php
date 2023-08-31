@@ -71,6 +71,7 @@
                 class="form-control @error('precio') is-invalid @enderror"
                 value="@if(old('precio')){{old('precio')}}@else{{0}}@endif"
                 step=".01">
+                <div class="invalid-feedback" id="invalid-feedback-precio"></div>
                 @error('precio')<div class="invalid-feedback">{{$message}}</div>@enderror
         </div>
     </div>
@@ -81,6 +82,7 @@
             <input type="number" name="cantidad" id="input-cantidad" min="0"
                 class="form-control @error('cantidad') is-invalid @enderror"
                 value="@if(old('cantidad')){{old('cantidad')}}@else{{0}}@endif">
+                <div class="invalid-feedback" id="invalid-feedback-cantidad"></div>
                 @error('cantidad')<div class="invalid-feedback">{{$message}}</div>@enderror
         </div>
     </div>

@@ -242,40 +242,65 @@
         $(document).on('submit','#formModifProducto',function(event){
             event.preventDefault();
 
-            $.ajax({
-                url: '{{route('administracion.cotizaciones.actualizar.producto')}}',
-                method: 'POST',
-                data: new FormData(this),
-                dataType: 'JSON',
-                contentType: false,
-                cache: false,
-                processData: false,
-                success:function(response)
-                {
-                    Swal.fire({
-                        title: 'Modificar producto',
-                        icon: 'success',
-                        text: response.success,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+            //Validación de formulario
+            // Realiza tus validaciones personalizadas aquí
+            var validado = true;
+                
+            //Valor de campo Precio
+            $('#invalid-feedback-precio p').remove();
+            $('#input-precio').removeClass('is-invalid');
+                if ( $.isNumeric($('#input-precio').val()) == false || $('#input-precio').val() <= 0){
+                validado = false;
+                $('#input-precio').addClass('is-invalid'); 
+                $('#invalid-feedback-precio').append('<p>El campo precio es incorrecto</p>'); 
+            }
 
-                    $('#modalModifProducto').modal('toggle')
-                    tablaProductos.ajax.reload();
-                },
-                error: function(response) {
-                    var errors = response.responseJSON;
-                    errores = '';
-                    $.each( errors, function( key, value ) {
-                        errores += value;
-                    });
-                    Swal.fire({
-                        icon: 'error',
-                        text: errores,
-                        showConfirmButton: true,
-                    });
-                }
-            });
+            //Valor de campo Cantidad
+            $('#invalid-feedback-cantidad p').remove();
+            $('#input-cantidad').removeClass('is-invalid');
+            if ( $.isNumeric($('#input-cantidad').val()) == false || $('#input-cantidad').val() <= 0){
+                validado = false;
+                $('#input-cantidad').addClass('is-invalid'); 
+                $('#invalid-feedback-cantidad').append('<p>El campo cantidad es incorrecto</p>'); 
+            }
+
+            if (validado){
+                $.ajax({
+                    url: '{{route('administracion.cotizaciones.actualizar.producto')}}',
+                    method: 'POST',
+                    data: new FormData(this),
+                    dataType: 'JSON',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success:function(response)
+                    {
+                        Swal.fire({
+                            title: 'Modificar producto',
+                            icon: 'success',
+                            text: response.success,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+
+                        $('#modalModifProducto').modal('toggle')
+                        tablaProductos.ajax.reload();
+                    },
+                    error: function(response) {
+                        var errors = response.responseJSON;
+                        errores = '';
+                        $.each( errors, function( key, value ) {
+                            errores += value;
+                        });
+                        Swal.fire({
+                            icon: 'error',
+                            text: errores,
+                            showConfirmButton: true,
+                        });
+                    }
+                });
+            }
+
         });
 
         // BOTON CONFIRMAR COTIZACIÓN QUE APARECE DINAMICAMENTE AL PRINCIPIO DE LA PÁGINA

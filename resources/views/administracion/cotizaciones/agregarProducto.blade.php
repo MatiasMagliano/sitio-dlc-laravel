@@ -206,6 +206,39 @@
                 costo_4: '*',
                 costo_5: '*',
             }).draw();
+
+            //Validación de formulario
+            $('.needs-validation').submit(function(event) {
+                // Detiene el envío predeterminado del formulario
+                event.preventDefault();
+
+                // Realiza tus validaciones personalizadas aquí
+                var validado = true;
+                
+                //Valor de campo Precio
+                $('#invalid-feedback-precio p').remove();
+                $('#input-precio').removeClass('is-invalid');
+                if ( $.isNumeric($('#input-precio').val()) == false || $('#input-precio').val() <= 0){
+                    validado = false;
+                    $('#input-precio').addClass('is-invalid'); 
+                    $('#invalid-feedback-precio').append('<p>El campo precio es incorrecto</p>'); 
+                }
+
+                //Valor de campo Cantidad
+                $('#invalid-feedback-cantidad p').remove();
+                $('#input-cantidad').removeClass('is-invalid');
+                if ( $.isNumeric($('#input-cantidad').val()) == false || $('#input-cantidad').val() <= 0){
+                    validado = false;
+                    $('#input-cantidad').addClass('is-invalid'); 
+                    $('#invalid-feedback-cantidad').append('<p>El campo cantidad es incorrecto</p>'); 
+                }
+
+
+                if (validado){
+                    this.submit();
+                }
+            });
+
         });
     </script>
 @endsection
