@@ -349,11 +349,10 @@ class CotizacionController extends Controller
         //AGREGAR PRESENTACION A COTIZACION
         $productos = Producto::orderby('droga', 'ASC')->get();
         $porcentajes = Cotizacion::select('clientes.razon_social', 'porcentaje_1', 'porcentaje_2', 'porcentaje_3', 'porcentaje_4', 'porcentaje_5')
-            ->join('clientes', 'cotizacions.cliente_id', '=', 'clientes.id')
-            ->join('esquema_precios', 'clientes.id', '=', 'esquema_precios.cliente_id')
-            ->where('cotizacions.id', '=', $cotizacion->id)
-            ->get();
-
+        ->join('clientes', 'cotizacions.cliente_id', '=', 'clientes.id')
+        ->join('esquema_precios', 'clientes.id', '=', 'esquema_precios.cliente_id')
+        ->where('cotizacions.id', '=', $cotizacion->id)
+        ->get();
 
         return view('administracion.cotizaciones.agregarProducto', compact('cotizacion', 'productos', 'porcentajes'));
     }
@@ -378,13 +377,25 @@ class CotizacionController extends Controller
             'producto_id' => $producto_ids[0],
             'presentacion_id' => $producto_ids[1]
         ]);
-        $request->merge([
-            'total' => $request->get('precio') * $request->get('cantidad')
-        ]);
 
-        $productoCotizado->create($request->all());
+        $existe = ProductoCotizado::select('COUNT(*)')
+        ->where('cotizacion_id', '=', $cotizacion->id)
+        ->where('producto_id', '=', $producto_ids[0])
+        ->where('presentacion_id', '=', $producto_ids[1])
+        ->count();
 
-        $request->session()->flash('success', 'Producto agregado con éxito.');
+        if($existe > 0){
+            $request->session()->flash('warning', 'Ya existe el producto en esta cotizacion.');
+        }else{
+            $request->merge([
+                'total' => $request->get('precio') * $request->get('cantidad')
+            ]);
+    
+            $productoCotizado->create($request->all()); 
+            $request->session()->flash('success', 'Producto agregado con éxito.');   
+        }
+        
+        
         return redirect()
             ->route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]);
     }
