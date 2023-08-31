@@ -19,8 +19,10 @@ class CreateOrdenTrabajosTable extends Migration
             $table->id();
             $table->foreignIdFor(Cotizacion::class)->constrained();
             $table->foreignIdFor(User::class)->constrained();
-            $table->string('plazo_entrega')->nullable();
-            $table->timestamp('en_produccion')->nullable();
+            $table->date('plazo_entrega');
+            $table->text('observaciones')->nullable();
+            $table->boolean('lotes_completos')->default(0);
+            $table->date('en_produccion');
             $table->foreignId('estado_id')->constrained('estados');
             $table->timestamps();
         });

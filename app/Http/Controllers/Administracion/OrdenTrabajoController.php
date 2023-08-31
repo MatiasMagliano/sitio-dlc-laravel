@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Administracion;
+
 use App\Http\Controllers\Controller;
 use App\Models\Cotizacion;
 use App\Models\DepositoCasaCentral;
@@ -8,6 +9,8 @@ use App\Models\Lote;
 use App\Models\LotePresentacionProducto;
 use App\Models\OrdenTrabajo;
 use App\Models\Producto;
+use App\Models\ProductoCotizado;
+use App\Models\ProductoOrdenTrabajo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,8 +29,7 @@ class OrdenTrabajoController extends Controller
 
     public function obtenerLineasCotizacion(Request $request)
     {
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             $lineas = DB::table('producto_cotizados')
                 ->select('producto_cotizados.id AS cotizado_id', 'productos.droga', 'presentacions.forma', 'presentacions.presentacion')
                 ->join('productos', 'producto_cotizados.producto_id', '=', 'productos.id')
@@ -45,63 +47,79 @@ class OrdenTrabajoController extends Controller
         return view('administracion.ordenestrabajo.show', compact('ordentrabajo', 'cotizacion'));
     }
 
-    public function asignarLotes(OrdenTrabajo $ordentrabajo, $producto, $presentacion){
-        $lotes = Lote::findMany(LotePresentacionProducto::getLotes($producto, $presentacion));
-        $producto = Producto::find($producto);
-
-        return view('administracion.ordenestrabajo.show-lotes', compact('ordentrabajo', 'producto', 'lotes'));
-    }
-
     public function store(Request $request)
     {
-        // SE TIENE QUE MODIFICAR COMPLETAMENTE EL MÉTODO
-        // Se buscan los productos tildados
-        $productos = DB::table('producto_cotizados')
-            ->whereIn('id', $request->lineasOrdenTrabajo)
-            ->get();
-
-        $cotizacion = Cotizacion::findOrFail($productos[0]->cotizacion_id);
-
-        // Se agregan los datos necesarios en el request para generar
-        // la OT y los productos que dependen de ella
-        $request->request->add([
-            'cotizacion_id' => $productos[0]->cotizacion_id,
-            'user_id'       => Auth::user()->id,
-            'estado_id'     => 4,
+        $productos = ProductoCotizado::where('cotizacion_id', $request->cotizacion_id)->get();
+        $cotizacion = Cotizacion::findOrFail($request->cotizacion_id);
+        $orden_trabajo = new OrdenTrabajo([
+            'cotizacion_id' => $request->cotizacion_id,
+            'user_id'       => Auth()->user()->id,
+            'plazo_entrega' => Carbon::parse($request->plazo_entrega),
+            'observaciones' => $request->observaciones,
             'en_produccion' => Carbon::now(),
+            'estado_id'     => 4 //estado provisorio
         ]);
+        $orden_trabajo->save();
 
-        $orden = new OrdenTrabajo($request->all());
-        $orden->save(); // para crearla en la BD
-
-        foreach($productos as $producto)
+        $productos_ot = array();
+        $GLOBALS['lotes_completos'] = false;
+        $GLOBALS['estado'] = 6;
+        foreach ($productos as $producto)
         {
-            $deposito = DepositoCasaCentral::find(
-                LotePresentacionProducto::getIdDeposito($producto->producto_id, $producto->presentacion_id) //devuelve un solo pivot relacionado a prod/pres
-            );
+            $producto_ot = array();
+            $lotes_asignados = [];
 
+            $producto_ot['orden_trabajo_id'] = $orden_trabajo->id;
+            $producto_ot['producto_id'] = $producto->producto_id;
+            $producto_ot['presentacion_id'] = $producto->presentacion_id;
 
-            // LOGICA QUE AGREGA A UN ARRAY LOS ID's DE LOTES AFECTADOS A LA ORDEN DE TRABAJO
+            $cantidad = $producto->cantidad;
+            $lotes = Lote::lotesPorPresentacion($producto->producto_id, $producto->presentacion_id);
+            $i_lote = 0;
 
+            while ($cantidad > 0 && $i_lote < count($lotes))
+            {
+                if ($lotes[$i_lote]->cantidad >= $cantidad)
+                {
+                    // cuando el lote llega a cubrir la cantidad requerida
+                    $lotes_asignados[] = [
+                        'indentificador' => $lotes[$i_lote]->identificador,
+                        'cantidad'       => $cantidad
+                    ];
+                    $cantidad -= $lotes[$i_lote]->cantidad;
+                    $GLOBALS['lotes_completos'] = true;
+                    $GLOBALS['estado'] = 6;
+                    // aquí va rutina que descuenta las cantidades en la tabla real LOTES
+                }
+                else
+                {
+                    // cuando el lote no llega a cubrir la cantidad requerida
+                    $GLOBALS['lotes_completos'] = false;
+                    $GLOBALS['estado'] = 7;
+                }
+                $i_lote += 1;
+            }
+            $producto_ot['lotes'] = json_encode($lotes_asignados);
+
+            // Agregar el producto al arreglo de productos
+            $productos_ot[] = $producto_ot;
         }
 
-        if(OrdenTrabajo::LotesCompletos($orden->id))
-        {
-            $estado = 6;
-            $request->session()->flash('success', 'La orden de trabajo se creó con éxito. Estará disponible para imprimir desde el panel inferior.');
-        }
-        else
-        {
-            $estado = 7;
-            $request->session()->flash('warning', 'La orden de trabajo se creó con éxito, pero con <strong>lotes incompletos</strong>. Deberá agregarlos manualmente una vez adquiridos.');
-        }
-        $cotizacion->estado_id = $estado;
-        $orden->estado_id = $estado;
+        // se limpia todo y se guardan los registros
+        $orden_trabajo->lotes_completos = $GLOBALS['lotes_completos'];
+        $orden_trabajo->estado_id = $GLOBALS['estado'];
+        $orden_trabajo->save();
 
-        //se actualiza el update_at...
+        $cotizacion->estado_id = $GLOBALS['estado'];
         $cotizacion->save();
-        $orden->save();
-        return redirect(route('administracion.ordentrabajo.index'));
+
+        ProductoOrdenTrabajo::create($productos_ot);
+
+        dd($orden_trabajo, $productos_ot);
+
+        //dd($lotes_asignados);
+        //return redirect(route('administracion.ordentrabajo.index'));
+        return view('pruebas', compact('lotes_asignados'));
     }
 
     public function descargapdf()

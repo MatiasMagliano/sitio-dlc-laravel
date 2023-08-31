@@ -9,7 +9,6 @@ use App\Models\Proveedor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\Return_;
 
 class ReporteController extends Controller
 {
@@ -22,7 +21,7 @@ class ReporteController extends Controller
     // REPORTE Nº 1 - PEDIDOS PROCESADOS POR VENDEDOR
     public function pedProcxVendedor(Request $request)
     {
-        $rango = explode(' - ', $request->sel_fecha_pedidos);
+        $rango = explode(' - ', $request->sel_fecha);
         $desde = Carbon::parse($rango[0]);
         $hasta = Carbon::parse($rango[1]);
 

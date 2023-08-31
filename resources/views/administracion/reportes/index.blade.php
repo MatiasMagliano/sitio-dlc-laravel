@@ -34,7 +34,8 @@
     {{-- 5 ---}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodvendxcliente" style="cursor: pointer;">Productos vendidos por cliente</a></li>
     {{-- 6 ---}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_vtasxtipoprod" style="cursor: pointer;">Ventas por tipo de producto</a></li>
                 </ul>
-
+            </div>
+            <div class="col">
                 <h5 class="mt-3">Reportes de productos</h5>
                 <ul class="list-group">
     {{-- 7 ---}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodmasvendido" style="cursor: pointer;">Productos más vendido</a></li>
@@ -68,7 +69,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-gradient-blue">
-                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <h5 class="modal-title">Pedidos procesados por vendedor</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -95,7 +96,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-gradient-blue">
-                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <h5 class="modal-title">Pedidos rechazados</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -122,7 +123,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-gradient-blue">
-                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <h5 class="modal-title">Cuota de ventas por vendedor</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -149,7 +150,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-gradient-blue">
-                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <h5 class="modal-title">Ventas por rango de fechas</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -177,7 +178,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-gradient-blue">
-                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <h5 class="modal-title">Productos vendidos por cliente</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -205,7 +206,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-gradient-blue">
-                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <h5 class="modal-title">Ventas por tipo de producto</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -241,7 +242,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-gradient-blue">
-                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <h5 class="modal-title">Producto más vendido</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -269,7 +270,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-gradient-blue">
-                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <h5 class="modal-title">Producto menos vendido</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -297,7 +298,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-gradient-blue">
-                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <h5 class="modal-title">Productos más cotizados</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -325,7 +326,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-gradient-blue">
-                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <h5 class="modal-title">Productos por temporada</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -352,7 +353,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-gradient-blue">
-                <h5 class="modal-title">Selección de datos iniciales</h5>
+                <h5 class="modal-title">Productos por proveedor</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>

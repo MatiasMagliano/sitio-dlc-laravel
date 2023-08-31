@@ -59,24 +59,18 @@ class Lote extends Model
 
 
     // RELACIONES PARTICULARES
-    // devuelve todos los lotes por presentacion y producto
+    // devuelve un array con todos los lotes por presentacion y producto
     public static function lotesPorPresentacion($producto, $presentacion)
     {
-        return Lote::select(
-            'lotes.id AS id',
-            'lotes.identificador',
-            'lotes.precio_compra',
-            'lotes.cantidad',
-            'lotes.fecha_vencimiento',
-            'lotes.fecha_compra',
-            'lotes.deleted_at as eliminado'
-            )
-            ->leftJoin('lote_presentacion_producto', 'lotes.id', '=', 'lote_presentacion_producto.lote_id')
-            ->where('lote_presentacion_producto.presentacion_id', '=', $presentacion)
-            ->where('lote_presentacion_producto.producto_id', '=', $producto)
-            ->where('lotes.cantidad', '>', 0)
-            ->withTrashed()
-            ->get();
+        return DB::select(
+            'SELECT
+                l.*
+            FROM lotes l
+            INNER JOIN lote_presentacion_producto lpp on lpp.lote_id = l.id
+            WHERE lpp.producto_id = ? AND lpp.presentacion_id = ?
+            ORDER BY l.fecha_vencimiento ASC;',
+            [$producto, $presentacion]
+        );
     }
 
     public static function promedioPrecioLotes($producto, $presentacion)
@@ -91,5 +85,17 @@ class Lote extends Model
 
     public function deposito(){
         return $this->belongsToMany(DepositoCasaCentral::class, 'lote_presentacion_producto', 'id', 'dcc_id');
+    }
+
+    public function descontarLotes(Lote $lote, $cantidad)
+    {
+        if($lote->cantidad > $cantidad)
+        {
+            $lote->cantidad -= $cantidad;
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

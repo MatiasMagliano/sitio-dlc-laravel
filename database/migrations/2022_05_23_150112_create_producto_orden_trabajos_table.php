@@ -22,8 +22,7 @@ class CreateProductoOrdenTrabajosTable extends Migration
             $table->foreignIdFor(OrdenTrabajo::class)->constrained();
             $table->foreignIdFor(Producto::class)->constrained();
             $table->foreignIdFor(Presentacion::class)->constrained();
-            $table->string('lotes');
-            $table->unsignedInteger('cantidad');
+            $table->json('lotes');
             $table->timestamps();
         });
     }

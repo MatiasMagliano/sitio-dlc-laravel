@@ -15,11 +15,12 @@ class OrdenTrabajo extends Model
     protected $table = 'orden_trabajos';
 
     protected $fillable = [
-        'cotizacion_id', 'user_id', 'plazo_entrega', 'en_produccion', 'estado_id'
+        'cotizacion_id', 'user_id', 'plazo_entrega', 'observaciones', 'lotes_completos', 'en_produccion', 'estado_id'
     ];
 
     protected $casts = [
-        'en_produccion' => 'datetime'
+        'plazo_entrega' => 'date',
+        'en_produccion' => 'date'
     ];
 
     // RELACIONES
