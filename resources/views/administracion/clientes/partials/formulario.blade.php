@@ -67,6 +67,7 @@
                 class="form-control @error('telefono') is-invalid @enderror" value="{{ old('telefono') }}">
             <small id="input-afip" class="form-text text-muted">Sin guiones, paréntesis u otros caracteres
                 especiales.</small>
+            <div class="invalid-feedback" id="invalid-feedback-telefono"></div>
             @error('telefono')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -169,27 +170,27 @@
         </div>
         <div class="card-body">
             <div class="row d-flex justify-content-center">
-                <div class="form-group col-lg-2 col-md-6 m-3 ">
+                <div id="descuento_1" class="form-group col-lg-2 col-md-6 m-3 ">
                     <label for="input-esquema">Descuento 1</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
                         name="esquema[]" id="input-esquema" value="0" min="0">
                 </div>
-                <div class="form-group col-lg-2 col-md-6 m-3">
+                <div id="descuento_2" class="form-group col-lg-2 col-md-6 m-3">
                     <label for="input-esquema">Descuento 2</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
                         name="esquema[]" id="input-esquema" value="0" min="0">
                 </div>
-                <div class="form-group col-lg-2 col-md-6 m-3">
+                <div id="descuento_3" class="form-group col-lg-2 col-md-6 m-3">
                     <label for="input-esquema">Descuento 3</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
                         name="esquema[]" id="input-esquema" value="0" min="">
                 </div>
-                <div class="form-group col-lg-2 col-md-6 m-3">
+                <div id="descuento_4" class="form-group col-lg-2 col-md-6 m-3">
                     <label for="input-esquema">Descuento 4</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
                         name="esquema[]" id="input-esquema" value="0" min="0">
                 </div>
-                <div class="form-group col-lg-2 col-md-6 m-3">
+                <div id="descuento_5" class="form-group col-lg-2 col-md-6 m-3">
                     <label for="input-esquema">Descuento 5</label>
                     <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
                         name="esquema[]" id="input-esquema" value="0" min="0">
