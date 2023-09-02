@@ -235,16 +235,14 @@ class CotizacionController extends Controller
             'cliente_id' => 'required',
             'plazo_entrega' => 'required'
         ]);
-
         // Se valida que no haya una misma cotización con el mismo identificador al mismo cliente
-        $existente = Cotizacion::where('cliente_id', $request->get('cliente'))
+        $existente = Cotizacion::where('cliente_id', $request->get('cliente_id'))
             ->where('identificador', $request->get('identificador'))
             ->where('finalizada', null)->get();
         if ($existente->count()) {
             $request->session()->flash('error', 'Ya existe este identificador en una cotización sin finalizar. <a href="' . route('administracion.cotizaciones.show', $existente->first()) . '">Haga click aquí para verla.</a>');
             return redirect()->route('administracion.cotizaciones.index');
         }
-
         // se continúa con el guardado de la cotización
         $request->request->add(['estado_id' => 1]);
         $cotizacion = new Cotizacion($request->all());
