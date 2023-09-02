@@ -237,8 +237,7 @@ class CotizacionController extends Controller
         ]);
         // Se valida que no haya una misma cotización con el mismo identificador al mismo cliente
         $existente = Cotizacion::where('cliente_id', $request->get('cliente_id'))
-            ->where('identificador', $request->get('identificador'))
-            ->where('finalizada', null)->get();
+            ->where('identificador', $request->get('identificador'))->get();
         if ($existente->count()) {
             $request->session()->flash('error', 'Ya existe este identificador en una cotización sin finalizar. <a href="' . route('administracion.cotizaciones.show', $existente->first()) . '">Haga click aquí para verla.</a>');
             return redirect()->route('administracion.cotizaciones.index');
