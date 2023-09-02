@@ -539,12 +539,12 @@ class CotizacionController extends Controller
             return response()->json($sugerencias);
         }
     }
-
+/*
     public function generarpdf(Cotizacion $cotizacion, Request $request)
     {
         if ($cotizacion->finalizada) {
-
             $presentaciones = Presentacion::all();
+
             $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout', ['cotizacion' => $cotizacion, 'presentaciones' => $presentaciones]);
 
             $dom_pdf = $pdf->getDomPDF();
@@ -552,6 +552,46 @@ class CotizacionController extends Controller
             $canvas->page_text(270, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 8, array(0, 0, 0));
 
             return $pdf->download('cotizacion_' . $cotizacion->identificador . '.pdf');
+        }
+        else
+        {
+            $request->session()->flash('error', 'La cotización aún no ha terminado de agregar líneas. Por favor finalice la cotización para descargar el PDF.');
+            return redirect(route('administracion.cotizaciones.index'));
+        }
+    }
+*/
+    public function generarpdf(Cotizacion $cotizacion, Request $request)
+    {
+        if ($cotizacion->finalizada) {
+
+            $cotizacion1 = DB::table('cotizacions')
+            ->select('cotizacions.identificador','cotizacions.confirmada','cotizacions.rechazada',
+                'cotizacions.cliente_id','clientes.razon_social','clientes.tipo_afip','clientes.afip','clientes.telefono',
+                'direcciones_entrega.lugar_entrega','direcciones_entrega.domicilio','direcciones_entrega.condiciones',
+                'direcciones_entrega.observaciones','localidades.nombre as localidad','provincias.nombre as provincia')
+            ->join('clientes', 'cotizacions.cliente_id', '=', 'clientes.id')
+            ->join('direcciones_entrega', 'cotizacions.dde_id', '=', 'direcciones_entrega.id')
+            ->join('localidades', 'direcciones_entrega.localidad_id', '=', 'localidades.id')
+            ->join('provincias', 'direcciones_entrega.provincia_id', '=', 'provincias.id')
+            ->where('cotizacions.id', $cotizacion->id)
+            ->get()->first();
+
+            $lineas = DB::table('producto_cotizados')
+            ->select('productos.droga','presentacions.forma','presentacions.presentacion',
+                'producto_cotizados.cantidad','producto_cotizados.precio','producto_cotizados.total')
+            ->join('productos', 'producto_cotizados.producto_id', '=', 'productos.id')
+            ->join('presentacions', 'producto_cotizados.presentacion_id', '=', 'presentacions.id')
+            ->where('producto_cotizados.cotizacion_id', $cotizacion->id)
+            ->where('producto_cotizados.no_aprobado', 0)
+            ->get();
+
+            //dd($cotizacion1);
+            $pdf = PDF::loadView('administracion.cotizaciones.pdfLayout-v2', ['cotizacion' => $cotizacion1, 'lineas' => $lineas]);
+            $dom_pdf = $pdf->getDomPDF();
+            $canvas = $dom_pdf->get_canvas();
+            $canvas->page_text(270, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 8, array(0, 0, 0));
+
+            return $pdf->download('cotizacion_' . $cotizacion1->identificador . '.pdf');
         }
         else
         {
