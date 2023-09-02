@@ -139,7 +139,7 @@ class ListaPrecio extends Model
             'lista_precios.id as listaId','lista_precios.proveedor_id','proveedors.razon_social','producto_id','presentacion_id',
             'codigoProv','droga', 'costo','lista_precios.updated_at',
             DB::raw('CONCAT(forma, ", ", presentacion) AS detalle'),
-            DB::raw('CASE WHEN presentacions.hospitalario = 1 THEN "Hospitalario" ELSE "" END AS hospotalario'),
+            DB::raw('CASE WHEN presentacions.hospitalario = 1 THEN "Hospitalario" ELSE "" END AS hospitalario'),
             DB::raw('CASE WHEN presentacions.trazabilidad = 1 THEN "Trazable" ELSE "" END AS trazabilidad'),
             DB::raw('CASE WHEN presentacions.divisible = 1 THEN "Divisible" ELSE "" END AS divisible'))
             ->join('productos','lista_precios.producto_id','=','productos.id')
