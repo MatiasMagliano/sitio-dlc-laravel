@@ -28,7 +28,7 @@
 {{-- aquí va contenido --}}
 @section('content')
     <x-adminlte-card>
-        <form action="{{ route('administracion.cotizaciones.store') }}" method="post" class="needs-validation m-3" autocomplete="off" novalidate>
+        <form action="{{ route('administracion.cotizaciones.store') }}" method="post" id="create_new_cotiz" class="needs-validation m-3" autocomplete="off" novalidate>
             @csrf
 
             <input type="hidden" name="user_id" value="{{ Auth::id() }}">
@@ -42,6 +42,7 @@
                         class="form-control @error('identificador') is-invalid @enderror"
                         placeholder="Identificador de licitación provisto por el cliente"
                         value="{{ old('identificador') }}" autofocus>
+                    <div class="invalid-feedback" id="invalid-feedback-identificador"></div>
                     @error('identificador')<div class="invalid-feedback">{{$message}}</div>@enderror
                 </div>
 
@@ -60,6 +61,7 @@
                             @endif
                         @endforeach
                     </select>
+                    <div class="invalid-feedback" id="invalid-feedback-cliente"></div>
                     @error('cliente_id')<div class="invalid-feedback">{{$message}}</div>@enderror
                 </div>
 
@@ -70,12 +72,14 @@
                         class="selecion-dde form-control-alternative @error('dde_id') is-invalid @enderror">
                         <option data-placeholder="true"></option>
                     </select>
+                    <div class="invalid-feedback" id="invalid-feedback-dde"></div>
                     @error('dde_id')<div class="invalid-feedback">{{$message}}</div>@enderror
                 </div>
 
                 <div class="form-group">
                     <label for="plazoDeEntrega">Plazo de entrega*</label>
                     <textarea name="plazo_entrega" class="form-control" id="plazoDeEntrega" rows="2"></textarea>
+                    <div class="invalid-feedback" id="invalid-feedback-plazoDeEntrega"></div>
                 </div>
 
                 <button type="submit" class="btn btn-success mt-4">Continuar</button>
@@ -88,6 +92,67 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
     <script>
         let old_cliente = {{@old('cliente_id', $cliente->id)}};
+
+        $(document).ready(function(){
+            //Validación de formulario
+            $('#create_new_cotiz').submit(function(event) {
+                // Detiene el envío predeterminado del formulario
+                event.preventDefault();
+                // Realiza tus validaciones personalizadas aquí
+                var validado = true;
+                
+                //Valor de campo Identificador
+                $('#invalid-feedback-identificador p').remove();
+                $('#input-identificador').removeClass('is-invalid');
+                if ( $('#input-identificador').val() === '' || $('#input-identificador').val() == null || $('#input-identificador').val() == undefined){
+                    validado = false;
+                    $('#input-identificador').addClass('is-invalid'); 
+                    $('#invalid-feedback-identificador').append('<p>El campo identificador es requerido</p>'); 
+                }
+
+                //Valor de campo Cliente
+                $('#invalid-feedback-cliente p').remove();
+                $('#input-cliente').removeClass('is-invalid');
+                if ( $('#input-cliente').val() === '' || $('#input-cliente').val() == null || $('#input-cliente').val() == undefined){
+                    validado = false;
+                    $('#input-cliente').addClass('is-invalid'); 
+                    $('#invalid-feedback-cliente').append('<p>El campo cliente es requerido</p>'); 
+                }
+                
+                //Valor de campo Punto de Entrega
+                $('#invalid-feedback-dde p').remove();
+                $('#input-dde').removeClass('is-invalid');
+                if ( $('#input-dde').val() === '' || $('#input-dde').val() == null || $('#input-dde').val() == undefined){
+                    validado = false;
+                    $('#input-dde').addClass('is-invalid'); 
+                    $('#invalid-feedback-dde').append('<p>El campo punto de entrega es requerido</p>'); 
+                }              
+                
+                //Valor de campo Plazo de Entrega
+                  $('#invalid-feedback-dde p').remove();
+                $('#input-dde').removeClass('is-invalid');
+                if ( $('#input-dde').val() === '' || $('#input-dde').val() == null || $('#input-dde').val() == undefined){
+                    validado = false;
+                    $('#input-dde').addClass('is-invalid'); 
+                    $('#invalid-feedback-dde').append('<p>El campo punto de entrega es requerido</p>'); 
+                }                 
+                
+                //Valor de campo Precio
+                $('#invalid-feedback-plazoDeEntrega p').remove();
+                $('#plazoDeEntrega').removeClass('is-invalid');
+                if ( $('#plazoDeEntrega').val() === '' || $('#plazoDeEntrega').val() == null || $('#plazoDeEntrega').val() == undefined){
+                    validado = false;
+                    $('#plazoDeEntrega').addClass('is-invalid'); 
+                    $('#invalid-feedback-plazoDeEntrega').append('<p>El campo plazo de entrega es requerido</p>'); 
+                }  
+
+                if (validado){
+                    this.submit();
+                }
+            });
+
+        });
+
         var dde = new SlimSelect({
             select: '.selecion-dde',
             placeholder: 'Seleccione un punto de entrega',
