@@ -1,10 +1,4 @@
 <script>
-    $(document).ready(function() {
-        hideAlertValidation();
-        $("#input-ncodigoProv").on('input', function (evt) {$(this).val($(this).val().replace(/[^0-9]/g, ''));});
-    });
-
-
     var frs = true;
     $(document).ready(function() {
         frs = true;
@@ -36,7 +30,12 @@
 
     //AGREGAR PRODUCTO - MODAL
     $(document).on('click', '.open_first_modal', function(){
-        hideAlertValidation();
+        $('#input-ncodigoProv').val('');
+        $('#input-ncosto').val('');
+        $('#invalid-feedback-ncodigoProv p').remove();
+        $('#input-ncodigoProv').removeClass('is-invalid');
+        $('#invalid-feedback-ncosto p').remove();
+        $('#input-ncosto').removeClass('is-invalid');
         $.ajax({
             type: "GET",
             url: "{{route('administracion.listaprecios.editar.traerDataAgregarProductoLista')}}",
@@ -68,61 +67,31 @@
     //AGREGAR PRODUCTO - SUBMIT DEL FORMULARIO
     $(document).on('submit','#formAgregProducto',function(event){
         event.preventDefault();
-        hideAlertValidation();
 
-        if ($('#input-ncosto')[0].valueAsNumber > 0 && $('#input-ncosto')[0].valueAsNumber != "" && $('#input-ncodigoProv')[0].value > '0' &&  $('#input-ncodigoProv')[0].value != "") {
-            $.ajax({
-                url: '{{route('administracion.listaprecios.editar.ingresarProductoLista')}}',
-                method: 'POST',
-                data: new FormData(this),
-                dataType: 'JSON',
-                contentType: false,
-                cache: false,
-                processData: false,
-                success:function(response)
-                {
-                    if(response.alert == "success"){
-                        Swal.fire({
-                            title: 'Agregar producto',
-                            icon: response.alert,
-                            text: response.message,
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
+        var validado = true;
 
-                        location.reload();
-                    }else{
-                        Swal.fire({
-                            title: 'Agregar producto',
-                            icon: response.alert,
-                            text: response.message,
-                            showConfirmButton: false,
-                        });
-                    }
-                },
-                error: function(response) {
-                    var errors = response.responseJSON;
-                    errores = '';
-                    $.each( errors, function( key, value ) {
-                        errores += value;
-                    });
-                    Swal.fire({
-                        icon: 'error',
-                        text: errores,
-                        showConfirmButton: true,
-                        timer: 1500
-                    });
-                }
-            });
-
-        }else{
-            if( $('#input-ncosto')[0].valueAsNumber == 0 || isNaN($('#input-ncosto')[0].valueAsNumber)) {
-                $('#input-ncosto-feedback').removeClass('invalid-feedback');
-            }
-            if( $('#input-ncodigoProv')[0].value == 0 || (isNaN($('#input-ncodigoProv')[0].value) && $('#input-ncodigoProv')[0].value.length == 0)) {
-                $('#input-ncodigoProv-feedback').removeClass('invalid-feedback');
-            }
+        //Valor de campo Codigo de Proveedor
+        $('#invalid-feedback-ncodigoProv p').remove();
+        $('#input-ncodigoProv').removeClass('is-invalid');
+        if ( $('#input-ncodigoProv').val() == '' || $('#input-ncodigoProv').val() == null || $('#input-ncodigoProv').val() == undefined){
+            validado = false;
+            $('#input-ncodigoProv').addClass('is-invalid'); 
+            $('#invalid-feedback-ncodigoProv').append('<p>El campo codigoprov es incorrecto</p>'); 
         }
+
+        //Valor de campo Costo
+        $('#invalid-feedback-ncosto p').remove();
+        $('#input-ncosto').removeClass('is-invalid');
+        if ( $.isNumeric($('#input-ncosto').val()) == false || $('#input-ncosto').val() <= 0){
+            validado = false;
+            $('#input-ncosto').addClass('is-invalid'); 
+            $('#invalid-feedback-ncosto').append('<p>El campo costo es incorrecto</p>'); 
+        }
+
+        if (validado){
+            this.submit();
+        }
+
     });
 
     //BORRAR PRODUCTO
@@ -155,7 +124,8 @@
 
     //MODIFICAR PRODUCTO - MODAL
     $(document).on('click', '.open_modal', function(){
-        hideAlertValidation();
+        $('#invalid-feedback-costo p').remove();
+        $('#input-costo').removeClass('is-invalid');
         $.ajax({
             type: "GET",
             url: "{{route('administracion.listaprecios.editar.traerDataModificarProductoLista')}}",
@@ -178,9 +148,20 @@
     //MODIFICAR PRODUCTO - SUBMIT DEL FORMULARIO
     $(document).on('submit','#formModifProducto',function(event){
         event.preventDefault();
-        hideAlertValidation();
-        if ($('#input-costo')[0].valueAsNumber > 0 && $('#input-costo')[0].valueAsNumber != "" && $('#input-codigoProv')[0].value > '0' &&  $('#input-codigoProv')[0].value != "") {
-            $.ajax({
+        var validado = true;
+
+        //Valor de campo Costo
+        $('#invalid-feedback-costo p').remove();
+        $('#input-costo').removeClass('is-invalid');
+        if ( $.isNumeric($('#input-costo').val()) == false || $('#input-costo').val() <= 0){
+            validado = false;
+            $('#input-costo').addClass('is-invalid'); 
+            $('#invalid-feedback-costo').append('<p>El campo costo es incorrecto</p>'); 
+        }
+
+        if (validado){
+            this.submit();
+            /*$.ajax({
                 url: '{{route('administracion.listaprecios.editar.actualizarProductoLista')}}',
                 method: 'POST',
                 data: new FormData(this),
@@ -212,22 +193,8 @@
                     });
                 }
 
-            });
-        }else{
-            if( $('#input-costo')[0].valueAsNumber == 0 || isNaN($('#input-costo')[0].valueAsNumber)) {
-                $('#input-costo-feedback').removeClass('invalid-feedback');
-            }
-            /*if( $('#input-codigoProv')[0].value == 0 || (isNaN($('#input-codigoProv')[0].value) && $('#input-codigoProv')[0].value.length == 0)) {
-                $('#input-codigoProv-feedback').removeClass('invalid-feedback');
-            }*/
+            });*/
         }
     });
-
-    function hideAlertValidation(){
-        $('#input-codigoProv-feedback').addClass('invalid-feedback');
-        $('#input-costo-feedback').addClass('invalid-feedback');
-        $('#input-ncodigoProv-feedback').addClass('invalid-feedback');
-        $('#input-ncosto-feedback').addClass('invalid-feedback');
-    }
 
 </script>

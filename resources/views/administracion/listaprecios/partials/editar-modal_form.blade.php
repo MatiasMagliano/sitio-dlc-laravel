@@ -3,9 +3,9 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
-            <form action="" method="POST" id="formAgregProducto" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <form action="{{route('administracion.listaprecios.editar.ingresarProductoLista')}}" method="POST" id="formAgregProducto" enctype="multipart/form-data" class="needs-validation" novalidate>
                 @csrf
-                @method('PATCH')
+                @method('POST')
                 <input type="hidden" name="proveedor_id" id="input-nproveedorId" value="{{ $proveedorItem->id }}">
                 <div class="modal-header bg-gradient-blue">
                     <h5 class="modal-title">Agregar producto</h5>
@@ -37,7 +37,7 @@
                             <div class="form-group">
                                 <label for="input-ncodigoProv">Código de Proveedor *</label>
                                 <input type="text" name="codigoProv" id="input-ncodigoProv" class="form-control" required>
-                                <div id="input-ncodigoProv-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Debe ingresar un dato válido</div>
+                                <div class="invalid-feedback" id="invalid-feedback-ncodigoProv"></div>
                             </div>
                         </div>
 
@@ -45,7 +45,7 @@
                             <div class="form-group">
                                 <label for="input-ncosto">Costo *</label>
                                 <input type="number" name="costo" id="input-ncosto" min="0" class="form-control" step=".01" required>
-                                <div id="input-ncosto-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Debe ingresar un importe mayor a 0</div>
+                                <div class="invalid-feedback" id="invalid-feedback-ncosto"></div>
                             </div>
                         </div>
 
@@ -57,7 +57,7 @@
                         <div class="text-secondary"><strong>H</strong>: Hospitalario</div>
                         <div class="text-secondary"><strong>T</strong>: Trazable</div>
                         <div class="text-secondary"><strong>D</strong>: Divisible</div>
-                        <button type="submit" id="guardarAprobada" class="btn btn-success">Continuar</button>
+                        <button type="submit" id="guardarNuevoAprobada" class="btn btn-success">Continuar</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
@@ -72,10 +72,10 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
-            <form action="" method="POST" id="formModifProducto" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <form action="{{route('administracion.listaprecios.editar.actualizarProductoLista')}}" method="POST" id="formModifProducto" enctype="multipart/form-data" class="needs-validation" novalidate>
                 @csrf
                 @method('PATCH')
-                <input type="hidden" name="listaId" id="input-listaId" value="">
+                <input type="hidden" name="listaId" id="input-listaId" value="{{ $proveedorItem }}">
                 <div class="modal-header bg-gradient-blue">
                     <h5 class="modal-title">Modificar producto</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
@@ -103,7 +103,7 @@
                             <div class="form-group">
                                 <label for="input-costo">Costo *</label>
                                 <input type="number" name="costo" id="input-costo" min="0" class="form-control" step=".01" required>
-                                <div id="input-costo-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Debe ingresar un importe mayor a 0</div>
+                                <div class="invalid-feedback" id="invalid-feedback-costo"></div>
                             </div>
                         </div>
 
@@ -111,7 +111,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" id="guardarAprobada" class="btn btn-success">Continuar</button>
+                    <button type="submit" id="guardarEditadoAprobada" class="btn btn-success">Continuar</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 </div>
             </form>

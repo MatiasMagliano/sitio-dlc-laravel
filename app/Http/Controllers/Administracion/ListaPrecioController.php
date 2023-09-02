@@ -295,31 +295,33 @@ class ListaPrecioController extends Controller
             
         return response()->json($jsonResponse);
     }
-    public function IngresarProductoLista(Request $request) {
-        $newProdLista = new ListaPrecio;
-        $existeCodigo = ListaPrecio::findCodigoProv($request->codigoProv);
 
-        if(!$existeCodigo){
+    public function IngresarProductoLista(Request $request) {
+        $rs = Proveedor::find($request->proveedor_id);
+        $existeCodigo = ListaPrecio::findCodigoProv($request->codigoProv);
+        if($existeCodigo == 0){
             $existeProducto = ListaPrecio::findByProducto($request->proveedor_id , $request->producto_id, $request->presentacion_id);
-            if(!$existeProducto){
-                $datos = $request->validate([
-                    'producto_id' => 'required',
-                    'presentacion_id' => 'required',
-                    'costo' => 'required|numeric|min:0',
-                    'codigoProv' => 'required|numeric|regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
-                ]);
-        
-                $newProdLista = new ListaPrecio($request->all());
+            if($existeProducto == 0){
+                $newProdLista = new ListaPrecio;
+                $newProdLista->producto_id = $request->producto_id;
+                $newProdLista->presentacion_id = $request->presentacion_id;
+                $newProdLista->proveedor_id = $request->proveedor_id;
+                $newProdLista->codigoProv = $request->codigoProv;
+                $newProdLista->costo = $request->costo;
+                
                 $newProdLista->save();
-    
-                return response()->json(['alert' => 'success','message' => 'El producto se ha modificado con éxito.']);
+                
+                $request->session()->flash('success', 'El producto se ha ingresado con éxito.');
+                return redirect(route('administracion.listaprecios.editar', ['razon_social' => $rs->razon_social]));
                 
             }else{
-                return response()->json(['alert' => 'warning','message' => 'El producto ya se encuentra en el listado del proveedor.']);
+                $request->session()->flash('warning', 'El producto ya se encuentra en el listado del proveedor.');
+                return redirect(route('administracion.listaprecios.editar', ['razon_social' => $rs->razon_social]));
             }
-        
+            
         }else{
-            return response()->json(['alert' => 'warning','message' => 'Ya existe un producto con el mismo código de proveedor.']);
+            $request->session()->flash('warning', 'Ya existe un producto con el mismo código de proveedor.');
+            return redirect(route('administracion.listaprecios.editar', ['razon_social' => $rs->razon_social]));
         }
     }
 
@@ -347,13 +349,12 @@ class ListaPrecioController extends Controller
     }
     public function ActualizarProductoLista(Request $request) {
         $producto_listaPrecio = ListaPrecio::find($request->listaId);
-        $datos = $request->validate([
-            'costo'  => 'required|numeric|min:0',
-        ]);
+        $cliente = Proveedor::find($producto_listaPrecio->proveedor_id);
+        $producto_listaPrecio->costo = $request->costo;
+        $producto_listaPrecio->save();
 
-        $producto_listaPrecio->update($datos);
-
-        return response()->json(['success' => 'El producto se ha modificado con éxito.']);
+        $request->session()->flash('success', 'El producto se ha modificado con éxito.');
+        return redirect(route('administracion.listaprecios.editar', ['razon_social' => $cliente->razon_social]));
     }
 
     /*public function getListasVacias() {
