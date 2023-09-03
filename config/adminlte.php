@@ -286,7 +286,7 @@ return [
                 ],
             ]
         ],
-        [
+        /*[
             'text'  => 'work_orders',
             'icon'  => 'fas fa-toolbox',
             'can'   => 'es-administracion',
@@ -298,7 +298,7 @@ return [
                     'can'    => ['es-administracion', 'es-expedicion'],
                 ],
             ]
-        ],
+        ],*/
         [
             'text'    => 'products_maintenance',
             'icon'    => 'fas fa-shopping-basket',
