@@ -91,7 +91,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     // rutas para LISTA DE PRECIOS
     Route::get('/listaprecios/alta', [ListaPrecioController::class, 'AgregarListadoPreciosProveedor'])->name('listaprecios.alta');
     Route::get('/listaprecios/{razon_social}', [ListaPrecioController::class, 'MostrarListado'])->name('listaprecios.editar');
-    Route::match(['put', 'patch'], '/listaprecios/alta/ListadoPrecios', [ListaPrecioController::class, 'NuevoListadoPrecioProveedor'])->name('listaprecios.alta.nuevoListadoPrecioProveedor');
+    Route::post('/listaprecios/alta/ListadoPrecios', [ListaPrecioController::class, 'NuevoListadoPrecioProveedor'])->name('listaprecios.alta.nuevoListadoPrecioProveedor');
     Route::delete('/listaprecios/{razon_social}/editar/{listaId}', [ListaPrecioController::class, 'QuitarProductoLista'])->name('listaprecios.editar.quitarProductoLista');
     Route::delete('/listaprecios/{proveedor_id}/vaciarListado', [ListaPrecioController::class, 'VaciarListado'])->name('listaprecios.vaciar');
     Route::get('/listaprecios/{proveedor_id}/volverListado', [ListaPrecioController::class, 'VolverListado'])->name('listaprecios.volverListado');

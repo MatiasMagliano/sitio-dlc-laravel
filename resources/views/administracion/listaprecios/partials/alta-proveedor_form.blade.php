@@ -1,6 +1,6 @@
-<form action="" method="POST" id="formAgregProveedor" class="needs-validation" autocomplete="off" novalidate>
+<form action="{{ route('administracion.listaprecios.alta.nuevoListadoPrecioProveedor') }}" method="POST" id="formAgregProveedor" class="needs-validation" autocomplete="off" novalidate>
     @csrf
-    @method('PATCH')
+    @method('POST')
     <div class="pl-lg-4">
         
         <div class="row d-flex m-1">
@@ -18,7 +18,7 @@
             <div class="form-group col">
                 <label for="input-razon_social">Razón social *</label>
                 <input type="text" name="razon_social" id="input-razon_social" class="form-control" placeholder="Nombre completo del proveedor o nombre de fantasía" required autofocus>
-                <div id="input-razon_social-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
+                <div class="invalid-feedback" id="invalid-feedback-razon_social"></div>
             </div>
         </div>
         <div class="row d-flex m-1">   
@@ -26,7 +26,7 @@
                 <label for="input-cuit">Número *</label>
                 <input type="text" name="cuit" id="input-cuit" class="form-control" required>
                 <small id="input-cuit-tip" class="form-text text-muted">Ingrese solo números.</small>
-                <div id="input-cuit-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
+                <div class="invalid-feedback" id="invalid-feedback-cuit"></div>
             </div>
         </div>
         
@@ -39,7 +39,7 @@
             <div class="form-group col">
                 <label for="input-email">E-mail de Contacto *</label>
                 <input type="email" name="email" id="input-email" class="form-control" placeholder="No posee dirección wb" required>
-                <div id="input-email-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
+                <div class="invalid-feedback" id="invalid-feedback-email"></div>
             </div>
         </div>
 
@@ -47,7 +47,7 @@
             <div class="form-group col">
                 <label for="input-web">Dirección Web *</label>
                 <input type="web" name="web" id="input-web" class="form-control form-control-sm" required>
-                <div id="input-web-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
+                <div class="invalid-feedback" id="invalid-feedback-web"></div> 
             </div>
         </div>
 
@@ -60,7 +60,7 @@
             <div class="form-group col">
                 <label for="input-domicilio">Dirección *</label>
                 <input type="domicilio" name="domicilio" id="input-domicilio" class="form-control form-control-sm">
-                <div id="input-domicilio-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
+                <div class="invalid-feedback" id="invalid-feedback-domicilio"></div>    
             </div>
         </div>
 
@@ -77,7 +77,7 @@
                         @endif
                     @endforeach
                 </select>
-                <div id="input-provincia-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
+                <div class="invalid-feedback" id="invalid-feedback-provincia"></div>    
             </div>
             <div class="form-group col-6">
                 <label for="input-localidad">Localidad *</label>
@@ -91,7 +91,7 @@
                         @endif
                     @endforeach
                 </select>
-                <div id="input-localidad-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Este campo es obligatorio</div>
+                <div class="invalid-feedback" id="invalid-feedback-localidad"></div>  
             </div>
         </div>
         

@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Hamcrest\Core\HasToString;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Calculation\TextData\Replace;
 
 class ListaPrecioController extends Controller
 {
@@ -139,9 +140,11 @@ class ListaPrecioController extends Controller
     // - Alta
     public function NuevoListadoPrecioProveedor(Request $request) {
         // se valida que los campos estén presentes
+        //dd($request);
+        
         $datosProveedor = $request->validate([
             'razon_social' => 'required',
-            'cuit' => 'required',
+            'cuit' => ['required', new ValidacionAfip],
             'email' => 'required',
             'web' => 'max:255',
             'domicilio' => 'required',
@@ -149,37 +152,31 @@ class ListaPrecioController extends Controller
             'localidad_id' => 'required'
         ]);
 
-        $existe = ListaPrecio::findByRSCUIT($request->razon_social, $request->cuit);
-
-        if ($existe) {
-            return response()->json(['alert' => 'warning','message' => 'El proveedor que intenta cargar ya existe.']);
+        $existeRS = ListaPrecio::findByRS($request->razon_social);
+        if ($existeRS) {
+            $request->session()->flash('warning', 'Ya existe un proveedor con esta razon social.');
+            return redirect(route('administracion.listaprecios.alta'));
         }else {
-            $existeRS = ListaPrecio::findByRS($request->razon_social);
-            if ($existeRS) {
-                return response()->json(['alert' => 'warning','message' => 'Ya existe un proveedor con esta razon social.']);
+            $existeCUIT = ListaPrecio::findByCUIT($request->cuit);
+            if ($existeCUIT) {
+                $request->session()->flash('warning', 'Ya existe el proveedor: '. $existeCUIT->RS .', con ese CUIT dado de alta.');
+                return redirect(route('administracion.listaprecios.alta'));
             }else {
-                $existeCUIT = ListaPrecio::findByCUIT($request->cuit);
-                if ($existeCUIT) {
-                    return response()->json(['alert' => 'warning','message' => 'Ya existe el proveedor: '. $existeCUIT->RS .', con ese CUIT dado de alta.']);
-                }else {
-                    $ubicacion = ListaPrecio::getUbicacion($request->provincia_id, $request->localidad_id);
 
-                    $proveedor = new Proveedor;
+                $ubicacion = ListaPrecio::getUbicacion($request->provincia_id, $request->localidad_id);
+
+                $proveedor = new Proveedor;
         
-                    $proveedor->razon_social = $request->razon_social;
-                    $proveedor->cuit = $request->cuit;
-                    $proveedor->contacto = $request->email;
-                    $proveedor->url =  $request->web;
-                    $proveedor->direccion =  $request->domicilio. ', ' .$ubicacion->localidad. ', ' .$ubicacion->provincia;
+                $proveedor->razon_social = $request->razon_social;
+                $proveedor->cuit = $request->cuit;
+                $proveedor->contacto = $request->email;
+                $proveedor->url =  $request->web;
+                $proveedor->direccion =  $request->domicilio. ', ' .$ubicacion->localidad. ', ' .$ubicacion->provincia;
                     
-                    $proveedor->save();
+                $proveedor->save();
 
-                    return response()->json(['alert' => 'success','message' => 'El alta de proveedor se ejecutó correctamente. Ahora será redirigido a la página principal']);
-                    //return redirect()->route('administracion.listaprecios.editar', ['razon_social' => $request->razon_social]);
-                    //return redirect()->route('administracion.listaprecios.editar', ['razon_social' => 'hg65hdnyt-yu']);
-                    //$this->show(strval($request->razon_social));
-                    //return redirect()->route('administracion.listaprecios.editar', $request->razon_social);
-                }
+                $request->session()->flash('success', 'El alta de proveedor se ejecutó correctamente. Ahora será redirigido a la página principal.');
+                return redirect(route('administracion.listaprecios.index'));
             }
         }
     }
