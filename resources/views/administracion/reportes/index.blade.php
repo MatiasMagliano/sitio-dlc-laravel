@@ -40,7 +40,7 @@
                 <ul class="list-group">
     {{-- 7 ---}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodmasvendido" style="cursor: pointer;">Productos más vendido</a></li>
     {{-- 8 ---}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodmenosvendido" style="cursor: pointer;">Productos menos vendido</a></li>
-    {{-- 9 ---}}   <li class="list-group-item"><a href="{{ route('administracion.reportes.rep-lotes-y-stock') }}">Lotes y Stock</a></li>
+    {{-- 9 ---}}   <li class="list-group-item"><a class="btn-link" href="{{ route('administracion.reportes.rep-lotes-y-stock') }}">Lotes y Stock</a></li>
     {{-- 10 --}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodmascotizados" style="cursor: pointer;">Productos más cotizados</a></li>
     {{-- 11 --}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodxtemp" style="cursor: pointer;">Productos por temporada</a></li>
                 </ul>
@@ -48,16 +48,16 @@
             <div class="col">
                 <h5 class="mt-3">Reportes de clientes</h5>
                 <ul class="list-group">
-    {{-- 12 --}}   <li class="list-group-item"><a href="{{ route('administracion.reportes.rep-clientes') }}">Clientes</a></li>
+    {{-- 12 --}}   <li class="list-group-item"><a class="btn-link" href="{{ route('administracion.reportes.rep-clientes') }}">Clientes</a></li>
     {{-- 13 --}}   <li class="list-group-item"><a class="btn-link" href="{{ route('administracion.reportes.rep-clientes-mas-cotizados') }}">Clientes más cotizados</a></li>
-    {{-- 14 --}}   {{-- <li class="list-group-item"><a class="text-danger" href="{{ route('administracion.reportes.rep-ord-de-trabajo') }}">Órdenes de trabajo - SIN DATOS</a></li> --}}
+    {{-- 14 --}}   <li class="list-group-item"><a class="btn-link" href="{{ route('administracion.reportes.rep-ord-de-trabajo') }}">Órdenes de trabajo</a></li>
                 </ul>
 
                 <h5 class="mt-3">Reportes de proveedores</h5>
                 <ul class="list-group">
-    {{-- 15 --}}   <li class="list-group-item"><a href="{{ route('administracion.reportes.rep-proveedores') }}">Proveedores</a></li>
+    {{-- 15 --}}   <li class="list-group-item"><a class="btn-link" href="{{ route('administracion.reportes.rep-proveedores') }}">Proveedores</a></li>
     {{-- 16 --}}   <li class="list-group-item"><a class="btn-link" data-toggle="modal" data-target="#md_prodporproveedor" style="cursor: pointer;">Productos por proveedor</a></li>
-    {{-- 17 --}}   <li class="list-group-item"><a href="{{ route('administracion.reportes.rep-prod-al-menor-costo') }}">Productos al menor costo</a></li>
+    {{-- 17 --}}   <li class="list-group-item"><a class="btn-link" href="{{ route('administracion.reportes.rep-prod-al-menor-costo') }}">Productos al menor costo</a></li>
                 </ul>
             </div>
         </div>

@@ -668,10 +668,12 @@ class ReporteController extends Controller
         $datos = DB::select(
             'SELECT
                 co.identificador AS "IDENT_ORDEN",
-                co.confirmada AS "F_APROBACION",
+                ot.en_produccion AS "F_APROBACION",
                 es.estado AS "ESTADO"
-            FROM orden_trabajo co
-            INNER JOIN estados es ON co.estado_id = es.id AND co.confirmada IS NOT NULL;'
+            FROM `orden_trabajos` ot
+            INNER JOIN cotizacions co ON co.id = ot.cotizacion_id
+            INNER JOIN estados es ON es.id = ot.estado_id
+            ORDER BY ot.en_produccion;'
         );
 
         return view('administracion.reportes.reportes.ordDeTrabajo', compact('datos_membrete', 'datos'));

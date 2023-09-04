@@ -180,7 +180,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
     Route::post('reportes/prodMenosVendido', [ReporteController::class, 'prodMenosVendido'])->name('reportes.rep-prod-menos-vendido');
     Route::post('reportes/prodMasCotizado', [ReporteController::class, 'prodMasCotizado'])->name('reportes.rep-prod-mas-cotizado');
     Route::get('reportes/clientesMasCotizados', [ReporteController::class, 'clientesMasCotizados'])->name('reportes.rep-clientes-mas-cotizados');
-    Route::post('reportes/ordDeTrabajo', [ReporteController::class, 'ordDeTrabajo'])->name('reportes.rep-ord-de-trabajo');
+    Route::get('reportes/ordDeTrabajo', [ReporteController::class, 'ordDeTrabajo'])->name('reportes.rep-ord-de-trabajo');
     Route::post('reportes/prodPorProveedor', [ReporteController::class, 'prodPorProveedor'])->name('reportes.rep-prod-por-proveedor');
     Route::post('reportes/pedidosRechazados', [ReporteController::class, 'pedidosRechazados'])->name('reportes.rep-pedidos-rechazados');
         // rutas extra ajax REPORTES
