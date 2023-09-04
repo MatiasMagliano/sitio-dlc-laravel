@@ -166,7 +166,7 @@
                                     <td style="vertical-align: middle; text-align:center;">
                                         <a href="{{ route('administracion.ordentrabajo.descargapdf', ['ordentrabajo' => $orden]) }}"
                                             class="btn btn-sm btn-info">
-                                            Imprimir OT
+                                            Imprimir Picking List
                                         </a>
                                     </td>
                                 @break
@@ -259,22 +259,6 @@
 @include('partials.alerts')
 <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
 <script>
-    function selectAll() {
-        var items = document.getElementsByName('lineasOrdenTrabajo[]');
-        for (var i = 0; i < items.length; i++) {
-            if (items[i].type == 'checkbox')
-                items[i].checked = true;
-        }
-    }
-
-    function UnSelectAll() {
-        var items = document.getElementsByName('lineasOrdenTrabajo[]');
-        for (var i = 0; i < items.length; i++) {
-            if (items[i].type == 'checkbox')
-                items[i].checked = false;
-        }
-    }
-
     $(document).ready(function() {
         $('#ordenesPotenciales').DataTable({
             "dom": 'frtip',
