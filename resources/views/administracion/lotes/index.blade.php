@@ -92,8 +92,7 @@
             <h3>
                 Lotes vigentes
             </h3>
-            <small>Letras rojas: Lote vencido</small><br>
-            <small>Fondo rojo: Lote eliminado</small>
+            <small>Referencia:</small> <small class="text-danger border"> Lote vencido</small> | <small class="table-danger border"> Lote eliminado</small>
         </div>
         <div class="card-body">
             <div class="card">
@@ -139,13 +138,13 @@
 
                             <div class="form-group col-md-4 mb-3">
                                 <label for="cantidad" class="label">Cantidad *</label>
-                                <input type="text" name="cantidad" id="cantidad" class="form-control" value=""
+                                <input type="number" name="cantidad" id="cantidad" class="form-control" value=""
                                     required>
                             </div>
 
                             <div class="form-group col-md-4 mb-3">
                                 <label for="precio_compra" class="label">Precio de compra *</label>
-                                <input type="text" name="precio_compra" id="precio_compra" class="form-control"
+                                <input type="number" name="precio_compra" id="precio_compra" class="form-control"
                                     value="" required>
                             </div>
                         </div>
@@ -281,11 +280,11 @@
             ],
             "rowCallback": function(row, data, index) {
                 if (data.fecha_vencimiento < moment(new Date()).format('YYYY-MM-DD HH:mm:ss')) {
-                    $('td', row).css('color', 'Brown');
+                    $('td', row).addClass('text-danger');
                 }
                 if (data.deleted_at != null) {
-                    $('td', row).css('background-color', 'Red');
-                    //$('td', row).class('overlay');
+                    $("td", row).addClass("table-danger");
+                    $("button", row, "#btnBorrar").attr("disabled", true).addClass("btn-secondary");
                 }
             },
         });
@@ -503,10 +502,14 @@
                         error: function(response) {
                             $("#submit").attr("disabled", true);
                             let respuesta = JSON.parse(response.responseText);
+                            let msj = "";
+                            $.each(respuesta.errors, function(index,value){
+                                msj += value + "\n"
+                            });
                             //sweet alert
                             Swal.fire({
                                 icon: 'error',
-                                text: respuesta.message,
+                                text: msj,
                                 showConfirmButton: true,
                             });
 
