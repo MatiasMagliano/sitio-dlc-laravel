@@ -34,7 +34,7 @@
                         {{ $cliente->IDENT_ORDEN }}
                     </td>
                     <td class="align-middle text-center"  width="33%">
-                        {{ \Carbon\Carbon::parse($cliente->F_APROBACION)->format('d/m/Y - H:i') }}
+                        {{ \Carbon\Carbon::parse($cliente->F_APROBACION)->format('d/m/Y') }}
                     </td>
                     <td class="align-middle text-center"  width="33%">
                         {{ $cliente->ESTADO }}
