@@ -50,7 +50,7 @@
                 <ul class="list-group">
     {{-- 12 --}}   <li class="list-group-item"><a href="{{ route('administracion.reportes.rep-clientes') }}">Clientes</a></li>
     {{-- 13 --}}   <li class="list-group-item"><a class="btn-link" href="{{ route('administracion.reportes.rep-clientes-mas-cotizados') }}">Clientes más cotizados</a></li>
-    {{-- 14 --}}   <li class="list-group-item"><a class="text-danger" href="{{ route('administracion.reportes.rep-ord-de-trabajo') }}">Órdenes de trabajo - SIN DATOS</a></li>
+    {{-- 14 --}}   {{-- <li class="list-group-item"><a class="text-danger" href="{{ route('administracion.reportes.rep-ord-de-trabajo') }}">Órdenes de trabajo - SIN DATOS</a></li> --}}
                 </ul>
 
                 <h5 class="mt-3">Reportes de proveedores</h5>
