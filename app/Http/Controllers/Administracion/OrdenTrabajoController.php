@@ -49,8 +49,11 @@ class OrdenTrabajoController extends Controller
 
     public function store(Request $request)
     {
-        $productos = ProductoCotizado::where('cotizacion_id', $request->cotizacion_id)->get();
+        $productos = ProductoCotizado::where('cotizacion_id', $request->cotizacion_id)
+            ->where('no_aprobado', 0)
+            ->get();
         $cotizacion = Cotizacion::findOrFail($request->cotizacion_id);
+
         $orden_trabajo = new OrdenTrabajo([
             'cotizacion_id' => $request->cotizacion_id,
             'user_id'       => Auth()->user()->id,
@@ -59,14 +62,16 @@ class OrdenTrabajoController extends Controller
             'en_produccion' => Carbon::now(),
             'estado_id'     => 4 //estado provisorio
         ]);
+
         $orden_trabajo->save();
 
-        $productos_ot = array();
-        $GLOBALS['lotes_completos'] = false;
-        $GLOBALS['estado'] = 6;
-        foreach ($productos as $producto)
-        {
-            $producto_ot = array();
+        $productos_ot = [];
+
+        $lotes_completos = false;
+        $estado = 6;
+
+        foreach ($productos as $producto) {
+            $producto_ot = [];
             $lotes_asignados = [];
 
             $producto_ot['orden_trabajo_id'] = $orden_trabajo->id;
@@ -77,28 +82,25 @@ class OrdenTrabajoController extends Controller
             $lotes = Lote::lotesPorPresentacion($producto->producto_id, $producto->presentacion_id);
             $i_lote = 0;
 
-            while ($cantidad > 0 && $i_lote < count($lotes))
-            {
-                if ($lotes[$i_lote]->cantidad >= $cantidad)
-                {
+            while ($cantidad > 0 && $i_lote < count($lotes)) {
+                if ($lotes[$i_lote]->cantidad >= $cantidad) {
                     // cuando el lote llega a cubrir la cantidad requerida
                     $lotes_asignados[] = [
                         'indentificador' => $lotes[$i_lote]->identificador,
                         'cantidad'       => $cantidad
                     ];
                     $cantidad -= $lotes[$i_lote]->cantidad;
-                    $GLOBALS['lotes_completos'] = true;
-                    $GLOBALS['estado'] = 6;
+                    $lotes_completos = true;
+                    $estado = 6;
                     // aquí va rutina que descuenta las cantidades en la tabla real LOTES
-                }
-                else
-                {
+                } else {
                     // cuando el lote no llega a cubrir la cantidad requerida
-                    $GLOBALS['lotes_completos'] = false;
-                    $GLOBALS['estado'] = 7;
+                    $lotes_completos = false;
+                    $estado = 7;
                 }
                 $i_lote += 1;
             }
+
             $producto_ot['lotes'] = json_encode($lotes_asignados);
 
             // Agregar el producto al arreglo de productos
@@ -106,20 +108,32 @@ class OrdenTrabajoController extends Controller
         }
 
         // se limpia todo y se guardan los registros
-        $orden_trabajo->lotes_completos = $GLOBALS['lotes_completos'];
-        $orden_trabajo->estado_id = $GLOBALS['estado'];
+        $orden_trabajo->lotes_completos = $lotes_completos;
+        $orden_trabajo->estado_id = $estado;
         $orden_trabajo->save();
 
-        $cotizacion->estado_id = $GLOBALS['estado'];
+        $cotizacion->estado_id = $estado;
         $cotizacion->save();
 
-        ProductoOrdenTrabajo::create($productos_ot);
+        try
+        {
+            ProductoOrdenTrabajo::insert($productos_ot);
 
-        dd($orden_trabajo, $productos_ot);
+            if($estado == 6)
+            {
+                $request->session()->flash('success', 'La orden de trabajo se creó con éxito. Estará disponible para imprimir desde el panel inferior.');
+            }
+            elseif($estado == 7)
+            {
+                $request->session()->flash('warning', 'La orden de trabajo se creó con éxito, pero con <strong>lotes incompletos</strong>. Deberá agregarlos manualmente una vez adquiridos y cargado en el sistema.');
+            }
 
-        //dd($lotes_asignados);
-        //return redirect(route('administracion.ordentrabajo.index'));
-        return view('pruebas', compact('lotes_asignados'));
+            return redirect(route('administracion.ordentrabajo.index'));
+
+        }
+        catch (\Illuminate\Database\QueryException $e) {
+            dd($e->getMessage());
+        }
     }
 
     public function descargapdf()
