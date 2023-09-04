@@ -30,12 +30,11 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
-                    'nombre_reporte' => 'Pedidos procesados por vendedor',
-                    'fecha_emision'  => $carbon->format('d/m/Y'),
-                    'hora_emision'   => $carbon->format('H:i')
-                ]
+                'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
+                'nombre_reporte' => 'Pedidos procesados por vendedor',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -71,6 +70,11 @@ class ReporteController extends Controller
             ->orderBy('q.name')
             ->get();
 
+        if($datos->isEmpty())
+        {
+            $datos_membrete['sin_datos'] = 1;
+        }
+
         // reorganizar los datos para que queden "VENDEDOR" -> "VENTAS"
         $datosReorganizados = [];
         foreach ($datos as $registro) {
@@ -100,12 +104,11 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
-                    'nombre_reporte' => 'Pedidos rechazados',
-                    'fecha_emision'  => $carbon->format('d/m/Y'),
-                    'hora_emision'   => $carbon->format('H:i')
-                ]
+                'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
+                'nombre_reporte' => 'Pedidos rechazados',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -126,6 +129,10 @@ class ReporteController extends Controller
             GROUP BY co.identificador, co.rechazada;',
             [$desde, $hasta]
         );
+
+        if (empty($datos)) {
+            $datos_membrete['sin_datos'] = 1;
+        }
 
         // reorganizar los datos para que queden "VENDEDOR" -> "VENTAS"
         $datosReorganizados = [];
@@ -155,12 +162,11 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
-                    'nombre_reporte' => 'Cuota de ventas por vendedor',
-                    'fecha_emision'  => $carbon->format('d/m/Y'),
-                    'hora_emision'   => $carbon->format('H:i')
-                ]
+                'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
+                'nombre_reporte' => 'Cuota de ventas por vendedor',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -207,7 +213,10 @@ class ReporteController extends Controller
             [$desde, $hasta, $desde, $hasta, $desde, $hasta]
         );
 
-        //dd($datos);
+        if(empty($datos))
+        {
+            $datos_membrete['sin_datos'] = 1;
+        }
 
         return view('administracion.reportes.reportes.cuotavtasxvendedor', compact('datos_membrete', 'datos'));
     }
@@ -224,12 +233,11 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
-                    'nombre_reporte' => 'Ventas por rango de fechas',
-                    'fecha_emision'  => $carbon->format('d/m/Y'),
-                    'hora_emision'   => $carbon->format('H:i')
-                ]
+                'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
+                'nombre_reporte' => 'Ventas por rango de fechas',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -248,6 +256,11 @@ class ReporteController extends Controller
             [$desde, $hasta]
         );
 
+        if(empty($datos))
+        {
+            $datos_membrete['sin_datos'] = 1;
+        }
+
         return view('administracion.reportes.reportes.vtasxrangodefechas', compact('datos_membrete', 'datos'));
     }
 
@@ -261,11 +274,10 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'nombre_reporte' => 'Productos vendidos por cliente',
-                    'fecha_emision'  => $carbon->format('d/m/Y'),
-                    'hora_emision'   => $carbon->format('H:i')
-                ]
+                'nombre_reporte' => 'Productos vendidos por cliente',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -293,6 +305,11 @@ class ReporteController extends Controller
             [$cliente->razon_social]
         );
 
+        if(empty($datos))
+        {
+            $datos_membrete['sin_datos'] = 1;
+        }
+
         return view('administracion.reportes.reportes.prodVendPorCliente', compact('datos_membrete', 'datos', 'cliente'));
     }
 
@@ -308,12 +325,11 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
-                    'nombre_reporte' => 'Ventas por tipo de producto',
-                    'fecha_emision'  => $carbon->format('d/m/Y'),
-                    'hora_emision'   => $carbon->format('H:i')
-                ]
+                'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
+                'nombre_reporte' => 'Ventas por tipo de producto',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -351,7 +367,11 @@ class ReporteController extends Controller
             ->orderBy('ULTIMA_VENTA', 'DESC')
             ->get();
 
-        //dd($datos->toSql());
+        if($datos->isEmpty())
+        {
+            $datos_membrete['sin_datos'] = 1;
+        }
+
         return view('administracion.reportes.reportes.vtasportipoprod', compact('datos_membrete', 'datos', 'tipo'));
     }
 
@@ -367,12 +387,11 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
-                    'nombre_reporte' => 'Producto más vendido',
-                    'fecha_emision'  => $carbon->format('d/m/Y'),
-                    'hora_emision'   => $carbon->format('H:i')
-                ]
+                'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
+                'nombre_reporte' => 'Producto más vendido',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -392,7 +411,11 @@ class ReporteController extends Controller
             [$desde, $hasta]
         );
 
-        //dd($datos);
+        if(empty($datos))
+        {
+            $datos_membrete['sin_datos'] = 1;
+        }
+
         return view('administracion.reportes.reportes.prodMasVendido', compact('datos_membrete', 'datos'));
     }
 
@@ -408,12 +431,11 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
-                    'nombre_reporte' => 'Producto menos vendido',
-                    'fecha_emision'  => $carbon->format('d/m/Y'),
-                    'hora_emision'   => $carbon->format('H:i')
-                ]
+                'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
+                'nombre_reporte' => 'Producto menos vendido',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -432,6 +454,11 @@ class ReporteController extends Controller
             [$desde, $hasta]
         );
 
+        if(empty($datos))
+        {
+            $datos_membrete['sin_datos'] = 1;
+        }
+
         return view('administracion.reportes.reportes.prodMenosVendido', compact('datos_membrete', 'datos'));
     }
 
@@ -443,11 +470,10 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'nombre_reporte' => 'Lotes y Stock',
-                    'fecha_emision' => $carbon->format('d/m/Y'),
-                    'hora_emision' => $carbon->format('H:i')
-                ]
+                'nombre_reporte' => 'Lotes y Stock',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -463,6 +489,11 @@ class ReporteController extends Controller
             ->orderBy('lo.cantidad', 'desc')
             ->orderBy('lo.fecha_vencimiento', 'desc')
             ->get();
+
+        if(empty($datos))
+        {
+            $datos_membrete['sin_datos'] = 1;
+        }
 
         $datosReorganizados = [];
 
@@ -497,12 +528,11 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
-                    'nombre_reporte' => 'Productos más cotizados',
-                    'fecha_emision'  => $carbon->format('d/m/Y'),
-                    'hora_emision'   => $carbon->format('H:i')
-                ]
+                'rango'          => 'Reporte desde: ' . $rango[0] . ' hasta el ' . $rango[1],
+                'nombre_reporte' => 'Productos más cotizados',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -538,6 +568,11 @@ class ReporteController extends Controller
             [$desde, $hasta, $desde, $hasta, $desde, $hasta]
         );
 
+        if(empty($datos))
+        {
+            $datos_membrete['sin_datos'] = 1;
+        }
+
         return view('administracion.reportes.reportes.prodMasCotizado', compact('datos_membrete', 'datos'));
     }
 
@@ -551,12 +586,11 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'rango'          => 'Año seleccionado: ' . $anio_seleccionado,
-                    'nombre_reporte' => 'Reporte de Productos por temporada',
-                    'fecha_emision'  => $carbon->format('d/m/Y'),
-                    'hora_emision'   => $carbon->format('H:i')
-                ]
+                'rango'          => 'Año seleccionado: ' . $anio_seleccionado,
+                'nombre_reporte' => 'Reporte de Productos por temporada',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -582,6 +616,11 @@ class ReporteController extends Controller
             ->orderByDesc('CANTIDAD')
             ->get();
 
+        if($datos->isEmpty())
+        {
+            $datos_membrete['sin_datos'] = 1;
+        }
+
         // Reorganizar los datos para un fácil acceso en la vista
         $datosReorganizados = [];
         foreach ($datos as $dato) {
@@ -604,11 +643,10 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'nombre_reporte' => 'Reporte de Clientes',
-                    'fecha_emision' => $carbon->format('d/m/Y'),
-                    'hora_emision' => $carbon->format('H:i')
-                ]
+                'nombre_reporte' => 'Reporte de Clientes',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -627,11 +665,10 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'nombre_reporte' => 'Clientes más cotizados',
-                    'fecha_emision' => $carbon->format('d/m/Y'),
-                    'hora_emision' => $carbon->format('H:i')
-                ]
+                'nombre_reporte' => 'Clientes más cotizados',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -646,6 +683,10 @@ class ReporteController extends Controller
             GROUP BY cl.razon_social, cl.ultima_cotizacion, cl.ultima_compra;'
         );
 
+        if (empty($datos)) {
+            $datos_membrete['sin_datos'] = 1;
+        }
+
         return view('administracion.reportes.reportes.clientesMasCotizados', compact('datos_membrete', 'datos'));
     }
 
@@ -657,11 +698,10 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'nombre_reporte' => 'Órdenes de trabajo',
-                    'fecha_emision' => $carbon->format('d/m/Y'),
-                    'hora_emision' => $carbon->format('H:i')
-                ]
+                'nombre_reporte' => 'Órdenes de trabajo',
+                'fecha_emision' => $carbon->format('d/m/Y'),
+                'hora_emision' => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -675,6 +715,10 @@ class ReporteController extends Controller
             INNER JOIN estados es ON es.id = ot.estado_id
             ORDER BY ot.en_produccion;'
         );
+
+        if (empty($datos)) {
+            $datos_membrete['sin_datos'] = 1;
+        }
 
         return view('administracion.reportes.reportes.ordDeTrabajo', compact('datos_membrete', 'datos'));
     }
@@ -690,11 +734,10 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'nombre_reporte' => 'Reporte de Productos por temporada',
-                    'fecha_emision'  => $carbon->format('d/m/Y'),
-                    'hora_emision'   => $carbon->format('H:i')
-                ]
+                'nombre_reporte' => 'Reporte de Productos por temporada',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
@@ -709,8 +752,12 @@ class ReporteController extends Controller
                 INNER JOIN proveedors pv ON lp.proveedor_id = pv.id AND pv.razon_social = ?
                 INNER JOIN productos pro ON lp.producto_id = pro.id
                 INNER JOIN presentacions pre ON lp.presentacion_id = pre.id',
-                [$proveedor]
+            [$proveedor]
         );
+
+        if (empty($datos)) {
+            $datos_membrete['sin_datos'] = 1;
+        }
 
         return view('administracion.reportes.reportes.prodPorProveedor', compact('datos_membrete', 'datos', 'datos_proveedor'));
     }
@@ -723,17 +770,15 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'nombre_reporte' => 'Reporte de Clientes',
-                    'fecha_emision' => $carbon->format('d/m/Y'),
-                    'hora_emision' => $carbon->format('H:i')
-                ]
+                'nombre_reporte' => 'Reporte de Clientes',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0
             ]
         );
 
 
         $proveedores = Proveedor::orderby('razon_social')->get();
-
         return view('administracion.reportes.reportes.repoProveedores', compact('proveedores', 'datos_membrete'));
     }
 
@@ -745,11 +790,10 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                [
-                    'nombre_reporte' => 'Productos al menor ',
-                    'fecha_emision' => $carbon->format('d/m/Y'),
-                    'hora_emision' => $carbon->format('H:i')
-                ]
+                'nombre_reporte' => 'Productos al menor costo',
+                'fecha_emision'  => $carbon->format('d/m/Y'),
+                'hora_emision'   => $carbon->format('H:i'),
+                'sin_datos'      => 0,
             ]
         );
 
@@ -792,6 +836,10 @@ class ReporteController extends Controller
             ->orderBy('pre.forma')
             ->orderBy('pre.presentacion')
             ->get();
+
+        if ($datos->isEmpty()) {
+            $datos_membrete['sin_datos'] = 1;
+        }
 
         return view('administracion.reportes.reportes.prodAlMenorCosto', compact('datos_membrete', 'datos'));
     }

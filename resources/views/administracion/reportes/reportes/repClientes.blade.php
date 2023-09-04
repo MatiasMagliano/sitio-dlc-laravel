@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', $datos_membrete[0]["nombre_reporte"])
+@section('title', $datos_membrete["nombre_reporte"])
 
 @section('css')
 @endsection

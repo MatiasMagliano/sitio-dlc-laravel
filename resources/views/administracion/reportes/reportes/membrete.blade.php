@@ -1,7 +1,7 @@
 <div class="card">
-    @isset($datos_membrete[0]['rango'])
+    @isset($datos_membrete['rango'])
         <div class="card-header text-center">
-            <h5>{{ $datos_membrete[0]['rango'] }}</h5>
+            <h5>{{ $datos_membrete['rango'] }}</h5>
         </div>
     @endisset
     <div class="card-body">
@@ -9,7 +9,7 @@
             <tr>
                 <td width="20%">
                     <span>Fecha de emisión:</span> <br>
-                    <strong>{{ $datos_membrete[0]['fecha_emision'] }}</strong>
+                    <strong>{{ $datos_membrete['fecha_emision'] }}</strong>
                 </td>
                 <td width="70%">
                     <h1 class="text-center">Droguería de la Ciudad</h1>
@@ -46,14 +46,20 @@
             <tr>
                 <td width="20%">
                     <span>Hora de emisión: </span> <br>
-                    <strong>{{ $datos_membrete[0]['hora_emision'] }}</strong>
+                    <strong>{{ $datos_membrete['hora_emision'] }}</strong>
                 </td>
                 <td>
                     <h3>
-                        {{ $datos_membrete[0]['nombre_reporte'] }}
+                        {{ $datos_membrete['nombre_reporte'] }}
                     </h3>
                 </td>
             </tr>
         </table>
     </div>
+
+    @if ($datos_membrete['sin_datos'] == 1)
+        <div class="card-footer text-center">
+            <h1>REPORTE SIN DATOS</h1>
+        </div>
+    @endif
 </div>

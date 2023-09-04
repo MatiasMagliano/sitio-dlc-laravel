@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Reporte - Lotes y stock')
+@section('title', 'Reporte - '. $datos_membrete["nombre_reporte"])
 
 @section('css')
 @endsection

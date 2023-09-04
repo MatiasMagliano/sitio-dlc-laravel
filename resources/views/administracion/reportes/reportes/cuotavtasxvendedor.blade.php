@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Reporte - Cuota de ventas por vendedor')
+@section('title', 'Reporte -'. $datos_membrete["nombre_reporte"])
 
 @section('css')
 @endsection
