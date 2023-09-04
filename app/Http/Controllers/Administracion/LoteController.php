@@ -26,15 +26,22 @@ class LoteController extends Controller
         $config = [
             'format' => 'DD/MM/YYYY',
             'dayViewHeaderFormat' => 'MMM YYYY',
+            'maxDate' => "js:moment()",
+        ];
+
+        $config_elaboracion = [
+            'format' => 'DD/MM/YYYY',
+            'dayViewHeaderFormat' => 'MMM YYYY',
+            'maxDate' => "js:moment()",
         ];
 
         $config_vencimiento = [
             'format' => 'DD/MM/YYYY',
             'dayViewHeaderFormat' => 'MMM YYYY',
-            'minDate' => "js:moment().startOf('month')",
+            'minDate' => "js:moment()",
         ];
 
-        return view('administracion.lotes.index', compact('productos', 'config', 'config_vencimiento'));
+        return view('administracion.lotes.index', compact('productos', 'config', 'config_elaboracion', 'config_vencimiento'));
     }
 
     public function show($id)
@@ -70,7 +77,7 @@ class LoteController extends Controller
         $isValid = $request->validate([
             'identificador' => 'required|unique:lotes'
         ]);
-
+        
         $lote = new Lote;
         $lote->identificador = $request->identificador;
         $lote->precio_compra = $request->precio_compra;

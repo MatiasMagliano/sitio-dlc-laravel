@@ -92,6 +92,8 @@
             <h3>
                 Lotes vigentes
             </h3>
+            <small>Letras rojas: Lote vencido</small><br>
+            <small>Fondo rojo: Lote eliminado</small>
         </div>
         <div class="card-body">
             <div class="card">
@@ -166,7 +168,7 @@
 
                             <div class="form-group col-md-4 mb-3">
                                 <x-adminlte-input-date name="fecha_elaboracion" id="fecha_elaboracion"
-                                    label="Fecha elaboración *" igroup-size="md" :config="$config"
+                                    label="Fecha elaboración *" igroup-size="md" :config="$config_elaboracion"
                                     placeholder="{{ __('formularios.date_placeholder') }}" autocomplete="off" required>
                                     <x-slot name="appendSlot">
                                         <div class="input-group-text bg-dark">
@@ -281,7 +283,7 @@
                 if (data.fecha_vencimiento < moment(new Date()).format('YYYY-MM-DD HH:mm:ss')) {
                     $('td', row).css('color', 'Brown');
                 }
-                if (data.eliminado != null) {
+                if (data.deleted_at != null) {
                     $('td', row).css('background-color', 'Red');
                     //$('td', row).class('overlay');
                 }
