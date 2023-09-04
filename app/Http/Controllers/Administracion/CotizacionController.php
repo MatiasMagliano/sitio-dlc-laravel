@@ -176,7 +176,7 @@ class CotizacionController extends Controller
         // QUERY COMPLETA DE COTIZACIONES
         $query = Cotizacion::join('clientes', 'clientes.id', '=', 'cotizacions.cliente_id')
             ->join('estados', 'estados.id', '=', 'cotizacions.estado_id')
-            ->whereIn('cotizacions.estado_id', [4, 5])
+            ->whereIn('cotizacions.estado_id', [4, 5, 6, 7])
             ->select(
                 'cotizacions.*',
                 'clientes.razon_social',
@@ -387,12 +387,12 @@ class CotizacionController extends Controller
             $request->merge([
                 'total' => $request->get('precio') * $request->get('cantidad')
             ]);
-    
-            $productoCotizado->create($request->all()); 
-            $request->session()->flash('success', 'Producto agregado con éxito.');   
+
+            $productoCotizado->create($request->all());
+            $request->session()->flash('success', 'Producto agregado con éxito.');
         }
-        
-        
+
+
         return redirect()
             ->route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]);
     }
