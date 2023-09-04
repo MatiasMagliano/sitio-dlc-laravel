@@ -48,7 +48,7 @@
                         <i class="fas fa-shopping-bag"></i>
                     </div>
                     <a href="{{ route('administracion.ordentrabajo.index') }}" class="small-box-footer">Más
-                        inforamción <i class="fas fa-arrow-circle-right"></i></a>
+                        información <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
         </div>
