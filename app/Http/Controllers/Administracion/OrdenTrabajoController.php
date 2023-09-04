@@ -112,9 +112,6 @@ class OrdenTrabajoController extends Controller
         $orden_trabajo->estado_id = $estado;
         $orden_trabajo->save();
 
-        $cotizacion->estado_id = $estado;
-        $cotizacion->save();
-
         try
         {
             ProductoOrdenTrabajo::insert($productos_ot);
