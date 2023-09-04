@@ -50,7 +50,8 @@ class CotizacionController extends Controller
             1 => 'cotizacions.identificador',
             2 => 'clientes.razon_social',
             3 => 'users.name',
-            4 => 'estados.estado'
+            4 => 'cotizacions.plazo_entrega',
+            5 => 'estados.estado'
         );
 
         // QUERY COMPLETA DE COTIZACIONES
