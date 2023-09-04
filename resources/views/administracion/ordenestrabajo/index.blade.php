@@ -164,7 +164,7 @@
 
                                     {{-- ACCIONES DINAMICAS --}}
                                     <td style="vertical-align: middle; text-align:center;">
-                                        <a href="{{ route('administracion.ordentrabajo.descargapdf', ['ordentrabajo' => $orden]) }}"
+                                        <a href="{{ route('administracion.ordentrabajo.pruebas', ['ordentrabajo' => $orden]) }}"
                                             class="btn btn-sm btn-info">
                                             Imprimir Picking List
                                         </a>
@@ -205,7 +205,7 @@
     {{-- SM size, restricted to current month and week days --}}
     @php
         $config = [
-            'format' => 'DD-MM-YYYY HH.mm',
+            'format' => 'DD/MM/YYYY HH:mm',
             'dayViewHeaderFormat' => 'MMM YYYY',
             'minDate' => "js:moment()",
             'maxDate' => "js:moment().add(30, 'd')",
@@ -234,7 +234,15 @@
                         <hr>
 
                         <div class="form-group">
-                            <x-adminlte-input-date name="plazo_entrega" label="Plazo de entrega" :config="$config" placeholder="Choose a working day..."/>
+                            <x-adminlte-input-date name="plazo_entrega" id="plazo_entrega"
+                                label="Plazo de entrega *" igroup-size="md" :config="$config"
+                                placeholder="{{ __('formularios.date_placeholder') }}" autocomplete="off" required>
+                                <x-slot name="appendSlot">
+                                    <div class="input-group-text bg-dark">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                </x-slot>
+                            </x-adminlte-input-date>
                             <small class="text-muted">Seleccione primero la fecha y luego la hora</small>
                         </div>
 

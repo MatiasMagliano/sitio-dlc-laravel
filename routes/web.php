@@ -194,8 +194,10 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esExpedicion'])->name
     // rutas de ORDENES DE TRABAJO
     Route::get('/ordentrabajo/lineasCotizadas', [OrdenTrabajoController::class, 'obtenerLineasCotizacion'])
         ->name('ordenTrabajo.ajax.obtener');
-    Route::post('/ordentrabajo/{ordentrabajo}/generar-pickinglist/', [OrdenTrabajoController::class, 'generarPickingList'])
+    Route::get('/ordentrabajo/{ordentrabajo}/generar-pickinglist/', [OrdenTrabajoController::class, 'generarPickingList'])
         ->name('ordentrabajo.generar-pickinglist');
+    Route::get('/ordentrabajo/{ordentrabajo}/ruebas/', [OrdenTrabajoController::class, 'generarPickingList'])
+        ->name('ordentrabajo.pruebas');
     Route::get('/ordentabajo/{ordentrabajo}/asignarlotes/{producto}/{presentacion}', [OrdenTrabajoController::class, 'asignarLotes'])
         ->name('ordentrabajo.asignarlotes');
     Route::resource('/ordentrabajo', OrdenTrabajoController::class);

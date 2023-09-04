@@ -133,8 +133,8 @@ class OrdenTrabajoController extends Controller
         }
     }
 
-    public function descargapdf()
+    public function generarPickingList(OrdenTrabajo $ordentrabajo)
     {
-        return "IMRESION DE ORDEN DE TRABAJO";
+        return view('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo'));
     }
 }

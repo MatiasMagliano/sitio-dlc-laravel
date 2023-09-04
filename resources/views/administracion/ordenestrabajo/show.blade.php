@@ -29,7 +29,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h5 class="heading-small text-muted mb-1">Datos de la orden de trabajo: {{$ordentrabajo->cotizacion->identificador}}</h5>
+            <h5 class="heading-small text-muted mb-1">Datos de la orden de trabajo: {{$orden_trabajo->cotizacion->identificador}}</h5>
         </div>
         <div class="card-body">
             <table class="table" width="100%">
@@ -45,44 +45,44 @@
                 <tbody>
                     <tr>
                         <td style="vertical-align: middle;">
-                            {{ $ordentrabajo->cotizacion->created_at->format('d/m/Y') }}
+                            {{ $orden_trabajo->cotizacion->created_at->format('d/m/Y') }}
                         </td>
                         <td style="vertical-align: middle;">
-                            {{ $ordentrabajo->cotizacion->cliente->razon_social }}
+                            {{ $orden_trabajo->cotizacion->cliente->razon_social }}
                         </td>
                         <td style="vertical-align: middle;">
-                            <u><strong>{{ $ordentrabajo->cotizacion->dde->lugar_entrega }}:</strong></u>
+                            <u><strong>{{ $orden_trabajo->cotizacion->dde->lugar_entrega }}:</strong></u>
                             <br>
                             <div class="ml-3">
                                 <strong>Dirección:</strong>
-                                {{ $ordentrabajo->cotizacion->dde->domicilio }}
+                                {{ $orden_trabajo->cotizacion->dde->domicilio }}
                                 <br>
                                 <strong>Condiciones: </strong>
-                                {{ $ordentrabajo->cotizacion->dde->condiciones }}
+                                {{ $orden_trabajo->cotizacion->dde->condiciones }}
                                 <br>
                                 <strong>Observaciones: </strong>
-                                {{ $ordentrabajo->cotizacion->dde->observaciones }}
+                                {{ $orden_trabajo->cotizacion->dde->observaciones }}
                             </div>
                         </td>
                         <td style="vertical-align: middle;">
-                            <strong>Cotizazión creada por: </strong>{{ $ordentrabajo->cotizacion->user->name }}
+                            <strong>Cotizazión creada por: </strong>{{ $orden_trabajo->cotizacion->user->name }}
                             <strong>, aprobada el:
-                            </strong>{{ $ordentrabajo->cotizacion->confirmada->format('d/m/Y') }} <br>
+                            </strong>{{ $orden_trabajo->cotizacion->confirmada->format('d/m/Y') }} <br>
                             <strong>En producción desde el:
-                            </strong>{{ $ordentrabajo->en_produccion->format('d/m/Y') }} <br>
-                            <strong>Plazo de entrega: </strong>{{ $ordentrabajo->plazo_entrega }}
+                            </strong>{{ $orden_trabajo->en_produccion->format('d/m/Y') }} <br>
+                            <strong>Plazo de entrega: </strong>{{ $orden_trabajo->plazo_entrega }}
                         </td>
                         <td style="vertical-align: middle;">
-                            @switch($ordentrabajo->estado_id)
+                            @switch($orden_trabajo->estado_id)
                                 @case(6)
                                     {{-- ESTADOS DINAMICOS --}}
                                 <td style="vertical-align: middle;">
-                                    <span class="text-success">{{ $ordentrabajo->estado->estado }}
+                                    <span class="text-success">{{ $orden_trabajo->estado->estado }}
                                 </td>
                             @case(7)
                                 {{-- ESTADOS DINAMICOS --}}
                                 <td style="vertical-align: middle;">
-                                    <span class="text-success">{{ $ordentrabajo->estado->estado }}
+                                    <span class="text-success">{{ $orden_trabajo->estado->estado }}
                                 </td>
                             @break
 
@@ -115,7 +115,7 @@
                 </thead>
                 <tbody>
                     @php $i = 0; /*variable contadora del Nº Orden*/@endphp
-                    @foreach ($ordentrabajo->productos as $itemOT)
+                    @foreach ($orden_trabajo->productos as $itemOT)
                         <tr>
                             <td style="text-align: center;">{{ ++$i }}</td>
                             <td>{{-- Producto: producto+presentacion --}}
@@ -130,7 +130,7 @@
                                     Lotes sin asignar
                                 </td>
                                 <td style="vertical-align: middle; text-align:center;">
-                                    <a href="{{ route('administracion.ordentrabajo.asignarlotes', ['ordentrabajo' => $ordentrabajo, 'producto' => $itemOT->producto->id, 'presentacion' => $itemOT->presentacion->id]) }}"
+                                    <a href="{{ route('administracion.orden_trabajo.asignarlotes', ['orden_trabajo' => $orden_trabajo, 'producto' => $itemOT->producto->id, 'presentacion' => $itemOT->presentacion->id]) }}"
                                         class="btn btn-sm btn-danger">
                                         Asignar
                                     </a>
