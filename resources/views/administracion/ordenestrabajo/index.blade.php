@@ -277,7 +277,7 @@
 
     $(document).ready(function() {
         $('#ordenesPotenciales').DataTable({
-            "dom": 'rtip',
+            "dom": 'frtip',
             "pageLength": 3,
             "order": [0, 'desc'],
             "responsive": [{
