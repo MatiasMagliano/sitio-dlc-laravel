@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use LotePresentacionProducto;
 
 class CotizacionController extends Controller
 {
@@ -345,7 +346,18 @@ class CotizacionController extends Controller
     public function agregarProducto(Cotizacion $cotizacion)
     {
         //AGREGAR PRESENTACION A COTIZACION
-        $productos = Producto::orderby('droga', 'ASC')->get();
+        //$productos = Producto::orderby('droga', 'ASC')->get();
+        $productos = DB::table('lote_presentacion_producto')
+            ->select('lote_presentacion_producto.producto_id','productos.droga','lote_presentacion_producto.presentacion_id','presentacions.forma','presentacions.presentacion')
+            ->join('productos','lote_presentacion_producto.producto_id','productos.id')
+            ->join('presentacions','lote_presentacion_producto.presentacion_id','presentacions.id')
+            ->groupBy('lote_presentacion_producto.producto_id','productos.droga','lote_presentacion_producto.presentacion_id','presentacions.forma','presentacions.presentacion')
+            ->orderBy('productos.droga', 'asc')
+            ->orderBy('presentacions.forma','asc')
+            ->orderBy('presentacions.presentacion','asc')
+            ->get();
+
+
         $porcentajes = Cotizacion::select('clientes.razon_social', 'porcentaje_1', 'porcentaje_2', 'porcentaje_3', 'porcentaje_4', 'porcentaje_5')
         ->join('clientes', 'cotizacions.cliente_id', '=', 'clientes.id')
         ->join('esquema_precios', 'clientes.id', '=', 'esquema_precios.cliente_id')

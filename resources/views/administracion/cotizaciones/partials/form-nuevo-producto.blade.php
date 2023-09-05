@@ -9,15 +9,13 @@
             $prod_pres = explode('|', @old('producto'));
         @endphp
         @foreach ($productos as $producto)
-            @foreach ($producto->presentacion as $presentacion)
-                @if ($producto->id == $prod_pres[0] && $presentacion->id == $prod_pres[1])
-                    <option value="{{$producto->id}}|{{$presentacion->id}}" selected>{{ $producto->droga }} -
-                        {{ $presentacion->forma }}, {{ $presentacion->presentacion }}</option>
-                @else
-                    <option value="{{$producto->id}}|{{$presentacion->id}}">{{ $producto->droga }} -
-                        {{ $presentacion->forma }}, {{ $presentacion->presentacion }}</option>
-                @endif
-            @endforeach
+            @if ($producto->producto_id == $prod_pres[0] && $producto->presentacion_id == $prod_pres[1])
+                <option value="{{$producto->producto_id}}|{{$producto->presentacion_id}}" selected>{{ $producto->droga }} -
+                    {{ $producto->forma }}, {{ $producto->presentacion }}</option>
+            @else
+                <option value="{{$producto->producto_id}}|{{$producto->presentacion_id}}">{{ $producto->droga }} -
+                    {{ $producto->forma }}, {{ $producto->presentacion }}</option>
+            @endif
         @endforeach
     </select>
     @error('producto')<div class="invalid-feedback">{{$message}}</div>@enderror
