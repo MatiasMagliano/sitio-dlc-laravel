@@ -21,57 +21,61 @@
         <div class="card-header">
             <p class="text-right">Córdoba, {{ \Carbon\Carbon::now()->isoFormat('LL') }}</p>
             <div class="contenedor-encabezado text-center">
-                <h1 class="display-4">Droguería de la Ciudad</h1>
+                <h1>Droguería de la Ciudad</h1>
                 <br>
                 <h3>Orden de Trabajo - PICKING LIST</h3>
             </div>
             <hr>
-            <div class="container">
-                @include('administracion.ordenestrabajo.partials.datos_cotizacion', [
-                    'cotizacion' => $ordentrabajo->cotizacion,
-                ])
-            </div>
+            @include('administracion.ordenestrabajo.partials.datos_cotizacion', [
+                'cotizacion' => $ordentrabajo->cotizacion,
+                'ordentrabajo' => $ordentrabajo
+            ])
         </div>
         <div class="card-body">
             <table class="table bordeless">
                 <thead>
-                    <th>Código de proveedor</th>
+                    <th>Códigos de proveedores</th>
+                    <th>Proveedores disponibles</th>
                     <th>Descripción de producto</th>
-                    <th>Proveedor</th>
-                    <th>Lotes seleccionados</th>
-                    <th>Cantidad</th>
+                    <th>Identificador de lotes</th>
+                    <th>Cantidad a seleccionar</th>
                 </thead>
                 <tbody>
-                    @foreach ($ordentrabajo->productos as $producto)
+                    @foreach ($prod_ordentrabajo as $producto => $datos)
                         <tr>
                             <td>
-                                @php
-                                    $cod_proveedor = DB::select('SELECT lp.codigoProv FROM lista_precios lp WHERE lp.producto_id = ? AND lp.presentacion_id = ?', [$producto->producto_id, $producto->presentacion_id]);
-                                    dd($cod_proveedor);
-                                @endphp
+                                @foreach ($datos['PROVEEDORES'] as $proveedor)
+                                    {{ $proveedor['COD_PROV'] }}
+                                    @if (!$loop->last)
+                                        <br>
+                                    @endif
+                                @endforeach
                             </td>
-                            <td>la</td>
-                            <td>la</td>
                             <td>
-                                @php
-                                    $lotes = json_decode($producto->lotes, true);
-                                @endphp
-                                @if (count($lotes) > 1)
-                                    @foreach ($lotes as $lote)
-                                        @foreach ($lote as $clave => $valor)
-                                            <strong>{{ $clave }}</strong>: {{ $valor }} <br>
-                                        @endforeach
-                                        <hr>
-                                    @endforeach
-                                @else
-                                    @foreach ($lotes as $lote)
-                                        @foreach ($lote as $clave => $valor)
-                                            <strong>{{ $clave }}</strong>: {{ $valor }} <br>
-                                        @endforeach
-                                    @endforeach
-                                @endif
+                                @foreach ($datos['PROVEEDORES'] as $proveedor)
+                                    {{ $proveedor['PROVEEDOR'] }}
+                                    @if (!$loop->last)
+                                        <br>
+                                    @endif
+                                @endforeach
                             </td>
-                            <td></td>
+                            <td>{{$producto}}</td>
+                            <td>
+                                @foreach ($datos['LOTES'] as $lote)
+                                    {{ $lote['identificador'] }}
+                                    @if (!$loop->last)
+                                        <br>
+                                    @endif
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach ($datos['LOTES'] as $lote)
+                                    {{ $lote['cantidad'] }}
+                                    @if (!$loop->last)
+                                        <br>
+                                    @endif
+                                @endforeach
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

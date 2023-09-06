@@ -164,7 +164,7 @@
 
                                     {{-- ACCIONES DINAMICAS --}}
                                     <td style="vertical-align: middle; text-align:center;">
-                                        <a href="{{ route('administracion.ordentrabajo.pruebas', ['ordentrabajo' => $orden]) }}"
+                                        <a href="{{ route('administracion.ordentrabajo.generar-pricking-list', ['ordentrabajo' => $orden]) }}"
                                             class="btn btn-sm btn-info">
                                             Imprimir Picking List
                                         </a>

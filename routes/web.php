@@ -197,8 +197,8 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esExpedicion'])->name
         ->name('ordenTrabajo.ajax.obtener');
     Route::get('/ordentrabajo/{ordentrabajo}/generar-pickinglist/', [OrdenTrabajoController::class, 'generarPickingList'])
         ->name('ordentrabajo.generar-pickinglist');
-    Route::get('/ordentrabajo/{ordentrabajo}/ruebas/', [OrdenTrabajoController::class, 'generarPickingList'])
-        ->name('ordentrabajo.pruebas');
+    Route::get('/ordentrabajo/{ordentrabajo}/generarPrickingList/', [OrdenTrabajoController::class, 'generarPickingList'])
+        ->name('ordentrabajo.generar-pricking-list');
     Route::get('/ordentabajo/{ordentrabajo}/asignarlotes/{producto}/{presentacion}', [OrdenTrabajoController::class, 'asignarLotes'])
         ->name('ordentrabajo.asignarlotes');
     Route::resource('/ordentrabajo', OrdenTrabajoController::class);

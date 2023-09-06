@@ -4,16 +4,13 @@ namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cotizacion;
-use App\Models\DepositoCasaCentral;
 use App\Models\Lote;
-use App\Models\LotePresentacionProducto;
 use App\Models\OrdenTrabajo;
-use App\Models\Producto;
 use App\Models\ProductoCotizado;
 use App\Models\ProductoOrdenTrabajo;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OrdenTrabajoController extends Controller
@@ -52,7 +49,7 @@ class OrdenTrabajoController extends Controller
         $productos = ProductoCotizado::where('cotizacion_id', $request->cotizacion_id)
             ->where('no_aprobado', 0)
             ->get();
-        $cotizacion = Cotizacion::findOrFail($request->cotizacion_id);
+        //$cotizacion = Cotizacion::findOrFail($request->cotizacion_id);
 
         $orden_trabajo = new OrdenTrabajo([
             'cotizacion_id' => $request->cotizacion_id,
@@ -86,7 +83,8 @@ class OrdenTrabajoController extends Controller
                 if ($lotes[$i_lote]->cantidad >= $cantidad) {
                     // cuando el lote llega a cubrir la cantidad requerida
                     $lotes_asignados[] = [
-                        'indentificador' => $lotes[$i_lote]->identificador,
+                        'id'             => $lotes[$i_lote]->id,
+                        'identificador' => $lotes[$i_lote]->identificador,
                         'cantidad'       => $cantidad
                     ];
                     $cantidad -= $lotes[$i_lote]->cantidad;
@@ -112,29 +110,73 @@ class OrdenTrabajoController extends Controller
         $orden_trabajo->estado_id = $estado;
         $orden_trabajo->save();
 
-        try
-        {
+        try {
             ProductoOrdenTrabajo::insert($productos_ot);
 
-            if($estado == 6)
-            {
+            if ($estado == 6) {
                 $request->session()->flash('success', 'La orden de trabajo se creó con éxito. Estará disponible para imprimir desde el panel inferior.');
-            }
-            elseif($estado == 7)
-            {
+            } elseif ($estado == 7) {
                 $request->session()->flash('warning', 'La orden de trabajo se creó con éxito, pero con <strong>lotes incompletos</strong>. Deberá agregarlos manualmente una vez adquiridos y cargado en el sistema.');
             }
 
             return redirect(route('administracion.ordentrabajo.index'));
-
-        }
-        catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             dd($e->getMessage());
         }
     }
 
     public function generarPickingList(OrdenTrabajo $ordentrabajo)
     {
-        return view('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo'));
+        $productos = $ordentrabajo->productos;
+        $prod_ordentrabajo = [];
+
+        foreach ($productos as $producto) {
+            $arrlotes = json_decode($producto->lotes, true);
+            $parametros = array_map(function ($elemento) {
+                return $elemento['identificador'];
+            }, $arrlotes);
+            $cant_param = implode(',', array_fill(0, count($arrlotes), '?'));
+
+            $query = '
+                SELECT
+                    lp.codigoProv AS COD_PROV,
+                    p.razon_social AS PROVEEDOR,
+                    CONCAT(pro.droga, " - ", pre.forma, ", ", pre.presentacion) AS PRODUCTO
+                FROM lote_presentacion_producto lpp
+                INNER JOIN productos pro ON pro.id = lpp.producto_id
+                INNER JOIN presentacions pre ON pre.id = lpp.presentacion_id
+                INNER JOIN lotes l ON l.id = lpp.lote_id
+                INNER JOIN lista_precios lp ON lp.producto_id = lpp.producto_id AND lp.presentacion_id = lpp.presentacion_id
+                INNER JOIN proveedors p ON lp.proveedor_id = p.id
+                WHERE l.identificador IN (' . $cant_param . ')
+            ';
+
+            $reordenados = DB::select($query, $parametros);
+
+            foreach ($reordenados as $prod) {
+                $prod_key = $prod->PRODUCTO;
+
+                if (!isset($prod_ordentrabajo[$prod_key])) {
+                    $prod_ordentrabajo[$prod_key] = [];
+                }
+
+                $prod_ordentrabajo[$prod_key]['PROVEEDORES'][] = [
+                    'COD_PROV' => $prod->COD_PROV,
+                    'PROVEEDOR' => $prod->PROVEEDOR,
+                ];
+
+                $prod_ordentrabajo[$prod_key]['LOTES'] = $arrlotes;
+            }
+        }
+        $cant_aprob = count($ordentrabajo->cotizacion->productos->where('no_aprobado', 0));
+
+        $pdf = PDF::loadView('administracion.ordenestrabajo.ordenTrabajo-layout', ['ordentrabajo' => $ordentrabajo, 'prod_ordentrabajo' => $prod_ordentrabajo, 'cant_aprob' => $cant_aprob]);
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf->get_canvas();
+        $canvas->page_text(270, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 8, array(0, 0, 0));
+
+        return $pdf->download('ordentrabajo_' . $ordentrabajo->cotizacion->identificador . '.pdf');
+
+        //return view('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo', 'prod_ordentrabajo'));
     }
 }
