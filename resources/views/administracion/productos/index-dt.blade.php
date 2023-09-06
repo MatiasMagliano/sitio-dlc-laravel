@@ -57,7 +57,9 @@
                 Los términos de búsqueda se realizan en los campos debajo de cada columna habilitada.
             </p>
             <p>
-                Desde aquí podrá modificar el nombre de la droga y su presentación. Para modificar los lotes de producto, ingrese en la <a href="{{route('administracion.lotes.index')}}" class="btn-link">siguiente</a> sección.
+                Desde aquí podrá modificar el nombre de la droga y su presentación. Para modificar los lotes de
+                producto, ingrese en la <a href="{{ route('administracion.lotes.index') }}"
+                    class="btn-link">siguiente</a> sección.
             </p>
         </div>
     </div>
@@ -66,7 +68,6 @@
             <thead class="bg-gray">
                 <th>Droga</th>
                 <th>Presentación</th>
-                {{-- <th>HOSP/TRAZ</th> --}}
                 <th>Lotes Nº</th>
                 <th>STOCK - CASA CENTRAL<br><span class="small text-nowrap">existencia | cotizización | disponible</span></th>
                 <th></th>
@@ -91,6 +92,25 @@
 @include('partials.alerts')
 <script type="text/javascript" src="{{ asset('js/datatables-spanish.js') }}" defer></script>
 <script>
+    // BORRAR PRODUCTO
+    function borrarProducto(id, event) {
+        event.preventDefault();
+        let advertencia =
+            'Esta acción eliminará el producto y la relación de éste con sus lotes';
+        Swal.fire({
+            icon: 'warning',
+            title: '¿Está seguro?',
+            html: '<span style=\'color: red; font-weight:800; font-size:1.3em;\'>¡ATENCION!</span><br>' + advertencia,
+            confirmButtonText: 'Borrar',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#borrar-' + id).submit();
+            }
+        });
+    };
+
     $(document).ready(function() {
         moment.locale('es');
 
@@ -107,8 +127,7 @@
                 method: "GET"
             },
             "order": [0, 'asc'],
-            "columnDefs": [
-                {
+            "columnDefs": [{
                     targets: [0],
                     name: "droga",
                     className: "align-middle",
@@ -136,6 +155,10 @@
                     className: "align-middle",
                     orderable: false,
                 },
+                {
+                    visible: false,
+                    orderable: false,
+                },
             ],
             "initComplete": function() {
                 this.api()
@@ -150,6 +173,12 @@
                         });
                     });
             },
+            "rowCallback": function(row, data, index) {
+                if (data.deleted_at != null) {
+                    $("td", row).addClass("table-danger");
+                    $("button", row).attr("disabled", true).addClass("text-gray");
+                }
+            },
         });
     });
 </script>
@@ -158,6 +187,6 @@
 @section('footer')
 <strong>AUSI - ESCMB - UNC - <a href="https://mb.unc.edu.ar/" target="_blank">mb.unc.edu.ar</a></strong>
 <div class="float-right d-none d-sm-inline-block">
-    <b>Versión de software 2.8</b> (PHP: v{{phpversion()}} | LARAVEL: v.{{App::VERSION()}})
+    <b>Versión de software 2.8</b> (PHP: v{{ phpversion() }} | LARAVEL: v.{{ App::VERSION() }})
 </div>
 @endsection

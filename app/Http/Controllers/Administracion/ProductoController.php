@@ -25,8 +25,6 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        // $productos = Producto::sortable(['droga' => 'asc'])->paginate(5);
-        // return view('administracion.productos.index', compact('productos'));
         return view('administracion.productos.index-dt');
     }
 
@@ -53,6 +51,7 @@ class ProductoController extends Controller
         // NUEVA QUERY COMPLETA DE RODUCTOS (ver archivo query vieja)
         $query = LotePresentacionProducto::select(
             'productos.id AS idProducto',
+            'productos.deleted_at',
             'presentacions.id AS idPresentacion',
             'productos.droga',
             'presentacions.forma',
@@ -113,7 +112,6 @@ class ProductoController extends Controller
             $query->where('productos.droga', 'like', '%' . $b_columna[0]['search']['value'] . '%');
         }
 
-        // EL ERROR ESTÁ ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         $recordsTotal = DB::table('presentacions')->count();
 
         $sortColumnName = $sortColumns[$order[0]['column']];
@@ -133,11 +131,12 @@ class ProductoController extends Controller
 
         foreach ($productos as $producto) {
             $json['data'][] = [
-                $producto->droga,
+                view('administracion.productos.partials.productos', ['producto' => $producto])->render(),
                 view('administracion.productos.partials.presentaciones', ['producto' => $producto])->render(),
                 view('administracion.productos.partials.lotes', ['producto' => $producto])->render(),
                 view('administracion.productos.partials.stock', ['producto' => $producto])->render(),
                 view('administracion.productos.partials.acciones', ['producto' => $producto])->render(),
+                'deleted_at' => $producto->deleted_at
             ];
         }
 
@@ -340,7 +339,7 @@ class ProductoController extends Controller
                 $presentacion->trazabilidad = $esTrazabilidad;
                 $presentacion->divisible = $esDivisible;
                 $presentacion->save();
-                
+
                 //Actualizo lote_producto_presentacion
                 $lpp = LotePresentacionProducto::where('presentacion_id', $request->antigua_presentacion)
                 ->where('producto_id',$request->antigua_drogaid)
@@ -362,7 +361,7 @@ class ProductoController extends Controller
                 $request->session()->flash('warning', 'El detalle de presentacion que intenta ingresar ya existe. Puede seleccionarlo de "Forma farmacéutica y presentacion"');
                 return redirect(route('administracion.productos.edit', ['producto' => $request->antigua_drogaid, 'presentacion' => $request->antigua_presentacion]));
             }
-            
+
         }
 
         if($actualiza){
@@ -374,10 +373,10 @@ class ProductoController extends Controller
 
     }
 
-    public function destroy($id, Request $request)
+    public function destroy(Producto $producto, Request $request)
     {
         // hace un softdelete sobre producto
-        $borrado = Producto::destroy($id);
+        $borrado = $producto->delete();
 
         if (!$borrado) {
             $request->session()->flash('error', 'Ocurrió un error al intentar borrar el producto');
@@ -386,6 +385,14 @@ class ProductoController extends Controller
         }
 
         return redirect()->route('administracion.productos.index');
+    }
+
+    public function restaurar(Producto $producto, Request $request)
+    {
+        $producto->restore();
+
+        $request->session()->flash('success', 'La dirección de entrega se ha recuperado con éxito.');
+        return redirect(route('administracion.dde.index'));
     }
 
     // Ajax responde dt de proveedores en vistas de edición de producto
