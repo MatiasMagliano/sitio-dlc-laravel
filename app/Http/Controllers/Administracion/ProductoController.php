@@ -340,13 +340,13 @@ class ProductoController extends Controller
                 $presentacion->trazabilidad = $esTrazabilidad;
                 $presentacion->divisible = $esDivisible;
                 $presentacion->save();
-
+                
                 //Actualizo lote_producto_presentacion
-                $lpp = LotePresentacionProducto::where('presentacion_id', $presentacion->antigua_presentacion)
-                    ->where('producto_id',$request->antigua_drogaid)
-                    ->get();
+                $lpp = LotePresentacionProducto::where('presentacion_id', $request->antigua_presentacion)
+                ->where('producto_id',$request->antigua_drogaid)
+                ->get();
                 foreach ($lpp as $pres) {
-                    $pres->presentacion_id = $request->$presentacion->id;
+                    $pres->presentacion_id = $presentacion->id;
                     $pres->save();
                 }
                 //Actualizo lista_precios
