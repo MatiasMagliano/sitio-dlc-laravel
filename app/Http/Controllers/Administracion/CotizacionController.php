@@ -388,6 +388,12 @@ class CotizacionController extends Controller
             'presentacion_id' => $producto_ids[1]
         ]);
 
+        $tieneCosto = ListaPrecio::where('producto_id',$producto_ids[0])->where('presentacion_id',$producto_ids[1])->count();
+        if($tieneCosto == 0){
+            $request->session()->flash('warning', 'El producto que intenta cotizar no tiene asignado proveedor ni costo. Primero Diríjase a Lista de precios para continuar.');
+            return redirect()
+            ->route('administracion.cotizaciones.show', ['cotizacione' => $cotizacion]);
+        }
         $existe = ProductoCotizado::select('COUNT(*)')
         ->where('cotizacion_id', '=', $cotizacion->id)
         ->where('producto_id', '=', $producto_ids[0])

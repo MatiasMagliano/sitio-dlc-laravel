@@ -102,6 +102,20 @@
                 tablaPreciosSugerido.clear();
                 tablaPreciosSugerido.rows.add(resultado).draw();
                 selectprecio();
+                if(resultado.length == 0){
+                    Swal.fire({
+                            icon: 'warning',
+                            title: 'Producto sin proveedor',
+                            html: '<span style=\'color: red; font-weight:800; font-size:1.3em;\'>¡ATENCION!</span><br><p>Para poder continuar cotizando, debe asignar a un listado de precios y definir su costo</p>',
+                            confirmButtonText: 'Listado de precios',
+                            showCancelButton: true,
+                            cancelButtonText: 'Cancelar',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '{{ route('administracion.listaprecios.index') }}';
+                            }
+                        });
+                }
             });
         }
 
