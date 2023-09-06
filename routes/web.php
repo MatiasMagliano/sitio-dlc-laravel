@@ -52,13 +52,13 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
 
     // rutas de PRODUCTOS
     Route::get('productos/ajaxProveedores', [ProductoController::class, 'ajaxProveedores'])->name('productos.ajaxProveedores');
+    //crea un post para guardar más proveedores
     Route::post('productos/ajaxNuevoProveedor', [ProductoController::class, 'ajaxNuevoPorveedor'])->name('productos.ajaxNuevoProveedor');
-    Route::get('productos/ajaxdt', [ProductoController::class, 'ajaxdt'])->name('productos.ajax');
-    Route::resource('productos', ProductoController::class)->except(['show', 'edit']);
-            //crear post para guardar más proveedores
     Route::get('/productos/{producto_id}/show/{presentacion_id}', [ProductoController::class, 'show'])->name('productos.show');
     Route::get('/productos/{producto}/edit/{presentacion}', [ProductoController::class, 'edit'])->name('productos.edit');
     Route::post('/productos/{producto}/edit/{presentacion}/nuevaPresentacion', [ProductoController::class, 'nuevaPresentacion'])->name('productos.nuevaPresentacion');
+    Route::get('productos/ajaxdt', [ProductoController::class, 'ajaxdt'])->name('productos.ajax');
+    Route::resource('productos', ProductoController::class)->except(['show', 'edit']);
 
     // rutas de CLIENTES
     Route::get('/clientes/ajaxObtenerClientes', [ClienteController::class, 'obtenerClientes'])->name('clientes.ajax.obtener');
