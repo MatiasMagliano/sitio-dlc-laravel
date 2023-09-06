@@ -47,12 +47,11 @@
 @section('content')
     @section('plugins.Datatables', true)
     @section('plugins.DatatablesPlugins', true)
-    <form action="#" method="post" class="needs-validation" autocomplete="off" novalidate>
+    <form action="{{ route('administracion.productos.nuevaPresentacion', ['producto' => $producto, 'presentacion' => $presentacion]) }}" method="post" class="needs-validation" autocomplete="off" novalidate>
         @csrf
-
+        @method('POST')
         @include('administracion.productos.partials.form-edit')
     </form>
-
     {{-- MODAL AGREGAR PROVEEDOR - FORMULARIO JAVASCRIPT --}}
     <div class="modal fade" id="modalAgregarroveedor" tabindex="-1" aria-labelledby="" aria-hidden="true">
         @section('plugins.inputmask', true)
@@ -140,7 +139,7 @@
             });
         };
 
-        $('#formAgregaProveedor').on('submit', function( event ) {
+        /*$('#formAgregaProveedor').on('submit', function( event ) {
             event.preventDefault();
 
             let datos_prov = new FormData(this);
@@ -151,7 +150,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: "{{route('administracion.productos.ajaxNuevoProveedor')}}",
+                url: "{{ route('administracion.productos.ajaxNuevoProveedor') }}",
                 type: "POST",
                 data: datos_prov,
                 dataType: 'JSON',
@@ -185,9 +184,99 @@
                     });
                 }
             });
+        });*/
+
+
+        $('.needs-validation').on('submit', function( event ) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            
+            //Validaciones de entrada
+            var validado = true;
+            //Valor de campo Droga
+            $('#invalid-feedback-droga p').remove();
+            $('#droga').removeClass('is-invalid');
+            if ( $('#droga').val() === '' || $('#droga').val() == null || $('#droga').val() == undefined){
+                validado = false;
+                $('#droga').addClass('is-invalid'); 
+                $('#invalid-feedback-droga').append('<p>El campo droga es requerido</p>'); 
+            }  
+
+            if(formData.get("crear_editar") != null || undefined){
+                //Valor de campo forma
+                $('#invalid-feedback-nuevaforma p').remove();
+                $('#nuevaforma').removeClass('is-invalid');
+                if ( $('#nuevaforma').val() === '' || $('#nuevaforma').val() == null || $('#nuevaforma').val() == undefined){
+                    validado = false;
+                    $('#nuevaforma').addClass('is-invalid'); 
+                    $('#invalid-feedback-nuevaforma').append('<p>El campo presentacion es requerido</p>'); 
+                }
+                //Valor de campo presentacion
+                $('#invalid-feedback-nuevapresentacion p').remove();
+                $('#nuevapresentacion').removeClass('is-invalid');
+                if ( $('#nuevapresentacion').val() === '' || $('#nuevapresentacion').val() == null || $('#nuevapresentacion').val() == undefined){
+                    validado = false;
+                    $('#nuevapresentacion').addClass('is-invalid'); 
+                    $('#invalid-feedback-nuevapresentacion').append('<p>El campo presentacion es requerido</p>'); 
+                }
+            }
+              
+
+            if(validado){
+                //Cambios
+                var cambios = false;
+                if(formData.get("antigua_droga") != formData.get("droga")){
+                    cambios = true;
+                }
+
+                if(formData.get("crear_editar") == null || undefined){
+                    if(formData.get("antigua_presentacion") != formData.get("presentacion")){
+                        cambios = true;
+                    }
+                }else{
+                    cambios = true;
+                }
+
+                if(!cambios){
+                    Swal.fire({
+                            icon: 'warning',
+                            title: 'No hay cambios realizados',
+                            confirmButtonText: 'Continuar',
+                        }).then((result) => {
+                        });
+                }else{
+                    this.submit();
+                }
+            }
+            
+            
+
+
+    // Muestra los datos por consola
+    formData.forEach(function(value, key) {
+        console.log(key + ': ' + value);
+    });
         });
+        
 
         $(document).ready(function() {
+            // CHEACKBOX PARA MOSTRAR Y OCULTAR PARTE DEL FORMULARIO SEGUN SE QUIERA ALTA O MODIFICACION.
+            $("#header-edit-prod-pres").text("EDITAR PRESENTACION");
+            $("#checkboxTrazable").prop("checked", false);
+            $("#checkboxDivisible").prop("checked", false);
+            $("#checkboxHospitalario").prop("checked", false);
+            $("#crear_editar").change(function() {
+                if($("#crear_editar").prop("checked")){
+                    $("#header-edit-prod-pres").text("NUEVA PRESENTACION");
+                    $('#cambio-presentacion').attr("hidden", true);
+                    $("#nueva-presentacion").removeAttr("hidden");
+                }else{
+                    $("#header-edit-prod-pres").text("EDITAR PRESENTACION");
+                    $('#nueva-presentacion').attr("hidden", true);
+                    $("#cambio-presentacion").removeAttr("hidden");
+                }
+            });
+
             $('#input-cuit').inputmask("9{2}-9{8}-9{1}");
 
             tablaProveedores = $('#tablaProveedores').DataTable({

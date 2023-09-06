@@ -58,6 +58,7 @@ Route::prefix('administracion')->middleware(['auth', 'auth.esAdministracion'])->
             //crear post para guardar más proveedores
     Route::get('/productos/{producto_id}/show/{presentacion_id}', [ProductoController::class, 'show'])->name('productos.show');
     Route::get('/productos/{producto}/edit/{presentacion}', [ProductoController::class, 'edit'])->name('productos.edit');
+    Route::post('/productos/{producto}/edit/{presentacion}/nuevaPresentacion', [ProductoController::class, 'nuevaPresentacion'])->name('productos.nuevaPresentacion');
 
     // rutas de CLIENTES
     Route::get('/clientes/ajaxObtenerClientes', [ClienteController::class, 'obtenerClientes'])->name('clientes.ajax.obtener');

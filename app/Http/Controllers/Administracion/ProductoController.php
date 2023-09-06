@@ -270,6 +270,110 @@ class ProductoController extends Controller
         //
     }
 
+    public function nuevaPresentacion(Request $request)
+    {
+        $actualiza = false;
+        //Droga
+        //Controlo diferencias
+        if($request->antigua_droga != $request->droga){
+            //Controlo duplicados
+            $existe = Producto::where('droga', $request->droga)->count();
+            if($existe == 0){
+                //Actualizo
+                $producto = Producto::where('droga', $request->antigua_droga)->first();
+                $producto->droga = $request->droga;
+                $producto->save();
+                $actualiza = true;
+            }else{
+                $request->session()->flash('warning', 'La droga que intenta ingresar ya existe.');
+                return redirect(route('administracion.productos.edit', ['producto' => $request->antigua_drogaid, 'presentacion' => $request->antigua_presentacion]));
+            }
+        }
+
+        //Presentacion
+        if(!$request->has('crear_editar')){
+            if($request->antigua_presentacion != $request->presentacion){
+                //Actualizo lote_producto_presentacion
+                $presentacion = LotePresentacionProducto::where('presentacion_id', $request->antigua_presentacion)
+                    ->where('producto_id',$request->antigua_drogaid)
+                    ->get();
+                foreach ($presentacion as $pres) {
+                    $pres->presentacion_id = $request->presentacion;
+                    $pres->save();
+                }
+                //Actualizo lista_precios
+                $listaDePrecios = ListaPrecio::where('presentacion_id', $request->antigua_presentacion)
+                    ->where('producto_id',$request->antigua_drogaid)
+                    ->get();
+                foreach ($listaDePrecios as $lp) {
+                    $lp->presentacion_id = $request->presentacion;
+                    $lp->save();
+                }
+                $actualiza = true;
+            }
+        }else{
+            $esHospitalario = 0;
+            $esTrazabilidad = 0;
+            $esDivisible = 0;
+            if($request->has('checkboxHospitalario')){
+                $esHospitalario = 1;
+            }
+            if($request->has('checkboxTrazable')){
+                $esTrazabilidad = 1;
+            }
+            if($request->has('checkboxDivisible')){
+                $esDivisible = 1;
+            }
+            //controlo duplicados
+            $existe = Presentacion::where('forma',$request->nuevaforma)
+            ->where('presentacion',$request->nuevapresentacion)
+            ->where('trazabilidad',$esTrazabilidad)
+            ->where('divisible',$esDivisible)
+            ->where('hospitalario',$esHospitalario)
+            ->count();
+
+            if($existe == 0){
+                $presentacion = new Presentacion;
+                $presentacion->forma = $request->nuevaforma;
+                $presentacion->presentacion = $request->nuevapresentacion;
+                $presentacion->hospitalario = $esHospitalario;
+                $presentacion->trazabilidad = $esTrazabilidad;
+                $presentacion->divisible = $esDivisible;
+                $presentacion->save();
+
+                //Actualizo lote_producto_presentacion
+                $lpp = LotePresentacionProducto::where('presentacion_id', $presentacion->antigua_presentacion)
+                    ->where('producto_id',$request->antigua_drogaid)
+                    ->get();
+                foreach ($lpp as $pres) {
+                    $pres->presentacion_id = $request->$presentacion->id;
+                    $pres->save();
+                }
+                //Actualizo lista_precios
+                $listaDePrecios = ListaPrecio::where('presentacion_id', $request->antigua_presentacion)
+                    ->where('producto_id',$request->antigua_drogaid)
+                    ->get();
+                foreach ($listaDePrecios as $lp) {
+                    $lp->presentacion_id = $request->presentacion;
+                    $lp->save();
+                }
+                $actualiza = true;
+            }else{
+                $request->session()->flash('warning', 'El detalle de presentacion que intenta ingresar ya existe. Puede seleccionarlo de "Forma farmacéutica y presentacion"');
+                return redirect(route('administracion.productos.edit', ['producto' => $request->antigua_drogaid, 'presentacion' => $request->antigua_presentacion]));
+            }
+            
+        }
+
+        if($actualiza){
+            $request->session()->flash('success', 'Producto actualizado con éxito.');
+            return redirect(route('administracion.productos.index'));
+        }
+        $request->session()->flash('warning', 'No existen cambios a procesar.');
+        return redirect(route('administracion.productos.index'));
+
+    }
+
     public function destroy($id, Request $request)
     {
         // hace un softdelete sobre producto
