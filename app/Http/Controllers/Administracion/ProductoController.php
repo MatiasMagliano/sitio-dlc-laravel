@@ -387,12 +387,12 @@ class ProductoController extends Controller
         return redirect()->route('administracion.productos.index');
     }
 
-    public function restaurar(Producto $producto, Request $request)
+    public function restaurar($producto, Request $request)
     {
-        $producto->restore();
+        Producto::where('id', $producto)->withTrashed()->restore();
 
-        $request->session()->flash('success', 'La dirección de entrega se ha recuperado con éxito.');
-        return redirect(route('administracion.dde.index'));
+        $request->session()->flash('success', 'El producto se ha recuperado con éxito.');
+        return redirect()->route('administracion.productos.index');
     }
 
     // Ajax responde dt de proveedores en vistas de edición de producto

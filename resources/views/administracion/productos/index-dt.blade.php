@@ -111,6 +111,26 @@
         });
     };
 
+    function restaurar(id, event){
+        event.preventDefault();
+        var form = $(event.target).closest("form");
+
+        let advertencia =
+            'Esta acción restaurará el producto y si tuviere, sus lotes.';
+        Swal.fire({
+            icon: 'warning',
+            title: 'Restaurar producto',
+            html: advertencia,
+            confirmButtonText: 'Confirmar',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+
     $(document).ready(function() {
         moment.locale('es');
 
