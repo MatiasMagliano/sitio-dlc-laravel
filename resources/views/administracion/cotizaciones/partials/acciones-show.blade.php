@@ -5,7 +5,7 @@
             <i class="fas fa-pencil-alt"></i>
         </button>
         <form action="{{ route('administracion.cotizaciones.borrar.producto', ['cotizacion' => $cotizacion, 'productoCotizado' => $productoCotizado]) }}"
-            id="frm-borrar-{{ $cotizacion }}" method="post" class="d-inline">
+            id="frm-borrar-{{ $productoCotizado }}" method="post" class="d-inline">
             @csrf
             @method('delete')
 
@@ -23,7 +23,7 @@
                             cancelButtonText: 'Cancelar',
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                $('#frm-borrar-{{ $cotizacion }}').submit()
+                                $('#frm-borrar-{{ $productoCotizado }}').submit()
                             }
                         });
                     ">
