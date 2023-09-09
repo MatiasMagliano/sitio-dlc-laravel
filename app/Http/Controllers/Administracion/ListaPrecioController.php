@@ -143,11 +143,11 @@ class ListaPrecioController extends Controller
         //dd($request);
         
         $datosProveedor = $request->validate([
-            'razon_social' => 'required',
+            'razon_social' => 'required|max:255',
             'cuit' => ['required', new ValidacionAfip],
-            'email' => 'required',
-            'web' => 'max:255',
-            'domicilio' => 'required',
+            'email' => 'required|max:255',
+            'web' => 'max:255|max:255',
+            'domicilio' => 'required|max:255',
             'provincia_id' => 'required',
             'localidad_id' => 'required'
         ]);

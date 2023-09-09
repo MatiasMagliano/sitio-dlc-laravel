@@ -56,7 +56,7 @@
                 // Detiene el envío predeterminado del formulario
                 event.preventDefault();
 
-                hideAlertValidation();
+                hideAlertValidationSubmit();
                 // Realiza tus validaciones personalizadas aquí
                 var validado = true;
 
@@ -113,41 +113,6 @@
                 if (validado){
                     hideAlertValidation();
                     this.submit();
-                    /*
-                    $.ajax({
-                        url: '{{--route('administracion.listaprecios.alta.nuevoListadoPrecioProveedor')--}}',
-                        method: 'POST',
-                        data: new FormData(this),
-                        dataType: 'JSON',
-                        contentType: false,
-                        cache: false,
-                        processData: false,
-                        success:function(response)
-                        {
-                            $razon_social = response.message;
-                            Swal.fire({
-                                title: 'Agregando Listado de proveedor',
-                                icon: response.alert,
-                                text: response.message,
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            window.location.replace('{{-- route('administracion.listaprecios.index') --}}');
-                        },
-                        error: function(response) {
-                            var errors = response.responseJSON;
-                            errores = '';
-                            $.each( errors, function( key, value ) {
-                                errores += value;
-                            });
-                            Swal.fire({
-                                icon: 'error',
-                                text: errores,
-                            showConfirmButton: true,
-                            });
-                        }
-                    });
-                    */
                 }
             });
 
@@ -155,6 +120,24 @@
         });
 
         function hideAlertValidation(){
+            //$('#input-razon_social').removeClass('is-invalid');
+            $('#invalid-feedback-razon_social p').remove();
+            //$('#input-cuit').removeClass('is-invalid');
+            $('#invalid-feedback-cuit p').remove();
+            //$('#input-email').removeClass('is-invalid');
+            $('#invalid-feedback-email p').remove();
+            //$('#input-web').removeClass('is-invalid');
+            $('#invalid-feedback-web p').remove();
+            //$('#input-domicilio').removeClass('is-invalid');
+            $('#invalid-feedback-domicilio p').remove();
+            //$('#input-provincia').removeClass('is-invalid');
+            $('#invalid-feedback-provincia p').remove();
+            //$('#input-localidad').removeClass('is-invalid');
+            $('#invalid-feedback-localidad p').remove();
+
+        }
+
+        function hideAlertValidationSubmit(){
             $('#input-razon_social').removeClass('is-invalid');
             $('#invalid-feedback-razon_social p').remove();
             $('#input-cuit').removeClass('is-invalid');

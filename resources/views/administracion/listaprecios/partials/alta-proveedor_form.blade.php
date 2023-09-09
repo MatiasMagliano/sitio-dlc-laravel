@@ -17,15 +17,22 @@
         <div class="row d-flex m-1">
             <div class="form-group col">
                 <label for="input-razon_social">Razón social *</label>
-                <input type="text" name="razon_social" id="input-razon_social" class="form-control" placeholder="Nombre completo del proveedor o nombre de fantasía" required autofocus>
+                <input type="text" name="razon_social" id="input-razon_social" placeholder="Nombre completo del proveedor o nombre de fantasía" 
+                class="form-control @error('razon_social') is-invalid @enderror" value="{{ old('razon_social') }}" required autofocus maxlength="100">
+                @error('razon_social')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
                 <div class="invalid-feedback" id="invalid-feedback-razon_social"></div>
             </div>
         </div>
         <div class="row d-flex m-1">   
             <div class="form-group col">
-                <label for="input-cuit">Número *</label>
-                <input type="text" name="cuit" id="input-cuit" class="form-control" required>
+                <label for="input-cuit">Cuit *</label>
+                <input type="text" name="cuit" id="input-cuit" class="form-control @error('cuit') is-invalid @enderror" value="{{ old('cuit') }}" required>
                 <small id="input-cuit-tip" class="form-text text-muted">Ingrese solo números.</small>
+                @error('cuit')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
                 <div class="invalid-feedback" id="invalid-feedback-cuit"></div>
             </div>
         </div>
@@ -38,7 +45,7 @@
         <div class="row d-flex m-1">   
             <div class="form-group col">
                 <label for="input-email">E-mail de Contacto *</label>
-                <input type="email" name="email" id="input-email" class="form-control" placeholder="No posee dirección wb" required>
+                <input type="email" name="email" id="input-email" class="form-control" value="{{ old('email') }}" placeholder="No posee dirección wb" maxlength="100" required>
                 <div class="invalid-feedback" id="invalid-feedback-email"></div>
             </div>
         </div>
@@ -46,7 +53,7 @@
         <div class="row d-flex m-1">
             <div class="form-group col">
                 <label for="input-web">Dirección Web *</label>
-                <input type="web" name="web" id="input-web" class="form-control form-control-sm" required>
+                <input type="web" name="web" id="input-web" class="form-control form-control-sm" value="{{ old('web') }}" maxlength="100" required>
                 <div class="invalid-feedback" id="invalid-feedback-web"></div> 
             </div>
         </div>
@@ -59,7 +66,7 @@
         <div class="row d-flex m-1">
             <div class="form-group col">
                 <label for="input-domicilio">Dirección *</label>
-                <input type="domicilio" name="domicilio" id="input-domicilio" class="form-control form-control-sm">
+                <input type="domicilio" name="domicilio" id="input-domicilio" value="{{ old('domicilio') }}" class="form-control form-control-sm" maxlength="100">
                 <div class="invalid-feedback" id="invalid-feedback-domicilio"></div>    
             </div>
         </div>
