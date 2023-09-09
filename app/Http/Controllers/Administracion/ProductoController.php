@@ -178,7 +178,7 @@ class ProductoController extends Controller
             $mañana = Carbon::now()->addDay()->format('d/m/Y');
             $request->validate([
                 'identificador' => 'required|unique:lotes|max:20',
-                'precio_compra' => 'required|numeric|min:1|max:5000',
+                'precio_compra' => 'required|numeric|min:1|max:500000',
                 'cantidad' => 'required|numeric|min:1|max:50000',
                 'fecha_elaboracion' => 'required|date_format:d/m/Y|before:' . $hoy,
                 'fecha_compra' => 'required|date_format:d/m/Y|before:' . $mañana,

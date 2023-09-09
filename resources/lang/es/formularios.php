@@ -2,7 +2,7 @@
 
 return [
     'batch_identification'  => 'Nº de lote *',
-    'batch_price'           => 'Precio de compra *',
+    'batch_price'           => 'Precio unitario de compra *',
     'batch_quantity'        => 'Cantidad *',
     'batch_elaboration'     => 'Fecha de elaboración *',
     'batch_purchase'        => 'Fecha de compra *',
