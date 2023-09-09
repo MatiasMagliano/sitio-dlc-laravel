@@ -239,7 +239,7 @@ class ProductoController extends Controller
             $lpp = LotePresentacionProducto::create([
                 'producto_id'     => $producto->id,
                 'presentacion_id' => $request->presentacion,
-                'lote_id'         => -1,
+                'lote_id'         => 1,
                 'dcc_id'          => $deposito->id
             ]);
             $lpp->save();
