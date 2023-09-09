@@ -130,7 +130,6 @@
                         <th>Identificador/Usuario</th>
                         <th>Cliente</th>
                         <th>Productos cotizados</th>
-                        <th>Total unidades</th>
                         <th>ESTADO</th>
                         <th></th>
                     </tr>
@@ -151,8 +150,6 @@
                                 {{ $orden->cotizacion->cliente->tipo_afip }}: {{ $orden->cotizacion->cliente->afip }}
                             </td>
                             <td style="vertical-align: middle; text-align:center;">{{ $orden->productos->count() }}</td>
-                            <td style="vertical-align: middle; text-align:center;">{{ $orden->productos->sum('cantidad') }}
-                            </td>
                             {{-- SE RESUME TODO A UN SOLO SWITCH, a diferencia del index de cotizaciones --}}
                             @switch($orden->estado_id)
                                 @case(6)
@@ -352,11 +349,7 @@
                     width: 70
                 },
                 {
-                    targets: 4,
-                    width: 70
-                },
-                {
-                    targets: 6,
+                    targets: 5,
                     width: 80,
                 },
             ]

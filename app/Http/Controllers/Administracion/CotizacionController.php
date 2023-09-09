@@ -215,7 +215,7 @@ class CotizacionController extends Controller
                 $cotizacion->updated_at,
                 $cotizacion->identificador,
                 $cotizacion->cliente->razon_social,
-                '<span class="badge badge-secondary">'. $cotizacion->estado .'</span>',
+                view('administracion.cotizaciones.partials.estados-historico', ['cotizacion' => $cotizacion])->render(),
                 view('administracion.cotizaciones.partials.acciones', ['cotizacion' => $cotizacion])->render(),
             ];
         }

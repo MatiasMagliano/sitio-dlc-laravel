@@ -49,7 +49,7 @@ class OrdenTrabajoController extends Controller
         $productos = ProductoCotizado::where('cotizacion_id', $request->cotizacion_id)
             ->where('no_aprobado', 0)
             ->get();
-        //$cotizacion = Cotizacion::findOrFail($request->cotizacion_id);
+        $cotizacion = Cotizacion::findOrFail($request->cotizacion_id);
 
         $orden_trabajo = new OrdenTrabajo([
             'cotizacion_id' => $request->cotizacion_id,
@@ -109,6 +109,10 @@ class OrdenTrabajoController extends Controller
         $orden_trabajo->lotes_completos = $lotes_completos;
         $orden_trabajo->estado_id = $estado;
         $orden_trabajo->save();
+
+        // se cambia el estado de la cotización, para que no aparezca en la lista de potenciales OTs
+        $cotizacion->estado_id = $estado;
+        $cotizacion->save();
 
         try {
             ProductoOrdenTrabajo::insert($productos_ot);
@@ -170,13 +174,13 @@ class OrdenTrabajoController extends Controller
         }
         $cant_aprob = count($ordentrabajo->cotizacion->productos->where('no_aprobado', 0));
 
+        //return view('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo', 'prod_ordentrabajo', 'cant_aprob'));
+
         $pdf = PDF::loadView('administracion.ordenestrabajo.ordenTrabajo-layout', ['ordentrabajo' => $ordentrabajo, 'prod_ordentrabajo' => $prod_ordentrabajo, 'cant_aprob' => $cant_aprob]);
         $dom_pdf = $pdf->getDomPDF();
         $canvas = $dom_pdf->get_canvas();
         $canvas->page_text(270, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 8, array(0, 0, 0));
 
         return $pdf->download('ordentrabajo_' . $ordentrabajo->cotizacion->identificador . '.pdf');
-
-        //return view('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo', 'prod_ordentrabajo'));
     }
 }
