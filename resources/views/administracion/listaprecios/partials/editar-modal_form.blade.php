@@ -36,7 +36,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="input-ncodigoProv">Código de Proveedor *</label>
-                                <input type="text" name="codigoProv" id="input-ncodigoProv" class="form-control" required>
+                                <input type="text" name="codigoProv" id="input-ncodigoProv" class="form-control" maxlength="18" required>
                                 <div class="invalid-feedback" id="invalid-feedback-ncodigoProv"></div>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="input-codigoProv">Código de Proveedor *</label>
-                                <input type="text" name="codigoProv" id="input-codigoProv" class="form-control" required disabled>
+                                <input type="text" name="codigoProv" id="input-codigoProv" class="form-control" maxlength="18" required disabled>
                                 <div id="input-codigoProv-feedback" class="invalid-feedback" style="color: red; font-size: 12px" >* Debe ingresar un dato válido</div>
                             </div>
                         </div>

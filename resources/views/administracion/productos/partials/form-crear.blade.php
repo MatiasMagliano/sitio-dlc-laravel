@@ -108,7 +108,7 @@
                     <input type="text" name="codigoProv" id="input-codigoProv"
                         class="form-control @error('proveedor') is-invalid @enderror"
                         placeholder="Codigo alfanumérico de facturación"
-                        value="{{ old('codigoProv') }}" autofocus>
+                        value="{{ old('codigoProv') }}" maxlength="18" autofocus>
                         @error('codigoProv')<div class="invalid-feedback">{{$message}}</div>@enderror
                 </div>
             </div>
