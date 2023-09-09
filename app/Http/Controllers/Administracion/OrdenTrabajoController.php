@@ -54,7 +54,7 @@ class OrdenTrabajoController extends Controller
         $orden_trabajo = new OrdenTrabajo([
             'cotizacion_id' => $request->cotizacion_id,
             'user_id'       => Auth()->user()->id,
-            'plazo_entrega' => Carbon::parse($request->plazo_entrega),
+            'plazo_entrega' => Carbon::createFromFormat('d/m/Y H:i', $request->plazo_entrega)->format('Y-m-d H:i:s'),
             'observaciones' => $request->observaciones,
             'en_produccion' => Carbon::now(),
             'estado_id'     => 4 //estado provisorio
