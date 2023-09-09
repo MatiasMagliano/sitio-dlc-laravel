@@ -176,7 +176,7 @@ class OrdenTrabajoController extends Controller
 
         //return view('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo', 'prod_ordentrabajo', 'cant_aprob'));
 
-        $pdf = PDF::loadView('administracion.ordenestrabajo.ordenTrabajo-layout', ['ordentrabajo' => $ordentrabajo, 'prod_ordentrabajo' => $prod_ordentrabajo, 'cant_aprob' => $cant_aprob]);
+        $pdf = PDF::loadView('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo', 'prod_ordentrabajo', 'cant_aprob'));
         $dom_pdf = $pdf->getDomPDF();
         $canvas = $dom_pdf->get_canvas();
         $canvas->page_text(270, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 8, array(0, 0, 0));
