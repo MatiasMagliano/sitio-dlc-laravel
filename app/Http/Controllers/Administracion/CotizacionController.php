@@ -512,8 +512,10 @@ class CotizacionController extends Controller
             $archivo->save();
         }
         $cotizacion->confirmada = Carbon::createFromFormat('d/m/Y', $request->confirmada);
-        // estado 4: Aceptada el: ...
+        // estado 4: Aprobada el: ...
         $cotizacion->estado_id = 4;
+        $cotizacion->cliente->ultima_compra = Carbon::now();
+        $cotizacion->cliente->save();
         $cotizacion->save();
 
         $request->session()->flash('success', 'La cotización se aprobó con éxito.\nAhora podrá generar la orden de trabajo para esta licitación.');
