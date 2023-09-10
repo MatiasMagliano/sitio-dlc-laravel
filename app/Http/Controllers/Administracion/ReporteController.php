@@ -734,7 +734,7 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                'nombre_reporte' => 'Reporte de Productos por temporada',
+                'nombre_reporte' => 'Reporte de Productos por proveedor',
                 'fecha_emision'  => $carbon->format('d/m/Y'),
                 'hora_emision'   => $carbon->format('H:i'),
                 'sin_datos'      => 0
@@ -770,7 +770,7 @@ class ReporteController extends Controller
         $carbon->timezone('America/Argentina/Cordoba');
         $datos_membrete = collect(
             [
-                'nombre_reporte' => 'Reporte de Clientes',
+                'nombre_reporte' => 'Reporte de Proveedores',
                 'fecha_emision'  => $carbon->format('d/m/Y'),
                 'hora_emision'   => $carbon->format('H:i'),
                 'sin_datos'      => 0
