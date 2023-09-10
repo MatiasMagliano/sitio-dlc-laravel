@@ -138,14 +138,14 @@
 
                             <div class="form-group col-md-4 mb-3">
                                 <label for="cantidad" class="label">Cantidad *</label>
-                                <input type="number" name="cantidad" id="cantidad" class="form-control" value=""
+                                <input type="number" name="cantidad" id="cantidad" class="form-control" value="" min="1"
                                     required>
                             </div>
 
                             <div class="form-group col-md-4 mb-3">
                                 <label for="precio_compra" class="label">Precio de compra *</label>
                                 <input type="number" name="precio_compra" id="precio_compra" class="form-control"
-                                    value="" required>
+                                    value="" min="1" required>
                             </div>
                         </div>
 
