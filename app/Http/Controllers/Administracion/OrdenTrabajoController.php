@@ -55,7 +55,7 @@ class OrdenTrabajoController extends Controller
             'cotizacion_id' => $request->cotizacion_id,
             'user_id'       => Auth()->user()->id,
             'plazo_entrega' => Carbon::createFromFormat('d/m/Y H:i', $request->plazo_entrega)->format('Y-m-d H:i:s'),
-            'observaciones' => $request->observaciones,
+            'observaciones' => $request->observacion,
             'en_produccion' => Carbon::now(),
             'estado_id'     => 4 //estado provisorio
         ]);
@@ -64,7 +64,7 @@ class OrdenTrabajoController extends Controller
 
         $productos_ot = [];
 
-        $lotes_completos = false;
+        $lotes_completos = true;
         $estado = 6;
 
         foreach ($productos as $producto) {
@@ -83,23 +83,37 @@ class OrdenTrabajoController extends Controller
                 if ($lotes[$i_lote]->cantidad >= $cantidad) {
                     // cuando el lote llega a cubrir la cantidad requerida
                     $lotes_asignados[] = [
-                        'id'             => $lotes[$i_lote]->id,
+                        'id'            => $lotes[$i_lote]->id,
                         'identificador' => $lotes[$i_lote]->identificador,
-                        'cantidad'       => $cantidad
+                        'cantidad'      => $cantidad
                     ];
                     $cantidad -= $lotes[$i_lote]->cantidad;
-                    $lotes_completos = true;
-                    $estado = 6;
+                    // Verificar si el lote cubrió completamente la cantidad requerida
+                    if ($cantidad == 0) {
+                        $lotes_completos = true;
+                    }
                     // aquí va rutina que descuenta las cantidades en la tabla real LOTES
-                } else {
-                    // cuando el lote no llega a cubrir la cantidad requerida
+                    Lote::restarCantidad($lotes[$i_lote]->id, $lotes[$i_lote]->cantidad);
+                }
+                elseif ($lotes[$i_lote]->cantidad <= $cantidad) {
+                    // cuando el lote no llega a cubrir la cantidad requerida, se asigna el último lote incompleto
+                    $resto = $cantidad - $lotes[$i_lote]->cantidad;
+                    $lotes_asignados[] = [
+                        'id'            => $lotes[$i_lote]->id,
+                        'identificador' => $lotes[$i_lote]->identificador,
+                        'cantidad'      => $lotes[$i_lote]->cantidad,
+                        'resto'         => $resto
+                    ];
                     $lotes_completos = false;
                     $estado = 7;
+                    Lote::restarCantidad($lotes[$i_lote]->id, $lotes[$i_lote]->cantidad);
+                    break;
                 }
                 $i_lote += 1;
             }
 
             $producto_ot['lotes'] = json_encode($lotes_asignados);
+            $producto_ot['l_incompleto'] = $lotes_completos;
 
             // Agregar el producto al arreglo de productos
             $productos_ot[] = $producto_ot;
@@ -145,12 +159,14 @@ class OrdenTrabajoController extends Controller
                 SELECT
                     lp.codigoProv AS COD_PROV,
                     p.razon_social AS PROVEEDOR,
-                    CONCAT(pro.droga, " - ", pre.forma, ", ", pre.presentacion) AS PRODUCTO
+                    CONCAT(pro.droga, " - ", pre.forma, ", ", pre.presentacion) AS PRODUCTO,
+                    pot.l_incompleto AS L_INCOMP
                 FROM lote_presentacion_producto lpp
                 INNER JOIN productos pro ON pro.id = lpp.producto_id
                 INNER JOIN presentacions pre ON pre.id = lpp.presentacion_id
                 INNER JOIN lotes l ON l.id = lpp.lote_id
                 INNER JOIN lista_precios lp ON lp.producto_id = lpp.producto_id AND lp.presentacion_id = lpp.presentacion_id
+                INNER JOIN producto_orden_trabajos pot ON pot.producto_id = lpp.producto_id AND pot.presentacion_id = lpp.presentacion_id
                 INNER JOIN proveedors p ON lp.proveedor_id = p.id
                 WHERE l.identificador IN (' . $cant_param . ')
             ';
@@ -170,13 +186,15 @@ class OrdenTrabajoController extends Controller
                 ];
 
                 $prod_ordentrabajo[$prod_key]['LOTES'] = $arrlotes;
+                $prod_ordentrabajo[$prod_key]['L_INCOMP'] = $prod->L_INCOMP;
             }
         }
         $cant_aprob = count($ordentrabajo->cotizacion->productos->where('no_aprobado', 0));
+        $observaciones = $ordentrabajo->observaciones;
 
-        //return view('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo', 'prod_ordentrabajo', 'cant_aprob'));
+        //return view('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo', 'prod_ordentrabajo', 'cant_aprob', 'observaciones'));
 
-        $pdf = PDF::loadView('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo', 'prod_ordentrabajo', 'cant_aprob'));
+        $pdf = PDF::loadView('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo', 'prod_ordentrabajo', 'cant_aprob', 'observaciones'));
         $dom_pdf = $pdf->getDomPDF();
         $canvas = $dom_pdf->get_canvas();
         $canvas->page_text(270, 820, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 8, array(0, 0, 0));

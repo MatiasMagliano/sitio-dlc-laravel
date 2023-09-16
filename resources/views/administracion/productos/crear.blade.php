@@ -41,10 +41,6 @@
                 $('#cuerpo_lote').toggleClass('overlay');
             });
         });
-        new SlimSelect({
-            select: '.selecion-proveedor',
-            placeholder: 'Seleccione un proveedor de la lista',
-        })
 
         new SlimSelect({
             select: '.selecion-presentacion',

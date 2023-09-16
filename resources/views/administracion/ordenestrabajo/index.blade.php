@@ -177,7 +177,7 @@
 
                                     {{-- ACCIONES DINAMICAS --}}
                                     <td style="vertical-align: middle; text-align:center;">
-                                        <a href="{{ route('administracion.ordentrabajo.show', ['ordentrabajo' => $orden]) }}"
+                                        <a href="{{ route('administracion.ordentrabajo.generar-pricking-list', ['ordentrabajo' => $orden]) }}"
                                             class="btn btn-sm btn-danger">
                                             Ver
                                         </a>

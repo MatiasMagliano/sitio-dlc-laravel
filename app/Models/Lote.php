@@ -73,6 +73,11 @@ class Lote extends Model
         );
     }
 
+    public static function restarCantidad($lote_id, $cantidad)
+    {
+        Lote::where('id', $lote_id)->decrement('cantidad', $cantidad);
+    }
+
     public static function promedioPrecioLotes($producto, $presentacion)
     {
         return Lote::select(DB::raw('round(AVG(precio_compra),2) as promedio_precio'))

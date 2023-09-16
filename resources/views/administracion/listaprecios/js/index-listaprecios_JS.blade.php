@@ -69,7 +69,7 @@
     $(document).ready(function() {
         //let table = new DataTable('#tabla');
         var tabla = $('#tabla').DataTable( {
-            dom: "tp",
+            dom: "ftp",
             pageLength: 10,
             scrollCollapse: true,
             order: [0, 'asc'],

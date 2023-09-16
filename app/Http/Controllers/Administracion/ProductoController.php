@@ -164,8 +164,6 @@ class ProductoController extends Controller
         ]);
 
         $request->validate([
-            'proveedor' => 'required',
-            'codigoProv' => 'required',
             'presentacion' => 'required'
         ]);
 
@@ -212,15 +210,6 @@ class ProductoController extends Controller
                 'dcc_id'          => $deposito->id
             ]);
             $lpp->save();
-
-            $listaDePrecios = new ListaPrecio;
-            $listaDePrecios->producto_id = $producto->id;
-            $listaDePrecios->presentacion_id = $request->presentacion;
-            $listaDePrecios->proveedor_id = $request->proveedor;
-            $listaDePrecios->codigoProv = $request->codigoProv;
-            $listaDePrecios->costo = $request->precio_compra;
-
-            $listaDePrecios->save();
 
             $request->session()->flash('success', 'El producto y su lote, se han creado con éxito');
             return redirect(route('administracion.productos.index'));

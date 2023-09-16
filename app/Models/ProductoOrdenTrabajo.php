@@ -13,7 +13,7 @@ class ProductoOrdenTrabajo extends Model
     protected $table = 'producto_orden_trabajos';
 
     protected $fillable = [
-        'orden_trabajo_id', 'producto_id', 'presentacion_id', 'lotes'
+        'orden_trabajo_id', 'producto_id', 'presentacion_id', 'l_incompleto', 'lotes'
     ];
 
     // RELACIONES

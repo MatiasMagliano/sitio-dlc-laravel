@@ -301,7 +301,7 @@ class ReporteController extends Controller
             INNER JOIN productos pro ON pc.producto_id = pro.id
             INNER JOIN presentacions pre ON pc.presentacion_id = pre.id
             GROUP BY pro.droga, pre.forma, pre.presentacion, pre.hospitalario, pre.trazabilidad, pre.divisible
-            ORDER BY pro.droga, CANTIDAD;',
+            ORDER BY CANTIDAD DESC, pro.droga;',
             [$cliente->razon_social]
         );
 

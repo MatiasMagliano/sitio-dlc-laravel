@@ -50,44 +50,26 @@
                 </thead>
                 <tbody>
                     @foreach ($prod_ordentrabajo as $producto => $datos)
-                        <tr>
-                            <td>
-                                @foreach ($datos['PROVEEDORES'] as $proveedor)
-                                    {{ $proveedor['COD_PROV'] }}
-                                    @if (!$loop->last)
-                                        <br>
-                                    @endif
-                                @endforeach
-                            </td>
-                            <td>
-                                @foreach ($datos['PROVEEDORES'] as $proveedor)
-                                    {{ $proveedor['PROVEEDOR'] }}
-                                    @if (!$loop->last)
-                                        <br>
-                                    @endif
-                                @endforeach
-                            </td>
-                            <td>{{$producto}}</td>
-                            <td>
-                                @foreach ($datos['LOTES'] as $lote)
-                                    {{ $lote['identificador'] }}
-                                    @if (!$loop->last)
-                                        <br>
-                                    @endif
-                                @endforeach
-                            </td>
-                            <td>
-                                @foreach ($datos['LOTES'] as $lote)
-                                    {{ $lote['cantidad'] }}
-                                    @if (!$loop->last)
-                                        <br>
-                                    @endif
-                                @endforeach
-                            </td>
-                        </tr>
+                        @if ($datos['L_INCOMP'] == 0)
+                            <tr>
+                                @include('administracion.ordenestrabajo.partials.contenido_tabla')
+                            </tr>
+                        @else
+                            <tr class="table-secondary">
+                                <td colspan="5" class="text-center"><span class="text-lg">PRODUCTO CON LOTES INCOMPLETOS</span></td>
+                            </tr>
+                            <tr class="table-secondary">
+                                @include('administracion.ordenestrabajo.partials.contenido_tabla')
+                            </tr>
+                        @endif
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        <hr>
+        <div class="card-footer">
+            <h4>Observaciones:</h4> <br>
+            {{$observaciones}}
         </div>
     </div>
 

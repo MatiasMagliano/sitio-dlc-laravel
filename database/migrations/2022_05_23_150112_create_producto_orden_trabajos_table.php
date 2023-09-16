@@ -22,6 +22,7 @@ class CreateProductoOrdenTrabajosTable extends Migration
             $table->foreignIdFor(OrdenTrabajo::class)->constrained();
             $table->foreignIdFor(Producto::class)->constrained();
             $table->foreignIdFor(Presentacion::class)->constrained();
+            $table->boolean('l_incompleto')->default(0);
             $table->json('lotes');
             $table->timestamps();
         });

@@ -12,13 +12,12 @@ use App\Models\ListaPrecio;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\ProductoCotizado;
-use App\Models\ProductoCotizadoAprobado;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use LotePresentacionProducto;
+use App\Rules\aprobacion;
 
 class CotizacionController extends Controller
 {
@@ -27,6 +26,7 @@ class CotizacionController extends Controller
         $config = [
             'format' => 'DD/MM/YYYY',
             'dayViewHeaderFormat' => 'MMM YYYY',
+            'maxDate' => "js:moment()",
         ];
 
         return view('administracion.cotizaciones.index-dt', compact('config'));
@@ -493,6 +493,18 @@ class CotizacionController extends Controller
 
     public function aprobarCotizacion(Cotizacion $cotizacion, Request $request)
     {
+        if($cotizacion->presentada > Carbon::createFromFormat('d/m/Y', $request->confirmada)->format('Y-m-d H:i:s'))
+        {
+            $request->session()->flash('warning', 'La fecha de aprobación debe ser posterior a la fecha de presentación.');
+            return redirect(route('administracion.cotizaciones.index'));
+        }
+
+        if(empty($request->lineasAprobadas))
+        {
+            $request->session()->flash('error', 'No puede aprobar una cotización vacía');
+            return redirect(route('administracion.cotizaciones.index'));
+        }
+
         // filtro las líneas finalmente aprobadas
         DB::table('producto_cotizados')
             ->where('cotizacion_id', $cotizacion->id)
