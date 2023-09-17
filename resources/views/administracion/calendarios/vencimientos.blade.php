@@ -8,11 +8,20 @@
             max-height: 45%;
             overflow-y: auto;
         }
+        .refer{
+            padding: 1px 10px;
+            border-radius: 5px;
+        }
     </style>
 @endsection
 
 @section('content_header')
     <h1>Calendarios importantes</h1>
+    <small>Referencia:</small> 
+    <small class="refer" style="background: green">Aprobadas</small> | 
+    <small class="refer" style="background: red">Rechazadas</small> | 
+    <small class="refer" style="background: yellow">Cotizando</small> | 
+    <small class="refer" style="background: pink">Presentadas</small> 
 @stop
 
 @section('content')
