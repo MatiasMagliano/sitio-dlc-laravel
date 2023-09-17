@@ -23,12 +23,12 @@
                         </select>
                         @error('producto')<div class="invalid-feedback">{{$message}}</div>@enderror
 
-                        <label for="input-npresentacion">Presentacion <sup><strong>1</strong></sup></label>
+                        {{-- <label for="input-npresentacion">Presentacion <sup><strong>1</strong></sup></label>
                         <select name="presentacion_id" id="input-presentacion_id"
                             class="seleccion-presentacion col @error('producto') is-invalid @enderror">
                             <option data-placeholder="true"></option>
                         </select>
-                        @error('producto')<div class="invalid-feedback">{{$message}}</div>@enderror
+                        @error('producto')<div class="invalid-feedback">{{$message}}</div>@enderror --}}
                     </div>
 
                     <div class="row d-flex">

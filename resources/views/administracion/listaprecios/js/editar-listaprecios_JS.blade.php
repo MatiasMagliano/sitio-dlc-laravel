@@ -41,11 +41,35 @@
             url: "{{route('administracion.listaprecios.editar.traerDataAgregarProductoLista')}}",
             success: function(data){
                 console.log(data);
+                if(frs){
+                    var optVal = "";
+                    var txtVal = "";
+                    for(var i = 0; i < data.length; i++){
+                        optVal = data[i].producto_id + '|' + data[i].presentacion_id;
+                        txtVal = data[i].droga + ' - ' + data[i].forma + ', ' + data[i].presentacion + data[i].Inp;
+                        //console.log(optVal);
+                        //console.log(txtVal);
+                        $(".seleccion-producto").append("<option value='"+ optVal +"' >"+ txtVal +"</option>");
+                    }
+                    var selProducto = new SlimSelect({
+                        select: '.seleccion-producto',
+                        placeholder: 'Seleccione el nombre del producto...',
+                    });
+
+                    frs = false;
+                }
+            },
+        });
+        /*$.ajax({
+            type: "GET",
+            url: "{{route('administracion.listaprecios.editar.traerDataAgregarProductoLista')}}",
+            success: function(data){
+                console.log(data);
                 var rProducto = data.dataResponse[0];
 
                 if(frs){
                     for(var i = 0; i < rProducto.nombre.dataProductos.length; i++){
-                        $(".seleccion-producto").append("<option value='"+ rProducto.nombre.dataProductos[i].productoId +"' class='opSelected' selected='selected'>"+ rProducto.nombre.dataProductos[i].droga +"</option>");
+                        $(".seleccion-producto").append("<option value='"+ rProducto.nombre.dataProductos[i].productoId +"' selected='selected'>"+ rProducto.nombre.dataProductos[i].droga +"</option>");
                     }
                     var selProducto = new SlimSelect({
                         select: '.seleccion-producto',
@@ -53,7 +77,7 @@
                     });
 
                     for(var i = 0; i < rProducto.detalle.dataPresentaciones.length; i++){
-                        $(".seleccion-presentacion").append("<option value='"+ rProducto.detalle.dataPresentaciones[i].presentacionId +"' class='opSelected' selected='selected'>"+ rProducto.detalle.dataPresentaciones[i].presentacion +"</option>");
+                        $(".seleccion-presentacion").append("<option value='"+ rProducto.detalle.dataPresentaciones[i].presentacionId +"' selected='selected'>"+ rProducto.detalle.dataPresentaciones[i].presentacion +"</option>");
                     }
                     frs = false;
                 }
@@ -62,7 +86,7 @@
                     placeholder: 'Seleccione la presentación de la droga...',
                 });
             },
-        });
+        });*/
     });
     //AGREGAR PRODUCTO - SUBMIT DEL FORMULARIO
     $(document).on('submit','#formAgregProducto',function(event){
@@ -196,5 +220,6 @@
             });*/
         }
     });
+
 
 </script>

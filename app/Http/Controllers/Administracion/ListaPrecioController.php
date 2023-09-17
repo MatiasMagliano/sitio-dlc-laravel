@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Hamcrest\Core\HasToString;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use LotePresentacionProducto;
 use PhpOffice\PhpSpreadsheet\Calculation\TextData\Replace;
 
 class ListaPrecioController extends Controller
@@ -238,6 +239,20 @@ class ListaPrecioController extends Controller
 
     // - Alta
     public function TraerDataAgregarProductoLista() {   
+        $jsonLPP = array('dataProductos' => []);
+
+        $lpp = Producto::select('lote_presentacion_producto.producto_id','lote_presentacion_producto.presentacion_id',
+                    'productos.droga','presentacions.forma','presentacions.presentacion',
+                    DB::raw('CONCAT(CASE WHEN hospitalario = 1 THEN " - H" ELSE "" END, CASE WHEN trazabilidad = 1 THEN " - T" ELSE "" END, CASE WHEN divisible = 1 THEN " - D" ELSE "" END) AS Inp'))
+                    ->join('lote_presentacion_producto','lote_presentacion_producto.producto_id','=','productos.id')
+                    ->join('presentacions','presentacions.id','=','lote_presentacion_producto.presentacion_id')
+                    ->groupBy('lote_presentacion_producto.producto_id','lote_presentacion_producto.presentacion_id',
+                    'productos.droga','presentacions.forma','presentacions.presentacion','presentacions.hospitalario','presentacions.trazabilidad','presentacions.divisible')
+                    ->orderBy('productos.droga')
+                    ->get();  
+        return response()->json($lpp);
+    }
+    public function TraerDataAgregarProductoLista1() {   
         $jsonProductos = array('dataProductos' => []);
         $productos = DB::table('productos')->get();
         foreach($productos as $producto) {
@@ -265,7 +280,7 @@ class ListaPrecioController extends Controller
             
         return response()->json($jsonResponse);
     }
-    public function TraerDataAgregarProductoLista1() {   
+    public function TraerDataAgregarProductoLista2() {   
         $jsonProductos = array('dataProductos' => []);
         $productos = DB::table('productos')->get();
         foreach($productos as $producto) {
@@ -297,11 +312,12 @@ class ListaPrecioController extends Controller
         $rs = Proveedor::find($request->proveedor_id);
         $existeCodigo = ListaPrecio::findCodigoProv($request->codigoProv);
         if($existeCodigo == 0){
-            $existeProducto = ListaPrecio::findByProducto($request->proveedor_id , $request->producto_id, $request->presentacion_id);
+            $arrayId = explode('|',$request->producto_id);
+            $existeProducto = ListaPrecio::findByProducto($request->proveedor_id , $arrayId[0], $arrayId[1]);
             if($existeProducto == 0){
                 $newProdLista = new ListaPrecio;
-                $newProdLista->producto_id = $request->producto_id;
-                $newProdLista->presentacion_id = $request->presentacion_id;
+                $newProdLista->producto_id = $arrayId[0];
+                $newProdLista->presentacion_id = $arrayId[1];
                 $newProdLista->proveedor_id = $request->proveedor_id;
                 $newProdLista->codigoProv = $request->codigoProv;
                 $newProdLista->costo = $request->costo;
