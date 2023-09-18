@@ -97,7 +97,7 @@
                 var validado = true;
                 
                 //Extensión de campo Telefono
-                $('#invalid-feedback-telefono p').remove();
+                /*$('#invalid-feedback-telefono p').remove();
                 $('#input-telefono').removeClass('is-invalid'); 
                 var inputVal = $('#input-telefono').val();
                 var telefonoNumerico = inputVal.replace(/\D/g, '');
@@ -105,19 +105,13 @@
                     validado = false;
                     $('#input-telefono').addClass('is-invalid'); 
                     $('#invalid-feedback-telefono').append('<p>El campo teléfono es incorrecto</p>'); 
-                }
+                }*/
 
                 //Valor de campos Descuentos
                 //Descuento 1
-                $('#descuento_1 p').remove();
+                /*$('#descuento_1 p').remove();
                 $('#descuento_1 input').removeClass('is-invalid'); 
                 if ( $.isNumeric($('#descuento_1 input').val()) == false ){
-                    validado = false;
-                    $('#descuento_1 input').addClass('is-invalid'); 
-                    $('#descuento_1').append('<p>Descuento incorrecto</p>'); 
-                    $('#descuento_1 p').addClass('invalid-feedback'); 
-                }
-                if ($('#descuento_1 input').val() < 0){
                     validado = false;
                     $('#descuento_1 input').addClass('is-invalid'); 
                     $('#descuento_1').append('<p>Descuento incorrecto</p>'); 
@@ -132,22 +126,10 @@
                     $('#descuento_2').append('<p>Descuento incorrecto</p>'); 
                     $('#descuento_2 p').addClass('invalid-feedback'); 
                 } 
-                if ($('#descuento_2 input').val() < 0){
-                    validado = false;
-                    $('#descuento_2 input').addClass('is-invalid'); 
-                    $('#descuento_2').append('<p>Descuento incorrecto</p>'); 
-                    $('#descuento_2 p').addClass('invalid-feedback'); 
-                }
                 //Descuento 3
                 $('#descuento_3 p').remove();
                 $('#descuento_3 input').removeClass('is-invalid'); 
                 if ( $.isNumeric($('#descuento_3 input').val()) == false ){
-                    validado = false;
-                    $('#descuento_3 input').addClass('is-invalid'); 
-                    $('#descuento_3').append('<p>Descuento incorrecto</p>'); 
-                    $('#descuento_3 p').addClass('invalid-feedback'); 
-                }
-                if ($('#descuento_3 input').val() < 0){
                     validado = false;
                     $('#descuento_3 input').addClass('is-invalid'); 
                     $('#descuento_3').append('<p>Descuento incorrecto</p>'); 
@@ -162,12 +144,6 @@
                     $('#descuento_4').append('<p>Descuento incorrecto</p>'); 
                     $('#descuento_4 p').addClass('invalid-feedback'); 
                 }
-                if ($('#descuento_4 input').val() < 0){
-                    validado = false;
-                    $('#descuento_4 input').addClass('is-invalid'); 
-                    $('#descuento_4').append('<p>Descuento incorrecto</p>'); 
-                    $('#descuento_4 p').addClass('invalid-feedback'); 
-                }
                 //Descuento 5
                 $('#descuento_5 p').remove();
                 $('#descuento_5 input').removeClass('is-invalid'); 
@@ -176,13 +152,7 @@
                     $('#descuento_5 input').addClass('is-invalid'); 
                     $('#descuento_5').append('<p>Descuento incorrecto</p>'); 
                     $('#descuento_5 p').addClass('invalid-feedback'); 
-                }
-                if ($('#descuento_5 input').val() < 0){
-                    valadado = false;
-                    $('#descuento_5 input').addClass('is-invalid'); 
-                    $('#descuento_5').append('<p>Descuento incorrecto</p>'); 
-                    $('#descuento_5 p').addClass('invalid-feedback'); 
-                }
+                }*/
 
                 if (validado){
                     this.submit();

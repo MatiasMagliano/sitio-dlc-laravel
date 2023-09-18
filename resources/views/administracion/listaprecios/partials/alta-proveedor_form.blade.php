@@ -19,20 +19,17 @@
                 <label for="input-razon_social">Razón social *</label>
                 <input type="text" name="razon_social" id="input-razon_social" placeholder="Nombre completo del proveedor o nombre de fantasía" 
                 class="form-control @error('razon_social') is-invalid @enderror" value="{{ old('razon_social') }}" required autofocus maxlength="100">
-                @error('razon_social')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                @error('razon_social')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 <div class="invalid-feedback" id="invalid-feedback-razon_social"></div>
             </div>
         </div>
         <div class="row d-flex m-1">   
             <div class="form-group col">
                 <label for="input-cuit">Cuit *</label>
-                <input type="text" name="cuit" id="input-cuit" class="form-control @error('cuit') is-invalid @enderror" value="{{ old('cuit') }}" required>
+                <input type="text" name="cuit" id="input-cuit" 
+                class="form-control @error('cuit') is-invalid @enderror" value="{{ old('cuit') }}" required>
                 <small id="input-cuit-tip" class="form-text text-muted">Ingrese solo números.</small>
-                @error('cuit')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                @error('cuit')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 <div class="invalid-feedback" id="invalid-feedback-cuit"></div>
             </div>
         </div>
@@ -45,7 +42,9 @@
         <div class="row d-flex m-1">   
             <div class="form-group col">
                 <label for="input-email">E-mail de Contacto *</label>
-                <input type="email" name="email" id="input-email" class="form-control" value="{{ old('email') }}" placeholder="No posee dirección wb" maxlength="100" required>
+                <input type="email" name="email" id="input-email" 
+                class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="No posee dirección wb" maxlength="100" required>
+                @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 <div class="invalid-feedback" id="invalid-feedback-email"></div>
             </div>
         </div>
@@ -53,7 +52,9 @@
         <div class="row d-flex m-1">
             <div class="form-group col">
                 <label for="input-web">Dirección Web *</label>
-                <input type="web" name="web" id="input-web" class="form-control form-control-sm" value="{{ old('web') }}" maxlength="100" required>
+                <input type="web" name="web" id="input-web" 
+                class="form-control @error('web') is-invalid @enderror" value="{{ old('web') }}" maxlength="100" required>
+                @error('web')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 <div class="invalid-feedback" id="invalid-feedback-web"></div> 
             </div>
         </div>
@@ -66,7 +67,9 @@
         <div class="row d-flex m-1">
             <div class="form-group col">
                 <label for="input-domicilio">Dirección *</label>
-                <input type="domicilio" name="domicilio" id="input-domicilio" value="{{ old('domicilio') }}" class="form-control form-control-sm" maxlength="100">
+                <input type="domicilio" name="domicilio" id="input-domicilio" value="{{ old('domicilio') }}" 
+                class="form-control @error('domicilio') is-invalid @enderror" maxlength="100">
+                @error('domicilio')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 <div class="invalid-feedback" id="invalid-feedback-domicilio"></div>    
             </div>
         </div>
@@ -74,7 +77,7 @@
         <div class="row d-flex m-1">
             <div class="form-group col-6">
                 <label for="input-provincia">Provincia *</label>
-                <select name="provincia_id" id="input-provincia" class="selector-provincia">
+                <select name="provincia_id" id="input-provincia" class="selector-provincia @error('provincia_id') is-invalid @enderror">
                     <option data-placeholder="true"></option>
                     @foreach ($provincias as $provincia)
                         @if ($provincia->id == old('provincia_id'))
@@ -84,11 +87,12 @@
                         @endif
                     @endforeach
                 </select>
+                @error('provincia_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 <div class="invalid-feedback" id="invalid-feedback-provincia"></div>    
             </div>
             <div class="form-group col-6">
                 <label for="input-localidad">Localidad *</label>
-                <select id="input-localidad" name="localidad_id" class="selector-localidad">
+                <select id="input-localidad" name="localidad_id" class="selector-localidad @error('localidad_id') is-invalid @enderror">
                     <option data-placeholder="true"></option>
                     @foreach ($localidades as $localidad)
                         @if ($localidad->id == old('localidad_id'))
@@ -98,6 +102,7 @@
                         @endif
                     @endforeach
                 </select>
+                @error('localidad_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 <div class="invalid-feedback" id="invalid-feedback-localidad"></div>  
             </div>
         </div>

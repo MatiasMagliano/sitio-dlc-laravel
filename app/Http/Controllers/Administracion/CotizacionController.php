@@ -562,10 +562,11 @@ class CotizacionController extends Controller
     public function preciosSugeridos(Request $request)
     {
         if ($request->ajax()) {
+            $cotizacion = Cotizacion::find($request->id);
             // la lógica de la función sería obtener todos los precios para esa presentación
             // por ahora, se envía la misma lista para todos los productos
             //$sugerencias = [];
-            $sugerencias = ListaPrecio::listarDescuentos($request->producto_id, $request->presentacion_id, $request->id);
+            $sugerencias = ListaPrecio::listarDescuentos($request->producto_id, $request->presentacion_id, $cotizacion);
 
             // AQUÍ DEBERÍA IR LA LÓGICA DE REARMADO DEL ARRAY
 

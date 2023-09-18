@@ -67,7 +67,7 @@
                 class="form-control @error('telefono') is-invalid @enderror" value="{{ old('telefono') }}">
             <small id="input-afip" class="form-text text-muted">Sin guiones, paréntesis u otros caracteres
                 especiales.</small>
-            <div class="invalid-feedback" id="invalid-feedback-telefono"></div>
+            {{-- <div class="invalid-feedback" id="invalid-feedback-telefono"></div> --}}
             @error('telefono')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -170,31 +170,52 @@
         </div>
         <div class="card-body">
             <div class="row d-flex justify-content-center">
+
                 <div id="descuento_1" class="form-group col-lg-2 col-md-6 m-3 ">
-                    <label for="input-esquema">Descuento 1</label>
-                    <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="0" min="0">
+                    <label>Descuento 1
+                        <input name="esquema_1"
+                        class="form-control @error('esquema_1') is-invalid @enderror"
+                        value="{{ old('esquema_1', 0) }}" min="0" max="99" >
+                    </label>
+                    @error('esquema_1')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
-                <div id="descuento_2" class="form-group col-lg-2 col-md-6 m-3">
-                    <label for="input-esquema">Descuento 2</label>
-                    <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="0" min="0">
+
+                <div id="descuento_2" class="form-group col-lg-2 col-md-6 m-3 ">
+                    <label>Descuento 2
+                        <input name="esquema_2" 
+                        class="form-control @error('esquema_2') is-invalid @enderror"
+                        value="{{ old('esquema_2', 0) }}" min="0" max="99">
+                    </label>
+                    @error('esquema_2')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
-                <div id="descuento_3" class="form-group col-lg-2 col-md-6 m-3">
-                    <label for="input-esquema">Descuento 3</label>
-                    <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="0" min="">
+
+                <div id="descuento_3" class="form-group col-lg-2 col-md-6 m-3 ">
+                    <label>Descuento 3
+                        <input name="esquema_3" 
+                        class="form-control @error('esquema_3') is-invalid @enderror"
+                        value="{{ old('esquema_3', 0) }}" min="0" max="99">
+                    </label>
+                    @error('esquema_3')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
-                <div id="descuento_4" class="form-group col-lg-2 col-md-6 m-3">
-                    <label for="input-esquema">Descuento 4</label>
-                    <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="0" min="0">
+
+                <div id="descuento_4" class="form-group col-lg-2 col-md-6 m-3 ">
+                    <label>Descuento 4
+                        <input name="esquema_4" 
+                        class="form-control @error('esquema_4') is-invalid @enderror"
+                        value="{{ old('esquema_4', 0) }}" min="0" max="99">
+                    </label>
+                    @error('esquema_4')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
-                <div id="descuento_5" class="form-group col-lg-2 col-md-6 m-3">
-                    <label for="input-esquema">Descuento 5</label>
-                    <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="0" min="0">
+
+                <div id="descuento_5" class="form-group col-lg-2 col-md-6 m-3 ">
+                    <label>Descuento 5
+                        <input name="esquema_5" 
+                        class="form-control @error('esquema_5') is-invalid @enderror"
+                        value="{{ old('esquema_5', 0) }}" min="0" max="99">
+                    </label>
+                    @error('esquema_5')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
+
             </div>
         </div>
         <div id="cuerpo_esquema"></div>

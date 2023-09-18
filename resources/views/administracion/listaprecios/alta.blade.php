@@ -41,8 +41,8 @@
     @include('partials.alerts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
     <script>
-        var emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
-        var urlRegex = /^(https?:\/\/)?([\w\-]+\.)+([a-z]{2,})(\/\S*)?$/i;
+        //var emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+        //var urlRegex = /^(https?:\/\/)?([\w\-]+\.)+([a-z]{2,})(\/\S*)?$/i;
         $(document).ready(function() {
             hideAlertValidation();
             
@@ -60,7 +60,7 @@
                 // Realiza tus validaciones personalizadas aquí
                 var validado = true;
 
-                //Valor de campo Razon social
+                /*//Valor de campo Razon social
                 if( $('#input-razon_social').val() == "" || $('#input-razon_social').val() == null || $('#input-razon_social').val() == undefined) {
                     validado = false;
                     $('#input-razon_social').addClass('is-invalid'); 
@@ -108,7 +108,7 @@
                     validado = false;
                     $('#input-localidad').addClass('is-invalid'); 
                     $('#invalid-feedback-localidad').append('<p>El campo localidad es incorrecto</p>'); 
-                }
+                }*/
 
                 if (validado){
                     hideAlertValidation();

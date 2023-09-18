@@ -86,29 +86,39 @@
         <div class="card-body">
             <div class="row d-flex justify-content-center">
                 <div id="descuento_1" class="form-group col-lg-2 col-md-6 m-3 ">
-                    <label for="input-esquema">Descuento 1</label>
-                    <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="{{old('esquema.0', $cliente->esquemaPrecio->porcentaje_1)}}" min="0">
+                    <label>Descuento 1
+                        <input type="number" name="esquema_1" min="0" max="99"
+                            class="form-control form-control-sm @error('esquema_1') is-invalid @enderror"
+                            value="{{old('esquema_1', $cliente->esquemaPrecio->porcentaje_1)}}">
+                    </label>
                 </div>
-                <div id="descuento_2" class="form-group col-lg-2 col-md-6 m-3">
-                    <label for="input-esquema">Descuento 2</label>
-                    <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="{{old('esquema.1', $cliente->esquemaPrecio->porcentaje_2)}}" min="0">
+                <div id="descuento_2" class="form-group col-lg-2 col-md-6 m-3 ">
+                    <label>Descuento 2
+                        <input type="number" name="esquema_2" min="0" max="99"
+                            class="form-control form-control-sm @error('esquema_2') is-invalid @enderror"
+                            value="{{old('esquema_2', $cliente->esquemaPrecio->porcentaje_2)}}">
+                    </label>
                 </div>
-                <div id="descuento_3" class="form-group col-lg-2 col-md-6 m-3">
-                    <label for="input-esquema">Descuento 3</label>
-                    <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="{{old('esquema.2', $cliente->esquemaPrecio->porcentaje_3)}}" min="0">
+                <div id="descuento_3" class="form-group col-lg-2 col-md-6 m-3 ">
+                    <label>Descuento 3
+                        <input type="number" name="esquema_3" min="0" max="99"
+                            class="form-control form-control-sm @error('esquema_3') is-invalid @enderror"
+                            value="{{old('esquema_3', $cliente->esquemaPrecio->porcentaje_3)}}">
+                    </label>
                 </div>
-                <div id="descuento_4" class="form-group col-lg-2 col-md-6 m-3">
-                    <label for="input-esquema">Descuento 4</label>
-                    <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="{{old('esquema.3', $cliente->esquemaPrecio->porcentaje_4)}}" min="0">
+                <div id="descuento_4" class="form-group col-lg-2 col-md-6 m-3 ">
+                    <label>Descuento 4
+                        <input type="number" name="esquema_4" min="0" max="99"
+                            class="form-control form-control-sm @error('esquema_4') is-invalid @enderror"
+                            value="{{old('esquema_4', $cliente->esquemaPrecio->porcentaje_4)}}">
+                    </label>
                 </div>
-                <div id="descuento_5" class="form-group col-lg-2 col-md-6 m-3">
-                    <label for="input-esquema">Descuento 5</label>
-                    <input class="form-control form-control-sm @error('esquema') is-invalid @enderror" type="number"
-                        name="esquema[]" id="input-esquema" value="{{old('esquema.4', $cliente->esquemaPrecio->porcentaje_5)}}" min="0">
+                <div id="descuento_5" class="form-group col-lg-2 col-md-6 m-3 ">
+                    <label>Descuento 5
+                        <input type="number" name="esquema_5" min="0" max="99"
+                            class="form-control form-control-sm @error('esquema_5') is-invalid @enderror"
+                            value="{{old('esquema_5', $cliente->esquemaPrecio->porcentaje_5)}}">
+                    </label>
                 </div>
             </div>
         </div>

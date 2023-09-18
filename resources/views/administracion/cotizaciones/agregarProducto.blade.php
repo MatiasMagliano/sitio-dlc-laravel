@@ -99,6 +99,7 @@
                 data: datos,
                 url: "{{ route('administracion.cotizaciones.agregar.producto.descuentos', ['cotizacion' => $cotizacion]) }}",
             }).done(function (resultado) {
+                console.log(resultado);
                 tablaPreciosSugerido.clear();
                 tablaPreciosSugerido.rows.add(resultado).draw();
                 selectprecio();

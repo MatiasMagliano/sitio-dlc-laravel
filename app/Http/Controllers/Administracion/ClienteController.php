@@ -35,19 +35,41 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         // validación de los datos del cliente
-        $datosCliente = $request->validate([
-            'nombre_corto'  => 'unique:clientes|required|max:30',
-            'razon_social'  => 'required|max:255',
-            'tipo_afip'     => 'required',
-            'afip'          => ['unique:clientes','required', new ValidacionAfip],
-            'contacto'      => 'required|max:50',
-            'telefono'      => 'required|string|max:20',
-            'email'         => 'required|email|max:50',
-            'lugar_entrega' => 'required|max:255',
-            'domicilio'     => 'required|max:255',
-            'provincia_id'  => 'required|integer',
-            'localidad_id'  => 'required|integer',
-        ]);
+        $datosCliente = null;
+        if (!$request->sin_esquema) {
+            $datosCliente = $request->validate([
+                'nombre_corto'  => 'unique:clientes|required|max:30',
+                'razon_social'  => 'required|max:255',
+                'tipo_afip'     => 'required',
+                'afip'          => ['unique:clientes','required', new ValidacionAfip],
+                'contacto'      => 'required|max:50',
+                'telefono'      => 'required|string|min:12|max:20',
+                'email'         => 'required|email|max:50|regex:/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/',
+                'lugar_entrega' => 'required|max:255',
+                'domicilio'     => 'required|max:255',
+                'provincia_id'  => 'required|integer',
+                'localidad_id'  => 'required|integer',
+                'esquema_1'     => 'required|numeric|min:-0.01|max:99',
+                'esquema_2'     => 'required|numeric|min:-0.01|max:99',
+                'esquema_3'     => 'required|numeric|min:-0.01|max:99',
+                'esquema_4'     => 'required|numeric|min:-0.01|max:99',
+                'esquema_5'     => 'required|numeric|min:-0.01|max:99',
+            ]);
+        }else{
+            $datosCliente = $request->validate([
+                'nombre_corto'  => 'unique:clientes|required|max:30',
+                'razon_social'  => 'required|max:255',
+                'tipo_afip'     => 'required',
+                'afip'          => ['unique:clientes','required', new ValidacionAfip],
+                'contacto'      => 'required|max:50',
+                'telefono'      => 'required|string|min:12|max:20',
+                'email'         => 'required|email|max:50|regex:/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/',
+                'lugar_entrega' => 'required|max:255',
+                'domicilio'     => 'required|max:255',
+                'provincia_id'  => 'required|integer',
+                'localidad_id'  => 'required|integer',
+            ]);
+        }
 
         $cliente = Cliente::create($datosCliente);
 
@@ -64,11 +86,11 @@ class ClienteController extends Controller
 
         $nuevoEsquema = new EsquemaPrecio;
         $nuevoEsquema->cliente_id = $cliente->id;
-        $nuevoEsquema->porcentaje_1 = $request->esquema[0];
-        $nuevoEsquema->porcentaje_2 = $request->esquema[1];
-        $nuevoEsquema->porcentaje_3 = $request->esquema[2];
-        $nuevoEsquema->porcentaje_4 = $request->esquema[3];
-        $nuevoEsquema->porcentaje_5 = $request->esquema[4];
+        $nuevoEsquema->porcentaje_1 = $request->esquema_1;
+        $nuevoEsquema->porcentaje_2 = $request->esquema_2;
+        $nuevoEsquema->porcentaje_3 = $request->esquema_3;
+        $nuevoEsquema->porcentaje_4 = $request->esquema_4;
+        $nuevoEsquema->porcentaje_5 = $request->esquema_5;
         $nuevoEsquema->save();
 
         $request->session()->flash('success', 'El registro de cliente se ha creado con éxito.');
@@ -93,21 +115,19 @@ class ClienteController extends Controller
             'contacto'      => 'required|max:50',
             'telefono'      => 'required|string|max:20',
             'email'         => 'required|email|max:50',
-        ]);
-        $datosEsquema = $request->validate([
-            'esquema[0]'    => 'regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
-            'esquema[1]'    => 'regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
-            'esquema[2]'    => 'regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
-            'esquema[3]'    => 'regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/',
-            'esquema[4]'    => 'regex:/^\d*[0-9]+(?:\.[0-9]{1,2})?$/'
+            'esquema_1'     => 'required|numeric|min:-0.01|max:99',
+            'esquema_2'     => 'required|numeric|min:-0.01|max:99',
+            'esquema_3'     => 'required|numeric|min:-0.01|max:99',
+            'esquema_4'     => 'required|numeric|min:-0.01|max:99',
+            'esquema_5'     => 'required|numeric|min:-0.01|max:99'
         ]);
 
         $cliente->update($datosCliente);
-        $cliente->esquemaPrecio->porcentaje_1 = $request->esquema[0];
-        $cliente->esquemaPrecio->porcentaje_2 = $request->esquema[1];
-        $cliente->esquemaPrecio->porcentaje_3 = $request->esquema[2];
-        $cliente->esquemaPrecio->porcentaje_4 = $request->esquema[3];
-        $cliente->esquemaPrecio->porcentaje_5 = $request->esquema[4];
+        $cliente->esquemaPrecio->porcentaje_1 = $request->esquema_1;
+        $cliente->esquemaPrecio->porcentaje_2 = $request->esquema_2;
+        $cliente->esquemaPrecio->porcentaje_3 = $request->esquema_3;
+        $cliente->esquemaPrecio->porcentaje_4 = $request->esquema_4;
+        $cliente->esquemaPrecio->porcentaje_5 = $request->esquema_5;
 
         $cliente->save();
         $cliente->esquemaPrecio->save();
