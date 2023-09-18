@@ -29,9 +29,9 @@ class ListaPrecio extends Model
     //INDEX
     public static function getAllListasDePrecios() {
         $allListasDePrecios = Proveedor::select('proveedors.id AS proveedorId','proveedors.razon_social AS razon_social',
-        'proveedors.cuit AS cuit', /*'proveedors.created_at AS alta',*/ //ListaPrecio::raw('min(lista_precios.created_at) AS creado'), 
+        'proveedors.cuit AS cuit', /*'proveedors.created_at AS alta',*/ //ListaPrecio::raw('min(lista_precios.created_at) AS creado'),
         ListaPrecio::raw('count(lista_precios.id) AS prods'),
-        ListaPrecio::raw('count(lista_precios.deleted_at) AS inactives'), ListaPrecio::raw('count(lista_precios.id) - count(lista_precios.deleted_at) AS actives'), 
+        ListaPrecio::raw('count(lista_precios.deleted_at) AS inactives'), ListaPrecio::raw('count(lista_precios.id) - count(lista_precios.deleted_at) AS actives'),
         ListaPrecio::raw('CASE WHEN min(lista_precios.created_at) IS NULL THEN proveedors.created_at ELSE min(lista_precios.created_at) END AS creado'),
         ListaPrecio::raw('CASE WHEN max(lista_precios.updated_at) IS NULL THEN proveedors.created_at ELSE max(lista_precios.updated_at) END AS modificado'),
         ListaPrecio::raw('MAX(lista_precios.deleted_at) AS lasts')/*,ListaPrecio::raw('max(lista_precios.updated_at) AS modificado')*/)
@@ -43,9 +43,9 @@ class ListaPrecio extends Model
     }
     public static function getAllListasDePrecios1() {
         $allListasDePrecios = ListaPrecio::select('proveedors.id AS proveedorId','proveedors.razon_social AS razon_social',
-        'proveedors.cuit AS cuit', /*'proveedors.created_at AS alta',*/ //ListaPrecio::raw('min(lista_precios.created_at) AS creado'), 
+        'proveedors.cuit AS cuit', /*'proveedors.created_at AS alta',*/ //ListaPrecio::raw('min(lista_precios.created_at) AS creado'),
         ListaPrecio::raw('count(lista_precios.id) AS prods'),
-        ListaPrecio::raw('count(lista_precios.deleted_at) AS inactives'), ListaPrecio::raw('count(lista_precios.id) - count(lista_precios.deleted_at) AS actives'), 
+        ListaPrecio::raw('count(lista_precios.deleted_at) AS inactives'), ListaPrecio::raw('count(lista_precios.id) - count(lista_precios.deleted_at) AS actives'),
         ListaPrecio::raw('CASE WHEN min(lista_precios.created_at) IS NULL THEN proveedors.created_at ELSE min(lista_precios.created_at) END AS creado'),
         ListaPrecio::raw('CASE WHEN max(lista_precios.updated_at) IS NULL THEN proveedors.created_at ELSE max(lista_precios.updated_at) END AS modificado'),
         'lista_precios.deleted_at'/*,ListaPrecio::raw('max(lista_precios.updated_at) AS modificado')*/)
@@ -55,9 +55,9 @@ class ListaPrecio extends Model
 
 
         $listados = ListaPrecio::select('proveedors.id AS proveedorId','proveedors.razon_social AS razon_social',
-        'proveedors.cuit AS cuit', /*'proveedors.created_at AS alta',*/ //ListaPrecio::raw('min(lista_precios.created_at) AS creado'), 
+        'proveedors.cuit AS cuit', /*'proveedors.created_at AS alta',*/ //ListaPrecio::raw('min(lista_precios.created_at) AS creado'),
         ListaPrecio::raw('count(lista_precios.id) AS prods'),
-        ListaPrecio::raw('count(lista_precios.deleted_at) AS inactives'), ListaPrecio::raw('count(lista_precios.id) - count(lista_precios.deleted_at) AS actives'), 
+        ListaPrecio::raw('count(lista_precios.deleted_at) AS inactives'), ListaPrecio::raw('count(lista_precios.id) - count(lista_precios.deleted_at) AS actives'),
         ListaPrecio::raw('CASE WHEN min(lista_precios.created_at) IS NULL THEN proveedors.created_at ELSE min(lista_precios.created_at) END AS creado'),
         ListaPrecio::raw('CASE WHEN max(lista_precios.updated_at) IS NULL THEN proveedors.created_at ELSE max(lista_precios.updated_at) END AS modificado'),
         'lista_precios.deleted_at'/*,ListaPrecio::raw('max(lista_precios.updated_at) AS modificado')*/)
@@ -204,13 +204,15 @@ class ListaPrecio extends Model
 
         $mercaderia = ListaPrecio::select('proveedors.razon_social','costo AS costo_1','costo AS costo_2','costo AS costo_3','costo AS costo_4','costo AS costo_5')
             ->join('proveedors','lista_precios.proveedor_id','=','proveedors.id')
-            ->whereIn('lista_precios.id', ListaPrecio::getIdListaPrecio($producto, $presentacion))
+            ->where('lista_precios.producto_id','=', $producto)
+            ->where('lista_precios.presentacion_id','=', $presentacion)
+            //->whereIn('lista_precios.id', ListaPrecio::getIdListaPrecio($producto, $presentacion))
             ->get();
 
         $descuentos = EsquemaPrecio::select('porcentaje_1','porcentaje_2','porcentaje_3','porcentaje_4','porcentaje_5')
             ->join('clientes','esquema_precios.cliente_id','=','clientes.id')
             ->join('cotizacions','clientes.id','=','cotizacions.cliente_id')
-            ->where('cotizacions.id', $cotizacion)
+            ->where('clientes.id', $cotizacion->cliente_id)
             ->get();
 
         // ESTA FUNCIONALIDAD DEBERÍA IR EN EL CONTROLLER (el modelo sólo debe preocuparse por los datos)
@@ -222,7 +224,7 @@ class ListaPrecio extends Model
                     $m_row->costo_1 = '';
                 }else{
                     $m_row->costo_1 = round(
-                        $m_row->costo_1 * (1 + ($d_row->porcentaje_1 / 100)),
+                        $m_row->costo_1 * (1 - ($d_row->porcentaje_1 / 100)),
                         2
                     );
                 }
@@ -230,7 +232,7 @@ class ListaPrecio extends Model
                     $m_row->costo_2 = '';
                 }else{
                     $m_row->costo_2 = round(
-                        $m_row->costo_2 * (1 + ($d_row->porcentaje_2 / 100)),
+                        $m_row->costo_2 * (1 - ($d_row->porcentaje_2 / 100)),
                         2
                     );
                 }
@@ -238,7 +240,7 @@ class ListaPrecio extends Model
                     $m_row->costo_3 = '';
                 }else{
                     $m_row->costo_3 = round(
-                        $m_row->costo_3 * (1 + ($d_row->porcentaje_3 / 100)),
+                        $m_row->costo_3 * (1 - ($d_row->porcentaje_3 / 100)),
                         2
                     );
                 }
@@ -246,7 +248,7 @@ class ListaPrecio extends Model
                     $m_row->costo_4 = '';
                 }else{
                     $m_row->costo_4 = round(
-                        $m_row->costo_4 * (1 + ($d_row->porcentaje_4 / 100)),
+                        $m_row->costo_4 * (1 - ($d_row->porcentaje_4 / 100)),
                         2
                     );
                 }
@@ -254,13 +256,12 @@ class ListaPrecio extends Model
                     $m_row->costo_5 = '';
                 }else{
                     $m_row->costo_5 = round(
-                        $m_row->costo_5 * (1 + ($d_row->porcentaje_5 / 100)),
+                        $m_row->costo_5 * (1 - ($d_row->porcentaje_5 / 100)),
                         2
                     );
                 }
             }
         }
-
         return $mercaderia;
 
 
