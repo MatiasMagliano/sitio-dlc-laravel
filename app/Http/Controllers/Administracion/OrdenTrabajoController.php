@@ -74,7 +74,7 @@ class OrdenTrabajoController extends Controller
             $producto_ot['presentacion_id'] = $producto->presentacion_id;
 
             $cantidad_requerida = $producto->cantidad;
-            $lotes = Lote::lotesPorPresentacion($producto->producto_id, $producto->presentacion_id);
+            $lotes = Lote::lotesPorPresentacionSinTrashed($producto->producto_id, $producto->presentacion_id);
             $lotesIndex = 0;
 
             while ($cantidad_requerida > 0 && $lotesIndex < count($lotes)) {
