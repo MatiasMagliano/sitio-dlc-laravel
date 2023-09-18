@@ -281,10 +281,19 @@ class ProductoController extends Controller
         //Presentacion
         if(!$request->has('crear_editar')){
             if($request->antigua_presentacion != $request->presentacion){
+                //Controlo duplicados
+                $existeProdPres = LotePresentacionProducto::where('producto_id',$request->antigua_drogaid)
+                                    ->where('presentacion_id', $request->presentacion)
+                                    ->count();
+                
+                if($existeProdPres > 0){
+                    $request->session()->flash('warning', 'Ya existe un producto con la misma droga y presentacion.');
+                    return redirect(route('administracion.productos.edit', ['producto' => $request->antigua_drogaid, 'presentacion' => $request->antigua_presentacion]));
+                }
                 //Actualizo lote_producto_presentacion
                 $presentacion = LotePresentacionProducto::where('presentacion_id', $request->antigua_presentacion)
-                    ->where('producto_id',$request->antigua_drogaid)
-                    ->get();
+                                ->where('producto_id',$request->antigua_drogaid)
+                                ->get();
                 foreach ($presentacion as $pres) {
                     $pres->presentacion_id = $request->presentacion;
                     $pres->save();
