@@ -143,7 +143,7 @@ class OrdenTrabajoController extends Controller
             {
                 $request->session()->flash('success', 'La orden de trabajo se creó con éxito. Estará disponible para imprimir desde el panel inferior.');
             }
-            elseif ($$orden_trabajo->estado_id == 7)
+            elseif ($orden_trabajo->estado_id == 7)
             {
                 $request->session()->flash('warning', 'La orden de trabajo se creó con éxito, pero con <strong>lotes incompletos</strong>. Deberá agregarlos manualmente una vez adquiridos y cargado en el sistema.');
             }
@@ -246,7 +246,7 @@ class OrdenTrabajoController extends Controller
         $cant_aprob = count($ordentrabajo->cotizacion->productos->where('no_aprobado', 0));
         $observaciones = $ordentrabajo->observaciones;
 
-        return view('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo', 'prod_ordentrabajo', 'cant_aprob', 'observaciones'));
+        //return view('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo', 'prod_ordentrabajo', 'cant_aprob', 'observaciones'));
 
         $pdf = PDF::loadView('administracion.ordenestrabajo.ordenTrabajo-layout', compact('ordentrabajo', 'prod_ordentrabajo', 'cant_aprob', 'observaciones'));
         $dom_pdf = $pdf->getDomPDF();
