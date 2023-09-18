@@ -3,7 +3,7 @@
     $(document).ready(function() {
         frs = true;
         var tablaProductos = $('#tablaProductos').DataTable( {
-            dom: "tp",
+            dom: "ftp",
             pageLength: 10,
             scrollY: "35vh",
             scrollCollapse: true,
@@ -99,8 +99,8 @@
         $('#input-ncodigoProv').removeClass('is-invalid');
         if ( $('#input-ncodigoProv').val() == '' || $('#input-ncodigoProv').val() == null || $('#input-ncodigoProv').val() == undefined){
             validado = false;
-            $('#input-ncodigoProv').addClass('is-invalid'); 
-            $('#invalid-feedback-ncodigoProv').append('<p>El campo codigoprov es incorrecto</p>'); 
+            $('#input-ncodigoProv').addClass('is-invalid');
+            $('#invalid-feedback-ncodigoProv').append('<p>El campo codigoprov es incorrecto</p>');
         }
 
         //Valor de campo Costo
@@ -108,8 +108,8 @@
         $('#input-ncosto').removeClass('is-invalid');
         if ( $.isNumeric($('#input-ncosto').val()) == false || $('#input-ncosto').val() <= 0){
             validado = false;
-            $('#input-ncosto').addClass('is-invalid'); 
-            $('#invalid-feedback-ncosto').append('<p>El campo costo es incorrecto</p>'); 
+            $('#input-ncosto').addClass('is-invalid');
+            $('#invalid-feedback-ncosto').append('<p>El campo costo es incorrecto</p>');
         }
 
         if (validado){
@@ -179,8 +179,8 @@
         $('#input-costo').removeClass('is-invalid');
         if ( $.isNumeric($('#input-costo').val()) == false || $('#input-costo').val() <= 0){
             validado = false;
-            $('#input-costo').addClass('is-invalid'); 
-            $('#invalid-feedback-costo').append('<p>El campo costo es incorrecto</p>'); 
+            $('#input-costo').addClass('is-invalid');
+            $('#invalid-feedback-costo').append('<p>El campo costo es incorrecto</p>');
         }
 
         if (validado){
