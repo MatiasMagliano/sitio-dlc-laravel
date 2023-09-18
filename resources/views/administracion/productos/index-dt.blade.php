@@ -69,7 +69,7 @@
                 <th>Droga</th>
                 <th>Presentación</th>
                 <th>Lotes Nº</th>
-                <th>STOCK - CASA CENTRAL<br><span class="small text-nowrap">existencia | cotizización | disponible</span></th>
+                <th>STOCK - CASA CENTRAL<br><span class="small text-nowrap">existencia | cotización | disponible</span></th>
                 <th></th>
             </thead>
             <tfoot style="display: table-header-group;">
