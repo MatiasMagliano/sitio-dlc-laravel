@@ -144,13 +144,13 @@ class ListaPrecioController extends Controller
         //dd($request);
         
         $datosProveedor = $request->validate([
-            'razon_social' => 'required|max:255',
             'cuit' => ['required', new ValidacionAfip],
-            'email' => 'required|max:255',
-            'web' => 'max:255|max:255',
+            'razon_social' => 'required|max:255',
+            'email' => 'required|max:255|regex:/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/',
+            'web' => 'required|max:255|regex:/^(https?:\/\/)?([\w\-]+\.)+([a-z]{2,})(\/\S*)?$/i',
             'domicilio' => 'required|max:255',
-            'provincia_id' => 'required',
-            'localidad_id' => 'required'
+            'provincia_id' => 'required|integer',
+            'localidad_id' => 'required|integer'
         ]);
 
         $existeRS = ListaPrecio::findByRS($request->razon_social);

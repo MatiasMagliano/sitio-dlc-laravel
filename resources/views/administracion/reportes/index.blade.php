@@ -133,7 +133,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="sel_fecha_pedidos">Seleccione un rango de fechas:</label>
-                        <x-adminlte-date-range name="sel_fecha_pedidos" />
+                        <x-adminlte-date-range name="sel_fecha_pedidos"  />
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -382,8 +382,7 @@
 @include('partials.alerts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
-
+    
             const select_clientes = new SlimSelect({
                 select: '.sel-clientes-slim',
             });

@@ -85,7 +85,7 @@
                 var validado = true;
                 
                 //Extensión de campo Telefono
-                $('#invalid-feedback-telefono p').remove();
+                /*$('#invalid-feedback-telefono p').remove();
                 $('#input-telefono').removeClass('is-invalid');
                 var inputVal = $('#input-telefono').val();
                 var telefonoNumerico = inputVal.replace(/\D/g, '');
@@ -93,11 +93,11 @@
                     validado = false;
                     $('#input-telefono').addClass('is-invalid'); 
                     $('#invalid-feedback-telefono').append('<p>El campo teléfono es incorrecto</p>'); 
-                }
+                }*/
 
                 //Valor de campos Descuentos
                 //Descuento 1
-                $('#descuento_1 p').remove();
+                /*$('#descuento_1 p').remove();
                 $('#descuento_1 input').removeClass('is-invalid');
                 if ( $.isNumeric($('#descuento_1 input').val()) == false ){
                     validado = false;
@@ -170,7 +170,7 @@
                     $('#descuento_5 input').addClass('is-invalid'); 
                     $('#descuento_5').append('<p>Descuento incorrecto</p>'); 
                     $('#descuento_5 p').addClass('invalid-feedback'); 
-                }
+                }*/
 
                 if (validado){
                     this.submit();
