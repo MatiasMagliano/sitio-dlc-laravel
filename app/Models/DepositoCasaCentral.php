@@ -43,4 +43,13 @@ class DepositoCasaCentral extends Model
     public function scopeGetDepCasaCentral($query, $id){
         return $query->where('id', $id);
     }
+
+    public static function getDcc($producto_id, $presentacion_id){
+        $dcc = DepositoCasaCentral::select('deposito_casa_centrals.*')
+                ->join('lote_presentacion_producto','deposito_casa_centrals.id','lote_presentacion_producto.dcc_id')
+                ->where('lote_presentacion_producto.producto_id',$producto_id)
+                ->where('lote_presentacion_producto.presentacion_id',$presentacion_id)
+                ->first();
+        return $dcc;
+    }
 }

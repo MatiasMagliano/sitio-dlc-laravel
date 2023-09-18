@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ArchivoCotizacion;
 use App\Models\Cliente;
+use App\Models\DepositoCasaCentral;
 use App\Models\DireccionEntrega;
 use App\Models\ListaPrecio;
+use App\Models\LotePresentacionProducto;
 use App\Models\Presentacion;
 use App\Models\Producto;
 use App\Models\ProductoCotizado;
@@ -486,6 +488,32 @@ class CotizacionController extends Controller
             $cotizacion->presentada = Carbon::now();
             $cotizacion->save();
 
+            //  ACTUALIZACIÓN DEL DEPÓSITO 
+            //OBTENGO TODOS LOS PRODUCTOS COTIZADOS
+            $pc = DB::table('producto_cotizados')
+                ->where('cotizacion_id', $cotizacion->id)
+                ->get();
+
+            foreach($pc as $item){
+                //BANDERA
+                $nuevaCotizando = 0;
+
+                //$dcc = DepositoCasaCentral::getDcc($item->producto_id, $item->presentacion_id);
+                //OBTENGO EL DETALLE DEL DEPÓSITO.
+                $dcc = DepositoCasaCentral::select('deposito_casa_centrals.*')
+                        ->join('lote_presentacion_producto','deposito_casa_centrals.id','lote_presentacion_producto.dcc_id')
+                        ->where('lote_presentacion_producto.producto_id',$item->producto_id)
+                        ->where('lote_presentacion_producto.presentacion_id', $item->presentacion_id)
+                        ->first();
+
+                //INCREMENTO EL VALOR DE LO COTIZADO HASTA ESE MOMENTO
+                $nuevaCotizando = $dcc->cotizacion + $item->cantidad;
+                //ACTUALIZO EL DEPÓSITO
+                DB::table('deposito_casa_centrals')
+                    ->where('id', $dcc->id)
+                    ->update(['cotizacion' => $nuevaCotizando]);            
+            }
+
             $request->session()->flash('success', 'La licitación se promovió con éxito. Quedará en espera de aprobación o rechazo.');
             return redirect(route('administracion.cotizaciones.index'));
         }
@@ -510,6 +538,47 @@ class CotizacionController extends Controller
             ->where('cotizacion_id', $cotizacion->id)
             ->whereNotIn('id', $request->lineasAprobadas)
             ->update(['no_aprobado' => true]);
+
+
+        //  ACTUALIZACIÓN DEL DEPÓSITO 
+        //OBTENGO TODOS LOS PRODUCTOS COTIZADOS APROBADOS
+        $pc = DB::table('producto_cotizados')
+                ->where('cotizacion_id', $cotizacion->id)
+                ->get();
+
+        foreach($pc as $item){
+            //BANDERAS
+            $nuevaExistencia = 0;
+            $nuevaCotizando = 0;
+
+            //$dcc = DepositoCasaCentral::getDcc($item->producto_id, $item->presentacion_id);
+            //OBTENGO EL DETALLE DEL DEPÓSITO.
+            $dcc = DepositoCasaCentral::select('deposito_casa_centrals.*')
+                    ->join('lote_presentacion_producto','deposito_casa_centrals.id','lote_presentacion_producto.dcc_id')
+                    ->where('lote_presentacion_producto.producto_id',$item->producto_id)
+                    ->where('lote_presentacion_producto.presentacion_id', $item->presentacion_id)
+                    ->first();
+
+            //PARA LAS LÍENAS QUE SE RECHAZARON SE DESCUENTAN DE COTIZACION PERO NO DE EXISTENCIA
+            if($item->no_aprobado == true){
+                $nuevaCotizando = $dcc->cotizacion - $item->cantidad;
+                //ACTUALIZO EL DEPÓSITO
+                DB::table('deposito_casa_centrals')
+                    ->where('id', $dcc->id)
+                    ->update(['cotizacion' => $nuevaCotizando]);     
+            }
+            else{ //PARA LAS LÍNEAS APROBADAS SIEMPRE RESTO EN EXISTENCIA Y SOLO RESTO HASTA EL VALOR 0 EN COTIZACION
+                $nuevaExistencia = $dcc->existencia - $item->cantidad;
+                if($dcc->cotizacion > $item->cantidad){
+                    $nuevaCotizando = $dcc->cotizacion - $item->cantidad;
+                }
+                //ACTUALIZO EL DEPÓSITO
+                DB::table('deposito_casa_centrals')
+                    ->where('id', $dcc->id)
+                    ->update(['existencia' => $nuevaExistencia,
+                            'cotizacion' => $nuevaCotizando]); 
+            }                             
+        }
 
         if ($request->hasFile('archivo')) {
             $ruta = $request->file('archivo')->storeAs(
@@ -553,6 +622,32 @@ class CotizacionController extends Controller
         $cotizacion->estado_id = 5;
         $cotizacion->motivo_rechazo = $request->motivo_rechazo;
         $cotizacion->save();
+
+        //  ACTUALIZACIÓN DEL DEPÓSITO 
+        //OBTENGO TODOS LOS PRODUCTOS COTIZADOS
+        $pc = DB::table('producto_cotizados')
+            ->where('cotizacion_id', $cotizacion->id)
+            ->get();
+
+        foreach($pc as $item){
+            //BANDERA
+            $nuevaCotizando = 0;
+
+            //$dcc = DepositoCasaCentral::getDcc($item->producto_id, $item->presentacion_id);
+            //OBTENGO EL DETALLE DEL DEPÓSITO.
+            $dcc = DepositoCasaCentral::select('deposito_casa_centrals.*')
+                    ->join('lote_presentacion_producto','deposito_casa_centrals.id','lote_presentacion_producto.dcc_id')
+                    ->where('lote_presentacion_producto.producto_id',$item->producto_id)
+                    ->where('lote_presentacion_producto.presentacion_id', $item->presentacion_id)
+                    ->first();
+
+            //DECREMENTO EL VALOR DE LO COTIZADO EN RELACIÓN A LA CANTIDAD QUE SE HABÍA COTIZADO
+            $nuevaCotizando = $dcc->cotizacion - $item->cantidad;
+            //ACTUALIZO EL DEPÓSITO
+            DB::table('deposito_casa_centrals')
+                ->where('id', $dcc->id)
+                ->update(['cotizacion' => $nuevaCotizando]);            
+        }
 
         $request->session()->flash('success', 'La cotización se rechazó con éxito.');
         return redirect(route('administracion.cotizaciones.index'));
