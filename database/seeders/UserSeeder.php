@@ -59,13 +59,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('bahPh0ei'),
                 'remember_token' => Str::random(10),
             ],
-            [
-                'name' => 'Fernando Villagra',
-                'email' => 'fernando.villagra@unc.edu.ar',
-                'email_verified_at' => now(),
-                'password' => Hash::make('jNiNr2cKKkWMQi7'),
-                'remember_token' => Str::random(10),
-            ],
         ];
 
         foreach($usuarios as $usuario){
