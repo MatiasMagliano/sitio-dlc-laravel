@@ -26,9 +26,11 @@ class HomeController extends Controller
         ');
 
         $compras = DB::select('
-            SELECT COUNT(producto_orden_trabajos.id) as comprar
-            FROM `producto_orden_trabajos`
-            WHERE producto_orden_trabajos.lotes = -1;
+            SELECT COUNT(q.id) AS comprar FROM(
+            SELECT dcc.id FROM deposito_casa_centrals dcc
+            INNER JOIN lote_presentacion_producto lpp ON dcc.id = lpp.dcc_id
+            WHERE existencia < 0
+            GROUP BY dcc.id)q;
         ');
 
         $vencimientos = DB::select('
