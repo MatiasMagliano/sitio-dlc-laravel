@@ -56,9 +56,6 @@
                             </tr>
                         @else
                             <tr class="table-secondary">
-                                <td colspan="5" class="text-center"><span class="text-lg">PRODUCTO CON LOTES INCOMPLETOS</span></td>
-                            </tr>
-                            <tr class="table-secondary">
                                 @include('administracion.ordenestrabajo.partials.contenido_tabla')
                             </tr>
                         @endif
