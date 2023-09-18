@@ -67,6 +67,20 @@ class Lote extends Model
                 l.*
             FROM lotes l
             INNER JOIN lote_presentacion_producto lpp on lpp.lote_id = l.id
+            WHERE lpp.producto_id = ? AND lpp.presentacion_id = ?
+            ORDER BY l.fecha_vencimiento ASC;',
+            [$producto, $presentacion]
+        );
+    }
+
+    // devuelve un array con todos los lotes por presentacion y producto SIN LOS LOTES BORRADOS
+    public static function lotesPorPresentacionSinTrashed($producto, $presentacion)
+    {
+        return DB::select(
+            'SELECT
+                l.*
+            FROM lotes l
+            INNER JOIN lote_presentacion_producto lpp on lpp.lote_id = l.id
             WHERE lpp.producto_id = ? AND lpp.presentacion_id = ? AND l.deleted_at IS NULL
             ORDER BY l.fecha_vencimiento ASC;',
             [$producto, $presentacion]
