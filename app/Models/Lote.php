@@ -67,7 +67,7 @@ class Lote extends Model
                 l.*
             FROM lotes l
             INNER JOIN lote_presentacion_producto lpp on lpp.lote_id = l.id
-            WHERE lpp.producto_id = ? AND lpp.presentacion_id = ?
+            WHERE lpp.producto_id = ? AND lpp.presentacion_id = ? AND l.deleted_at IS NULL
             ORDER BY l.fecha_vencimiento ASC;',
             [$producto, $presentacion]
         );
@@ -75,7 +75,15 @@ class Lote extends Model
 
     public static function restarCantidad($lote_id, $cantidad)
     {
-        Lote::where('id', $lote_id)->decrement('cantidad', $cantidad);
+        $lote = Lote::where('id', $lote_id)->first();
+        if($lote->cantidad == 0)
+        {
+            $lote->deleted_at = Carbon::now();
+        }
+        else
+        {
+            $lote->decrement('cantidad', $cantidad);
+        }
     }
 
     public static function promedioPrecioLotes($producto, $presentacion)
