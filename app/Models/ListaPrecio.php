@@ -211,7 +211,6 @@ class ListaPrecio extends Model
 
         $descuentos = EsquemaPrecio::select('porcentaje_1','porcentaje_2','porcentaje_3','porcentaje_4','porcentaje_5')
             ->join('clientes','esquema_precios.cliente_id','=','clientes.id')
-            ->join('cotizacions','clientes.id','=','cotizacions.cliente_id')
             ->where('clientes.id', $cotizacion->cliente_id)
             ->get();
 
