@@ -500,7 +500,7 @@ class CotizacionController extends Controller
 
                 //$dcc = DepositoCasaCentral::getDcc($item->producto_id, $item->presentacion_id);
                 //OBTENGO EL DETALLE DEL DEPÓSITO.
-                $dcc = DepositoCasaCentral::select('deposito_casa_centrals.*')
+                $dcc = DepositoCasaCentral::select('deposito_casa_centrals.id','deposito_casa_centrals.existencia','deposito_casa_centrals.cotizacion')
                         ->join('lote_presentacion_producto','deposito_casa_centrals.id','lote_presentacion_producto.dcc_id')
                         ->where('lote_presentacion_producto.producto_id',$item->producto_id)
                         ->where('lote_presentacion_producto.presentacion_id', $item->presentacion_id)
@@ -553,7 +553,7 @@ class CotizacionController extends Controller
 
             //$dcc = DepositoCasaCentral::getDcc($item->producto_id, $item->presentacion_id);
             //OBTENGO EL DETALLE DEL DEPÓSITO.
-            $dcc = DepositoCasaCentral::select('deposito_casa_centrals.*')
+            $dcc = DepositoCasaCentral::select('deposito_casa_centrals.id','deposito_casa_centrals.existencia','deposito_casa_centrals.cotizacion')
                     ->join('lote_presentacion_producto','deposito_casa_centrals.id','lote_presentacion_producto.dcc_id')
                     ->where('lote_presentacion_producto.producto_id',$item->producto_id)
                     ->where('lote_presentacion_producto.presentacion_id', $item->presentacion_id)
@@ -635,7 +635,7 @@ class CotizacionController extends Controller
 
             //$dcc = DepositoCasaCentral::getDcc($item->producto_id, $item->presentacion_id);
             //OBTENGO EL DETALLE DEL DEPÓSITO.
-            $dcc = DepositoCasaCentral::select('deposito_casa_centrals.*')
+            $dcc = DepositoCasaCentral::select('deposito_casa_centrals.id','deposito_casa_centrals.existencia','deposito_casa_centrals.cotizacion')
                     ->join('lote_presentacion_producto','deposito_casa_centrals.id','lote_presentacion_producto.dcc_id')
                     ->where('lote_presentacion_producto.producto_id',$item->producto_id)
                     ->where('lote_presentacion_producto.presentacion_id', $item->presentacion_id)
